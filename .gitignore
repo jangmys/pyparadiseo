@@ -1,0 +1,16 @@
+build/
+CMakeFiles/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info
+
+# C extensions
+*.so
+
+.spyproject/*
+*/.spyproject/*
+
+_skbuild/
