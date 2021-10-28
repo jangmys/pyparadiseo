@@ -41,6 +41,7 @@ set(eoSources
     src/cpp/eo/selectOne.cpp
     src/cpp/eo/selectors.cpp
     src/cpp/eo/replacement.cpp
+    src/cpp/eo/continuators.cpp
     src/cpp/eo/breeders.cpp
     src/cpp/eo/eoAlgos.cpp
 )
