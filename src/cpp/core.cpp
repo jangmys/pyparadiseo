@@ -169,16 +169,12 @@ BOOST_PYTHON_MODULE(_core)
         .def("__getitem__", &PyEOT::get_item)
         .def("__setitem__", &PyEOT::set_item)
         .def("__str__", &PyEOT::to_string)
+        .def("__lt__", &PyEOT::operator<)
+        .def("__gt__", &PyEOT::operator>)
         .def("__len__", &PyEOT::get_len)
+        .def("__eq__", &PyEOT::operator==)
         .def_pickle(PyEOT_pickle_suite())
     ;
-        // .add_property("objectiveVector", &PyMOEO::getObjectiveVector, &PyMOEO::setObjectiveVector)
-        // .def("__lt__", &PyMOEO::operator<)
-        // .def("__gt__", &PyMOEO::operator>)
-        // .def("__eq__", &PyMOEO::operator==)
-        // ;
-
-
 
     //common
     initialize();
