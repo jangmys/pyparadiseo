@@ -60,10 +60,10 @@ class moeoObjectiveVectorTraits
       // in case the number of objectives was already set to a different value
       if ( nObj && (nObj != _nObjectives) )
         {
-          std::cout << "WARNING\n";
-          std::cout << "WARNING : the number of objectives are changing\n";
-          std::cout << "WARNING : Make sure all existing objects are destroyed\n";
-          std::cout << "WARNING\n";
+          // std::cout << "WARNING\n";
+          std::cout << "WARNING : the number of objectives is changing\n";
+          // std::cout << "WARNING : Make sure all existing objects are destroyed\n";
+          // std::cout << "WARNING\n";
         }
       // number of objectives
       nObj = _nObjectives;
@@ -82,7 +82,7 @@ class moeoObjectiveVectorTraits
       // in case the number of objectives would not be assigned yet
       if (! nObj){
           nObj = 1;
-          std::cout<<"number of objectives undefined, assuming 1\n";
+          // std::cout<<"number of objectives undefined, assuming 1\n";
       }
         // throw std::runtime_error("Number of objectives not assigned in moeoObjectiveVectorTraits");
       return nObj;
