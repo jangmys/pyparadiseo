@@ -33,19 +33,6 @@ Note: this may create a directory `_skbuild`. If the installation fails, this di
 
 ## Quick start : GA - Max One
 
-TODO ::
-encoding
+Check out the example in `examples/` : a simple GA for the One-Max pseudo-problem
 
-from encoding import binary_vector
-
-binary_vector.initializer()
-
-binary_vector.mutation.bitFlip()
-
-binary_vector.crossover.onePt()
-
-
-
-problem
-
-from problems import oneMax
+More documentation, examples and tutorials coming soon!
