@@ -79,7 +79,6 @@ extern void replacement();
 extern void breeders();
 extern void eoAlgos();
 
-
 extern void algos();
 extern void continuators();
 extern void reduce();
@@ -198,8 +197,8 @@ BOOST_PYTHON_MODULE(_core)
     replacement();
     breeders();
     eoAlgos();
+    continuators();
     // algos();
-    // continuators();
     // reduce();
 
     //MO (localsearch)
