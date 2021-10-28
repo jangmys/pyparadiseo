@@ -23,7 +23,7 @@ struct PyEOT : public MOEO< realObjVec, double, double>
 
     PyEOT() : MOEO()
     {
-        // std::cout<<"call PyMOEO default ctor\n";
+        // std::cout<<"call PyEOT default ctor\n";
     }
 
     //for copy ctor
@@ -49,6 +49,14 @@ struct PyEOT : public MOEO< realObjVec, double, double>
     }
 
 
+    //MOEO overrrides operator< from EO
+    //we inherit from MOEO but don't want this by default ... reversing without interfering in MOEO module...
+    bool operator<(const PyEOT & _other) const
+      {
+        return getFitness() < _other.getFitness();
+      }
+
+
 
     //solution encoding is a python object --> a property of pyEOT
     boost::python::object encoding;
@@ -71,6 +79,10 @@ struct PyEOT : public MOEO< realObjVec, double, double>
     {
         ssize_t l = boost::python::len(encoding);
         return boost::python::object(l);
+    }
+    bool operator==(const PyEOT& _other)
+    {
+        return encoding == _other.encoding;
     }
 
 
