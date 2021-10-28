@@ -87,7 +87,7 @@ void pop()
     .def("best", &eoPop<PyEOT>::best_element, return_internal_reference<>() )
     .def("push_back", pop_push_back)
     .def("resize",    pop_resize)
-    // .def("swap", &eoPop<PyEOT>::swap)
+    .def("swap", &eoPop<PyEOT>::swap)
     // .def_pickle(pyPop_pickle_suite())
     ;
 }
