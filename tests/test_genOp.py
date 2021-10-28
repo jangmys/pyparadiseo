@@ -1,6 +1,6 @@
 from pyparadiseo import PyEOT
 from pyparadiseo import eo
-from pyparadiseo import pyeoInit
+from pyparadiseo import Init
 
 from pyparadiseo import pyMonOp
 from pyparadiseo import pyBinOp
@@ -17,7 +17,7 @@ import numpy as np
 
 class test_genops(unittest.TestCase):
     def setUp(self):
-        self.init = pyeoInit(lambda : np.random.randint(0,2,10))
+        self.init = Init(lambda : np.random.randint(0,2,10))
         self.ind1 = PyEOT()
         self.init(self.ind1)
 

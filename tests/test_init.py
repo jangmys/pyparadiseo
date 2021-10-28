@@ -1,7 +1,7 @@
 from pyparadiseo import PyEOT
 from pyparadiseo import eo
 
-from pyparadiseo import pyeoInit
+from pyparadiseo import Init
 
 
 import unittest
@@ -23,7 +23,7 @@ class test_init(unittest.TestCase):
                 return np.arange(n)
             return init
         #construct a Pyparadiseo initalizer passing a function
-        initializer = pyeoInit(init_fun(10))
+        initializer = Init(init_fun(10))
         #a solution
         sol = PyEOT()
         initializer(sol)
@@ -33,7 +33,7 @@ class test_init(unittest.TestCase):
             self.assertEqual(sol[i],i)
 
         #construct a Pyparadiseo initalizer passing a lambda
-        initializer = pyeoInit(lambda : np.arange(1,5))
+        initializer = Init(lambda : np.arange(1,5))
         initializer(sol)
         self.assertEqual(len(sol),4)
         self.assertEqual(len(sol.encoding),4)
