@@ -26,50 +26,50 @@
 #include <utils/eoCheckPoint.h>
 #include <utils/eoStat.h>
 
-#include "PyMOEO.h"
-#include "def_abstract_functor.h"
+#include <pyeot.h>
+#include <utils/def_abstract_functor.h>
 
 using namespace boost::python;
 
-#define DEF(x) class_<x<PyMOEO>, bases<eoContinue<PyMOEO > > >(#x).def("__call__", &eoContinue<PyMOEO>::operator())
-#define DEF2(x, i1) class_<x<PyMOEO>, bases<eoContinue<PyMOEO > > >(#x, init<i1>() ).def("__call__", &eoContinue<PyMOEO>::operator())
-#define DEF3(x, i1, i2) class_<x<PyMOEO>, bases<eoContinue<PyMOEO > > >(#x, init<i1, i2 >() ).def("__call__", &eoContinue<PyMOEO>::operator())
+#define DEF(x) class_<x<PyEOT>, bases<eoContinue<PyEOT > > >(#x).def("__call__", &eoContinue<PyEOT>::operator())
+#define DEF2(x, i1) class_<x<PyEOT>, bases<eoContinue<PyEOT > > >(#x, init<i1>() ).def("__call__", &eoContinue<PyEOT>::operator())
+#define DEF3(x, i1, i2) class_<x<PyEOT>, bases<eoContinue<PyEOT > > >(#x, init<i1, i2 >() ).def("__call__", &eoContinue<PyEOT>::operator())
 
 void add_checkpoint();
 
 void continuators()
 {
     /* Continuators */
-    def_abstract_functor<eoContinue<PyMOEO> >("eoContinue");
+    def_abstract_functor<eoContinue<PyEOT> >("eoContinue");
 
     /* Counters, wrappers etc */
-    class_<eoEvalFuncCounter<PyMOEO>, bases<eoEvalFunc<PyMOEO> > >
+    class_<eoEvalFuncCounter<PyEOT>, bases<eoEvalFunc<PyEOT> > >
         ("eoEvalFuncCounter",
-         init< eoEvalFunc<PyMOEO>&, std::string>()
+         init< eoEvalFunc<PyEOT>&, std::string>()
          [
           with_custodian_and_ward<1, 2>()
          ]
         )
-        .def("__call__", &eoEvalFuncCounter<PyMOEO>::operator())
+        .def("__call__", &eoEvalFuncCounter<PyEOT>::operator())
         ;
 
-    class_<eoGenContinue<PyMOEO>, bases<eoContinue<PyMOEO> >, boost::noncopyable >
+    class_<eoGenContinue<PyEOT>, bases<eoContinue<PyEOT> >, boost::noncopyable >
         ("eoGenContinue", init<unsigned long>() )
-        .def("__call__", &eoGenContinue<PyMOEO>::operator())
+        .def("__call__", &eoGenContinue<PyEOT>::operator())
         ;
 
-    class_<eoCombinedContinue<PyMOEO>, bases<eoContinue<PyMOEO> > >
-        ("eoCombinedContinue", init<eoContinue<PyMOEO>&>()[WC1])
-        .def( init<eoContinue<PyMOEO>&, eoContinue<PyMOEO>& >()[WC2] )
-        .def("add", &eoCombinedContinue<PyMOEO>::add, WC1)
-        .def("__call__", &eoCombinedContinue<PyMOEO>::operator())
+    class_<eoCombinedContinue<PyEOT>, bases<eoContinue<PyEOT> > >
+        ("eoCombinedContinue", init<eoContinue<PyEOT>&>()[WC1])
+        .def( init<eoContinue<PyEOT>&, eoContinue<PyEOT>& >()[WC2] )
+        .def("add", &eoCombinedContinue<PyEOT>::add, WC1)
+        .def("__call__", &eoCombinedContinue<PyEOT>::operator())
         ;
 
-    class_<eoEvalContinue<PyMOEO>, bases<eoContinue<PyMOEO> > >
+    class_<eoEvalContinue<PyEOT>, bases<eoContinue<PyEOT> > >
         ("eoEvalContinue",
-         init<eoEvalFuncCounter<PyMOEO>&, unsigned long>()[WC1]
+         init<eoEvalFuncCounter<PyEOT>&, unsigned long>()[WC1]
          )
-        .def("__call__", &eoEvalContinue<PyMOEO>::operator())
+        .def("__call__", &eoEvalContinue<PyEOT>::operator())
         ;
 
     // JG : python object as fitness type? extraction done inside eoFitContinue? if r/o ... relying on [] operator...
@@ -80,21 +80,21 @@ void continuators()
     add_checkpoint();
 }
 
-void addContinue(eoCheckPoint<PyMOEO>& c, eoContinue<PyMOEO>& cc) { c.add(cc); }
-void addMonitor(eoCheckPoint<PyMOEO>& c, eoMonitor& m) { c.add(m);}
-void addStat(eoCheckPoint<PyMOEO>& c, eoStatBase<PyMOEO>& s) { c.add(s);}
-void addSortedStat(eoCheckPoint<PyMOEO>& c, eoSortedStatBase<PyMOEO>& s) { c.add(s);}
+void addContinue(eoCheckPoint<PyEOT>& c, eoContinue<PyEOT>& cc) { c.add(cc); }
+void addMonitor(eoCheckPoint<PyEOT>& c, eoMonitor& m) { c.add(m);}
+void addStat(eoCheckPoint<PyEOT>& c, eoStatBase<PyEOT>& s) { c.add(s);}
+void addSortedStat(eoCheckPoint<PyEOT>& c, eoSortedStatBase<PyEOT>& s) { c.add(s);}
 
 void add_checkpoint()
 {
-    class_<eoCheckPoint<PyMOEO>, bases< eoContinue<PyMOEO> > >
+    class_<eoCheckPoint<PyEOT>, bases< eoContinue<PyEOT> > >
         ("eoCheckPoint",
-         init<eoContinue<PyMOEO>&> ()[with_custodian_and_ward<1,2>()]
+         init<eoContinue<PyEOT>&> ()[with_custodian_and_ward<1,2>()]
          )
         .def("add", addContinue, with_custodian_and_ward<1,2>() )
         .def("add", addMonitor, with_custodian_and_ward<1,2>() )
         .def("add", addStat, with_custodian_and_ward<1,2>())
         .def("add", addSortedStat, with_custodian_and_ward<1,2>())
-        .def("__call__", &eoCheckPoint<PyMOEO>::operator())
+        .def("__call__", &eoCheckPoint<PyEOT>::operator())
         ;
 }
