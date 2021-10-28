@@ -62,11 +62,8 @@ class eoSelectPerc : public eoSelect<EOT>
 
     select.setup(_source);
 
-    std::cout<<"size: "<<target<<" "<<_dest.size()<<std::endl;
-
     for (size_t i = 0; i < _dest.size(); ++i){
         _dest[i] = select(_source);
-        std::cout<<_dest[i].to_string()<<std::endl;
     }
   }
 
