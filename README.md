@@ -26,8 +26,9 @@ We're aware that there might be installation issues on different systems. In fut
 
 Note: this may create a directory `_skbuild`. If the installation fails, this directory should be deleted before you re-attempt to install pyparadiseo.
 
+3. Add the `pyparadiseo`directory in the PYTHONPATH 
 
-3. Now run the tests
+4. Now run the tests
 
 `python -m pytest tests`
 
