@@ -1,9 +1,11 @@
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 // #define PY_ARRAY_UNIQUE_SYMBOL MyParadiseo_PyArray_API
 
-#include <numpy/arrayobject.h>
+
+
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
+#include <numpy/arrayobject.h>
 #include <numpy/arrayscalars.h>
 #include <boost/python/to_python_converter.hpp>
 
