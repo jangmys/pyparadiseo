@@ -7,12 +7,22 @@ project(pyparadiseo
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(Boost COMPONENTS python3 REQUIRED)
-find_package(Boost COMPONENTS numpy3 REQUIRED)
-find_package(PythonLibs 3)
+set(BOOST_ROOT /usr/)
+
+set(BOOST_INCLUDEDIR /usr/include/boost169/)
+set(BOOST_LIBRARYDIR /usr/lib64/boost169/)
+
+
+find_package(Boost 1.69 EXACT COMPONENTS python36 numpy36 REQUIRED)
+# find_package(Boost 1.65 COMPONENTS numpy3 REQUIRED)
+
+find_package (Python3 3.6.15 EXACT COMPONENTS Interpreter Development.Module NumPy)
+
+message("==> Boost include" ${Boost_INCLUDE_DIRS})
+message("==> Python include" ${Python3_INCLUDE_DIRS})
 
 include_directories(${Boost_INCLUDE_DIRS})
-include_directories(${PYTHON_INCLUDE_PATH})
+include_directories(${Python3_INCLUDE_DIRS})
 
 link_directories(${Boost_LIBRARY_DIRS})
 
@@ -63,6 +73,8 @@ include_directories(${PROJECT_SOURCE_DIR}/src/cpp/mo/src)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/moeo/src)
 
 set_target_properties(_core PROPERTIES PREFIX "")
-target_link_libraries(_core ${PYTHON_LIBRARY} ${Boost_LIBRARIES})
+
+
+target_link_libraries(_core Python3::Module ${Boost_LIBRARIES} Python3::NumPy)
 
 install(TARGETS _core LIBRARY DESTINATION ./ COMPONENT libraries)
