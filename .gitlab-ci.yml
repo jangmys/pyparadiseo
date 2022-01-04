@@ -17,13 +17,10 @@ test-job1:
     stage: test
     dependencies:
         - build-job
-    artifacts:
-        paths:
-            - dist/
     script:
         - python3 -m pip install dist/*.whl --user --force-reinstall
-        - python3 -c "import pyparadiseo"
-        - python3 -m pytest tests
+        # - python3 -c "import pyparadiseo"
+        # - python3 -m pytest tests
 
 deploy-prod:
     stage: deploy
