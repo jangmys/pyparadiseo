@@ -21,7 +21,7 @@ public:
 
     PyNeighbor(bp::object move,bp::object move_back) : moIndexNeighbor<PyEOT>(),move_op(move),move_back_op(move_back) { }
 
-    PyNeighbor(const PyNeighbor& _n) : moIndexNeighbor<PyEOT>(_n){
+    PyNeighbor(const PyNeighbor& _n) : moNeighbor<PyEOT>(),moIndexNeighbor<PyEOT>(_n),moBackableNeighbor<PyEOT>(_n){
         fitness(_n.fitness());
         move_op = _n.move_op;
         move_back_op = _n.move_op;
