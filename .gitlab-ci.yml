@@ -3,7 +3,7 @@ image: jangmys/manylinux2014_pyparadiseo:latest
 stages:
     - build
     - test
-    - deploy
+#    - deploy
 #    - package
 
 build-job:
@@ -23,10 +23,10 @@ test-job1:
         # - python3 -c "import pyparadiseo"
         # - python3 -m pytest tests
 
-deploy-prod:
-    stage: deploy
-    script:
-        - echo "This job deploys something from the $CI_COMMIT_BRANCH branch."
+#deploy-prod:
+#    stage: deploy
+#    script:
+#        - echo "This job deploys something from the $CI_COMMIT_BRANCH branch."
 
 #package:
 #    stage: package
