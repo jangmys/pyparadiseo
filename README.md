@@ -1,3 +1,5 @@
+[![pipeline status](https://gitlab.inria.fr/paradiseo/pyparadiseo/badges/master/pipeline.svg)](https://gitlab.inria.fr/paradiseo/pyparadiseo/-/commits/master)
+
 # PyParadisEO
 
 A Python Framework for Metaheuristics
