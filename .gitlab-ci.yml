@@ -1,5 +1,10 @@
 image: jangmys/manylinux2014_pyparadiseo:latest
 
+stages:
+  - build
+  - test
+  - deploy
+
 build-job:
   stage: build
   script:
@@ -9,6 +14,8 @@ build-job:
 test-job1:
   stage: test
   script:
+    - python3 setup.py sdist bdist_wheel
+    - python3 -m pip install dist/*.whl --user --force-reinstall
     - python3 -c "import pyparadiseo"
     - python3 -m pytest tests
 
@@ -16,3 +23,9 @@ deploy-prod:
   stage: deploy
   script:
     - echo "This job deploys something from the $CI_COMMIT_BRANCH branch."
+
+package:
+  script: cat file1.txt file2.txt | gzip > packaged.gz
+  artifacts:
+    paths:
+    - packaged.gz
