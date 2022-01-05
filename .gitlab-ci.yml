@@ -47,4 +47,4 @@ test-job1:
     dependencies:
         - build-job
     script:
-        - python3 -c "print("test")"
+        - python3 -c "print('hello')"
