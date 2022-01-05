@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.14)
 
 project(pyparadiseo
     VERSION "0.1"
@@ -12,11 +12,11 @@ set(BOOST_ROOT /usr/)
 set(BOOST_INCLUDEDIR /usr/include/boost169/)
 set(BOOST_LIBRARYDIR /usr/lib64/boost169/)
 
-
+find_package(Python3 3.6.15 EXACT COMPONENTS Interpreter Development.Module NumPy)
 find_package(Boost 1.69 EXACT COMPONENTS python36 numpy36 REQUIRED)
 # find_package(Boost 1.65 COMPONENTS numpy3 REQUIRED)
 
-find_package (Python3 3.6.15 EXACT COMPONENTS Interpreter Development.Module NumPy)
+message("==> Python Sitelib" ${Python3_SITELIB})
 
 message("==> Boost include" ${Boost_INCLUDE_DIRS})
 message("==> Python include" ${Python3_INCLUDE_DIRS})
