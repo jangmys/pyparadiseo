@@ -25,7 +25,7 @@ include_directories(${Python3_INCLUDE_DIRS})
 
 link_directories(${Boost_LIBRARY_DIRS})
 
-set(CMAKE_CXX_FLAGS "-Wall -O2 -fPIC -DBOOST_NO_AUTO_PTR")
+set(CMAKE_CXX_FLAGS "-Wall -Wno-maybe-uninitialized -O2 -fPIC -DBOOST_NO_AUTO_PTR")
 
 set(commonSources
     src/cpp/utils/converters.cpp
