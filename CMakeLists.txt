@@ -16,10 +16,9 @@ find_package(Python3 3.6.15 EXACT COMPONENTS Interpreter Development.Module NumP
 find_package(Boost 1.69 EXACT COMPONENTS python36 numpy36 REQUIRED)
 # find_package(Boost 1.65 COMPONENTS numpy3 REQUIRED)
 
-message("==> Python Sitelib" ${Python3_SITELIB})
-
-message("==> Boost include" ${Boost_INCLUDE_DIRS})
-message("==> Python include" ${Python3_INCLUDE_DIRS})
+message("==> Python Sitelib : " ${Python3_SITELIB})
+message("==> Boost include : " ${Boost_INCLUDE_DIRS})
+message("==> Python include : " ${Python3_INCLUDE_DIRS})
 
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${Python3_INCLUDE_DIRS})
