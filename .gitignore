@@ -6,6 +6,14 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.egg-info
+.eggs
+dist
+
+#doc
+doc/build/
+doc/source/pyparadiseo*.rst
+doc/source/installation.rst
+doc/source/modules.rst
 
 # C extensions
 *.so
@@ -14,3 +22,7 @@ __pycache__/
 */.spyproject/*
 
 _skbuild/
+
+
+#local only
+local_build-install.sh
