@@ -18,6 +18,7 @@ transform()
 
     class_<eoSGATransform<PyEOT>, bases<eoTransform<PyEOT> > >
         ("eoSGATransform",
+        "SGADOCTRING",
         init<
             eoQuadOp<PyEOT>&,
             double,
@@ -25,7 +26,9 @@ transform()
             double
         >()
         )
-        .def("__call__", &eoSGATransform<PyEOT>::operator ())
+        .def("__call__", &eoSGATransform<PyEOT>::operator (),
+        "operator docstring"
+        )
         ;
     //
     // def_abstract_functor<eoPopEvalFunc<PyMOEO> >("eoPopEvalFunc");

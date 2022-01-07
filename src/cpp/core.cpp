@@ -95,6 +95,9 @@ BOOST_PYTHON_MODULE(_core)
 {
     using namespace boost::python;
 
+    docstring_options docopt;
+	docopt.enable_all();
+
     register_exception_translator<index_error>(&translate_index_error);
 
     Py_Initialize(); //needed to call Python code from c++
