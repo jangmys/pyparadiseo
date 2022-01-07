@@ -1,33 +1,33 @@
 ### basic stuff common to MO,EO and MOEO
 
 #encoding type
-from ._core import ObjectiveVectorTraits
-from ._core import ObjectiveVector
-from ._core import PyEOT
-from ._core import Pop
+from .core import ObjectiveVectorTraits
+from .core import ObjectiveVector
+from .core import PyEOT
+from .core import Pop
 
 #abstract base classes
-from ._core import eoEvalFunc
-from ._core import eoPopEvalFunc
+from .core import eoEvalFunc
+from .core import eoPopEvalFunc
 #init/eval
-from ._core import FitnessEval
-from ._core import ObjectiveEval
-from ._core import eoPopLoopEval as PopLoopEval
+from .core import FitnessEval
+from .core import ObjectiveEval
+from .core import eoPopLoopEval as PopLoopEval
 
 # abstract
-from ._core import eoInit
+from .core import eoInit
 #
-from ._core import pyeoInit as Init
+from .core import pyeoInit as Init
 
 #  EO RNG
-from ._core import eoRng
-from ._core import rng
+from .core import eoRng
+from .core import rng
 
 # EO OPS ...
-from ._core import eoMonOp as MonOp
-from ._core import eoBinOp as BinOp
-from ._core import eoQuadOp as QuadOp
+from .core import eoMonOp as MonOp
+from .core import eoBinOp as BinOp
+from .core import eoQuadOp as QuadOp
 
-from ._core import pyMonOp
-from ._core import pyBinOp
-from ._core import pyQuadOp
+from .core import pyMonOp
+from .core import pyBinOp
+from .core import pyQuadOp

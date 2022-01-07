@@ -1,1 +1,1 @@
-from ..._core import eoSGATransform as SGATransform
+from ...core import eoSGATransform as SGATransform

@@ -1,16 +1,16 @@
 # from ._mo import *
-from .._core import Neighbor
+from ..core import Neighbor
 
 #moEval
 ##abstract
-from .._core import moEval as Eval
-from .._core import moNeighborhoodEvaluation as NeighborhoodEvaluation
+from ..core import moEval as Eval
+from ..core import moNeighborhoodEvaluation as NeighborhoodEvaluation
 
 ##abstract
-from .._core import moNeighborhood
-from .._core import moIndexNeighborhood
+from ..core import moNeighborhood
+from ..core import moIndexNeighborhood
 
-from .._core import moContinuator
-from .._core import moLocalSearch
+from ..core import moContinuator
+from ..core import moLocalSearch
 
-from .._core import moNeighborhoodExplorer
+from ..core import moNeighborhoodExplorer

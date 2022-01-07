@@ -1,2 +1,2 @@
-from ..._core import moOrderNeighborhood as OrderNeighborhood
-from ..._core import moDummyNeighborhood as DummyNeighborhood
+from ...core import moOrderNeighborhood as OrderNeighborhood
+from ...core import moDummyNeighborhood as DummyNeighborhood

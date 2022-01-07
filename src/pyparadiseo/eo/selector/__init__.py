@@ -1,15 +1,16 @@
 # from selectors.cpp
-from ..._core import eoDetSelect as DetSelect
-from ..._core import eoSelectMany as SelectMany
-from ..._core import eoSelectNumber as SelectNumber
-from ..._core import eoSelectPerc as SelectPerc
-from ..._core import eoTruncSelect as TruncSelect
-from ..._core import eoTruncatedSelectMany as TruncatedSelectOne
+from ...core import eoDetSelect as DetSelect
+from ...core import eoSelectMany as SelectMany
+from ...core import eoSelectNumber as SelectNumber
+from ...core import eoSelectPerc as SelectPerc
+from ...core import eoTruncSelect as TruncSelect
+from ...core import eoTruncatedSelectMany as TruncatedSelectOne
 # from selectOne.cpp
-from ..._core import eoSelectOne as SelectOne
-from ..._core import eoDetTournamentSelect as DetTournamentSelect
-from ..._core import eoTruncatedSelectOne as TruncatedSelectOne
-from ..._core import eoRandomSelect as RandomSelect
-from ..._core import eoNoSelect as NoSelect
-from ..._core import eoSequentialSelect as SequentialSelect
-from ..._core import eoEliteSequentialSelect as EliteSequentialSelect
+from ...core import eoSelectOne as SelectOne
+from ...core import eoDetTournamentSelect as DetTournamentSelect
+# from ..._core import eoStochTournamentSelect as StochTournamentSelect
+from ...core import eoTruncatedSelectOne as TruncatedSelectOne
+from ...core import eoRandomSelect as RandomSelect
+from ...core import eoNoSelect as NoSelect
+from ...core import eoSequentialSelect as SequentialSelect
+from ...core import eoEliteSequentialSelect as EliteSequentialSelect

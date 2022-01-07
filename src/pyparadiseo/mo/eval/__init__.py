@@ -1,2 +1,2 @@
-from ..._core import moFullEvalByCopy as FullEvalByCopy
-from ..._core import moFullEvalByModif as FullEvalByModif
+from ...core import moFullEvalByCopy as FullEvalByCopy
+from ...core import moFullEvalByModif as FullEvalByModif

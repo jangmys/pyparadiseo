@@ -1,8 +1,8 @@
 # move to eval?
-from ..._core import eoEvalFuncCounter as EvalFuncCounter
+from ...core import eoEvalFuncCounter as EvalFuncCounter
 
-from ..._core import eoEvalContinue as EvalContinue
+from ...core import eoEvalContinue as EvalContinue
 
-from ..._core import eoGenContinue as GenContinue
-from ..._core import eoCombinedContinue as CombinedContinue
-from ..._core import eoSteadyFitContinue as SteadyFitContinue
+from ...core import eoGenContinue as GenContinue
+from ...core import eoCombinedContinue as CombinedContinue
+from ...core import eoSteadyFitContinue as SteadyFitContinue
