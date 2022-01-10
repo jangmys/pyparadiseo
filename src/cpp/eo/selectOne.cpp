@@ -103,17 +103,9 @@ void selectOne()
             args("_tSize"),"tournament size"
         ))
 	.def("__call__", &eoDetTournamentSelect<PyEOT>::operator(), return_value_policy<copy_const_reference>() )
-	// .def("__call__", &Select::operator(), return_internal_reference<>() )
 	.def("setup", &eoDetTournamentSelect<PyEOT>::setup);
 
 
-    // add_select<eoDetTournamentSelect<PyEOT> >("eoDetTournamentSelect",
-    // "Tournament Selection."
-    // init<>(
-    //     args(),"default tournament size = 2"
-    // ), init<unsigned>(
-    //     args("_tSize"),"tournament size"
-    // ) );
     add_select<eoStochTournamentSelect<PyEOT> >("eoStochTournamentSelect", init<>(), init<double>() );
     add_select<eoTruncatedSelectOne<PyEOT> >("eoTruncatedSelectOne",
 					    init<eoSelectOne<PyEOT>&, double>()[WC1],
