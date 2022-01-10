@@ -94,8 +94,26 @@ void selectOne()
 	.def("setup", &eoSelectOne<PyEOT>::setup);
 
     /* SelectOne derived classes */
+    class_<eoDetTournamentSelect<PyEOT>, bases<eoSelectOne<PyEOT> > >("eoDetTournamentSelect", "Tournament Selection.",
+    init<>(
+        args("self"),"default tournament size = 2"
+    ))
+	.def(
+        init<unsigned>(
+            args("_tSize"),"tournament size"
+        ))
+	.def("__call__", &eoDetTournamentSelect<PyEOT>::operator(), return_value_policy<copy_const_reference>() )
+	// .def("__call__", &Select::operator(), return_internal_reference<>() )
+	.def("setup", &eoDetTournamentSelect<PyEOT>::setup);
 
-    add_select<eoDetTournamentSelect<PyEOT> >("eoDetTournamentSelect", init<>(), init<unsigned>() );
+
+    // add_select<eoDetTournamentSelect<PyEOT> >("eoDetTournamentSelect",
+    // "Tournament Selection."
+    // init<>(
+    //     args(),"default tournament size = 2"
+    // ), init<unsigned>(
+    //     args("_tSize"),"tournament size"
+    // ) );
     add_select<eoStochTournamentSelect<PyEOT> >("eoStochTournamentSelect", init<>(), init<double>() );
     add_select<eoTruncatedSelectOne<PyEOT> >("eoTruncatedSelectOne",
 					    init<eoSelectOne<PyEOT>&, double>()[WC1],
