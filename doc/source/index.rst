@@ -12,7 +12,6 @@ Welcome to pyparadiseo's documentation!
 
    installation
 
-
 Indices and tables
 ==================
 

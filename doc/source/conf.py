@@ -40,8 +40,11 @@ release = '0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "sphinx.ext.autodoc"
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon"
 ]
+
+autodoc_class_signature = "separated"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -60,10 +63,69 @@ master_doc = 'index'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#
-html_theme = 'sphinxdoc'
+html_theme = 'sphinx_rtd_theme'
+#html_theme = 'sphinxdoc'
+
+
+# html_theme_options = {
+#     'analytics_id': 'G-XXXXXXXXXX',  #  Provided by Google in your dashboard
+#     'analytics_anonymize_ip': False,
+#     'logo_only': False,
+#     'display_version': True,
+#     'prev_next_buttons_location': 'bottom',
+#     'style_external_links': False,
+#     'vcs_pageview_mode': '',
+#     'style_nav_header_background': 'white',
+#     # Toc options
+#     'collapse_navigation': True,
+#     'sticky_navigation': True,
+#     'navigation_depth': 4,
+#     'includehidden': True,
+#     'titles_only': False
+# }
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+
+def setup(app):
+    # assign the names to classes imported 'as ...', otherwise autodoc won't document these classes,
+    # and will instead just say 'alias of ...'
+    import pyparadiseo
+    pyparadiseo.Init.__name__ = 'Init'
+    pyparadiseo.PopLoopEval.__name__ = 'PopLoopEval'
+    pyparadiseo.MonOp.__name__ = 'MonOp'
+    pyparadiseo.BinOp.__name__ = 'BinOp'
+    pyparadiseo.QuadOp.__name__ = 'QuadOp'
+
+    import pyparadiseo.eo
+    pyparadiseo.eo.Select.__name__ = 'Select'
+    pyparadiseo.eo.Replacement.__name__ = 'Replacement'
+    pyparadiseo.eo.Breed.__name__ = 'Breed'
+    pyparadiseo.eo.Algo.__name__ = 'Algo'
+    pyparadiseo.eo.Transform.__name__ = 'Transform'
+    pyparadiseo.eo.Continue.__name__ = 'Continue'
+
+    import pyparadiseo.eo.selector
+    pyparadiseo.eo.selector.SelectOne.__name__ = 'SelectOne'
+    pyparadiseo.eo.selector.DetTournamentSelect.__name__ = 'DetTournamentSelect'
+    pyparadiseo.eo.selector.TruncatedSelectOne.__name__ = 'TruncatedSelectOne'
+    pyparadiseo.eo.selector.RandomSelect.__name__ = 'RandomSelect'
+    pyparadiseo.eo.selector.NoSelect.__name__ = 'NoSelect'
+    pyparadiseo.eo.selector.SequentialSelect.__name__ = 'SequentialSelect'
+    pyparadiseo.eo.selector.EliteSequentialSelect.__name__ = 'EliteSequentialSelect'
+
+
+    pyparadiseo.eo.selector.DetSelect.__name__ = 'DetSelect'
+    pyparadiseo.eo.selector.SelectMany.__name__ = 'SelectMany'
+    pyparadiseo.eo.selector.SelectNumber.__name__ = 'SelectNumber'
+    pyparadiseo.eo.selector.SelectPerc.__name__ = 'SelectPerc'
+    pyparadiseo.eo.selector.TruncSelect.__name__ = 'TruncSelect'
+    pyparadiseo.eo.selector.TruncatedSelectMany.__name__ = 'TruncatedSelectMany'
+
+
+
+    import pyparadiseo.eo.transform
+    pyparadiseo.eo.transform.SGATransform.__name__ = 'SGATransform'
