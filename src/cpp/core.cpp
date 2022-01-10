@@ -95,8 +95,11 @@ BOOST_PYTHON_MODULE(_core)
 {
     using namespace boost::python;
 
+	scope().attr("__doc__")="pyparadiseo is a metaheuristic optimization framework";
+
     docstring_options docopt;
-	docopt.enable_all();
+    docopt.enable_all();
+    docopt.disable_cpp_signatures();
 
     register_exception_translator<index_error>(&translate_index_error);
 
