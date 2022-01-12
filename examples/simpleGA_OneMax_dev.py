@@ -48,7 +48,7 @@ if __name__ == "__main__":
         continuator.GenContinue(100)
     )
 
-    pop = pp.Pop(20, pp.get_init("binary",16))
+    pop = pp.Pop(20, pp.core.get_init("binary",16))
     # pop = pp.Pop(20, BinaryRandomInit(16))
     for ind in pop:
         myeval(ind)

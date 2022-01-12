@@ -1,4 +1,5 @@
-from .core import pyeoInit
+from ._core import pyeoInit
+
 import numpy as np
 
 def get_init(solution_encoding,len=None):

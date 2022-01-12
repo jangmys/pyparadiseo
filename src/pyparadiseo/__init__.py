@@ -31,5 +31,3 @@ from .core import eoQuadOp as QuadOp
 from .core import pyMonOp
 from .core import pyBinOp
 from .core import pyQuadOp
-
-from .get_init import get_init
