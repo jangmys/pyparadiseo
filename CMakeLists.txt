@@ -55,6 +55,7 @@ set(eoSources
     src/cpp/eo/eoAlgos.cpp
     src/cpp/eo/bounds.cpp
     src/cpp/eo/real_op.cpp
+    src/cpp/eo/bit_op.cpp
 )
 
 set(EO_SRC_DIR "src/cpp/eo/src" CACHE INTERNAL "ParadisEO-EO source directory" FORCE)

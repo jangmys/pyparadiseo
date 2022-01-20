@@ -85,6 +85,7 @@ extern void reduce();
 
 extern void bounds();
 extern void real_op();
+extern void bit_op();
 
 //MO
 extern void mo();
@@ -207,6 +208,7 @@ BOOST_PYTHON_MODULE(_core)
     // reduce();
     bounds();
     real_op();
+    bit_op();
 
 
     //MO (localsearch)
