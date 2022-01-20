@@ -83,6 +83,9 @@ extern void algos();
 extern void continuators();
 extern void reduce();
 
+extern void bounds();
+extern void real_op();
+
 //MO
 extern void mo();
 extern void moEvaluators();
@@ -202,6 +205,9 @@ BOOST_PYTHON_MODULE(_core)
     continuators();
     // algos();
     // reduce();
+    bounds();
+    real_op();
+
 
     //MO (localsearch)
     mo();
