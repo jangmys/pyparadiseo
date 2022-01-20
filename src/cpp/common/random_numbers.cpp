@@ -92,6 +92,10 @@ int spin(eoRng& _rng, numpy::ndarray values, double total)
     return --i;
 }
 
+//there is uniform(double m=1.0) and uniform(double min, double max)
+//deal with overloads and default args...
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(unif_zeroM, eoRng::uniform, 0, 1)
+
 void random_numbers()
 {
     class_<eoRng, boost::noncopyable>("eoRng", init<uint32_t>())
@@ -100,7 +104,8 @@ void random_numbers()
         .def("rand", &eoRng::rand)
         .def("rand_max", &eoRng::rand_max)
         .def("reseed", &eoRng::reseed)
-        // .def("uniform", &eoRng::uniform)
+        .def("uniform", static_cast<double (eoRng::*)(double)>(&eoRng::uniform),unif_zeroM())
+        .def("uniform", static_cast<double (eoRng::*)(double,double)>(&eoRng::uniform))
         .def("normal", normal)
         .def("negexp", &eoRng::negexp)
         .def("to_string", rng_to_string)
