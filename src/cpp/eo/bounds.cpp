@@ -126,8 +126,23 @@ bounds()
     .def(vector_indexing_suite<std::vector<eoRealBounds *> >())
     ;
 
-    bool (eoRealBaseVectorBounds::* fx1) (unsigned) = &eoRealBaseVectorBounds::isBounded;
-    bool (eoRealBaseVectorBounds::* fx2) (void)     = &eoRealBaseVectorBounds::isBounded;
+
+
+    bool (eoRealBaseVectorBounds::* isBounded1) (unsigned) = &eoRealBaseVectorBounds::isBounded;
+    bool (eoRealBaseVectorBounds::* isBounded2) (void)     = &eoRealBaseVectorBounds::isBounded;
+    bool (eoRealBaseVectorBounds::* hasNoBoundAtAll1) (unsigned) = &eoRealBaseVectorBounds::isBounded;
+    bool (eoRealBaseVectorBounds::* hasNoBoundAtAll2) (void) = &eoRealBaseVectorBounds::isBounded;
+    void (eoRealBaseVectorBounds::* foldsInBounds1) (unsigned, double&) = &eoRealBaseVectorBounds::foldsInBounds;
+    void (eoRealBaseVectorBounds::* foldsInBounds2) (std::vector<double> &) = &eoRealBaseVectorBounds::foldsInBounds;
+    void (eoRealBaseVectorBounds::* truncated1) (unsigned, double&) = &eoRealBaseVectorBounds::truncate;
+    void (eoRealBaseVectorBounds::* truncated2) (std::vector<double> &) = &eoRealBaseVectorBounds::truncate;
+    bool (eoRealBaseVectorBounds::* isInBounds1) (unsigned, double) = &eoRealBaseVectorBounds::isInBounds;
+    bool (eoRealBaseVectorBounds::* isInBounds2) (const std::vector<double>) = &eoRealBaseVectorBounds::isInBounds;
+
+    //TODO overload !
+    // double (eoRealBaseVectorBounds::* uniform1) (unsigned,eoRng&) = &eoRealBaseVectorBounds::uniform;
+    // void (eoRealBaseVectorBounds::* uniform2) (std:vector<double>&,eoRng&) = &eoRealBaseVectorBounds::uniform;
+
 
     class_<eoRealBaseVectorBounds, bases<std::vector<eoRealBounds *> > >("RealBaseVectorBounds", init<>())
     .def(init<
@@ -138,8 +153,24 @@ bounds()
           with_custodian_and_ward<1, 3>()
       ]
     )
-    .def("isBounded", fx1)
-    .def("isBounded", fx2)
+    .def("isBounded", isBounded1)
+    .def("isBounded", isBounded2)
+    .def("hasNoBoundAtAll", hasNoBoundAtAll1)
+    .def("hasNoBoundAtAll", hasNoBoundAtAll2)
+    .def("isMinBounded",&eoRealBaseVectorBounds::isMinBounded)
+    .def("isMaxBounded",&eoRealBaseVectorBounds::isMaxBounded)
+    .def("foldsInBounds",foldsInBounds1)
+    .def("foldsInBounds",foldsInBounds2)
+    .def("truncated",truncated1)
+    .def("truncated",truncated2)
+    .def("isInBounds",isInBounds1)
+    .def("isInBounds",isInBounds2)
+    .def("minimum",&eoRealBaseVectorBounds::minimum)
+    .def("maximum",&eoRealBaseVectorBounds::maximum)
+    .def("range",&eoRealBaseVectorBounds::range)
+    .def("averageRange",&eoRealBaseVectorBounds::averageRange)
+    // .def("uniform",uniform1)
+    // .def("uniform",uniform2)
     ;
 
     class_<eoRealVectorBounds, bases<eoRealBaseVectorBounds> >("RealVectorBounds", init<>())
