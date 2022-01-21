@@ -266,8 +266,6 @@ template<class Chrom> class Py1PtBitXover: public eoQuadOp<Chrom>
         np::ndarray e1 = np::from_object(chrom1.encoding, dt);
         np::ndarray e2 = np::from_object(chrom2.encoding, dt);
 
-        unsigned _size2       = e2.shape(0);
-
         std::vector<int> ind1(reinterpret_cast<int *>(e1.get_data()),
             reinterpret_cast<int *>(e1.get_data())+e1.shape(0));
         std::vector<int> ind2(reinterpret_cast<int *>(e2.get_data()),
@@ -289,6 +287,131 @@ template<class Chrom> class Py1PtBitXover: public eoQuadOp<Chrom>
 
 
 
+/** eoUBitXover --> classic Uniform crossover
+\class eoUBitXover eoBitOp.h ga/eoBitOp.h
+\ingroup bitstring
+*/
+
+template<class Chrom> class PyUBitXover: public eoQuadOp<Chrom>
+{
+ public:
+  /// (Default) Constructor.
+  PyUBitXover(double _preference = 0.5): preference(_preference)
+    {
+      if ( (_preference <= 0.0) || (_preference >= 1.0) )
+        std::runtime_error("UxOver --> invalid preference");
+    }
+  /// The class name.
+  // virtual std::string className() const { return "eoUBitXover"; }
+
+  /**
+   * Uniform crossover for binary chromosomes.
+   * @param chrom1 The first chromosome.
+   * @param chrom2 The first chromosome.
+   *    std::runtime_error if sizes don't match
+   */
+  bool operator()(Chrom& chrom1, Chrom& chrom2)
+    {
+        np::dtype dt = np::dtype::get_builtin<int>();
+
+        // get ndarray from object
+        np::ndarray e1 = np::from_object(chrom1.encoding, dt);
+        np::ndarray e2 = np::from_object(chrom2.encoding, dt);
+
+        std::vector<int> ind1(reinterpret_cast<int *>(e1.get_data()),
+            reinterpret_cast<int *>(e1.get_data())+e1.shape(0));
+        std::vector<int> ind2(reinterpret_cast<int *>(e2.get_data()),
+            reinterpret_cast<int *>(e2.get_data())+e2.shape(0));
+
+      if ( ind1.size() != ind2.size())
+            std::runtime_error("UxOver --> chromosomes sizes don't match" );
+      bool changed = false;
+      for (unsigned int i=0; i<ind1.size(); i++)
+        {
+          if (ind1[i] != ind2[i] && eo::rng.flip(preference))
+            {
+              std::swap(ind1[i], ind2[i]);
+              changed = true;
+            }
+        }
+    return changed;
+  }
+    protected:
+      double preference;
+};
+
+
+
+
+/** eoNPtsBitXover --> n-point crossover
+\class eoNPtsBitXover eoBitOp.h ga/eoBitOp.h
+\ingroup bitstring
+*/
+template<class Chrom> class PyNPtsBitXover : public eoQuadOp<Chrom>
+{
+public:
+
+    /** (Default) Constructor. */
+    PyNPtsBitXover(unsigned _num_points = 2) : num_points(_num_points)
+        {
+            if (num_points < 1)
+                std::runtime_error("NxOver --> invalid number of points");
+        }
+
+    /** The class name */
+    // virtual std::string className() const { return "eoNPtsBitXover"; }
+
+    /** n-point crossover for binary chromosomes.
+
+    @param chrom1 The first chromosome.
+    @param chrom2 The first chromosome.
+    */
+    bool operator()(Chrom& chrom1, Chrom& chrom2) {
+        np::dtype dt = np::dtype::get_builtin<int>();
+
+        // get ndarray from object
+        np::ndarray e1 = np::from_object(chrom1.encoding, dt);
+        np::ndarray e2 = np::from_object(chrom2.encoding, dt);
+
+        std::vector<int> ind1(reinterpret_cast<int *>(e1.get_data()),
+            reinterpret_cast<int *>(e1.get_data())+e1.shape(0));
+        std::vector<int> ind2(reinterpret_cast<int *>(e2.get_data()),
+            reinterpret_cast<int *>(e2.get_data())+e2.shape(0));
+
+        unsigned max_size(std::min(ind1.size(), ind2.size()));
+        unsigned max_points(std::min(max_size - 1, num_points));
+        std::vector<bool> points(max_size, false);
+
+        // select ranges of bits to swap
+        do {
+            unsigned bit(eo::rng.random(max_size));
+            if(points[bit])
+                continue;
+            else {
+                points[bit] = true;
+                --max_points;
+            }
+        } while(max_points);
+
+        // swap bits between chromosomes
+        bool change(false);
+        for (unsigned bit = 1; bit < points.size(); bit++) {
+            if (points[bit])
+                change = !change;
+            if (change) {
+                std::swap(ind1[bit],ind2[bit]);
+            }
+        }
+        return true;
+    }
+
+private:
+
+    /** @todo Document this data member */
+    unsigned num_points;
+};
+
+
 
 
 void
@@ -296,18 +419,19 @@ bit_op()
 {
     using namespace boost::python;
 
+    //MUTATION
     class_<PyOneBitFlip<PyEOT>, bases<eoMonOp<PyEOT> > >
         ("OneBitFlip", init<>())
     .def("__call__", &PyOneBitFlip<PyEOT>::operator ())
     ;
 
     class_<PyDetBitFlip<PyEOT>, bases<eoMonOp<PyEOT> > >
-        ("DetBitFlip", init<unsigned>())
+        ("DetBitFlip", init<optional<const unsigned>>())
     .def("__call__", &PyDetBitFlip<PyEOT>::operator ())
     ;
 
     class_<PyDetSingleBitFlip<PyEOT>, bases<eoMonOp<PyEOT> > >
-        ("DetSingleBitFlip", init<unsigned>())
+        ("DetSingleBitFlip", init<optional<const unsigned>>())
     .def("__call__", &PyDetBitFlip<PyEOT>::operator ())
     ;
 
@@ -316,9 +440,26 @@ bit_op()
         .def("__call__", &PyBitMutation<PyEOT>::operator ())
     ;
 
+    //TODO
+    //eoBitInversion
+    //eoBitNext
+    //eoBitPrev
+
+
+    //CROSSOVER
     class_<Py1PtBitXover<PyEOT>, bases<eoQuadOp<PyEOT> > >
         ("OnePtBitCrossover",init<>())
         .def("__call__",&Py1PtBitXover<PyEOT>::operator())
+    ;
+
+    class_<PyUBitXover<PyEOT>, bases<eoQuadOp<PyEOT> > >
+        ("UBitCrossover",init<optional<double>>())
+        .def("__call__",&PyUBitXover<PyEOT>::operator())
+    ;
+
+    class_<PyNPtsBitXover<PyEOT>, bases<eoQuadOp<PyEOT> > >
+        ("NPtsBitCrossover",init<optional<unsigned>>())
+        .def("__call__",&PyUBitXover<PyEOT>::operator())
     ;
 
 
