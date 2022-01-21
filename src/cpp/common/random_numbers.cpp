@@ -27,7 +27,6 @@ using namespace boost::python;
 #include <sstream>
 #include <boost/python/detail/api_placeholder.hpp>
 
-using namespace boost::python;
 
 // initialize static constants
 const uint32_t eoRng::K(0x9908B0DFU);
@@ -40,7 +39,7 @@ namespace eo
 }
 
 eoRng& get_rng() { return rng; }
-double normal(eoRng& rng) { return rng.normal(); }
+// double normal(eoRng& rng) { return rng.normal(); }
 
 std::string rng_to_string(const eoRng& _rng)
 {
@@ -72,7 +71,7 @@ struct RNG_pickle_suite : boost::python::pickle_suite
     }
 };
 
-int spin(eoRng& _rng, numpy::ndarray values, double total)
+int spin(eoRng& _rng, numpy::ndarray values, double total = 0.0)
 {
     if (total == 0.0)
         {
@@ -92,20 +91,37 @@ int spin(eoRng& _rng, numpy::ndarray values, double total)
     return --i;
 }
 
+
+
+BOOST_PYTHON_FUNCTION_OVERLOADS(spin_overload, spin, 2, 3)
+
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(flip_overload, eoRng::flip, 0, 1)
+//there is uniform(double m=1.0) and uniform(double min, double max)
+//deal with overloads and default args...
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(unif_zeroM, eoRng::uniform, 0, 1)
+
+double (eoRng::*normal1)(double) = &eoRng::normal;
+double (eoRng::*normal2)(double,double) = &eoRng::normal;
+
 void random_numbers()
 {
     class_<eoRng, boost::noncopyable>("eoRng", init<uint32_t>())
-        .def("flip", &eoRng::flip)
+        .def("reseed", &eoRng::reseed)
+        .def("uniform", static_cast<double (eoRng::*)(double)>(&eoRng::uniform),unif_zeroM())
+        .def("uniform", static_cast<double (eoRng::*)(double,double)>(&eoRng::uniform))
         .def("random", &eoRng::random)
+        .def("flip", &eoRng::flip, flip_overload())
+        .def("binomial",&eoRng::binomial)
+        .def("powerlaw",&eoRng::powerlaw)
+        .def("normal", normal1)
+        .def("normal", normal2)
+        .def("negexp", &eoRng::negexp)
         .def("rand", &eoRng::rand)
         .def("rand_max", &eoRng::rand_max)
-        .def("reseed", &eoRng::reseed)
-        // .def("uniform", &eoRng::uniform)
-        .def("normal", normal)
-        .def("negexp", &eoRng::negexp)
+        .def("roulette_wheel", spin, spin_overload())
+        .def("clearCache",&eoRng::clearCache)
         .def("to_string", rng_to_string)
         .def("from_string", rng_from_string)
-        .def("roulette_wheel", spin)
         .def_pickle(RNG_pickle_suite())
         ;
 
