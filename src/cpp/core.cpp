@@ -176,6 +176,8 @@ BOOST_PYTHON_MODULE(_core)
         .def("invalidateObjectiveVector",&PyEOT::invalidateObjectiveVector)
         .def("invalidObjectiveVector",&PyEOT::invalidObjectiveVector)
         .def("invalidate", &PyEOT::invalidate)
+        .def("invalid", &PyEOT::invalid)
+
         // .def("invalid", &PyEOT::invalid) //identical to invalidateObjectiveVector
         .def("__getitem__", &PyEOT::get_item)
         .def("__setitem__", &PyEOT::set_item)
