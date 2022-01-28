@@ -61,6 +61,8 @@ struct PyEOT_pickle_suite : bp::pickle_suite
 
 extern void registerConverters();
 
+extern void bounds();
+
 //EO - core
 extern void initialize();
 extern void evaluate();
@@ -83,7 +85,6 @@ extern void algos();
 extern void continuators();
 extern void reduce();
 
-extern void bounds();
 extern void real_op();
 extern void bit_op();
 
