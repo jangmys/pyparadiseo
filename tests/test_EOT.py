@@ -51,6 +51,7 @@ class TestEOT(unittest.TestCase):
         sol.objectiveVector = [1.1,2.2]
         sol.diversity = 4.2
 
+        #copy ctor
         sol2 = PyEOT(sol)
         self.assertEqual(sol2.encoding,[1,2,3,4])
         self.assertEqual(sol2.fitness,42.0)
@@ -58,11 +59,28 @@ class TestEOT(unittest.TestCase):
         self.assertEqual(sol2.objectiveVector[1],2.2)
         self.assertEqual(sol2.diversity,4.2)
 
+        #change sol
         sol.encoding = [0]
         sol.fitness = 2.0
         sol.objectiveVector = [0.1,0.2]
         sol.diversity = 2.2
 
+        #check that sol2 hasn't changed
+        self.assertEqual(sol2.encoding,[1,2,3,4])
+        self.assertEqual(sol2.fitness,42.0)
+        self.assertEqual(sol2.objectiveVector[0],1.1)
+        self.assertEqual(sol2.objectiveVector[1],2.2)
+        self.assertEqual(sol2.diversity,4.2)
+
+    def test_assignment(self):
+        sol = PyEOT()
+        sol.encoding = [1,2,3,4]
+        sol.fitness = 42.0
+        sol.objectiveVector = [1.1,2.2]
+        sol.diversity = 4.2
+
+        #copy ctor
+        sol2 = PyEOT(sol)
         self.assertEqual(sol2.encoding,[1,2,3,4])
         self.assertEqual(sol2.fitness,42.0)
         self.assertEqual(sol2.objectiveVector[0],1.1)

@@ -44,6 +44,16 @@ class test_eocontinue(unittest.TestCase):
                 else:
                     self.assertEqual(obj.__bases__[0].__name__,"eoContinue")
 
+    def test_eoGenContinue(self):
+        myGenContinue = continuator.GenContinue(42)
+
+        c=0
+        while True:
+            c = c + 1
+            if not myGenContinue(self.pop):
+                break
+        self.assertEqual(c,42)
+
     def test_eoEvalFuncCounter(self):
         #make counting_eval_function object from FitnessEval
         myEvalFuncCounter = continuator.EvalFuncCounter(self.eval,"test-string")
@@ -51,22 +61,14 @@ class test_eocontinue(unittest.TestCase):
         myEvalContinue = continuator.EvalContinue(myEvalFuncCounter,100)
 
         c=0
-        #stop after 100 evaluations
+        # stop after 100 evaluations
         while myEvalContinue(self.pop):
+            #if we don't invalidate, eval won't re-evaluate
+            self.ind1.invalidate()
             myEvalFuncCounter(self.ind1)
             c = c + 1
         self.assertEqual(c,100)
 
-    def test_eoGenContinue(self):
-        myGenContinue = continuator.GenContinue(42)
-
-        c=0
-        while True:
-            c = c + 1
-            print(c)
-            if not myGenContinue(self.pop):
-                break
-        self.assertEqual(c,42)
 
 
 if __name__ == '__main__':
