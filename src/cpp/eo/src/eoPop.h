@@ -18,7 +18,7 @@
    License along with this library; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-Authors: 
+Authors:
     todos@geneura.ugr.es, http://geneura.ugr.es
     jmerelo
     gustavoromero
@@ -126,7 +126,7 @@ class eoPop: public std::vector<EOT>, public eoObject, public eoPersistent
           each element should be in different lines
           @param _is the stream
         */
-        eoPop( std::istream& _is ) :std::vector<EOT>() 
+        eoPop( std::istream& _is ) :std::vector<EOT>()
         {
             readFrom( _is );
         }
@@ -183,7 +183,7 @@ class eoPop: public std::vector<EOT>, public eoObject, public eoPersistent
         void shuffle(void)
         {
             UF_random_generator<unsigned int> gen;
-            std::random_shuffle(begin(), end(), gen);
+            std::shuffle(begin(), end(), gen);
         }
 
 
@@ -195,7 +195,7 @@ class eoPop: public std::vector<EOT>, public eoObject, public eoPersistent
             std::transform(begin(), end(), result.begin(), Ref());
 
             UF_random_generator<unsigned int> gen;
-            std::random_shuffle(result.begin(), result.end(), gen);
+            std::shuffle(result.begin(), result.end(), gen);
         }
 
 
@@ -378,4 +378,3 @@ class eoPop: public std::vector<EOT>, public eoObject, public eoPersistent
 }; // class eoPop
 
 #endif // _EOPOP_H_
-
