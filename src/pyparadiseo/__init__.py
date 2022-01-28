@@ -18,6 +18,7 @@ from .core import eoPopLoopEval as PopLoopEval
 from .core import eoInit
 #
 from .core import pyeoInit as Init
+from .core import BinaryInit
 
 #  EO RNG
 from .core import eoRng
