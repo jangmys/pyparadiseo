@@ -45,7 +45,7 @@ void continuators()
     /* Counters, wrappers etc */
     class_<eoEvalFuncCounter<PyEOT>, bases<eoEvalFunc<PyEOT> > >
         ("eoEvalFuncCounter",
-         init< eoEvalFunc<PyEOT>&, std::string>()
+         init< eoEvalFunc<PyEOT>&, optional<std::string>>()
          [
           with_custodian_and_ward<1, 2>()
          ]
