@@ -3,6 +3,9 @@
 
 #include <eoEvalFunc.h>
 #include <eoInit.h>
+#include <eoRealInitBounded.h>
+#include <utils/eoRealVectorBounds.h>
+
 #include <eoTransform.h>
 #include <eoSGATransform.h>
 #include <eoPopEvalFunc.h>
@@ -66,8 +69,53 @@ private:
     eoUniformGenerator<T> _gen;
 };
 
+//TODO : merge with unbounded (FIxedLength)
+class pyRealInitBounded : public eoInit<PyEOT>{
+public:
+    /** Ctor - from eoRealVectorBounds */
+    pyRealInitBounded(eoRealVectorBounds & _bounds):bounds(_bounds)
+    {
+        if (!bounds.isBounded())
+            throw eoException("Needs bounded bounds to initialize a std::vector<double>");
+    }
+
+    /** simply passes the argument to the uniform method of the bounds */
+    virtual void operator()(PyEOT& _eo)
+    {
+        if(_eo.encoding.ptr() == Py_None)
+        {
+            _eo.encoding = np::zeros(p::make_tuple(bounds.size()),np::dtype::get_builtin<double>());
+        }
+
+        // get ndarray from object
+        np::ndarray arr = np::from_object(_eo.encoding, np::dtype::get_builtin<double>());
+
+        for(unsigned i=0;i<arr.shape(0);i++)
+        {
+            arr[i] = bounds.uniform(i);
+        }
+
+        _eo.invalidate();
+    }
+private:
+    eoRealVectorBounds & bounds;
+};
 
 
+
+
+
+// void operator_wrap(eoRealVectorBounds& b, PyEOT& _eo)
+// {
+//     // get ndarray from object
+//     np::ndarray e1 = np::from_object(_eo.encoding, np::dtype::get_builtin<double>());
+//
+//     //get std::vector from ndarray
+//     std::vector<double> ind1(reinterpret_cast<double*>(e1.get_data()),
+//         reinterpret_cast<double*>(e1.get_data())+e1.shape(0));
+//
+//     b.uniform(ind1);
+// }
 
 
 
@@ -90,5 +138,11 @@ initialize()
         ("BinaryInit", init<unsigned>())
     .def("__call__", &FixedLengthInit<bool>::operator ())
     ;
+
+    class_<pyRealInitBounded, bases<eoInit<PyEOT>>, boost::noncopyable> ("RealInitBounded", init<eoRealVectorBounds&>())
+    // .def("__call__", operator_wrap)
+    .def("__call__", &pyRealInitBounded::operator ())
+    ;
+
 
 } // abstract
