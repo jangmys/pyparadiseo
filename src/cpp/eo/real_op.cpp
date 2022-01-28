@@ -250,7 +250,7 @@ public:
      *               0 == contractive application
      *               Must be positive
      */
-    PySegmentCrossover(const double& _alpha = 0.0)
+    PySegmentCrossover(const double _alpha = 0.0)
         : bounds(eoDummyVectorNoBounds), alpha(_alpha), range(1 + 2 * _alpha){ }
 
     /**
@@ -262,7 +262,7 @@ public:
      *               Must be positive
      */
     PySegmentCrossover(eoRealVectorBounds & _bounds,
-      const double                        & _alpha = 0.0)
+      const double                         _alpha = 0.0)
         : bounds(_bounds), alpha(_alpha), range(1 + 2 * _alpha){ }
 
     /// The class name.
@@ -586,19 +586,17 @@ real_op()
 
 
     class_<PySegmentCrossover<PyEOT>, bases<eoQuadOp<PyEOT> >, boost::noncopyable>
-        ("SegmentCrossover", init<double&>()
+        ("SegmentCrossover", init<double>()
         [
             with_custodian_and_ward<1,2>()
         ]
     )
     .def(init<
           eoRealVectorBounds&,
-          const double&
+          const double
       >()
       [
-          with_custodian_and_ward<1, 2,
-          with_custodian_and_ward<1, 3
-          >>()
+          with_custodian_and_ward<1, 2>()
       ]
     )
     .def("__call__", &PySegmentCrossover<PyEOT>::operator ())
