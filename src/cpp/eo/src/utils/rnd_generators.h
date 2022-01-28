@@ -126,10 +126,17 @@ inline bool random_generator<bool>::operator()(void)
 template <class T = uint32_t> class UF_random_generator
 {
   public :
-    UF_random_generator(eoRng& _rng = rng) :
+  typedef T result_type;
+  // using result_type = T;
+
+  UF_random_generator(eoRng& _rng = rng) :
       random(_rng) {}
 
-  T operator()(T _t) { return (T) (random.random(_t)); }
+  static T min(){ return 0; }
+  static T max(){ return std::numeric_limits<T>::max(); }
+
+  T operator()() { return (T) (random.random(max())); }
+  // T operator()(T _t) { return (T) (random.random(_t)); }
 
 private :
   eoRng& random;
