@@ -165,6 +165,12 @@ struct PyEOT : public MOEO< realObjVec, double, double>
         }
     }
 
+    bool invalid() const
+    {
+        return invalidFitness();
+    }
+
+
 
     std::string to_string() const
     {
