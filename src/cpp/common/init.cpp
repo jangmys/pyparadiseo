@@ -14,6 +14,8 @@
 #include <pyeot.h>
 #include <utils/def_abstract_functor.h>
 
+#include <random>
+
 namespace p=boost::python;
 namespace np=boost::python::numpy;
 
@@ -102,7 +104,41 @@ private:
 };
 
 
+class pyInitPermutation : public eoInit<PyEOT>{
+public:
+    pyInitPermutation(unsigned _chromSize, unsigned _startFrom = 0) : chromSize(_chromSize), startFrom(_startFrom){}
 
+    virtual void operator()(PyEOT& _eo)
+    {
+        if(_eo.encoding.ptr() == Py_None)
+        {
+            _eo.encoding = np::zeros(p::make_tuple(chromSize),np::dtype::get_builtin<int>());
+        }
+
+        np::ndarray arr = np::from_object(_eo.encoding, np::dtype::get_builtin<int>());
+
+        int* ptr = reinterpret_cast<int*>(arr.get_data());
+        std::vector<int> vec(ptr, ptr + arr.shape(0));
+
+        for(unsigned i=0;i<arr.shape(0);i++)
+        {
+            vec[i] = startFrom + i;
+        }
+
+        std::random_device rd;
+        std::mt19937 g(rd());
+
+        std::shuffle(vec.begin(),vec.end(), g);
+        std::copy(vec.begin(), vec.end(), ptr);
+
+        _eo.invalidate();
+    }
+
+private:
+    unsigned chromSize;
+    unsigned startFrom;
+    UF_random_generator<unsigned int> gen;
+};
 
 
 // void operator_wrap(eoRealVectorBounds& b, PyEOT& _eo)
@@ -140,9 +176,10 @@ initialize()
     ;
 
     class_<pyRealInitBounded, bases<eoInit<PyEOT>>, boost::noncopyable> ("RealInitBounded", init<eoRealVectorBounds&>())
-    // .def("__call__", operator_wrap)
     .def("__call__", &pyRealInitBounded::operator ())
     ;
 
-
-} // abstract
+    class_<pyInitPermutation, bases<eoInit<PyEOT>>, boost::noncopyable> ("PermutationInit", init<unsigned,optional<unsigned>>())
+    .def("__call__", &pyInitPermutation::operator ())
+    ;
+}
