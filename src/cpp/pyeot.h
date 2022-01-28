@@ -53,6 +53,9 @@ struct PyEOT : public MOEO< realObjVec, double, double>
     //we inherit from MOEO but don't want this by default ... reversing without interfering in MOEO module...
     bool operator<(const PyEOT & _other) const
       {
+        if(getFitness().is_none())
+            std::cout<<"can't compare< NoneType\n";
+
         return getFitness() < _other.getFitness();
       }
 
@@ -192,6 +195,12 @@ struct PyEOT : public MOEO< realObjVec, double, double>
 
         return result;
     }
+
+    void printOn(std::ostream & _os) const
+      {
+        _os << to_string() << ' ';
+      }
+
 };
 
 #endif
