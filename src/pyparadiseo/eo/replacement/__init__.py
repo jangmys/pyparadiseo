@@ -5,6 +5,6 @@ from ...core import eoCommaReplacement as CommaReplacement
 from ...core import eoEPReplacement as EPReplacement
 from ...core import eoReduceMerge as ReduceMerge
 from ...core import eoSSGAWorseReplacement as SSGAWorseReplacement
-from ...core import eoSSGADetTournamentReplacement as SGADetTournamentReplacement
+from ...core import eoSSGADetTournamentReplacement as SSGADetTournamentReplacement
 from ...core import eoSSGAStochTournamentReplacement as SSGAStochTournamentReplacement
 from ...core import eoMGGReplacement as MGGReplacement
