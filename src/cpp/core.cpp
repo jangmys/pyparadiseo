@@ -6,6 +6,7 @@
 #include <utils/to_string.h>
 #include <utils/to_std_vector.h>
 #include <utils/index_error.h>
+#include <utils/eoLogger.h>
 
 #include <pyeot.h>
 
@@ -226,6 +227,8 @@ BOOST_PYTHON_MODULE(_core)
     // fitnessAssign();
     // diversityAssign();
     // moeoreplacement();
+
+    eo::log << eo::setlevel(eo::warnings);
 }
 
 // to avoid having to build with libeo.a
