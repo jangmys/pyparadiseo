@@ -66,6 +66,8 @@ struct moLocalSearchWrap : moLocalSearch<PyNeighbor>,wrapper<moLocalSearch<PyNei
         searchExplorer.getCurrentNeighbor().setMoveBack(_obj);
     }
 };
+
+/***
 //
 // #define WRAP(X) struct XWrap : X<PyNeighbor>,wrapper<X<PyNeighbor>>\
 //     {\
@@ -80,7 +82,7 @@ struct moLocalSearchWrap : moLocalSearch<PyNeighbor>,wrapper<moLocalSearch<PyNei
 //         explorer.getCurrentNeighbor().setMoveBack(_obj);}};
 //
 // WRAP(moSimpleHC)
-
+*///
 
 
 //

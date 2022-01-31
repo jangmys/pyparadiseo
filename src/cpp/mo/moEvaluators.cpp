@@ -12,11 +12,55 @@
 #include <eval/moFullEvalByModif.h>
 
 
+
+struct pyNeighborEval : moEval<PyNeighbor> {
+    pyNeighborEval() : moEval<PyNeighbor>(){ };
+
+    pyNeighborEval(boost::python::object _op) :
+        moEval<PyNeighbor>(),
+        eval_op(_op)
+    { };
+
+    void
+    setEvalFunc(boost::python::object obj)
+    {
+        eval_op = obj;
+    }
+
+    void
+    operator () (PyEOT& _eo, PyNeighbor& _nbor)
+    {
+        if (eval_op.ptr() != Py_None) {
+            _eo.setFitness(
+                boost::python::call<boost::python::object>(eval_op.ptr(),_eo,_nbor)
+            );
+        } else {
+            std::cout << "no function defined : do nothing";
+        }
+    }
+
+private:
+    boost::python::object eval_op;
+};
+
+
+
+
 void moEvaluators(){
     using namespace boost::python;
 
     def_abstract_functor<moEval<PyNeighbor> >("moEval");
     def_abstract_functor<moNeighborhoodEvaluation<PyNeighbor> >("moNeighborhoodEvaluation");
+
+    class_<pyNeighborEval, bases<moEval<PyNeighbor>>>
+        ("NeighborEval", init<>())
+    .def(init<boost::python::object>()
+    [WC1]
+    )
+    .def("set_eval_func", &pyNeighborEval::setEvalFunc)
+    .def("__call__", &pyNeighborEval::operator ())
+    ;
+
 
     class_<moFullEvalByCopy<PyNeighbor>,bases<moEval<PyNeighbor>>>
     ("moFullEvalByCopy",
