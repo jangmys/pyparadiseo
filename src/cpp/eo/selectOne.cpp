@@ -25,6 +25,8 @@
 #include <eoTruncatedSelectOne.h>
 #include <eoSequentialSelect.h>
 #include <eoSelectFromWorth.h>
+#include <eoProportionalSelect.h>
+
 
 #include <selection/moeoSelectOne.h>
 #include <selection/moeoDetTournamentSelect.h>
@@ -105,8 +107,8 @@ void selectOne()
 	.def("__call__", &eoDetTournamentSelect<PyEOT>::operator(), return_value_policy<copy_const_reference>() )
 	.def("setup", &eoDetTournamentSelect<PyEOT>::setup);
 
-
     add_select<eoStochTournamentSelect<PyEOT> >("eoStochTournamentSelect", init<>(), init<double>() );
+
     add_select<eoTruncatedSelectOne<PyEOT> >("eoTruncatedSelectOne",
 					    init<eoSelectOne<PyEOT>&, double>()[WC1],
 					    init<eoSelectOne<PyEOT>&, eoHowMany >()[WC1]
@@ -114,7 +116,7 @@ void selectOne()
 
     // eoProportionalSelect is not feasible to implement at this point as fitness is not recognizable as a float
     // use eoDetTournament instead: with a t-size of 2 it is equivalent to eoProportional with linear scaling
-    //add_select<eoProportionalSelect<PyEOT> >("eoProportionalSelect", init<eoPop<PyEOT>&>() );
+    add_select<eoProportionalSelect<PyEOT> >("eoProportionalSelect", init<eoPop<PyEOT>&>() );
 
     add_select<eoRandomSelect<PyEOT> >("eoRandomSelect");
     add_select<eoBestSelect<PyEOT> >("eoBestSelect");
