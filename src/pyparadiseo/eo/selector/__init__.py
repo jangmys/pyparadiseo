@@ -5,10 +5,12 @@ from ...core import eoSelectNumber as SelectNumber
 from ...core import eoSelectPerc as SelectPerc
 from ...core import eoTruncSelect as TruncSelect
 from ...core import eoTruncatedSelectMany as TruncatedSelectMany
+
 # from selectOne.cpp
 from ...core import eoSelectOne as SelectOne
 from ...core import eoDetTournamentSelect as DetTournamentSelect
-# from ..._core import eoStochTournamentSelect as StochTournamentSelect
+from ...core import eoStochTournamentSelect as StochTournamentSelect
+from ...core import eoProportionalSelect as ProportionalSelect
 from ...core import eoTruncatedSelectOne as TruncatedSelectOne
 from ...core import eoRandomSelect as RandomSelect
 from ...core import eoNoSelect as NoSelect
