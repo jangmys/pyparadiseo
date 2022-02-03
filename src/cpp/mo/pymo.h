@@ -57,21 +57,6 @@ public:
             std::cout<<"no moveBack defined : do nothing";
     }
 
-    void index(PyEOT& _sol, unsigned int _key)
-    {
-        if (bp::override index = this->get_override("index"))
-        {
-            index(_sol,_key);
-            // return;
-        }
-        moIndexNeighbor<PyEOT>::index(_sol,_key);
-    }
-    void default_index(PyEOT& _sol, unsigned int _key)
-    {
-        this->moIndexNeighbor<PyEOT>::index(_sol,_key);
-        // std::cout<<"INDEX..."<<_key<<" "<<key<<"\n";
-    }
-//
     //virtual with defaults
     bool equals(PyNeighbor& _neighbor)
     {
