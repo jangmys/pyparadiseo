@@ -41,6 +41,7 @@ set(moSources
     src/cpp/mo/moExplorer.cpp
     src/cpp/mo/moContinuator.cpp
     src/cpp/mo/moAlgo.cpp
+    src/cpp/mo/moComparator.cpp
 )
 
 set(eoSources
