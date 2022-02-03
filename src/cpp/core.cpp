@@ -96,6 +96,8 @@ extern void moNeighborhoods();
 extern void moExplorers();
 extern void moContinuators();
 extern void moAlgos();
+extern void moComparators();
+
 
 BOOST_PYTHON_MODULE(_core)
 {
@@ -222,6 +224,7 @@ BOOST_PYTHON_MODULE(_core)
     moExplorers();
     moContinuators();
     moAlgos();
+    moComparators();
 
     //MOEO
     // fitnessAssign();
