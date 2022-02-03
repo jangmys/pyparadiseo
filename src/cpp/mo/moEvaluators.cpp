@@ -31,8 +31,8 @@ struct pyNeighborEval : moEval<PyNeighbor> {
     operator () (PyEOT& _eo, PyNeighbor& _nbor)
     {
         if (eval_op.ptr() != Py_None) {
-            _eo.setFitness(
-                boost::python::call<boost::python::object>(eval_op.ptr(),_eo,_nbor)
+            _nbor.setFitness(
+                boost::python::call<boost::python::object>(eval_op.ptr(),_eo.encoding,_eo.getFitness(),_nbor.index())
             );
         } else {
             std::cout << "no function defined : do nothing";
