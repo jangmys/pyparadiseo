@@ -1,7 +1,7 @@
 from ..core import eoContinue as Continue
 
 # move to eval?
-from ..core import eoEvalFuncCounter as EvalFuncCounter
+# from ..core import eoEvalFuncCounter as EvalFuncCounter
 
 from ..core import eoEvalContinue as EvalContinue
 
