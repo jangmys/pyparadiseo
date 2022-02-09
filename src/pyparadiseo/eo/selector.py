@@ -1,3 +1,5 @@
+from ..core import eoSelect as Select
+
 # from selectors.cpp
 from ..core import eoDetSelect as DetSelect
 from ..core import eoSelectMany as SelectMany

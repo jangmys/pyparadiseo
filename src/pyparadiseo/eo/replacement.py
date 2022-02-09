@@ -1,3 +1,5 @@
+from ..core import eoReplacement as Replacement
+
 from ..core import eoWeakElitistReplacement as WeakElitistReplacement
 from ..core import eoMergeReduce as MergeReduce
 from ..core import eoPlusReplacement as PlusReplacement
