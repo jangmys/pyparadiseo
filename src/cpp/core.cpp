@@ -73,6 +73,8 @@ extern void random_numbers();
 extern void pop();
 extern void geneticOps();
 extern void transform();
+extern void mergers();
+extern void reduce();
 
 extern void selectOne();
 extern void PyEOTSelectOne();
@@ -200,6 +202,9 @@ BOOST_PYTHON_MODULE(_core)
     //EO (evolutionary)
     pop();
     geneticOps();
+
+    mergers();
+    reduce();
     transform();
 
     selectOne();

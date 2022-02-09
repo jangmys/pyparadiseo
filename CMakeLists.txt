@@ -47,6 +47,8 @@ set(moSources
 set(eoSources
     src/cpp/eo/pop.cpp
     src/cpp/eo/geneticOps.cpp
+    src/cpp/eo/mergers.cpp
+    src/cpp/eo/reduce.cpp
     src/cpp/eo/transform.cpp
     src/cpp/eo/selectOne.cpp
     src/cpp/eo/selectors.cpp
