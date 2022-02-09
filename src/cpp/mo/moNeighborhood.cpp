@@ -9,6 +9,10 @@
 #include <neighborhood/moIndexNeighborhood.h>
 #include <neighborhood/moOrderNeighborhood.h>
 
+#include <neighborhood/moRndWithoutReplNeighborhood.h>
+#include <neighborhood/moRndWithReplNeighborhood.h>
+
+
 using namespace boost::python;
 
 struct moNeighborhoodWrap : moNeighborhood<PyNeighbor>,
@@ -84,6 +88,13 @@ struct moIndexNeighborhoodWrap : moIndexNeighborhood<PyNeighbor>,
 };
 
 
+template<typename X>
+bool isRandom(X& _nhood)
+{
+    return true;
+}
+
+
 void moNeighborhoods()
 {
     //ABC
@@ -121,4 +132,24 @@ void moNeighborhoods()
     .def("next",&moDummyNeighborhood<PyNeighbor>::next)
     .def("cont",&moDummyNeighborhood<PyNeighbor>::cont)
     ;
+
+    class_<moRndWithoutReplNeighborhood<PyNeighbor>,bases<moIndexNeighborhood<PyNeighbor>>>
+    ("moRndWithoutReplNeighborhood",init<unsigned>())
+    .def("has_neighbor",&moRndWithoutReplNeighborhood<PyNeighbor>::hasNeighbor)
+    .def("init",&moRndWithoutReplNeighborhood<PyNeighbor>::init)
+    .def("next",&moRndWithoutReplNeighborhood<PyNeighbor>::next)
+    .def("cont",&moRndWithoutReplNeighborhood<PyNeighbor>::cont)
+    .def("isRandom",isRandom<moRndWithoutReplNeighborhood<PyNeighbor>>)
+    .def("position",&moRndWithoutReplNeighborhood<PyNeighbor>::position)
+    ;
+
+    class_<moRndWithReplNeighborhood<PyNeighbor>,bases<moIndexNeighborhood<PyNeighbor>>>
+    ("moRndWithReplNeighborhood",init<unsigned>())
+    .def("has_neighbor",&moRndWithReplNeighborhood<PyNeighbor>::hasNeighbor)
+    .def("init",&moRndWithReplNeighborhood<PyNeighbor>::init)
+    .def("next",&moRndWithReplNeighborhood<PyNeighbor>::next)
+    .def("cont",&moRndWithReplNeighborhood<PyNeighbor>::cont)
+    .def("isRandom",isRandom<moRndWithReplNeighborhood<PyNeighbor>>)
+    ;
+
 }

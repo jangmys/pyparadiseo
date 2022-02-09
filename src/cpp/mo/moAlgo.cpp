@@ -331,6 +331,16 @@ struct moNeutralHCWrap : moNeutralHC<PyNeighbor>,wrapper<moNeutralHC<PyNeighbor>
         .def("setMoveBack",&X::setMoveBack)
 
 
+template<typename X>
+void setMove(X& _ls, boost::python::object _obj)
+{
+    _ls.getNeighborhoodExplorer().getSelectedNeighbor().setMove(_obj);
+    _ls.getNeighborhoodExplorer().getCurrentNeighbor().setMove(_obj);
+}
+
+// template void setMove<moRandomWalk<PyNeighbor>>();
+
+
 void moAlgos()
 {
     class_<moLocalSearchWrap,boost::noncopyable>
@@ -397,6 +407,22 @@ void moAlgos()
     >())
     ;
 
+    class_<moRandomWalk<PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
+    ("moRandomWalk",init<
+    moNeighborhood<PyNeighbor>&,
+    eoEvalFunc<PyEOT>&,
+    moEval<PyNeighbor>&,
+    unsigned
+    >())
+    .def(init<
+        moNeighborhood<PyNeighbor>&,
+        eoEvalFunc<PyEOT>&,
+        moEval<PyNeighbor>&,
+        moContinuator<PyNeighbor>&
+    >())
+    .def("setMove",setMove<moRandomWalk<PyNeighbor>>)
+    ;
+
     class_<moRandomNeutralWalk<PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
     ("moRandomNeutralWalk",init<
         moNeighborhood<PyNeighbor>&,
@@ -419,22 +445,9 @@ void moAlgos()
         moContinuator<PyNeighbor>&,
         moSolNeighborComparator<PyNeighbor>&
     >())
+    .def("setMove",setMove<moRandomNeutralWalk<PyNeighbor>>)
     ;
 
-    class_<moRandomWalk<PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
-    ("moRandomWalk",init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
-        unsigned
-    >())
-    .def(init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
-        moContinuator<PyNeighbor>&
-    >())
-    ;
 
 
     class_<moMetropolisHasting<PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
