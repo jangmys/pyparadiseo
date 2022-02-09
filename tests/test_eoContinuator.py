@@ -1,6 +1,7 @@
 from pyparadiseo import PyEOT
 from pyparadiseo import eo
 from pyparadiseo.eo import continuator
+from pyparadiseo import evaluator
 
 from pyparadiseo import Init
 from pyparadiseo import FitnessEval
@@ -56,7 +57,7 @@ class test_eocontinue(unittest.TestCase):
 
     def test_eoEvalFuncCounter(self):
         #make counting_eval_function object from FitnessEval
-        myEvalFuncCounter = continuator.EvalFuncCounter(self.eval,"test-string")
+        myEvalFuncCounter = evaluator.EvalFuncCounter(self.eval,"test-string")
         #make eval_continuator : 100 evaluations
         myEvalContinue = continuator.EvalContinue(myEvalFuncCounter,100)
 
