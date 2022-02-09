@@ -41,6 +41,7 @@ release = '0.1'
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
+    'sphinx.ext.autosummary',
     "sphinx.ext.napoleon"
 ]
 
@@ -125,7 +126,9 @@ def setup(app):
     pyparadiseo.eo.selector.TruncSelect.__name__ = 'TruncSelect'
     pyparadiseo.eo.selector.TruncatedSelectMany.__name__ = 'TruncatedSelectMany'
 
-
+    import pyparadiseo.eo.continuator
+    pyparadiseo.eo.continuator.EvalContinue.__name__ = 'EvalContinue'
+    pyparadiseo.eo.continuator.GenContinue.__name__ = 'GenContinue'
 
     import pyparadiseo.eo.transform
     pyparadiseo.eo.transform.SGATransform.__name__ = 'SGATransform'
