@@ -157,7 +157,7 @@ public:
 
   /** test: are ALL components within the bounds?
    */
-  virtual bool isInBounds(std::vector<double> _v)
+  virtual bool isInBounds(const std::vector<double> _v)
   {
     for (unsigned i=0; i<size(); i++)
       if (! isInBounds(i, _v[i]))

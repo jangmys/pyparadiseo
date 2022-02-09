@@ -1,7 +1,7 @@
 from ._core import eoInit
 from ._core import pyeoInit
 
-import numpy as np
+# import numpy as np
 
 def get_init(solution_encoding,len=None):
     """
@@ -19,13 +19,10 @@ def get_init(solution_encoding,len=None):
     else:
         pass
 
-import numba as nb
 
 
 
 
-
-@nb.jit(cache=True,nopython=True)
 def rand_bits(len_):
     x=np.random.randint(0,2,len_)
     return x
@@ -47,7 +44,6 @@ def get_binary_solution_generator(len_):
 
 
 #############################################
-@nb.jit(cache=True,nopython=True)
 def rand_ints(lb,ub):
     x=np.zeros(len(lb))
     for i,_ in enumerate(x):

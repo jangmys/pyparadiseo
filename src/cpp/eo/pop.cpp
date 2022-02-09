@@ -20,9 +20,9 @@ int pop_size(eoPop<PyEOT>& pop) {
     return pop.size();
 }
 
-void pop_sort(eoPop<PyEOT>& pop) {
-    pop.sort();
-}
+// void pop_sort(eoPop<PyEOT>& pop) {
+//     pop.sort();
+// }
 
 void pop_shuffle(eoPop<PyEOT>& pop){
     pop.shuffle();
@@ -68,6 +68,8 @@ void pop_resize(eoPop<PyEOT>& pop, unsigned i) {
 
 
 
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(pop_sort_overload, sort, 0, 1)
+
 void pop()
 {
     using namespace boost::python;
@@ -80,7 +82,8 @@ void pop()
     // .def("__str__", pop_to_string)
     .def("__str__", pop_to_string)
     .def("__len__", pop_size)
-    .def("sort",    pop_sort )
+    .def("sort", static_cast<void (eoPop<PyEOT>::*)(void)>(&eoPop<PyEOT>::sort))
+    .def("sort", static_cast<void (eoPop<PyEOT>::*)(std::vector<const PyEOT*>&) const >(&eoPop<PyEOT>::sort))
     .def("shuffle", pop_shuffle)
     .def("__getitem__", pop_getitem, return_internal_reference<>() )
     .def("__setitem__", pop_setitem)
