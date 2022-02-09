@@ -8,4 +8,5 @@ class test_mocontinuator(unittest.TestCase):
     def test_bases(self):
         for name, obj in inspect.getmembers(eval):
             if inspect.isclass(obj):
-                self.assertEqual(obj.__bases__[0].__name__,"moEval")
+                if name != "Eval" and name != "NeighborhoodEvaluation":
+                    self.assertEqual(obj.__bases__[0].__name__,"moEval")

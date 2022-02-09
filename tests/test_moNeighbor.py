@@ -1,5 +1,6 @@
 from pyparadiseo import PyEOT
-from pyparadiseo import mo
+from pyparadiseo.mo import neighborhood
+from pyparadiseo.mo.neighborhood import Neighbor
 
 import unittest
 import numpy as np
@@ -10,9 +11,9 @@ class TestNeighbor(unittest.TestCase):
     def tearDown(self):
         pass
     def test_ctor(self):
-        sol = mo.Neighbor()
+        sol = Neighbor()
     def test_Fitness(self):
-        nbor = mo.Neighbor()
+        nbor = Neighbor()
         nbor.fitness = 3.0
         self.assertEqual(nbor.fitness,3.0)
 
@@ -28,19 +29,19 @@ class TestNeighbor(unittest.TestCase):
         nbor.fitness = np.int64(5)
         self.assertEqual(nbor.fitness,5)
 
-        nbor2 = mo.Neighbor()
+        nbor2 = Neighbor()
         nbor2.fitness = 3.0
 
         self.assertFalse(nbor.equals(nbor2),"default equals is false")
 
     def test_assign(self):
-        nbor = mo.Neighbor()
+        nbor = Neighbor()
         nbor.fitness = 3.0
         nbor.index(4)
         self.assertEqual(nbor.fitness,3.0)
         self.assertEqual(nbor.index(),4)
 
-        nbor2 = mo.Neighbor()
+        nbor2 = Neighbor()
         nbor2.reassign(nbor)
         self.assertEqual(nbor2.fitness,3.0)
         self.assertEqual(nbor2.index(),4)
@@ -56,7 +57,7 @@ class TestNeighbor(unittest.TestCase):
         #a solution
         sol = PyEOT()
 
-        nbor = mo.Neighbor()
+        nbor = Neighbor()
         nbor.setMove(mv)
 
         nbor.move(sol)
@@ -70,7 +71,7 @@ class TestNeighbor(unittest.TestCase):
 
     def test_index(self):
         sol = PyEOT()
-        nbor = mo.Neighbor()
+        nbor = Neighbor()
 
         nbor.index(sol,1)
         self.assertEqual(nbor.index(),1)

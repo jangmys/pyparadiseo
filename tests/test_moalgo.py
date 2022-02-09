@@ -16,4 +16,5 @@ class test_moalgo(unittest.TestCase):
     def test_bases(self):
         for name, obj in inspect.getmembers(algo):
             if inspect.isclass(obj):
-                self.assertEqual(obj.__bases__[0].__name__,"moLocalSearch")
+                if name != "LocalSearch":
+                    self.assertEqual(obj.__bases__[0].__name__,"moLocalSearch")

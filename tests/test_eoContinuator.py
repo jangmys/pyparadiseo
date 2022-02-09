@@ -41,7 +41,7 @@ class test_eocontinue(unittest.TestCase):
             if inspect.isclass(obj):
                 if name == "EvalFuncCounter":
                     self.assertEqual(obj.__bases__[0].__name__,"eoEvalFunc")
-                else:
+                elif name != "Continue":
                     self.assertEqual(obj.__bases__[0].__name__,"eoContinue")
 
     def test_eoGenContinue(self):

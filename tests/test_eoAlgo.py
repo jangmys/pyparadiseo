@@ -9,6 +9,5 @@ class test_eoAlgo(unittest.TestCase):
         for name, obj in inspect.getmembers(algo):
             if name == "Algo":
                 self.assertEqual(obj.__bases__[0].__name__,"instance")
-
             elif inspect.isclass(obj):
                 self.assertEqual(obj.__bases__[0].__name__,"eoAlgo")

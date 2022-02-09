@@ -2,11 +2,12 @@ from pyparadiseo import PyEOT
 
 from pyparadiseo import mo
 from pyparadiseo.mo import neighborhood
+from pyparadiseo.mo.neighborhood import Neighbor
 
 import unittest
 import numpy as np
 
-class TestNeighbor(unittest.TestCase):
+class TestNeighborhood(unittest.TestCase):
     def setUp(self):
         pass
     def tearDown(self):
@@ -45,7 +46,7 @@ class TestNeighbor(unittest.TestCase):
 
     def test_orderNeighborhood(self):
         sol = PyEOT()
-        nbor= mo.Neighbor()
+        nbor= Neighbor()
 
         nhood = mo.neighborhood.OrderNeighborhood()
         self.assertFalse(nhood.has_neighbor(sol)) #no size given in ctor
