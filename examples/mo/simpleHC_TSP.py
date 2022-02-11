@@ -14,13 +14,16 @@ import time
 
 import numpy as np
 
+
+
+
 if __name__ == "__main__":
     tsp = tsp.TravelingSalesman("berlin52")
 
     tsp_init = pp.core.PermutationInit(tsp.ncities)
     toureval = pp.FitnessEval(tsp.eval)
 
-    sol = pp.PyEOT()
+    sol = pp.Solution()
     tsp_init(sol)
     toureval(sol)
     print(sol)

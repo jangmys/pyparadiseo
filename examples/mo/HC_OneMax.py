@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     ########################################
     # define sol / init / eval
-    sol = pp.PyEOT()
+    sol = pp.Solution()
     myinit(sol)
     myeval(sol)
     # print(sol)
@@ -144,6 +144,52 @@ if __name__ == "__main__":
     print(sol)
     #######################################
 
+
+    # hc = mo.algo.RandomWalk(nhood,myeval,nborEval,100)
+    hc = mo.algo.MetropolisHasting(rnd_nhood,myeval,nborEval,1000000)
+    # set move
+    hc.setMove(max_one.move)
+
+    myinit(sol)
+    myeval(sol)
+
+    t1 = time.time()
+    hc(sol)
+
+    print("MetropolisHasting elapsed:\t",time.time()-t1)
+    print(sol)
+
+
+
+    # hc = mo.algo.RandomWalk(nhood,myeval,nborEval,100)
+    hc = mo.algo.SA(rnd_nhood,myeval,nborEval,100,0.99)
+    # set move
+    hc.setMove(max_one.move)
+
+    myinit(sol)
+    myeval(sol)
+
+    t1 = time.time()
+    hc(sol)
+
+    print("SA elapsed:\t",time.time()-t1)
+    print(sol)
+
+
+
+    # hc = mo.algo.RandomWalk(nhood,myeval,nborEval,100)
+    hc = mo.algo.TS(nhood,myeval,nborEval,100,100)
+    # set move
+    hc.setMove(max_one.move)
+    #
+    myinit(sol)
+    myeval(sol)
+    #
+    # t1 = time.time()
+    # hc(sol)
+    #
+    # print("SA elapsed:\t",time.time()-t1)
+    # print(sol)
 
 
 
