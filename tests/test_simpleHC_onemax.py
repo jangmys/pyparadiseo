@@ -52,7 +52,7 @@ class test_simpleHC_onemax(unittest.TestCase):
         hc.setMove(self.move)
 
         # define sol / init / eval
-        sol = pp.PyEOT()
+        sol = pp.Solution()
         self.myinit(sol)
         self.myeval(sol)
 

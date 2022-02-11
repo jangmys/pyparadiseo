@@ -1,4 +1,4 @@
-from pyparadiseo import PyEOT,Pop,Init
+from pyparadiseo import Solution,Pop,Init
 
 import unittest
 import numpy as np
@@ -57,7 +57,7 @@ class Test_Pop(unittest.TestCase):
         self.assertEqual(bestind.fitness,99)
     def test_push_back(self):
         self.pop.append(10,self.init)
-        ind = PyEOT()
+        ind = Solution()
         self.init(ind)
         ind.fitness = 42
         self.pop.push_back(ind)

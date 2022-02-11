@@ -1,4 +1,4 @@
-from pyparadiseo import PyEOT
+from pyparadiseo import Solution
 from pyparadiseo.mo import neighborhood
 from pyparadiseo.mo.neighborhood import Neighbor
 
@@ -55,7 +55,7 @@ class TestNeighbor(unittest.TestCase):
             sol.encoding = None
 
         #a solution
-        sol = PyEOT()
+        sol = Solution()
 
         nbor = Neighbor()
         nbor.setMove(mv)
@@ -70,7 +70,7 @@ class TestNeighbor(unittest.TestCase):
         self.assertEqual(sol.encoding,None)
 
     def test_index(self):
-        sol = PyEOT()
+        sol = Solution()
         nbor = Neighbor()
 
         nbor.index(sol,1)

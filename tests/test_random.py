@@ -1,4 +1,3 @@
-from pyparadiseo import PyEOT
 from pyparadiseo import rng
 
 import unittest

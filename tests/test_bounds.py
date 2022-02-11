@@ -1,6 +1,8 @@
-from pyparadiseo import PyEOT
+from pyparadiseo import Solution
+
+from pyparadiseo import bounds
 from pyparadiseo import rng
-from pyparadiseo import core
+# from pyparadiseo import core
 
 import unittest
 import numpy as np
@@ -14,7 +16,7 @@ class TestBounds(unittest.TestCase):
 
 
     def test_realInterval(self):
-        interval = core.RealInterval(-1.0,1.0)
+        interval = bounds.RealInterval(-1.0,1.0)
         self.assertTrue(interval.isBounded())
         self.assertFalse(interval.hasNoBoundAtAll())
         self.assertTrue(interval.isMinBounded())
@@ -28,7 +30,7 @@ class TestBounds(unittest.TestCase):
 
 
     def test_realInterval_fold(self):
-        interval = core.RealInterval(-1.0,1.0)
+        interval = bounds.RealInterval(-1.0,1.0)
 
         self.assertAlmostEqual(interval.foldsInBounds(1.1), 0.9)
         self.assertAlmostEqual(interval.foldsInBounds(-1.1), -0.9)
@@ -36,21 +38,21 @@ class TestBounds(unittest.TestCase):
 
 
     def test_realInterval_truncate(self):
-        interval = core.RealInterval(-1.0,1.0)
+        interval = bounds.RealInterval(-1.0,1.0)
 
         self.assertAlmostEqual(interval.truncate(1.1), 1.0)
         self.assertAlmostEqual(interval.truncate(-1.1), -1.0)
 
 
     def test_realInterval_minmax(self):
-        interval = core.RealInterval(-1.0,1.0)
+        interval = bounds.RealInterval(-1.0,1.0)
 
         self.assertEqual(interval.minimum(),-1.0)
         self.assertEqual(interval.maximum(),1.0)
         self.assertEqual(interval.range(),2.0)
 
     def test_realVecBounds1(self):
-        b = core.RealVectorBounds(3,-1.0,1.0)
+        b = bounds.RealVectorBounds(3,-1.0,1.0)
 
         self.assertTrue(b.isBounded())
         for i in range(3):
@@ -74,7 +76,7 @@ class TestBounds(unittest.TestCase):
 
 
     def test_realVecBounds2(self):
-        b = core.RealVectorBounds(3,core.RealInterval(-1.0,1.0))
+        b = bounds.RealVectorBounds(3,bounds.RealInterval(-1.0,1.0))
 
         self.assertTrue(b.isBounded())
         for i in range(3):
@@ -100,7 +102,7 @@ class TestBounds(unittest.TestCase):
     def test_realVecBounds3(self):
         lb = np.asarray([-1.0*i for i in range(1,4)])
         ub = np.asarray([i*1.0 for i in range(1,4)])
-        b = core.RealVectorBounds(lb,ub)
+        b = bounds.RealVectorBounds(lb,ub)
 
         self.assertTrue(b.isBounded())
         for i in range(0,3):

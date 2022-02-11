@@ -1,4 +1,4 @@
-from pyparadiseo import PyEOT
+from pyparadiseo import Solution
 
 from pyparadiseo import mo
 from pyparadiseo.mo import neighborhood
@@ -45,7 +45,7 @@ class TestNeighborhood(unittest.TestCase):
         self.assertEqual(nhood.neighborhood_size,10)
 
     def test_orderNeighborhood(self):
-        sol = PyEOT()
+        sol = Solution()
         nbor= Neighbor()
 
         nhood = mo.neighborhood.OrderNeighborhood()

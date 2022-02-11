@@ -1,4 +1,4 @@
-from pyparadiseo import PyEOT
+from pyparadiseo import Solution
 from pyparadiseo import eo
 from pyparadiseo import Init
 
@@ -18,10 +18,10 @@ import numpy as np
 class test_genops(unittest.TestCase):
     def setUp(self):
         self.init = Init(lambda : np.random.randint(0,2,10))
-        self.ind1 = PyEOT()
+        self.ind1 = Solution()
         self.init(self.ind1)
 
-        self.ind2 = PyEOT()
+        self.ind2 = Solution()
         self.init(self.ind2)
 
     def tearDown(self):

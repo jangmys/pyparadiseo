@@ -1,4 +1,4 @@
-from pyparadiseo import core, eo, mo, moeo
+from pyparadiseo import eo, mo, moeo
 
 from .operator import *
 from .initializer import *
@@ -6,10 +6,10 @@ from .evaluator import *
 
 ### basic stuff common to MO,EO and MOEO
 
-#encoding type
+#SOLUTION (PyEOT)
+from .core import PyEOT as Solution
 from .core import ObjectiveVectorTraits
 from .core import ObjectiveVector
-from .core import PyEOT
 from .core import Pop
 
 #  EO RNG

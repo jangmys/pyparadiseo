@@ -1,19 +1,12 @@
-from pyparadiseo import PyEOT
+from pyparadiseo import Solution
+
 from pyparadiseo import eo
 from pyparadiseo.eo import continuator
 from pyparadiseo import evaluator
 
-from pyparadiseo import Init
-from pyparadiseo import FitnessEval
+from pyparadiseo.initializer import Init
+from pyparadiseo.evaluator import FitnessEval
 from pyparadiseo import Pop
-
-from pyparadiseo import pyMonOp
-from pyparadiseo import pyBinOp
-from pyparadiseo import pyQuadOp
-
-from pyparadiseo import MonOp
-from pyparadiseo import BinOp
-from pyparadiseo import QuadOp
 
 
 import unittest
@@ -28,10 +21,10 @@ class test_eocontinue(unittest.TestCase):
 
         self.pop = Pop(10,self.init)
 
-        self.ind1 = PyEOT()
+        self.ind1 = Solution()
         self.init(self.ind1)
 
-        self.ind2 = PyEOT()
+        self.ind2 = Solution()
         self.init(self.ind2)
 
     def tearDown(self):

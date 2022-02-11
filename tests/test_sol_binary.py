@@ -1,6 +1,5 @@
-from pyparadiseo import PyEOT
-
-from pyparadiseo import BinaryInit
+from pyparadiseo import Solution
+from pyparadiseo.initializer import BinaryInit
 
 import numpy as np
 
@@ -8,7 +7,7 @@ import unittest
 
 class TestBinary(unittest.TestCase):
     def setUp(self):
-        self.sol = PyEOT()
+        self.sol = Solution()
 
     def test_len(self):
         init = BinaryInit(10)
