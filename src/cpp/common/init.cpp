@@ -175,7 +175,7 @@ initialize()
     .def("__call__", &FixedLengthInit<bool>::operator ())
     ;
 
-    class_<pyRealInitBounded, bases<eoInit<PyEOT>>, boost::noncopyable> ("RealInitBounded", init<eoRealVectorBounds&>())
+    class_<pyRealInitBounded, bases<eoInit<PyEOT>>, boost::noncopyable> ("RealBoundedInit", init<eoRealVectorBounds&>())
     .def("__call__", &pyRealInitBounded::operator ())
     ;
 
