@@ -191,13 +191,6 @@ void add_real_bounds(std::string name, Init init)
     .def("range", &x::range) \
     ;
 
-#define DEF0(x) class_<x, bases<eoRealBounds>>(#x, init<>()) DEF_FUN(x)
-
-#define DEF1(x,i1) class_<x, bases<eoRealBounds>>(#x, init<i1>()) DEF_FUN(x)
-
-#define DEF2(x,i1,i2) class_<x, bases<eoRealBounds>>(#x, init<i1,i2>()) DEF_FUN(x)
-
-
 void uniformWrap(eoRealBaseVectorBounds& _b, np::ndarray _v, eoRng & _rng = eo::rng)
 {
     double* vec = reinterpret_cast<double*>(_v.get_data());
@@ -247,17 +240,11 @@ bounds()
     add_real_bounds<eoRealInterval>("RealInterval",init<double,double>());
     add_real_bounds<eoRealBelowBound>("RealBelowBound",init<double>());
     add_real_bounds<eoRealAboveBound>("RealAboveBound",init<double>());
-    // DEF0(eoRealNoBounds)
-    // DEF2(eoRealInterval,double,double)
-    // DEF1(eoRealBelowBound,double)
-    // DEF1(eoRealAboveBound,double)
-
 
     // expose do derive eoRealBaseVectorBounds
     class_<std::vector<eoRealBounds *> >("BoundsVector")
     .def(vector_indexing_suite<std::vector<eoRealBounds *> >())
     ;
-
 
     bool (eoRealBaseVectorBounds::* isBounded1) (unsigned) = &eoRealBaseVectorBounds::isBounded;
     bool (eoRealBaseVectorBounds::* isBounded2) (void)     = &eoRealBaseVectorBounds::isBounded;
@@ -265,7 +252,6 @@ bounds()
     bool (eoRealBaseVectorBounds::* hasNoBoundAtAll2) (void) = &eoRealBaseVectorBounds::hasNoBoundAtAll;
     bool (eoRealBaseVectorBounds::* isInBounds1) (unsigned, double) = &eoRealBaseVectorBounds::isInBounds;
     bool (eoRealBaseVectorBounds::* isInBounds2) (const std::vector<double>) = &eoRealBaseVectorBounds::isInBounds;
-
 
 
 

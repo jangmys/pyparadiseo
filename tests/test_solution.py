@@ -25,6 +25,13 @@ class TestSolution(unittest.TestCase):
         sol.fitness = 42
         self.assertEqual(sol.fitness,42)
 
+    def test_compare(self):
+        sol1 = Solution()
+        sol2 = Solution()
+        sol1.fitness = 1.0
+        sol2.fitness = 2.0
+        self.assertTrue(sol1 < sol2)
+
     def test_setDiversity(self):
         sol = Solution()
         sol.diversity = 1.11

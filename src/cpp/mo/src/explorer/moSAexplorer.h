@@ -118,8 +118,10 @@ public:
             //init on the first neighbor: supposed to be random solution in the neighborhood
             neighborhood.init(_solution, selectedNeighbor);
 
+
             //eval the _solution moved with the neighbor and stock the result in the neighbor
             eval(_solution, selectedNeighbor);
+            // std::cout<<_solution.fitness()<<" "<<selectedNeighbor.index()<<" "<<getTemperature()<<std::endl;
         }
         else {
             //if _solution hasn't neighbor,
