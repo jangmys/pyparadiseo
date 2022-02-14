@@ -64,4 +64,32 @@ class TestObjVec(unittest.TestCase):
         # self.assertTrue(objvec.dominates(objvec2))
 
 if __name__ == '__main__':
+    ObjectiveVector.setup(2,[True,False])
+
+    objvec = ObjectiveVector([1,2])
+    objvec2 = ObjectiveVector([2,1])
+
+    print(objvec < objvec2)
+    print(objvec2 < objvec)
+    print(objvec > objvec2)
+    print(objvec == objvec2)
+
+    print(objvec.dominates(objvec2))
+    print("#"*10)
+
+    ObjectiveVector.setup(2,[False,True])
+
+    objvec = ObjectiveVector([1,2])
+    objvec2 = ObjectiveVector([2,1])
+
+    print(objvec < objvec2)
+    print(objvec2 < objvec)
+    print(objvec > objvec2)
+    print(objvec == objvec2)
+
+    print(objvec.dominates(objvec2))
+
+    print(ObjectiveVector.nObjectives())
+
+
     unittest.main()

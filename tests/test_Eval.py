@@ -11,10 +11,16 @@ import numba as nb
 
 ind = Solution()
 init = initializer.BinaryInit(12)
-
 init(ind)
 
 print(ind)
+
+solu = Solution([1,True,0.234,'abc'])
+print(solu)
+
+
+
+
 
 ################
 # HOW TO DEFINE FITNESS EVALUATOR ?

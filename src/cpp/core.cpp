@@ -167,12 +167,13 @@ BOOST_PYTHON_MODULE(_core)
         .def( init< std::vector < double > const& >()[with_custodian_and_ward<1,2>()] )
         .def( "dominates",&moeoRealObjectiveVector<moeoObjectiveVectorTraits>::dominates)
         .def( "__eq__",&moeoRealObjectiveVector<moeoObjectiveVectorTraits>::operator==)
+        .def( "__lt__",&moeoRealObjectiveVector<moeoObjectiveVectorTraits>::operator<)
         .def( "__str__",to_py_str<moeoRealObjectiveVector<moeoObjectiveVectorTraits>>)
         ;
 
     void (PyEOT::*fx2)(boost::python::object) = &PyEOT::setObjectiveVector;
 
-    class_<PyEOT>("PyEOT",init<>())
+    class_<PyEOT>("PyEOT",init<optional<bp::object>>())
         .def(init<const PyEOT&>())
         .add_property("encoding", &PyEOT::getEncoding, &PyEOT::setEncoding)
         .add_property("fitness", &PyEOT::getFitness, &PyEOT::setFitness)
