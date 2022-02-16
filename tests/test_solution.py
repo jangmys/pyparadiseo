@@ -1,3 +1,5 @@
+from pyparadiseo import core
+
 from pyparadiseo import Solution
 
 import unittest
@@ -21,6 +23,7 @@ class TestSolution(unittest.TestCase):
         sol = Solution()
         self.assertEqual(sol.fitness,None)
         sol.fitness = 1.11
+        print(sol)
         self.assertEqual(sol.fitness,1.11)
         sol.fitness = 42
         self.assertEqual(sol.fitness,42)
@@ -30,6 +33,13 @@ class TestSolution(unittest.TestCase):
         sol2 = Solution()
         sol1.fitness = 1.0
         sol2.fitness = 2.0
+
+        core.DFitness.setup(True)
+        self.assertTrue(sol1 > sol2)
+        self.assertFalse(sol1 < sol2)
+
+        core.DFitness.setup(False)
+        self.assertFalse(sol1 > sol2)
         self.assertTrue(sol1 < sol2)
 
     def test_setDiversity(self):

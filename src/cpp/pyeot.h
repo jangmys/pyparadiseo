@@ -8,16 +8,20 @@
 #include <core/moeoObjectiveVector.h>
 #include <core/moeoRealObjectiveVector.h>
 
+#include <fitness.h>
+
 #include "utils/to_std_vector.h"
 #include "utils/index_error.h"
 
 namespace bp=boost::python;
 
+
 typedef moeoRealObjectiveVector<moeoObjectiveVectorTraits> realObjVec;
 
-struct PyEOT : public MOEO< realObjVec, double, double>
+
+struct PyEOT : public MOEO< realObjVec, doubleFitness, double>
 {
-    typedef double Fitness;
+    typedef doubleFitness Fitness;
     typedef double Diversity;
     typedef realObjVec ObjectiveVector;
 
@@ -56,7 +60,9 @@ struct PyEOT : public MOEO< realObjVec, double, double>
         if(getFitness().is_none())
             std::cout<<"can't compare< NoneType\n";
 
-        return getFitness() < _other.getFitness();
+
+        return fitness() < _other.fitness();
+        // return getFitness() < _other.getFitness();
       }
 
 
@@ -96,7 +102,7 @@ struct PyEOT : public MOEO< realObjVec, double, double>
     */
     boost::python::object getFitness() const {
         //if invalid return "None" object else construct Python object from C++ double
-        return invalidFitness()? boost::python::object(): boost::python::object(fitness());
+        return invalidFitness()? boost::python::object(): boost::python::object(fitness().get());
     }
     void setFitness(boost::python::object f) {
         // NOT : if(!f) //this will be true for 0.0
@@ -107,9 +113,13 @@ struct PyEOT : public MOEO< realObjVec, double, double>
         }
 
         boost::python::extract<double> x(f);
+        // boost::python::extract<Fitness> x(f);
         if(x.check())
         {
             double d = x();
+
+            // std::cout<<"val=\t"<<d<<std::endl;
+            // Fitness d = x();
             fitness(d);
         }else{
             throw index_error("fitness : failed to extract double\n");
@@ -182,7 +192,7 @@ struct PyEOT : public MOEO< realObjVec, double, double>
 
         result += "Fitness: ";
         if(!invalidFitness())
-            result += boost::python::extract<const char*>(boost::python::str(fitness()));
+            result += boost::python::extract<const char*>(boost::python::str(fitness().get()));
         else result += std::string("[]");
 
         if(!invalidObjectiveVector()){

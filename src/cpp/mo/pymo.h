@@ -72,7 +72,7 @@ public:
 
     //like for PyEOT, "emulating" inheritance from EO ... this is not DRY
     bp::object getFitness() const {
-        return invalid()? bp::object(): bp::object(fitness());
+        return invalid()? bp::object(): bp::object(fitness().get());
     }
     void setFitness(bp::object f) {
         if(f.ptr() == Py_None)
@@ -93,7 +93,8 @@ public:
 
     bool operator<(const PyNeighbor& _other) const
     {
-        return getFitness() < _other.getFitness();
+        return fitness() < _other.fitness();
+        // return getFitness() < _other.getFitness();
     }
 
     std::string to_string() const
