@@ -55,6 +55,7 @@ test-job1:
         - python3 -m pytest tests
 
 pypi:
+    stage: release
     needs:
         - build-job
     script:
