@@ -10,9 +10,9 @@ from .core import FitnessTraits
 
 #SOLUTION (PyEOT)
 from .core import Solution
+from .core import Pop
 from .core import ObjectiveVectorTraits
 from .core import ObjectiveVector
-from .core import Pop
 
 #  EO RNG
 from .core import eoRng

@@ -8,3 +8,9 @@ from .core import eoPopLoopEval as PopLoopEval
 
 ### counting eval function (for eoContinuator)
 from .core import eoEvalFuncCounter as EvalFuncCounter
+
+
+
+def pop_eval(pop,eval):
+    for ind in pop:
+        eval(ind)
