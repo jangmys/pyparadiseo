@@ -4,10 +4,12 @@ from .operator import *
 from .initializer import *
 from .evaluator import *
 
+from .core import FitnessTraits
+
 ### basic stuff common to MO,EO and MOEO
 
 #SOLUTION (PyEOT)
-from .core import PyEOT as Solution
+from .core import Solution
 from .core import ObjectiveVectorTraits
 from .core import ObjectiveVector
 from .core import Pop
