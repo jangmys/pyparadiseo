@@ -57,7 +57,8 @@ struct PyEOT_pickle_suite : bp::pickle_suite
         {
             p.setEncoding(state[3]);
         }else{
-            p.setEncoding(bp::object());
+            p.setEncoding(bp::object())
+            ;
         }
     }
 };
@@ -187,11 +188,7 @@ BOOST_PYTHON_MODULE(_core)
 
     void (PyEOT::*fx2)(boost::python::object) = &PyEOT::setObjectiveVector;
 
-<<<<<<< HEAD
-    class_<PyEOT>("PyEOT",init<optional<bp::object>>())
-=======
     class_<PyEOT>("Solution",init<optional<object>>())
->>>>>>> minimFitness
         .def(init<const PyEOT&>())
         .add_property("encoding", &PyEOT::getEncoding, &PyEOT::setEncoding)
         .add_property("fitness", &PyEOT::getFitness, &PyEOT::setFitness)

@@ -44,11 +44,6 @@ public:
         setDiversity(p.deepcopy(p.getDiversity()));
     }
 
-    PyEOT(bp::object _encoding)
-    {
-        setEncoding(_encoding);
-    }
-
     PyEOT& operator=(const PyEOT& p)
     {
         setEncoding(p.deepcopy(p.getEncoding()));
