@@ -147,11 +147,10 @@ BOOST_PYTHON_MODULE(_core)
             .staticmethod("set_minimizing")
     ;
 
-    class_<DoubleFitness<FitnessTraits>>("DFitness",init<optional<double>>())
-    .def("setup",&DoubleFitness<FitnessTraits>::setup)
-    .def("__lt__",&DoubleFitness<FitnessTraits>::operator<)
+    class_<DoubleFitness<FitnessTraits>>("Fitness",init<optional<double>>())
+        .def("setup",&DoubleFitness<FitnessTraits>::setup).staticmethod("setup")
+        .def("__lt__",&DoubleFitness<FitnessTraits>::operator<)
     ;
-
 
     // need this to be able to derive moeoObjectiveVector from std::vector<double>
     class_< std::vector<double> >("DoubleVec")
@@ -187,7 +186,7 @@ BOOST_PYTHON_MODULE(_core)
 
     void (PyEOT::*fx2)(boost::python::object) = &PyEOT::setObjectiveVector;
 
-    class_<PyEOT>("PyEOT",init<>())
+    class_<PyEOT>("Solution",init<optional<object>>())
         .def(init<const PyEOT&>())
         .add_property("encoding", &PyEOT::getEncoding, &PyEOT::setEncoding)
         .add_property("fitness", &PyEOT::getFitness, &PyEOT::setFitness)
@@ -197,8 +196,6 @@ BOOST_PYTHON_MODULE(_core)
         .def("invalidObjectiveVector",&PyEOT::invalidObjectiveVector)
         .def("invalidate", &PyEOT::invalidate)
         .def("invalid", &PyEOT::invalid)
-
-        // .def("invalid", &PyEOT::invalid) //identical to invalidateObjectiveVector
         .def("__getitem__", &PyEOT::get_item)
         .def("__setitem__", &PyEOT::set_item)
         .def("__str__", &PyEOT::to_string)
@@ -251,6 +248,7 @@ BOOST_PYTHON_MODULE(_core)
     // diversityAssign();
     // moeoreplacement();
 
+    //TODO : set this from python ...
     eo::log << eo::setlevel(eo::warnings);
 }
 
