@@ -40,7 +40,7 @@ struct pyeoInit : eoInit<PyEOT> {
     {
         if (init_op.ptr() != Py_None) {
             // std::cout << "*** init" << std::endl;
-            _eo.encoding = p::call<p::object>(init_op.ptr());
+            _eo.setEncoding(p::call<p::object>(init_op.ptr()));
             _eo.invalidate();
         } else   {
             std::cout << "no move defined : do nothing";

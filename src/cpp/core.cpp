@@ -35,7 +35,7 @@ struct PyEOT_pickle_suite : bp::pickle_suite
                 p.invalidObjectiveVector()?bp::object():bp::object(p.objectiveVector()),
                 p.invalidFitness()?bp::object():bp::object(p.fitness().get()),
                 p.invalidDiversity()?bp::object():bp::object(p.diversity()),
-                p.encoding);
+                p.getEncoding());
     }
 
     static void setstate(bp::object _eot, bp::tuple state)
@@ -55,9 +55,9 @@ struct PyEOT_pickle_suite : bp::pickle_suite
 
         if(bp::object(state[3]).ptr() != Py_None)
         {
-            p.encoding = state[3];
+            p.setEncoding(state[3]);
         }else{
-            p.encoding = bp::object();
+            p.setEncoding(bp::object());
         }
     }
 };
