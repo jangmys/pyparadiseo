@@ -41,11 +41,14 @@ set(moSources
     src/cpp/mo/moExplorer.cpp
     src/cpp/mo/moContinuator.cpp
     src/cpp/mo/moAlgo.cpp
+    src/cpp/mo/moComparator.cpp
 )
 
 set(eoSources
     src/cpp/eo/pop.cpp
     src/cpp/eo/geneticOps.cpp
+    src/cpp/eo/mergers.cpp
+    src/cpp/eo/reduce.cpp
     src/cpp/eo/transform.cpp
     src/cpp/eo/selectOne.cpp
     src/cpp/eo/selectors.cpp
@@ -53,6 +56,9 @@ set(eoSources
     src/cpp/eo/continuators.cpp
     src/cpp/eo/breeders.cpp
     src/cpp/eo/eoAlgos.cpp
+    src/cpp/eo/bounds.cpp
+    src/cpp/eo/real_op.cpp
+    src/cpp/eo/bit_op.cpp
 )
 
 set(EO_SRC_DIR "src/cpp/eo/src" CACHE INTERNAL "ParadisEO-EO source directory" FORCE)
@@ -61,12 +67,14 @@ set(EO_SRC_DIR "src/cpp/eo/src" CACHE INTERNAL "ParadisEO-EO source directory" F
 set(eoDep
     ${EO_SRC_DIR}/eoFunctorStore.cpp
     ${EO_SRC_DIR}/utils/eoLogger.cpp
+    ${EO_SRC_DIR}/utils/eoRealBounds.cpp
 )
 
 add_library(_core SHARED src/cpp/core.cpp ${commonSources} ${eoSources} ${moSources} ${eoDep})
 
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/src)
+include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/src/es)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/mo/)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/mo/src)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/moeo/src)

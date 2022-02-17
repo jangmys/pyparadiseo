@@ -1,68 +1,99 @@
 pyparadiseo.eo package
 ======================
 
-Subpackages
------------
+Submodules
+----------
 
-.. toctree::
-   :maxdepth: 4
+pyparadiseo.eo.algo module
+--------------------------
 
-   pyparadiseo.eo.algo
-   pyparadiseo.eo.breeders
-   pyparadiseo.eo.continuator
-   pyparadiseo.eo.replacement
-   pyparadiseo.eo.selector
-   pyparadiseo.eo.transform
+.. automodule:: pyparadiseo.eo.algo
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyparadiseo.eo.breeders module
+------------------------------
+
+.. automodule:: pyparadiseo.eo.breeders
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyparadiseo.eo.continuator module
+---------------------------------
+
+.. automodule:: pyparadiseo.eo.continuator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+   .. autoclass:: EvalContinue
+        :members:
+        :special-members:
+        :private-members:
+        :undoc-members:
+        :show-inheritance:
+
+    .. autoclass:: GenContinue
+        :members:
+        :special-members:
+        :private-members:
+        :undoc-members:
+        :show-inheritance:
+
+pyparadiseo.eo.merge module
+---------------------------
+
+.. automodule:: pyparadiseo.eo.merge
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyparadiseo.eo.reduce module
+----------------------------
+
+.. automodule:: pyparadiseo.eo.reduce
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyparadiseo.eo.replacement module
+---------------------------------
+
+.. automodule:: pyparadiseo.eo.replacement
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyparadiseo.eo.selector module
+------------------------------
+
+.. automodule:: pyparadiseo.eo.selector
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyparadiseo.eo.test\_mod module
+-------------------------------
+
+.. automodule:: pyparadiseo.eo.test_mod
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyparadiseo.eo.transform module
+-------------------------------
+
+.. automodule:: pyparadiseo.eo.transform
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Module contents
 ---------------
 
 .. automodule:: pyparadiseo.eo
    :members:
-   :special-members:
-   :private-members:
    :undoc-members:
    :show-inheritance:
-
-
-.. autoclass:: Select
-    :members:
-    :special-members: __init__, __call__
-    :show-inheritance:
-
-.. autoclass:: Replacement
-    :members:
-    :special-members: __init__, __call__
-    :private-members:
-    :undoc-members:
-    :show-inheritance:
-
-
-.. autoclass:: Breed
-    :members:
-    :special-members: __init__, __call__
-    :private-members:
-    :undoc-members:
-    :show-inheritance:
-
-
-.. autoclass:: Algo
-    :members:
-    :special-members: __init__, __call__
-    :private-members:
-    :undoc-members:
-    :show-inheritance:
-
-.. autoclass:: Transform
-    :members:
-    :special-members: __init__, __call__
-    :private-members:
-    :undoc-members:
-    :show-inheritance:
-
-.. autoclass:: Continue
-    :members:
-    :special-members: __init__, __call__
-    :private-members:
-    :undoc-members:
-    :show-inheritance:

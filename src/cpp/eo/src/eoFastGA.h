@@ -116,6 +116,9 @@ public:
                     eoPop<EOT> crossed; 
                     crossed.push_back(sol1);
                     crossed.push_back(sol2);
+                    //they should be evaluated before we apply aftercross_selector
+                    _pop_eval(crossed, crossed);
+
                     _select_aftercross.setup(crossed);
                     EOT sol3 = _select_aftercross(crossed);
 

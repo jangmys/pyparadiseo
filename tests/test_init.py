@@ -1,4 +1,4 @@
-from pyparadiseo import PyEOT
+from pyparadiseo import Solution
 from pyparadiseo import eo
 
 from pyparadiseo import Init
@@ -25,7 +25,7 @@ class test_init(unittest.TestCase):
         #construct a Pyparadiseo initalizer passing a function
         initializer = Init(init_fun(10))
         #a solution
-        sol = PyEOT()
+        sol = Solution()
         initializer(sol)
         self.assertEqual(len(sol),10)
         self.assertEqual(len(sol.encoding),10)

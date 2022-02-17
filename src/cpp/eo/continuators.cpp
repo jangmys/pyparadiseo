@@ -20,6 +20,7 @@
 
 #include <eoGenContinue.h>
 #include <eoCombinedContinue.h>
+#include <eoSecondsElapsedContinue.h>
 #include <eoEvalContinue.h>
 #include <eoFitContinue.h>
 #include <eoSteadyFitContinue.h>
@@ -31,8 +32,6 @@
 
 using namespace boost::python;
 
-#define DEF(x) class_<x<PyEOT>, bases<eoContinue<PyEOT > > >(#x).def("__call__", &eoContinue<PyEOT>::operator())
-#define DEF2(x, i1) class_<x<PyEOT>, bases<eoContinue<PyEOT > > >(#x, init<i1>() ).def("__call__", &eoContinue<PyEOT>::operator())
 #define DEF3(x, i1, i2) class_<x<PyEOT>, bases<eoContinue<PyEOT > > >(#x, init<i1, i2 >() ).def("__call__", &eoContinue<PyEOT>::operator())
 
 void add_checkpoint();
@@ -45,7 +44,7 @@ void continuators()
     /* Counters, wrappers etc */
     class_<eoEvalFuncCounter<PyEOT>, bases<eoEvalFunc<PyEOT> > >
         ("eoEvalFuncCounter",
-         init< eoEvalFunc<PyEOT>&, std::string>()
+         init< eoEvalFunc<PyEOT>&, optional<std::string>>()
          [
           with_custodian_and_ward<1, 2>()
          ]
@@ -72,10 +71,16 @@ void continuators()
         .def("__call__", &eoEvalContinue<PyEOT>::operator())
         ;
 
+    class_<eoSecondsElapsedContinue<PyEOT>,bases<eoContinue<PyEOT>>>
+        ("eoSecondsElapsedContinue",init<int>())
+        .def("__call__", &eoSecondsElapsedContinue<PyEOT>::operator())
+        ;
+
     // JG : python object as fitness type? extraction done inside eoFitContinue? if r/o ... relying on [] operator...
     // DEF2(eoFitContinue, object); // object is the fitness type
     //
     DEF3(eoSteadyFitContinue, unsigned long, unsigned long);
+
     //
     add_checkpoint();
 }

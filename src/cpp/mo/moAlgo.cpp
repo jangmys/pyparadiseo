@@ -66,22 +66,6 @@ struct moLocalSearchWrap : moLocalSearch<PyNeighbor>,wrapper<moLocalSearch<PyNei
         searchExplorer.getCurrentNeighbor().setMoveBack(_obj);
     }
 };
-//
-// #define WRAP(X) struct XWrap : X<PyNeighbor>,wrapper<X<PyNeighbor>>\
-//     {\
-//     XWrap(moNeighborhood<PyNeighbor>& _nhood,eoEvalFunc<PyEOT>& _eval,moEval<PyNeighbor>& _nborEval) : X<PyNeighbor>(_nhood,_eval,_nborEval){}\
-//     XWrap(moNeighborhood<PyNeighbor>& _nhood,eoEvalFunc<PyEOT>& _eval,moEval<PyNeighbor>& _nborEval,moContinuator<PyNeighbor>& _cont) : X<PyNeighbor>(_nhood,_eval,_nborEval,_cont){}\
-//     XWrap(moNeighborhood<PyNeighbor>& _nhood,eoEvalFunc<PyEOT>& _eval,moEval<PyNeighbor>& _nborEval,moContinuator<PyNeighbor>& _cont,moNeighborComparator<PyNeighbor>& _compN,moSolNeighborComparator<PyNeighbor>& _compSN) : X<PyNeighbor>(_nhood,_eval,_nborEval,_cont, _compN, _compSN){}\
-//     void setMove(boost::python::object _obj){\
-//         explorer.getSelectedNeighbor().setMove(_obj);\
-//         explorer.getCurrentNeighbor().setMove(_obj);}\
-//     void setMoveBack(boost::python::object _obj){\
-//         explorer.getSelectedNeighbor().setMoveBack(_obj);\
-//         explorer.getCurrentNeighbor().setMoveBack(_obj);}};
-//
-// WRAP(moSimpleHC)
-
-
 
 //
 struct moSimpleHCWrap : moSimpleHC<PyNeighbor>,wrapper<moSimpleHC<PyNeighbor>>
@@ -329,6 +313,16 @@ struct moNeutralHCWrap : moNeutralHC<PyNeighbor>,wrapper<moNeutralHC<PyNeighbor>
         .def("setMoveBack",&X::setMoveBack)
 
 
+template<typename X>
+void setMove(X& _ls, boost::python::object _obj)
+{
+    _ls.getNeighborhoodExplorer().getSelectedNeighbor().setMove(_obj);
+    _ls.getNeighborhoodExplorer().getCurrentNeighbor().setMove(_obj);
+}
+
+// template void setMove<moRandomWalk<PyNeighbor>>();
+
+
 void moAlgos()
 {
     class_<moLocalSearchWrap,boost::noncopyable>
@@ -395,6 +389,22 @@ void moAlgos()
     >())
     ;
 
+    class_<moRandomWalk<PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
+    ("moRandomWalk",init<
+    moNeighborhood<PyNeighbor>&,
+    eoEvalFunc<PyEOT>&,
+    moEval<PyNeighbor>&,
+    unsigned
+    >())
+    .def(init<
+        moNeighborhood<PyNeighbor>&,
+        eoEvalFunc<PyEOT>&,
+        moEval<PyNeighbor>&,
+        moContinuator<PyNeighbor>&
+    >())
+    .def("setMove",setMove<moRandomWalk<PyNeighbor>>)
+    ;
+
     class_<moRandomNeutralWalk<PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
     ("moRandomNeutralWalk",init<
         moNeighborhood<PyNeighbor>&,
@@ -417,22 +427,9 @@ void moAlgos()
         moContinuator<PyNeighbor>&,
         moSolNeighborComparator<PyNeighbor>&
     >())
+    .def("setMove",setMove<moRandomNeutralWalk<PyNeighbor>>)
     ;
 
-    class_<moRandomWalk<PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
-    ("moRandomWalk",init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
-        unsigned
-    >())
-    .def(init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
-        moContinuator<PyNeighbor>&
-    >())
-    ;
 
 
     class_<moMetropolisHasting<PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
@@ -458,17 +455,18 @@ void moAlgos()
         moNeighborComparator<PyNeighbor>&,
         moSolNeighborComparator<PyNeighbor>&
     >())
+    .def("setMove",setMove<moMetropolisHasting<PyNeighbor>>)
     ;
 
     class_<moSA<PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
     ("moSA",init<
         moNeighborhood<PyNeighbor>&,
         eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
+        moEval<PyNeighbor>&,optional<
         double,
         double,
         unsigned,
-        double
+        double>
     >())
     .def(init<
         moNeighborhood<PyNeighbor>&,
@@ -491,6 +489,7 @@ void moAlgos()
         moSolNeighborComparator<PyNeighbor>&,
         moContinuator<PyNeighbor>&
     >())
+    .def("setMove",setMove<moSA<PyNeighbor>>)
     ;
 
 
@@ -529,6 +528,7 @@ void moAlgos()
         moDiversification<PyNeighbor>&,
         moAspiration<PyNeighbor>&
     >())
+    .def("setMove",setMove<moTS<PyNeighbor>>)
     ;
 
 

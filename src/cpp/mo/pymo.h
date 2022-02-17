@@ -57,21 +57,6 @@ public:
             std::cout<<"no moveBack defined : do nothing";
     }
 
-    void index(PyEOT& _sol, unsigned int _key)
-    {
-        if (bp::override index = this->get_override("index"))
-        {
-            index(_sol,_key);
-            // return;
-        }
-        moIndexNeighbor<PyEOT>::index(_sol,_key);
-    }
-    void default_index(PyEOT& _sol, unsigned int _key)
-    {
-        this->moIndexNeighbor<PyEOT>::index(_sol,_key);
-        // std::cout<<"INDEX..."<<_key<<" "<<key<<"\n";
-    }
-//
     //virtual with defaults
     bool equals(PyNeighbor& _neighbor)
     {
@@ -87,7 +72,7 @@ public:
 
     //like for PyEOT, "emulating" inheritance from EO ... this is not DRY
     bp::object getFitness() const {
-        return invalid()? bp::object(): bp::object(fitness());
+        return invalid()? bp::object(): bp::object(fitness().get());
     }
     void setFitness(bp::object f) {
         if(f.ptr() == Py_None)
@@ -108,7 +93,8 @@ public:
 
     bool operator<(const PyNeighbor& _other) const
     {
-        return getFitness() < _other.getFitness();
+        return fitness() < _other.fitness();
+        // return getFitness() < _other.getFitness();
     }
 
     std::string to_string() const
