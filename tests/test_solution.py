@@ -9,6 +9,14 @@ class TestSolution(unittest.TestCase):
         sol = Solution()
         self.assertEqual(sol.fitness,None)
 
+    def test_ctor_noinit(self):
+        sol = Solution([1,2,3.0,'arf'])
+        self.assertEqual(sol.encoding,[1,2,3.0,'arf'])
+        self.assertEqual(sol[0],1)
+        self.assertEqual(sol[1],2)
+        self.assertEqual(sol[2],3.0)
+        self.assertEqual(sol[3],'arf')
+
     def test_encoding(self):
         sol = Solution()
         sol.encoding = [1,2,3.0]
@@ -34,11 +42,11 @@ class TestSolution(unittest.TestCase):
         sol1.fitness = 1.0
         sol2.fitness = 2.0
 
-        core.DFitness.setup(True)
+        core.FitnessTraits.set_minimizing(True)
         self.assertTrue(sol1 > sol2)
         self.assertFalse(sol1 < sol2)
 
-        core.DFitness.setup(False)
+        core.FitnessTraits.set_minimizing(False)
         self.assertFalse(sol1 > sol2)
         self.assertTrue(sol1 < sol2)
 

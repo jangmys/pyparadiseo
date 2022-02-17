@@ -16,7 +16,10 @@ class Test_Pop(unittest.TestCase):
     def setUp(self):
         self.pop = Pop()
         self.init = Init(lambda : np.arange(10)) #just something
-        core.DFitness.setup(False)
+        #reset to default : maximizing fitness
+        core.FitnessTraits.set_minimizing(False)
+
+        # core.DFitness.setup(False)
 
     def tearDown(self):
         self.pop.resize(0)
@@ -50,7 +53,7 @@ class Test_Pop(unittest.TestCase):
         self.pop.sort()
         self.assertTrue(isNonIncreasing(self.pop),"maximize : sorted pop should be non-increasing")
 
-        core.DFitness.setup(True)
+        core.FitnessTraits.set_minimizing(True)
         self.pop.sort()
         self.assertFalse(isNonIncreasing(self.pop),"minimize : sorted pop should be non-decreasing ")
 
@@ -71,7 +74,7 @@ class Test_Pop(unittest.TestCase):
         self.assertEqual(self.pop.best().fitness,99,"maximize : 99.0 is best")
         self.assertEqual(self.pop.worst().fitness,0,"maximize : 0.0 is worst")
 
-        core.DFitness.setup(True)
+        core.FitnessTraits.set_minimizing(True)
         self.assertEqual(self.pop.best().fitness,0,"minimize : 0.0 is best")
         self.assertEqual(self.pop.worst().fitness,99,"minimize : 99.0 is worst")
 

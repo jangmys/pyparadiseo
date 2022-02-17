@@ -34,7 +34,7 @@ class test_simpleHC_onemax(unittest.TestCase):
         # neighborhood
         self.nhood = mo.neighborhood.OrderNeighborhood(self.DIM)
 
-        core.DFitness.setup(False)
+        core.FitnessTraits.set_minimizing(False)
 
     def move(self,nbor,sol):
         ind = nbor.index()
