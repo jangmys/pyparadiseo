@@ -29,8 +29,7 @@ public:
 
     DoubleFitness(const DoubleFitness& other) : value(other.value) {};
 
-    operator double(void) const { return value; }
-
+    //TODO : not really useful i think
     static void setup(bool _minimize)
     {
         FitnessTraits::set_minimizing(_minimize);
@@ -41,25 +40,21 @@ public:
         return value;
     }
 
+    //conversion operator
+    operator double(void) const { return value; }
+
     bool operator<(const DoubleFitness<FitnessTraits>& _other) const
     {
-        // std::cout<<"operator"<<std::endl;
-        if(FitnessTraits::minimizing()){
-            // std::cout<<"minimizing"<<std::endl;
+        if(FitnessTraits::minimizing())
             return get() > _other.get();
-        }
-        else{
-            // std::cout<<"maximizing"<<std::endl;
-            return get() < _other.get();
-        }
+        //else
+        return get() < _other.get();
     }
 
     void printOn(std::ostream& os) const {
         std::string result;
         result += boost::python::extract<const char*>(boost::python::str(get()));
         os << result;
-        // const boost::python::object& o = *this;
-        // boost::python::api::operator<<(os,o);
     }
     friend std::ostream& operator<<(std::ostream& os, const DoubleFitness& p) {
         p.printOn(os);
@@ -73,15 +68,7 @@ public:
         if(x.check())
         {
             p = DoubleFitness(x());
-            // Fitness d = x();
-            // double d = x();
-            // fitness(d);
         }
-        // else{
-        //     throw index_error("fitness : failed to extract double\n");
-        // }
-
-        // p = DoubleFitness(o);
         return is;
     }
 
@@ -90,22 +77,3 @@ private:
 };
 
 typedef DoubleFitness<FitnessTraits> doubleFitness;
-
-
-
-
-// template <class F, class Cmp>
-// std::ostream& operator<<(std::ostream& os, const DoubleFitness<FitnessTraits>& f)
-// {
-//     os << (double) f;
-//     return os;
-// }
-//
-// // template <class F, class Cmp>
-// std::istream& operator>>(std::istream& is, DoubleFitness<FitnessTraits>& f)
-// {
-//     double value;
-//     is >> value;
-//     f = value;
-//     return is;
-// }
