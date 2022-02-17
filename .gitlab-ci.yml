@@ -28,6 +28,7 @@ before_script:
 stages:
     - build
     - test
+    - deploy
 
 build-job:
     stage: build
@@ -55,7 +56,7 @@ test-job1:
         - python3 -m pytest tests
 
 pypi:
-    stage: release
+    stage: deploy
     needs:
         - build-job
     script:
