@@ -17,6 +17,34 @@ class TestSolution(unittest.TestCase):
         self.assertEqual(sol[2],3.0)
         self.assertEqual(sol[3],'arf')
 
+    def test_copy_ctor(self):
+        sol = Solution()
+        sol.encoding = [1,2,3,4]
+        sol.fitness = 42.0
+        sol.objectiveVector = [1.1,2.2]
+        sol.diversity = 4.2
+
+        #copy ctor
+        sol2 = Solution(sol)
+        self.assertEqual(sol2.encoding,[1,2,3,4])
+        self.assertEqual(sol2.fitness,42.0)
+        self.assertEqual(sol2.objectiveVector[0],1.1)
+        self.assertEqual(sol2.objectiveVector[1],2.2)
+        self.assertEqual(sol2.diversity,4.2)
+
+        #change sol
+        sol.encoding = [0]
+        sol.fitness = 2.0
+        sol.objectiveVector = [0.1,0.2]
+        sol.diversity = 2.2
+
+        #check that sol2 hasn't changed
+        self.assertEqual(sol2.encoding,[1,2,3,4])
+        self.assertEqual(sol2.fitness,42.0)
+        self.assertEqual(sol2.objectiveVector[0],1.1)
+        self.assertEqual(sol2.objectiveVector[1],2.2)
+        self.assertEqual(sol2.diversity,4.2)
+
     def test_encoding(self):
         sol = Solution()
         sol.encoding = [1,2,3.0]
@@ -69,77 +97,32 @@ class TestSolution(unittest.TestCase):
         sol.invalidateObjectiveVector()
         self.assertTrue(sol.invalidObjectiveVector())
 
-    def test_copy_ctor(self):
-        sol = Solution()
-        sol.encoding = [1,2,3,4]
-        sol.fitness = 42.0
-        sol.objectiveVector = [1.1,2.2]
-        sol.diversity = 4.2
-
-        #copy ctor
-        sol2 = Solution(sol)
-        self.assertEqual(sol2.encoding,[1,2,3,4])
-        self.assertEqual(sol2.fitness,42.0)
-        self.assertEqual(sol2.objectiveVector[0],1.1)
-        self.assertEqual(sol2.objectiveVector[1],2.2)
-        self.assertEqual(sol2.diversity,4.2)
-
-        #change sol
-        sol.encoding = [0]
-        sol.fitness = 2.0
-        sol.objectiveVector = [0.1,0.2]
-        sol.diversity = 2.2
-
-        #check that sol2 hasn't changed
-        self.assertEqual(sol2.encoding,[1,2,3,4])
-        self.assertEqual(sol2.fitness,42.0)
-        self.assertEqual(sol2.objectiveVector[0],1.1)
-        self.assertEqual(sol2.objectiveVector[1],2.2)
-        self.assertEqual(sol2.diversity,4.2)
-
-    def test_assignment(self):
-        sol = Solution()
-        sol.encoding = [1,2,3,4]
-        sol.fitness = 42.0
-        sol.objectiveVector = [1.1,2.2]
-        sol.diversity = 4.2
-
-        #copy ctor
-        sol2 = Solution(sol)
-        self.assertEqual(sol2.encoding,[1,2,3,4])
-        self.assertEqual(sol2.fitness,42.0)
-        self.assertEqual(sol2.objectiveVector[0],1.1)
-        self.assertEqual(sol2.objectiveVector[1],2.2)
-        self.assertEqual(sol2.diversity,4.2)
-
     def test_pickle(self):
-        sol = Solution()
-        sol.encoding = [1,2,3,4]
+        #make a solution
+        sol = Solution([1,2,3,4])
         sol.fitness = 42.0
         sol.objectiveVector = [1.1,2.2]
         sol.diversity = 4.2
-
+        #copy that solution
         from copy import copy,deepcopy
-
-        sol2 = Solution()
         sol2 = copy(sol)
-
+        #check new solution is identical to first
         self.assertEqual(sol2.encoding,[1,2,3,4])
         self.assertEqual(sol2.fitness,42.0)
         self.assertEqual(sol2.objectiveVector[0],1.1)
         self.assertEqual(sol2.objectiveVector[1],2.2)
         self.assertEqual(sol2.diversity,4.2)
-
+        #change original
         sol.encoding = [0]
         sol.invalidate()
-
+        #check that copy didn't change
         self.assertEqual(sol2.encoding,[1,2,3,4])
         self.assertEqual(sol2.fitness,42.0)
         self.assertEqual(sol2.objectiveVector[0],1.1)
         self.assertEqual(sol2.objectiveVector[1],2.2)
         self.assertEqual(sol2.diversity,4.2)
 
-        sol3 = copy(sol2)
+        sol3 = deepcopy(sol2)
         sol2.encoding = [0]
         sol2.invalidate()
 
