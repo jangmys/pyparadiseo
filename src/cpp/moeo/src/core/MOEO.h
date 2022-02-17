@@ -92,7 +92,7 @@
 // except the ones in moeoVecVsVecMultiplicativeEpsilonBinaryMetric it fails anyway
 // EO<double> seems OK too
 template < class MOEOObjectiveVector, class MOEOFitness=double, class MOEODiversity=double >
-class MOEO : public EO<double> //< MOEOObjectiveVector >
+class MOEO : public EO<MOEOFitness> //< MOEOObjectiveVector >
   {
   public:
 

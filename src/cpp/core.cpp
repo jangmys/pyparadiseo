@@ -8,6 +8,8 @@
 #include <utils/index_error.h>
 #include <utils/eoLogger.h>
 
+// #include "fitness.h"
+
 #include <pyeot.h>
 
 namespace bp=boost::python;
@@ -16,11 +18,12 @@ namespace bp=boost::python;
 unsigned int moeoObjectiveVectorTraits::nObj;
 std::vector < bool > moeoObjectiveVectorTraits::bObj;
 
+bool FitnessTraits::_minimizing = false;
 
 //TODO: __copy__ OK, error when trying to __deepcopy__
 struct PyEOT_pickle_suite : bp::pickle_suite
 {
-    typedef double Fitness;
+    typedef doubleFitness Fitness;
     typedef double Diversity;
     typedef realObjVec ObjectiveVector;
 
@@ -30,9 +33,9 @@ struct PyEOT_pickle_suite : bp::pickle_suite
 
         return bp::make_tuple(
                 p.invalidObjectiveVector()?bp::object():bp::object(p.objectiveVector()),
-                p.invalidFitness()?bp::object():bp::object(p.fitness()),
+                p.invalidFitness()?bp::object():bp::object(p.fitness().get()),
                 p.invalidDiversity()?bp::object():bp::object(p.diversity()),
-                p.encoding);
+                p.getEncoding());
     }
 
     static void setstate(bp::object _eot, bp::tuple state)
@@ -47,14 +50,14 @@ struct PyEOT_pickle_suite : bp::pickle_suite
         Explicitly constructing a boost::python::object from the proxy should resolve the conversion exception:
         */
         p.setObjectiveVector( bp::object(state[0]) );
-        p.setFitness( state[1] );
+        p.setFitness( bp::object(state[1]) );
         p.setDiversity( state[2] ); //checks for None
 
         if(bp::object(state[3]).ptr() != Py_None)
         {
-            p.encoding = state[3];
+            p.setEncoding(state[3]);
         }else{
-            p.encoding = bp::object();
+            p.setEncoding(bp::object());
         }
     }
 };
@@ -138,6 +141,17 @@ BOOST_PYTHON_MODULE(_core)
             .staticmethod("tolerance")
         ;
 
+
+    class_<FitnessTraits,boost::noncopyable>("FitnessTraits",bp::no_init)
+        .def("set_minimizing",&FitnessTraits::set_minimizing)
+            .staticmethod("set_minimizing")
+    ;
+
+    class_<DoubleFitness<FitnessTraits>>("Fitness",init<optional<double>>())
+        .def("setup",&DoubleFitness<FitnessTraits>::setup).staticmethod("setup")
+        .def("__lt__",&DoubleFitness<FitnessTraits>::operator<)
+    ;
+
     // need this to be able to derive moeoObjectiveVector from std::vector<double>
     class_< std::vector<double> >("DoubleVec")
         .def(bp::vector_indexing_suite<std::vector<double> >())
@@ -173,7 +187,11 @@ BOOST_PYTHON_MODULE(_core)
 
     void (PyEOT::*fx2)(boost::python::object) = &PyEOT::setObjectiveVector;
 
+<<<<<<< HEAD
     class_<PyEOT>("PyEOT",init<optional<bp::object>>())
+=======
+    class_<PyEOT>("Solution",init<optional<object>>())
+>>>>>>> minimFitness
         .def(init<const PyEOT&>())
         .add_property("encoding", &PyEOT::getEncoding, &PyEOT::setEncoding)
         .add_property("fitness", &PyEOT::getFitness, &PyEOT::setFitness)
@@ -183,8 +201,6 @@ BOOST_PYTHON_MODULE(_core)
         .def("invalidObjectiveVector",&PyEOT::invalidObjectiveVector)
         .def("invalidate", &PyEOT::invalidate)
         .def("invalid", &PyEOT::invalid)
-
-        // .def("invalid", &PyEOT::invalid) //identical to invalidateObjectiveVector
         .def("__getitem__", &PyEOT::get_item)
         .def("__setitem__", &PyEOT::set_item)
         .def("__str__", &PyEOT::to_string)
@@ -237,6 +253,7 @@ BOOST_PYTHON_MODULE(_core)
     // diversityAssign();
     // moeoreplacement();
 
+    //TODO : set this from python ...
     eo::log << eo::setlevel(eo::warnings);
 }
 

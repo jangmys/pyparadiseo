@@ -34,6 +34,8 @@ class test_simpleHC_onemax(unittest.TestCase):
         # neighborhood
         self.nhood = mo.neighborhood.OrderNeighborhood(self.DIM)
 
+        core.FitnessTraits.set_minimizing(False)
+
     def move(self,nbor,sol):
         ind = nbor.index()
         if sol[ind]:
@@ -56,8 +58,12 @@ class test_simpleHC_onemax(unittest.TestCase):
         self.myinit(sol)
         self.myeval(sol)
 
+        print(sol)
+
         # run algo
         hc(sol)
+
+        print(sol)
 
         self.assertTrue(np.all(sol))
         self.assertAlmostEqual(sol.fitness, self.DIM)

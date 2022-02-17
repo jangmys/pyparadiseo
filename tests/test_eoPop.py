@@ -1,5 +1,7 @@
 from pyparadiseo import Solution,Pop,Init
 
+from pyparadiseo import core
+
 import unittest
 import numpy as np
 
@@ -9,10 +11,15 @@ def isNonIncreasing(pop):
             return False
     return True
 
+
 class Test_Pop(unittest.TestCase):
     def setUp(self):
         self.pop = Pop()
         self.init = Init(lambda : np.arange(10)) #just something
+        #reset to default : maximizing fitness
+        core.FitnessTraits.set_minimizing(False)
+
+        # core.DFitness.setup(False)
 
     def tearDown(self):
         self.pop.resize(0)
@@ -26,6 +33,7 @@ class Test_Pop(unittest.TestCase):
         self.pop.resize(10)
         self.assertEqual(len(self.pop),10)
         self.assertEqual(self.pop[9].fitness,9)
+
     def test_append(self):
         self.pop.append(10,self.init)
         self.assertEqual(len(self.pop),10)
@@ -33,28 +41,44 @@ class Test_Pop(unittest.TestCase):
         self.assertEqual(len(self.pop),20)
         with self.assertRaises(RuntimeError):
             self.pop.append(10,self.init)
+
     def test_sort(self):
         self.pop.resize(20)
         # sort fails if fitness not set
-        with self.assertRaises(TypeError):
+        with self.assertRaises(RuntimeError):
             self.pop.sort()
         for i in self.pop:
             i.fitness = np.random.randint(100)
+
         self.pop.sort()
-        self.assertTrue(isNonIncreasing(self.pop))
+        self.assertTrue(isNonIncreasing(self.pop),"maximize : sorted pop should be non-increasing")
+
+        core.FitnessTraits.set_minimizing(True)
+        self.pop.sort()
+        self.assertFalse(isNonIncreasing(self.pop),"minimize : sorted pop should be non-decreasing ")
+
+
     def test_shuffle(self):
         self.pop.resize(100)
         for i,ind in enumerate(self.pop):
             ind.fitness = i
         self.pop.shuffle()
-        self.assertFalse(isNonIncreasing(self.pop),"this is highly unlikely")
-    def test_best(self):
+        self.assertFalse(isNonIncreasing(self.pop),"shuffled pop is sorted. this is highly unlikely.")
+
+    def test_best_worst(self):
         self.pop.resize(100)
         for i,ind in enumerate(self.pop):
             ind.fitness = i
         self.pop.shuffle()
-        bestind = self.pop.best()
-        self.assertEqual(bestind.fitness,99)
+
+        self.assertEqual(self.pop.best().fitness,99,"maximize : 99.0 is best")
+        self.assertEqual(self.pop.worst().fitness,0,"maximize : 0.0 is worst")
+
+        core.FitnessTraits.set_minimizing(True)
+        self.assertEqual(self.pop.best().fitness,0,"minimize : 0.0 is best")
+        self.assertEqual(self.pop.worst().fitness,99,"minimize : 99.0 is worst")
+
+
     def test_push_back(self):
         self.pop.append(10,self.init)
         ind = Solution()
@@ -63,6 +87,7 @@ class Test_Pop(unittest.TestCase):
         self.pop.push_back(ind)
         self.assertEqual(len(self.pop), 11)
         self.assertEqual(self.pop[10].fitness, 42)
+
     def test_swap(self):
         pop2 = Pop(10,self.init)
         self.assertEqual(len(pop2),10)

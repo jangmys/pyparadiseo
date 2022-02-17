@@ -88,6 +88,8 @@ void pop()
     .def("__getitem__", pop_getitem, return_internal_reference<>() )
     .def("__setitem__", pop_setitem)
     .def("best", &eoPop<PyEOT>::best_element, return_internal_reference<>() )
+    .def("worst", &eoPop<PyEOT>::worse_element, return_internal_reference<>() )
+
     .def("push_back", pop_push_back)
     .def("resize",    pop_resize)
     .def("swap", &eoPop<PyEOT>::swap)

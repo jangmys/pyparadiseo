@@ -8,23 +8,29 @@
 #include <core/moeoObjectiveVector.h>
 #include <core/moeoRealObjectiveVector.h>
 
+#include <fitness.h>
+
 #include "utils/to_std_vector.h"
 #include "utils/index_error.h"
 
 namespace bp=boost::python;
 
+
 typedef moeoRealObjectiveVector<moeoObjectiveVectorTraits> realObjVec;
 
-struct PyEOT : public MOEO< realObjVec, double, double>
+
+class PyEOT : public MOEO< realObjVec, doubleFitness, double>
 {
-    typedef double Fitness;
+public:
+    typedef doubleFitness Fitness;
     typedef double Diversity;
     typedef realObjVec ObjectiveVector;
 
-    PyEOT() : MOEO()
-    {
-        // std::cout<<"call PyEOT default ctor\n";
-    }
+    PyEOT() : MOEO(),encoding(bp::object())
+    {    }
+
+    PyEOT(boost::python::object _enc) : MOEO(),encoding(_enc)
+    {    }
 
     //for copy ctor
     bp::object copyMod = bp::import("copy");
@@ -53,19 +59,54 @@ struct PyEOT : public MOEO< realObjVec, double, double>
         return *this;
     }
 
-
+    //FITNESS
+    //==========================================
     //MOEO overrrides operator< from EO
     //we inherit from MOEO but don't want this by default ... reversing without interfering in MOEO module...
     bool operator<(const PyEOT & _other) const
-      {
+    {
         if(getFitness().is_none())
             std::cout<<"can't compare< NoneType\n";
 
-        return getFitness() < _other.getFitness();
-      }
+        //this is Fitness<FitnessTraits>::operator<(Fitness &lhs, Fitness& rhn)
+        //default is maximization, i.e TRUE iff this < other, reversed for minimization
+        return fitness() < _other.fitness();
+    }
+
+    /*
+    getter/setter for fitness, exposed to python as a "property"
+    on the C++ side a fitness is a double
+    on the Python side, anything convertible to a double
+    */
+    boost::python::object getFitness() const {
+        //if invalid return "None" object else construct Python object from C++ double
+        return invalidFitness()? boost::python::object(): boost::python::object(fitness().get());
+    }
+    void setFitness(boost::python::object f) {
+        // NOT : if(!f) //this will be true for 0.0
+        if(f.ptr() == Py_None)
+        {
+            invalidateFitness();
+            return;
+        }
+
+        boost::python::extract<double> x(f);
+        // boost::python::extract<Fitness> x(f);
+        if(x.check())
+        {
+            double d = x();
+
+            // std::cout<<"val=\t"<<d<<std::endl;
+            // Fitness d = x();
+            fitness(d);
+        }else{
+            throw index_error("fitness : failed to extract double\n");
+        }
+    }
 
 
-
+    //ENCODING
+    //==========================================
     //solution encoding is a python object --> a property of pyEOT
     boost::python::object encoding;
 
@@ -94,34 +135,8 @@ struct PyEOT : public MOEO< realObjVec, double, double>
     }
 
 
-    /*
-    getter/setter for fitness, exposed to python as a "property"
-    on the C++ side a fitness is a double
-    on the Python side, anything convertible to a double
-    */
-    boost::python::object getFitness() const {
-        //if invalid return "None" object else construct Python object from C++ double
-        return invalidFitness()? boost::python::object(): boost::python::object(fitness());
-    }
-    void setFitness(boost::python::object f) {
-        // NOT : if(!f) //this will be true for 0.0
-        if(f.ptr() == Py_None)
-        {
-            invalidateFitness();
-            return;
-        }
-
-        boost::python::extract<double> x(f);
-        if(x.check())
-        {
-            double d = x();
-            fitness(d);
-        }else{
-            throw index_error("fitness : failed to extract double\n");
-        }
-    }
-
-
+    //OBJECTIVE VECTOR
+    //======================================================
     //C++ functions use objectiveVector...so this should always return : an objectiveVector!
     //if invalid...(what should happen? see pickling...)
     ObjectiveVector getObjectiveVector() const
@@ -146,7 +161,8 @@ struct PyEOT : public MOEO< realObjVec, double, double>
         objectiveVector(f);
     }
 
-
+    //DIVERSITY
+    //====================================================================
     //getter/setter for diversity, exposed to python as a "property"
     //on the C++ side a diversity is a double
     //on the Python side, anything convertible to a double
@@ -170,13 +186,13 @@ struct PyEOT : public MOEO< realObjVec, double, double>
         }
     }
 
+    //VALIDITY FLAGS
     bool invalid() const
     {
         return invalidFitness();
     }
 
-
-
+    //I/O
     std::string to_string() const
     {
         std::string result;
@@ -187,7 +203,7 @@ struct PyEOT : public MOEO< realObjVec, double, double>
 
         result += "Fitness: ";
         if(!invalidFitness())
-            result += boost::python::extract<const char*>(boost::python::str(fitness()));
+            result += boost::python::extract<const char*>(boost::python::str(fitness().get()));
         else result += std::string("[]");
 
         if(!invalidObjectiveVector()){
@@ -208,10 +224,9 @@ struct PyEOT : public MOEO< realObjVec, double, double>
     }
 
     void printOn(std::ostream & _os) const
-      {
+    {
         _os << to_string() << ' ';
-      }
-
+    }
 };
 
 #endif

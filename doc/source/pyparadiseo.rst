@@ -24,7 +24,7 @@ Module contents
     :undoc-members:
     :show-inheritance:
 
-    .. autoclass:: PyEOT
+    .. autoclass:: Solution
         :members:
         :special-members:
         :private-members:
