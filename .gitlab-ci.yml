@@ -53,3 +53,10 @@ test-job1:
         - python3 -m pip install wheelhouse/*.manylinux2014_x86_64.whl
         - python3 -c "import pyparadiseo"
         - python3 -m pytest tests
+
+pypi:
+    needs:
+        - build-job
+    script:
+        - python3 -m pip install -U twine
+        - twine upload wheelhouse/* 
