@@ -5,8 +5,7 @@ from .initializer import *
 from .evaluator import *
 from .bounds import *
 
-from .core import set_minimize_fitness
-from .core import set_maximize_fitness
+from .core import *
 
 from ._core import FitnessTraits
 
