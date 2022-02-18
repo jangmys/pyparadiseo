@@ -7,7 +7,7 @@ from ._core import ObjectiveEval
 from ._core import eoPopLoopEval as PopLoopEval
 
 ### counting eval function (for eoContinuator)
-from .core import eoEvalFuncCounter as EvalFuncCounter
+from ._core import eoEvalFuncCounter as EvalFuncCounter
 
 
 
