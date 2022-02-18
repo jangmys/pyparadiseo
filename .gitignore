@@ -1,6 +1,3 @@
-build/
-CMakeFiles/
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -8,6 +5,12 @@ __pycache__/
 *.egg-info
 .eggs
 dist
+
+MANIFEST
+
+artifacts
+build/
+CMakeFiles/
 
 #doc
 doc/build/
@@ -23,6 +26,7 @@ doc/source/modules.rst
 
 _skbuild/
 
+problemData
 
 #local only
 local_build-install.sh
