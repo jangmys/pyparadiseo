@@ -28,6 +28,7 @@ before_script:
 stages:
     - build
     - test
+    - deploy
 
 build-job:
     stage: build
@@ -53,3 +54,12 @@ test-job1:
         - python3 -m pip install wheelhouse/*.manylinux2014_x86_64.whl
         - python3 -c "import pyparadiseo"
         - python3 -m pytest tests
+
+pypi:
+    stage: deploy
+    needs:
+        - test-job1
+    script:
+        - python3 -m pip install -U twine
+        - twine upload --skip-existing wheelhouse/*
+    when: manual
