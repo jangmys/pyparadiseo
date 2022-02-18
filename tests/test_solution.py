@@ -1,4 +1,4 @@
-from pyparadiseo import core
+import pyparadiseo as pp
 
 from pyparadiseo import Solution
 
@@ -70,11 +70,11 @@ class TestSolution(unittest.TestCase):
         sol1.fitness = 1.0
         sol2.fitness = 2.0
 
-        core.FitnessTraits.set_minimizing(True)
+        pp.set_minimize_fitness()
         self.assertTrue(sol1 > sol2)
         self.assertFalse(sol1 < sol2)
 
-        core.FitnessTraits.set_minimizing(False)
+        pp.set_maximize_fitness()
         self.assertFalse(sol1 > sol2)
         self.assertTrue(sol1 < sol2)
 

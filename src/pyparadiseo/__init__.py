@@ -3,17 +3,21 @@ from pyparadiseo import eo, mo, moeo
 from .operator import *
 from .initializer import *
 from .evaluator import *
+from .bounds import *
 
-from .core import FitnessTraits
+from .core import set_minimize_fitness
+from .core import set_maximize_fitness
+
+from ._core import FitnessTraits
 
 ### basic stuff common to MO,EO and MOEO
 
 #SOLUTION (PyEOT)
-from .core import Solution
-from .core import ObjectiveVectorTraits
-from .core import ObjectiveVector
-from .core import Pop
+from ._core import Solution
+from ._core import ObjectiveVectorTraits
+from ._core import ObjectiveVector
+from ._core import Pop
 
 #  EO RNG
-from .core import eoRng
-from .core import rng
+from ._core import eoRng
+from ._core import rng

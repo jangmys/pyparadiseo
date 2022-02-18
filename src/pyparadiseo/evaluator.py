@@ -1,10 +1,11 @@
 #abstract base classes
-from .core import eoEvalFunc
-from .core import eoPopEvalFunc
+from ._core import eoEvalFunc
+from ._core import eoPopEvalFunc
 
-from .core import FitnessEval
-from .core import ObjectiveEval
-from .core import eoPopLoopEval as PopLoopEval
+from ._core import FitnessEval
+from ._core import ObjectiveEval
+from ._core import eoPopLoopEval as PopLoopEval
 
 ### counting eval function (for eoContinuator)
-from .core import eoEvalFuncCounter as EvalFuncCounter
+from ._core import eoEvalFuncCounter as EvalFuncCounter
+    

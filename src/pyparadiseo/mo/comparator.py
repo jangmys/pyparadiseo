@@ -1,2 +1,2 @@
-from ..core import moNeighborComparator
-from ..core import moSolNeighborComparator
+from .._core import moNeighborComparator
+from .._core import moSolNeighborComparator

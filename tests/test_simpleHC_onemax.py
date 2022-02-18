@@ -1,6 +1,6 @@
 import pyparadiseo as pp
 
-from pyparadiseo import core,mo
+from pyparadiseo import mo
 from pyparadiseo.mo import eval,neighborhood,algo
 
 from pyparadiseo import Init,Pop
@@ -26,7 +26,7 @@ class test_simpleHC_onemax(unittest.TestCase):
     def setUp(self):
         self.DIM = 20
         # initializer
-        self.myinit = pp.core.BinaryInit(self.DIM)
+        self.myinit = pp.initializer.BinaryInit(self.DIM)
         # full evaluation
         self.myeval = pp.FitnessEval(sum_bits)
         # nbor evaluation
@@ -34,7 +34,7 @@ class test_simpleHC_onemax(unittest.TestCase):
         # neighborhood
         self.nhood = mo.neighborhood.OrderNeighborhood(self.DIM)
 
-        core.FitnessTraits.set_minimizing(False)
+        pp.set_maximize_fitness()
 
     def move(self,nbor,sol):
         ind = nbor.index()
