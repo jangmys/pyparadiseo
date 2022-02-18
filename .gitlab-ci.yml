@@ -61,4 +61,5 @@ pypi:
         - build-job
     script:
         - python3 -m pip install -U twine
-        - twine upload --skip-existing wheelhouse/* 
+        - twine upload --skip-existing wheelhouse/*
+    when: manual
