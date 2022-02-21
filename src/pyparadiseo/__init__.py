@@ -5,7 +5,7 @@ from .initializer import *
 from .evaluator import *
 from .bounds import *
 
-from ._core import *
+from .core import *
 
 from ._core import FitnessTraits
 
