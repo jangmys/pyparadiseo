@@ -16,8 +16,8 @@ if __name__ == "__main__":
     DIM = 200
     max_one = onemax.OneMax(DIM)
 
-    # initializer
-    myinit = pp.core.BinaryInit(DIM)
+    # standard initializer object 
+    myinit = pp.initializer.BinaryInit(DIM)
     # full evaluation
     myeval = pp.FitnessEval(max_one.sum_bits)
     # nbor evaluation
@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     ########################################
     # define sol / init / eval
-    sol = pp.PyEOT()
+    sol = pp.Solution()
     myinit(sol)
     myeval(sol)
     print(sol)
