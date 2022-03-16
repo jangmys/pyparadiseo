@@ -1,6 +1,7 @@
-from pyparadiseo import Solution,Pop,Init
+import pyparadiseo as pp
+from pyparadiseo import Solution,Pop
+from pyparadiseo.initializer import Init
 
-from pyparadiseo import core
 
 import unittest
 import numpy as np
@@ -17,9 +18,7 @@ class Test_Pop(unittest.TestCase):
         self.pop = Pop()
         self.init = Init(lambda : np.arange(10)) #just something
         #reset to default : maximizing fitness
-        core.FitnessTraits.set_minimizing(False)
-
-        # core.DFitness.setup(False)
+        pp.set_maximize_fitness()
 
     def tearDown(self):
         self.pop.resize(0)
@@ -53,7 +52,7 @@ class Test_Pop(unittest.TestCase):
         self.pop.sort()
         self.assertTrue(isNonIncreasing(self.pop),"maximize : sorted pop should be non-increasing")
 
-        core.FitnessTraits.set_minimizing(True)
+        pp.set_minimize_fitness()
         self.pop.sort()
         self.assertFalse(isNonIncreasing(self.pop),"minimize : sorted pop should be non-decreasing ")
 
@@ -74,7 +73,7 @@ class Test_Pop(unittest.TestCase):
         self.assertEqual(self.pop.best().fitness,99,"maximize : 99.0 is best")
         self.assertEqual(self.pop.worst().fitness,0,"maximize : 0.0 is worst")
 
-        core.FitnessTraits.set_minimizing(True)
+        pp.set_minimize_fitness()
         self.assertEqual(self.pop.best().fitness,0,"minimize : 0.0 is best")
         self.assertEqual(self.pop.worst().fitness,99,"minimize : 99.0 is worst")
 

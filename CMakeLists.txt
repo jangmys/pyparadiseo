@@ -84,4 +84,4 @@ set_target_properties(_core PROPERTIES PREFIX "")
 
 target_link_libraries(_core Python3::Module ${Boost_LIBRARIES} Python3::NumPy)
 
-install(TARGETS _core LIBRARY DESTINATION ./core/ COMPONENT libraries)
+install(TARGETS _core LIBRARY DESTINATION ./ COMPONENT libraries)

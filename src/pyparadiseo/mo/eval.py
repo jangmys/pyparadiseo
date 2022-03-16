@@ -1,8 +1,8 @@
 ##abstract
-from ..core import moEval as Eval
-from ..core import moNeighborhoodEvaluation as NeighborhoodEvaluation
+from .._core import moEval as Eval
+from .._core import moNeighborhoodEvaluation as NeighborhoodEvaluation
 
-from ..core import NeighborEval
+from .._core import NeighborEval
 
-from ..core import moFullEvalByCopy as FullEvalByCopy
-from ..core import moFullEvalByModif as FullEvalByModif
+from .._core import moFullEvalByCopy as FullEvalByCopy
+from .._core import moFullEvalByModif as FullEvalByModif

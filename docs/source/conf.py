@@ -40,12 +40,25 @@ release = '0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "sphinx.ext.autodoc",
+    'sphinx.ext.autodoc',
+    'sphinx.ext.coverage',
     'sphinx.ext.autosummary',
-    "sphinx.ext.napoleon"
+    'sphinx.ext.napoleon'
 ]
 
+autosummary_generate = True  # Turn on sphinx.ext.autosummary
+
 autodoc_class_signature = "separated"
+autodoc_typehints = 'description'
+
+autodoc_default_options = {
+    'members': True,
+    'member-order': 'bysource',
+    'special-members': '__init__',
+    'undoc-members': True,
+    'inherited-members': True,
+    'exclude-members': '__weakref__,__new__'
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -95,19 +108,31 @@ def setup(app):
     # assign the names to classes imported 'as ...', otherwise autodoc won't document these classes,
     # and will instead just say 'alias of ...'
     import pyparadiseo
-    pyparadiseo.Init.__name__ = 'Init'
-    pyparadiseo.PopLoopEval.__name__ = 'PopLoopEval'
-    pyparadiseo.MonOp.__name__ = 'MonOp'
-    pyparadiseo.BinOp.__name__ = 'BinOp'
-    pyparadiseo.QuadOp.__name__ = 'QuadOp'
+    import pyparadiseo.operator
+    pyparadiseo.operator.MonOp.__name__ = 'MonOp'
+    pyparadiseo.operator.BinOp.__name__ = 'BinOp'
+    pyparadiseo.operator.QuadOp.__name__ = 'QuadOp'
+
+    import pyparadiseo.evaluator
+    pyparadiseo.evaluator.PopLoopEval.__name__ = 'PopLoopEval'
+
+    import pyparadiseo.initializer
+    pyparadiseo.initializer.Init.__name__ = 'Init'
 
     import pyparadiseo.eo
-    pyparadiseo.eo.Select.__name__ = 'Select'
-    pyparadiseo.eo.Replacement.__name__ = 'Replacement'
-    pyparadiseo.eo.Breed.__name__ = 'Breed'
     pyparadiseo.eo.Algo.__name__ = 'Algo'
-    pyparadiseo.eo.Transform.__name__ = 'Transform'
+    pyparadiseo.eo.Breed.__name__ = 'Breed'
     pyparadiseo.eo.Continue.__name__ = 'Continue'
+    pyparadiseo.eo.Merge.__name__ = 'Merge'
+    pyparadiseo.eo.Reduce.__name__ = 'Reduce'
+    pyparadiseo.eo.Replacement.__name__ = 'Replacement'
+    pyparadiseo.eo.Select.__name__ = 'Select'
+    pyparadiseo.eo.Transform.__name__ = 'Transform'
+
+    import pyparadiseo.eo.algo
+    pyparadiseo.eo.algo.SGA.__name__ = 'SGA'
+    pyparadiseo.eo.algo.EasyEA.__name__ = 'EasyEA'
+    pyparadiseo.eo.algo.FastGA.__name__ = 'FastGA'
 
     import pyparadiseo.eo.selector
     pyparadiseo.eo.selector.SelectOne.__name__ = 'SelectOne'
@@ -129,6 +154,9 @@ def setup(app):
     import pyparadiseo.eo.continuator
     pyparadiseo.eo.continuator.EvalContinue.__name__ = 'EvalContinue'
     pyparadiseo.eo.continuator.GenContinue.__name__ = 'GenContinue'
-
+    pyparadiseo.eo.continuator.CombinedContinue.__name__ = 'CombinedContinue'
+    pyparadiseo.eo.continuator.SteadyFitContinue.__name__ = 'SteadyFitContinue'
+    pyparadiseo.eo.continuator.SecondsElapsedContinue.__name__ = 'SecondsElapsedContinue'
+    
     import pyparadiseo.eo.transform
     pyparadiseo.eo.transform.SGATransform.__name__ = 'SGATransform'

@@ -1,6 +1,12 @@
 pyparadiseo.mo package
 ======================
 
+.. automodule:: pyparadiseo.mo
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :imported-members:
+
 Submodules
 ----------
 
@@ -11,6 +17,7 @@ pyparadiseo.mo.algo module
    :members:
    :undoc-members:
    :show-inheritance:
+   :imported-members:
 
 pyparadiseo.mo.comparator module
 --------------------------------
@@ -19,6 +26,7 @@ pyparadiseo.mo.comparator module
    :members:
    :undoc-members:
    :show-inheritance:
+   :imported-members:
 
 pyparadiseo.mo.continuator module
 ---------------------------------
@@ -27,6 +35,7 @@ pyparadiseo.mo.continuator module
    :members:
    :undoc-members:
    :show-inheritance:
+   :imported-members:
 
 pyparadiseo.mo.eval module
 --------------------------
@@ -35,6 +44,7 @@ pyparadiseo.mo.eval module
    :members:
    :undoc-members:
    :show-inheritance:
+   :imported-members:
 
 pyparadiseo.mo.explorer module
 ------------------------------
@@ -43,6 +53,7 @@ pyparadiseo.mo.explorer module
    :members:
    :undoc-members:
    :show-inheritance:
+   :imported-members:
 
 pyparadiseo.mo.neighborhood module
 ----------------------------------
@@ -51,11 +62,4 @@ pyparadiseo.mo.neighborhood module
    :members:
    :undoc-members:
    :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: pyparadiseo.mo
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   :imported-members:

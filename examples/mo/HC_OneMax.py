@@ -16,10 +16,10 @@ if __name__ == "__main__":
     DIM = 2000
     max_one = onemax.OneMax(DIM)
 
-    # initializer
-    myinit = pp.core.BinaryInit(DIM)
-    # full evaluation
-    myeval = pp.FitnessEval(max_one.sum_bits)
+    #use provided initializer class for binary solutions
+    myinit = pp.initializer.BinaryInit(DIM)
+    #make pyparadiseo fitness evaluator (callable with appropriate signature...)
+    myeval = pp.evaluator.FitnessEval(max_one.sum_bits)
     # nbor evaluation
     nborEval = pp.mo.eval.NeighborEval(max_one.eval_incremental)
     # neighborhood

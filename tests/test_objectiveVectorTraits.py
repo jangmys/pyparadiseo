@@ -1,9 +1,19 @@
+import pyparadiseo as pp
+
 from pyparadiseo import ObjectiveVectorTraits
 
 import unittest
 
 
-class BiObj(unittest.TestCase):
+class TestObj(unittest.TestCase):
+    def test_MinMaxMin(self):
+        pp.setup_objectives(3,[True,False,True])
+
+        self.assertEqual(ObjectiveVectorTraits.nb_objectives(),3)
+        self.assertTrue(ObjectiveVectorTraits.minimizing(0))
+        self.assertTrue(ObjectiveVectorTraits.maximizing(1))
+        self.assertTrue(ObjectiveVectorTraits.minimizing(2))
+
     def test_MinMin(self):
         ObjectiveVectorTraits.setup(2,[True,True])
 
@@ -22,7 +32,6 @@ class BiObj(unittest.TestCase):
         self.assertFalse(ObjectiveVectorTraits.maximizing(0))
         self.assertTrue(ObjectiveVectorTraits.maximizing(1))
 
-class SingleObj(unittest.TestCase):
     def test_Min(self):
         # second arg must be iterable !!!
         # moeoObjectiveVectorTraits.setup(1,True)

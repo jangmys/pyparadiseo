@@ -1,7 +1,6 @@
 from pyparadiseo.eo import transform
 
-from pyparadiseo import pyMonOp
-from pyparadiseo import pyQuadOp
+from pyparadiseo.operator import pyMonOp,pyQuadOp
 
 import unittest
 import inspect

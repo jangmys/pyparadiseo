@@ -1,14 +1,14 @@
 from pyparadiseo import Solution
 from pyparadiseo import eo
-from pyparadiseo import Init
+from pyparadiseo.initializer import Init
 
-from pyparadiseo import pyMonOp
-from pyparadiseo import pyBinOp
-from pyparadiseo import pyQuadOp
+from pyparadiseo.operator import pyMonOp
+from pyparadiseo.operator import pyBinOp
+from pyparadiseo.operator import pyQuadOp
 
-from pyparadiseo import MonOp
-from pyparadiseo import BinOp
-from pyparadiseo import QuadOp
+from pyparadiseo.operator import MonOp
+from pyparadiseo.operator import BinOp
+from pyparadiseo.operator import QuadOp
 
 
 import unittest
