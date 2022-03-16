@@ -108,11 +108,16 @@ def setup(app):
     # assign the names to classes imported 'as ...', otherwise autodoc won't document these classes,
     # and will instead just say 'alias of ...'
     import pyparadiseo
-    pyparadiseo.Init.__name__ = 'Init'
-    pyparadiseo.PopLoopEval.__name__ = 'PopLoopEval'
-    pyparadiseo.MonOp.__name__ = 'MonOp'
-    pyparadiseo.BinOp.__name__ = 'BinOp'
-    pyparadiseo.QuadOp.__name__ = 'QuadOp'
+    import pyparadiseo.operator
+    pyparadiseo.operator.MonOp.__name__ = 'MonOp'
+    pyparadiseo.operator.BinOp.__name__ = 'BinOp'
+    pyparadiseo.operator.QuadOp.__name__ = 'QuadOp'
+
+    import pyparadiseo.evaluator
+    pyparadiseo.evaluator.PopLoopEval.__name__ = 'PopLoopEval'
+
+    import pyparadiseo.initializer
+    pyparadiseo.initializer.Init.__name__ = 'Init'
 
     import pyparadiseo.eo
     pyparadiseo.eo.Algo.__name__ = 'Algo'
@@ -149,6 +154,9 @@ def setup(app):
     import pyparadiseo.eo.continuator
     pyparadiseo.eo.continuator.EvalContinue.__name__ = 'EvalContinue'
     pyparadiseo.eo.continuator.GenContinue.__name__ = 'GenContinue'
-
+    pyparadiseo.eo.continuator.CombinedContinue.__name__ = 'CombinedContinue'
+    pyparadiseo.eo.continuator.SteadyFitContinue.__name__ = 'SteadyFitContinue'
+    pyparadiseo.eo.continuator.SecondsElapsedContinue.__name__ = 'SecondsElapsedContinue'
+    
     import pyparadiseo.eo.transform
     pyparadiseo.eo.transform.SGATransform.__name__ = 'SGATransform'
