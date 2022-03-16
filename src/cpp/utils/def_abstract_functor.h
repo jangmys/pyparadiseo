@@ -70,10 +70,10 @@ namespace eoutils {
     };
 
     template <class Proc>
-    void make_abstract_functor(std::string name, typename eoFunctorBase::procedure_tag)
+    void make_abstract_functor(std::string name, std::string docstring, typename eoFunctorBase::procedure_tag)
     {
         typedef ProcWrapper<Proc> Wrapper;
-        boost::python::class_<Proc, Wrapper,boost::noncopyable>(name.c_str(), boost::python::init<>() )
+        boost::python::class_<Proc, Wrapper,boost::noncopyable>(name.c_str(), docstring.c_str(), boost::python::init<>() )
             .def("__call__", &Wrapper::operator());
     }
 
@@ -99,11 +99,11 @@ namespace eoutils {
     };
 
     template <class Unary>
-    void make_abstract_functor(std::string name, typename eoFunctorBase::unary_function_tag)
+    void make_abstract_functor(std::string name, std::string docstring, typename eoFunctorBase::unary_function_tag)
     {
         typedef UnaryWrapper<Unary> Wrapper;
 
-        boost::python::class_<Unary, Wrapper, boost::noncopyable>(name.c_str(), boost::python::init<>() )
+        boost::python::class_<Unary, Wrapper, boost::noncopyable>(name.c_str(), docstring.c_str(), boost::python::init<>() )
             .def("__call__", &Wrapper::operator())
             ;
     }
@@ -131,11 +131,19 @@ namespace eoutils {
         }
     };
 
+    // template <class Binary>
+    // void make_abstract_functor(std::string name, typename eoFunctorBase::binary_function_tag)
+    // {
+    //     typedef BinaryWrapper<Binary> Wrapper;
+    //     boost::python::class_<Binary, Wrapper, boost::noncopyable>(name.c_str(), boost::python::init<>() )
+    //         .def("__call__", &Wrapper::operator());
+    // }
+
     template <class Binary>
-    void make_abstract_functor(std::string name, typename eoFunctorBase::binary_function_tag)
+    void make_abstract_functor(std::string name, std::string docstring, typename eoFunctorBase::binary_function_tag)
     {
         typedef BinaryWrapper<Binary> Wrapper;
-        boost::python::class_<Binary, Wrapper, boost::noncopyable>(name.c_str(), boost::python::init<>() )
+        boost::python::class_<Binary, Wrapper, boost::noncopyable>(name.c_str(), docstring.c_str(), boost::python::init<>() )
             .def("__call__", &Wrapper::operator());
     }
 
@@ -150,9 +158,9 @@ namespace eoutils {
 }// namespace eoutils
 
 template <class Functor>
-void def_abstract_functor(std::string name)
+void def_abstract_functor(std::string name,std::string docstring = "Abstract base class")
 {
-    eoutils::make_abstract_functor<Functor>(name, Functor::functor_category());
+    eoutils::make_abstract_functor<Functor>(name, docstring, Functor::functor_category());
 }
 
 template <class Functor>
