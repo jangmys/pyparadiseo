@@ -61,5 +61,6 @@ pypi:
         - test-job1
     script:
         - python3 -m pip install -U twine
-        - twine upload --skip-existing wheelhouse/*
+        #- twine upload --skip-existing wheelhouse/*
+        - twine upload wheelhouse/*.manylinux2014_x86_64.whl
     when: manual
