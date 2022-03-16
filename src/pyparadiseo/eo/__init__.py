@@ -1,10 +1,8 @@
-from .algo import *
-from .breeders import *
-from .continuator import *
-from .merge import *
-from .reduce import *
-from .replacement import *
-from .selector import *
-from .transform import *
-
-from .test_mod import *
+from .._core import eoAlgo as Algo
+from .._core import eoBreed as Breed
+from .._core import eoContinue as Continue
+from .._core import eoMerge as Merge
+from .._core import eoReduce as Reduce
+from .._core import eoReplacement as Replacement
+from .._core import eoSelect as Select
+from .._core import eoTransform as Transform
