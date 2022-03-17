@@ -23,7 +23,7 @@ before_script:
     - . /opt/venv/bin/activate
     - mkdir -p .pip
     - python3 -m pip install --cache-dir=.pip --upgrade pip
-    - python3 -m pip install --cache-dir=.pip scikit-build numpy numba pytest auditwheel
+    - python3 -m pip install --cache-dir=.pip scikit-build numpy numba pytest auditwheel sphinxcontrib-napoleon
     - yum -y install python-sphinx
 
 stages:
