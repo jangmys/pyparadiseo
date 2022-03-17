@@ -9,7 +9,8 @@
 
 ## Installation
 
-You can install pyParadiseo with `pip`
+For now, PyParadiseo is only available for Python 3.6.
+You can install PyParadiseo with `pip`
 
 ```console
 pip install pyparadiseo
