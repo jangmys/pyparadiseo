@@ -54,6 +54,10 @@ test-job1:
         - python3 -m pip install wheelhouse/*.manylinux2014_x86_64.whl
         - python3 -c "import pyparadiseo"
         - python3 -m pytest tests
+    artifacts:
+           paths:
+            - wheelhouse/
+
 
 pypi:
     stage: deploy
