@@ -24,6 +24,7 @@ before_script:
     - mkdir -p .pip
     - python3 -m pip install --cache-dir=.pip --upgrade pip
     - python3 -m pip install --cache-dir=.pip scikit-build numpy numba pytest auditwheel
+    - apt-get install python3-sphinx
 
 stages:
     - build
