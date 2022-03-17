@@ -42,8 +42,8 @@ release = '0.1'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.coverage',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.napoleon'
+    'sphinx.ext.autosummary'
+#    'sphinx.ext.napoleon'
 ]
 
 autosummary_generate = True  # Turn on sphinx.ext.autosummary
@@ -157,6 +157,6 @@ def setup(app):
     pyparadiseo.eo.continuator.CombinedContinue.__name__ = 'CombinedContinue'
     pyparadiseo.eo.continuator.SteadyFitContinue.__name__ = 'SteadyFitContinue'
     pyparadiseo.eo.continuator.SecondsElapsedContinue.__name__ = 'SecondsElapsedContinue'
-    
+
     import pyparadiseo.eo.transform
     pyparadiseo.eo.transform.SGATransform.__name__ = 'SGATransform'
