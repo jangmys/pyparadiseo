@@ -37,7 +37,8 @@ build-job:
         - python3 setup.py sdist bdist_wheel -G"Unix Makefiles"
         - auditwheel repair dist/*.whl
         - rm dist/*
-        - cd docs; make html
+        - cd docs
+        - make html
         # - python3 -m pip install wheelhouse/*.manylinux2014_x86_64.whl
         # - python3 -c "import pyparadiseo"
         # - python3 -m pytest tests
@@ -86,4 +87,3 @@ pypi:
         #- twine upload --skip-existing wheelhouse/*
         - twine upload wheelhouse/*.manylinux2014_x86_64.whl
     when: manual
-
