@@ -73,7 +73,7 @@ pages:
         - ls
         - ls docs
         - ls docs/build
-        - cp -r docs/build .public
+        - cp -r docs/build/* .public
         - mv .public public
         - ls public
     artifacts:
