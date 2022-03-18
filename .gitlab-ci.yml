@@ -62,7 +62,7 @@ test-job1:
     artifacts:
         paths:
             - wheelhouse/
-            - docs/build/html
+            - docs/build/
 
 pages:
     stage: test
@@ -70,6 +70,9 @@ pages:
         - test-job1
     script:
         - mkdir .public
+        - ls
+        - ls docs
+        - ls docs/build 
         - cp -r docs/build/html .public
         - mv .public public
     artifacts:
