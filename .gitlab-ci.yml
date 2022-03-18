@@ -72,9 +72,10 @@ pages:
         - mkdir .public
         - ls
         - ls docs
-        - ls docs/build 
+        - ls docs/build
         - cp -r docs/build .public
         - mv .public public
+        - ls public
     artifacts:
         paths:
             - public
