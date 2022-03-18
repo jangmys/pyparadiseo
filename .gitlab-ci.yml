@@ -24,7 +24,7 @@ before_script:
     - mkdir -p .pip
     - python3 -m pip install --cache-dir=.pip --upgrade pip
     - python3 -m pip install --cache-dir=.pip scikit-build numpy numba pytest auditwheel sphinxcontrib-napoleon Sphinx sphinx-rtd-theme
-    - yum -y install python-sphinx
+    #- yum -y install python-sphinx
 
 stages:
     - build
@@ -65,7 +65,7 @@ test-job1:
             - docs/build/html
 
 pages:
-    stage: deploy
+    stage: test
     needs:
         - test-job1
     script:
