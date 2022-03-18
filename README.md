@@ -5,8 +5,6 @@
 - [Usage](#getting-started)
 - [Components](#components)
 
-
-
 ## Installation
 
 For now, PyParadiseo is only available for Python 3.6.
@@ -17,6 +15,8 @@ pip install pyparadiseo
 ```
 
 ## Getting Started
+
+The documentation of PyParadiseo is available [here](https://paradiseo.gitlabpages.inria.fr/pyparadiseo/)
 
 Example of running EO's simple GA (SGA) for the One-Max test problem
 
