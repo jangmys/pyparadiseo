@@ -1,6 +1,12 @@
 pyparadiseo.eo package
 ======================
 
+.. automodule:: pyparadiseo.eo
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :imported-members:
+
 Submodules
 ----------
 
@@ -11,6 +17,7 @@ pyparadiseo.eo.algo module
    :members:
    :undoc-members:
    :show-inheritance:
+   :imported-members:
 
 pyparadiseo.eo.breeders module
 ------------------------------
@@ -19,6 +26,7 @@ pyparadiseo.eo.breeders module
    :members:
    :undoc-members:
    :show-inheritance:
+   :imported-members:
 
 pyparadiseo.eo.continuator module
 ---------------------------------
@@ -27,20 +35,7 @@ pyparadiseo.eo.continuator module
    :members:
    :undoc-members:
    :show-inheritance:
-
-   .. autoclass:: EvalContinue
-        :members:
-        :special-members:
-        :private-members:
-        :undoc-members:
-        :show-inheritance:
-
-    .. autoclass:: GenContinue
-        :members:
-        :special-members:
-        :private-members:
-        :undoc-members:
-        :show-inheritance:
+   :imported-members:
 
 pyparadiseo.eo.merge module
 ---------------------------
@@ -49,6 +44,7 @@ pyparadiseo.eo.merge module
    :members:
    :undoc-members:
    :show-inheritance:
+   :imported-members:
 
 pyparadiseo.eo.reduce module
 ----------------------------
@@ -57,6 +53,7 @@ pyparadiseo.eo.reduce module
    :members:
    :undoc-members:
    :show-inheritance:
+   :imported-members:
 
 pyparadiseo.eo.replacement module
 ---------------------------------
@@ -65,6 +62,7 @@ pyparadiseo.eo.replacement module
    :members:
    :undoc-members:
    :show-inheritance:
+   :imported-members:
 
 pyparadiseo.eo.selector module
 ------------------------------
@@ -73,14 +71,7 @@ pyparadiseo.eo.selector module
    :members:
    :undoc-members:
    :show-inheritance:
-
-pyparadiseo.eo.test\_mod module
--------------------------------
-
-.. automodule:: pyparadiseo.eo.test_mod
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   :imported-members:
 
 pyparadiseo.eo.transform module
 -------------------------------
@@ -89,11 +80,4 @@ pyparadiseo.eo.transform module
    :members:
    :undoc-members:
    :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: pyparadiseo.eo
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   :imported-members:

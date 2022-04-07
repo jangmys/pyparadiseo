@@ -1,6 +1,7 @@
 import pyparadiseo
 
-from pyparadiseo import Init,Pop
+from pyparadiseo import Pop
+from pyparadiseo.initializer import Init
 from pyparadiseo.eo import selector
 
 import numpy as np

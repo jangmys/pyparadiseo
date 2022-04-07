@@ -7,7 +7,7 @@ public:
         _minimizing = _val;
     }
 
-    static bool minimizing()
+    static bool is_minimizing()
     {
         // std::cout<<"call flag\n";
         return _minimizing;
@@ -45,7 +45,7 @@ public:
 
     bool operator<(const DoubleFitness<FitnessTraits>& _other) const
     {
-        if(FitnessTraits::minimizing())
+        if(FitnessTraits::is_minimizing())
             return get() > _other.get();
         //else
         return get() < _other.get();

@@ -136,6 +136,7 @@ public:
     //if invalid...(what should happen? see pickling...)
     ObjectiveVector getObjectiveVector() const
     {
+        //if invalid...default ctor...else return
         return invalidObjectiveVector()?ObjectiveVector():objectiveVector();
     }
     //objective vector is set at EACH f-eval...doing this right seems quite critical !!!
@@ -217,6 +218,32 @@ public:
 
         return result;
     }
+
+    std::string repr() const
+    {
+        std::string s;
+
+        s += "Solution(";
+        s += boost::python::extract<const char*>(boost::python::str(encoding));
+        s += ",";
+        if(invalidFitness())
+            s+="";
+        else s += boost::python::extract<const char*>(boost::python::str(fitness().get()));
+        s += ",";
+
+        if(invalidObjectiveVector())
+            s+="";
+        else s += boost::python::extract<const char*>(boost::python::str(objectiveVector()));
+        s += ",";
+
+        if(invalidDiversity())
+            s+="";
+        else s += boost::python::extract<const char*>(boost::python::str(diversity()));
+        s += ")";
+
+        return s;
+    }
+
 
     void printOn(std::ostream & _os) const
     {

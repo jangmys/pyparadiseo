@@ -5,9 +5,6 @@
 #include <eoSGA.h>
 #include <eoEasyEA.h>
 #include <eoFastGA.h>
-// #include <eoCellularEasyEA.h>
-
-// #include <selection/moeoSelectOne.h>
 
 #include <boost/python.hpp>
 #include <pyeot.h>
@@ -17,10 +14,10 @@ using namespace boost::python;
 
 void eoAlgos()
 {
-    def_abstract_functor<eoAlgo<PyEOT> >("eoAlgo");
+    def_abstract_functor<eoAlgo<PyEOT>>("eoAlgo","Abstract base class. Unary functor : Population -> void");
 
     class_<eoSGA<PyEOT>, bases<eoAlgo<PyEOT> >, boost::noncopyable>
-    ("eoSGA",
+    ("eoSGA","Simple genetic algorithm.",
     init<
     eoSelectOne<PyEOT>&,
     eoQuadOp<PyEOT>&,
@@ -48,7 +45,7 @@ void eoAlgos()
 
 
     class_<eoEasyEA<PyEOT>, bases<eoAlgo<PyEOT> > >
-    ("eoEasyEA",
+    ("eoEasyEA","Evolutionary algorithm.",
     init<
     eoContinue<PyEOT>&,
     eoEvalFunc<PyEOT>&,
@@ -170,7 +167,7 @@ void eoAlgos()
 
 
     class_<eoFastGA<PyEOT>, bases<eoAlgo<PyEOT> > >
-    ("eoFastGA",
+    ("eoFastGA","Fast genetic algorithm.",
     init<
         double,
         eoSelectOne<PyEOT>&,

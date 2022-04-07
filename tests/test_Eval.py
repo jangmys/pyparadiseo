@@ -6,93 +6,76 @@ from pyparadiseo import initializer
 import time
 import functools
 
+import unittest
+
 import numpy as np
 import numba as nb
 
-ind = Solution()
-init = initializer.BinaryInit(12)
-init(ind)
+class test_eval(unittest.TestCase):
+    def setUp(self):
+        self.sol = Solution(np.arange(10))
 
-print(ind)
+    def test_lambda(self):
+        ev = evaluator.FitnessEval(lambda x: np.sum(x))
+        self.assertTrue(isinstance(ev,evaluator.eoEvalFunc))
+        ev(self.sol)
+        self.assertEqual(self.sol.fitness,45)
 
-solu = Solution([1,True,0.234,'abc'])
-print(solu)
+    def test_function(self):
+        # take encoding as argument return fitness
+        def foo(x):
+            return np.sum(x)
+        ev = evaluator.FitnessEval(foo)
+        self.assertTrue(isinstance(ev,evaluator.eoEvalFunc))
+        ev(self.sol)
+        self.assertEqual(self.sol.fitness,45)
 
+    def test_inherit(self):
+        class myEval(evaluator.eoEvalFunc):
+            def __init__(self):
+                evaluator.eoEvalFunc.__init__(self)
+            def __call__(self, sol):
+                # take solution as argument, set fitness
+                sol.fitness = np.sum(sol.encoding)
 
+        ev = myEval()
+        self.assertTrue(isinstance(ev,evaluator.eoEvalFunc))
+        ev(self.sol)
+        self.assertEqual(self.sol.fitness,45)
 
+    def test_njit(self):
+        @nb.njit
+        def foo(x):
+            s = 0
+            for i in x:
+                s += i
+            return s
+        ev = evaluator.FitnessEval(foo)
+        self.assertTrue(isinstance(ev,evaluator.eoEvalFunc))
+        ev(self.sol)
+        self.assertEqual(self.sol.fitness,45)
 
+    def test_popEval(self):
+        from pyparadiseo import Pop,Solution
+        from pyparadiseo.initializer import Init
 
-################
-# HOW TO DEFINE FITNESS EVALUATOR ?
-################
-@nb.njit
-def baz(sol,data):
-    return 1.0
-    # return np.count_nonzero(sol) + data
+        p = Pop(5,Init(lambda : np.zeros(5,dtype=int)))
+        print(p)
 
-#### /1/ inherit from base class and specialize __call__
-class myEval(evaluator.eoEvalFunc):
-    def __init__(self,val):
-        #not needed? super() doesn't work
-        evaluator.eoEvalFunc.__init__(self)
-        self.data = val
-    def __call__(self, sol):
-        # no other arguments allowed
-        # set .fitness from .encoding ...
-        sol.fitness = baz(sol.encoding,self.data)
+        for i in range(4):
+            p[i]=Solution(np.zeros(5,dtype=int))
+            for j in range(1,2+i):
+                p[i][j]=1
 
-class myPyEval(evaluator.FitnessEval):
-    def __init__(self,val,fun):
-        evaluator.FitnessEval.__init__(self)
-        self.foo = fun
-        self.data = val
-    def __call__(self,sol):
-        sol.fitness = self.foo(sol.encoding,self.data)
+        print(p)
 
-def get_foo(val):
-    return functools.partial(baz,data=val)
-
-def time_eval(eval,init,N):
-    ind = Solution()
-    pop = Pop(N,init)
-
-    t1 = time.time()
-    for i in pop:
-        eval(i)
-    print(time.time()-t1)
-
-off=42
-
-D=100
-N=10000
-
-time_eval(myEval(off),initializer.BinaryInit(D),N)
-time_eval(myEval(off),initializer.BinaryInit(D),N)
-
-eval_count = evaluator.EvalFuncCounter(myEval(off))
-time_eval(eval_count,initializer.BinaryInit(D),N)
-
-f = get_foo(off)
-time_eval(evaluator.FitnessEval(f),initializer.BinaryInit(D),N)
-
-time_eval(myPyEval(off,baz),initializer.BinaryInit(D),N)
+        popeval = evaluator.PopLoopEval(evaluator.FitnessEval(lambda x: np.sum(x)))
+        popeval(p,p)
+        for i in range(4):
+            self.assertEqual(p[i].fitness,i+1)
+        print(p)
 
 
 
-loopeval = evaluator.PopLoopEval(evaluator.FitnessEval(f))
-pop = Pop(N,initializer.BinaryInit(D))
-
-t1 = time.time()
-loopeval(pop,pop)
-print(time.time()-t1)
-
-
-p = [np.random.choice(2,D) for _ in range(N)]
-v = np.zeros(N)
-
-baz(p[0],off)
-
-t1 = time.time()
-for i,ind in enumerate(p):
-    v[i]=baz(ind,off)
-print(time.time()-t1)
+if __name__ == "__main__":
+    unittest.main()

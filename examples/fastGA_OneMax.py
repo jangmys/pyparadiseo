@@ -17,19 +17,19 @@ if __name__ == "__main__":
     POP_SIZE = 10
     DIM = 500
 
-    myinit = pp.core.BinaryInit(DIM)
+    myinit = pp.initializer.BinaryInit(DIM)
     myeval = pp.FitnessEval(sum_bits)
     # myeval = pp.FitnessEval(lambda sol: np.sum(sol))
 
     #crossovers 5
-    crossovers = [pp.core.OnePtBitCrossover(),pp.core.UBitCrossover(0.5)]
+    crossovers = [pp.operator.OnePtBitCrossover(),pp.operator.UBitCrossover(0.5)]
     for i in range(1,11,4):
-        crossovers.append(pp.core.NPtsBitCrossover(i))
+        crossovers.append(pp.operator.NPtsBitCrossover(i))
 
     #mutations 4
-    mutations = [pp.core.BitMutation(0.01)]
+    mutations = [pp.operator.BitMutation(0.01)]
     for i in range(1,11,4):
-        mutations.append(pp.core.DetBitFlip(i))
+        mutations.append(pp.operator.DetBitFlip(i))
 
     #selectors 4 (+2)
     #add StochTournamentSelect

@@ -1,5 +1,6 @@
 import pyparadiseo as pp
-from pyparadiseo import Solution,Pop,Init
+from pyparadiseo import Solution,Pop
+from pyparadiseo.initializer import Init
 
 
 import unittest

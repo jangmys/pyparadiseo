@@ -178,7 +178,7 @@ BOOST_PYTHON_MODULE(_core)
     // TODO : assignment objvec = [2,1]
     class_< moeoRealObjectiveVector<moeoObjectiveVectorTraits>,
         bases< moeoObjectiveVector<moeoObjectiveVectorTraits,double> >
-        >("ObjectiveVector",init<>())
+        >("ObjectiveVector",init<optional<double>>())
         .def( init< std::vector < double > const& >()[with_custodian_and_ward<1,2>()] )
         .def( "dominates",&moeoRealObjectiveVector<moeoObjectiveVectorTraits>::dominates)
         .def( "__eq__",&moeoRealObjectiveVector<moeoObjectiveVectorTraits>::operator==)
@@ -201,6 +201,7 @@ BOOST_PYTHON_MODULE(_core)
         .def("__getitem__", &PyEOT::get_item)
         .def("__setitem__", &PyEOT::set_item)
         .def("__str__", &PyEOT::to_string)
+        .def("__repr__", &PyEOT::repr)
         .def("__lt__", &PyEOT::operator<)
         .def("__gt__", &PyEOT::operator>)
         .def("__len__", &PyEOT::get_len)

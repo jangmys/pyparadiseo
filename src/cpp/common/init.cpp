@@ -26,7 +26,8 @@ struct pyeoInit : eoInit<PyEOT> {
     pyeoInit(p::object _op) :
         eoInit<PyEOT>(),
         init_op(_op)
-    { };
+    {
+    };
 
     void
     setGenerator(p::object obj)
@@ -84,10 +85,7 @@ public:
     /** simply passes the argument to the uniform method of the bounds */
     virtual void operator()(PyEOT& _eo)
     {
-        if(_eo.encoding.ptr() == Py_None)
-        {
-            _eo.encoding = np::zeros(p::make_tuple(bounds.size()),np::dtype::get_builtin<double>());
-        }
+        _eo.encoding = np::zeros(p::make_tuple(bounds.size()),np::dtype::get_builtin<double>());
 
         // get ndarray from object
         np::ndarray arr = np::from_object(_eo.encoding, np::dtype::get_builtin<double>());
@@ -110,10 +108,7 @@ public:
 
     virtual void operator()(PyEOT& _eo)
     {
-        if(_eo.encoding.ptr() == Py_None)
-        {
-            _eo.encoding = np::zeros(p::make_tuple(chromSize),np::dtype::get_builtin<int>());
-        }
+        _eo.encoding = np::zeros(p::make_tuple(chromSize),np::dtype::get_builtin<int>());
 
         np::ndarray arr = np::from_object(_eo.encoding, np::dtype::get_builtin<int>());
 
@@ -161,7 +156,7 @@ initialize()
     using namespace boost::python;
 
     // eoUF : PyMOEO ---> void
-    def_abstract_functor<eoInit<PyEOT> >("eoInit");
+    def_abstract_functor<eoInit<PyEOT> >("eoInit","docstring");
 
     class_<pyeoInit, bases<eoInit<PyEOT> >, boost::noncopyable>
         ("pyeoInit", init<>())

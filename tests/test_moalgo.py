@@ -1,13 +1,5 @@
 from pyparadiseo.mo import algo
 
-# from pyparadiseo.mo.algo import SimpleHC
-# from pyparadiseo.mo.algo import FirstImprHC
-# from pyparadiseo.mo.algo import RandomBestHC
-# from pyparadiseo.mo.algo import NeutralHC
-# from pyparadiseo.mo.algo import RandomSearch
-# from pyparadiseo.mo.algo import RandomWalk
-# from pyparadiseo.mo.algo import RandomNeutralWalk
-
 import unittest
 import inspect
 
