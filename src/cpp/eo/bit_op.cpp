@@ -1,7 +1,5 @@
-#include <eoOp.h>
-// #include <utils/eoRealVectorBounds.h>
-// #include <eoBinOp.h>
 #include <pyeot.h>
+#include <eoOp.h>
 
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>

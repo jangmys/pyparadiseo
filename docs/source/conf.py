@@ -31,7 +31,7 @@ copyright = '2022, Jan Gmys'
 author = 'Jan Gmys'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1'
+release = '0.2.1'
 
 
 # -- General configuration ---------------------------------------------------
@@ -54,7 +54,7 @@ autodoc_typehints = 'description'
 autodoc_default_options = {
     'members': True,
     'member-order': 'bysource',
-    'special-members': '__init__',
+    'special-members': '__init__,__call__',
     'undoc-members': True,
     'inherited-members': True,
     'exclude-members': '__weakref__,__new__'
@@ -157,6 +157,6 @@ def setup(app):
     pyparadiseo.eo.continuator.CombinedContinue.__name__ = 'CombinedContinue'
     pyparadiseo.eo.continuator.SteadyFitContinue.__name__ = 'SteadyFitContinue'
     pyparadiseo.eo.continuator.SecondsElapsedContinue.__name__ = 'SecondsElapsedContinue'
-    
+
     import pyparadiseo.eo.transform
     pyparadiseo.eo.transform.SGATransform.__name__ = 'SGATransform'
