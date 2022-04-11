@@ -6,6 +6,8 @@ from problems import onemax
 import pyparadiseo as pp
 
 from pyparadiseo import mo
+from pyparadiseo import initializer,evaluator
+
 from pyparadiseo.mo import eval,neighborhood,algo,Eval,Neighbor
 
 import time
@@ -24,6 +26,9 @@ if __name__ == "__main__":
     nborEval = pp.mo.eval.NeighborEval(max_one.eval_incremental)
     # neighborhood
     nhood = mo.neighborhood.OrderNeighborhood(DIM)
+    rand_nhood = mo.neighborhood.RndWithoutReplNeighborhood(DIM)
+    rand_nhood_repl = mo.neighborhood.RndWithReplNeighborhood(DIM)
+
 
     # algo
     hc = mo.algo.SimpleHC(nhood,myeval,nborEval)
@@ -94,27 +99,30 @@ if __name__ == "__main__":
 
     #######################################
     hc = mo.algo.RandomSearch(myinit,myeval,1000)
-    # hc = mo.algo.NeutralHC(nhood,myeval,nborEval,2000)
-    # set move
-    # hc.setMove(max_one.move)
+    myinit(sol)
+    myeval(sol)
+
+    t1 = time.time()
+    hc(sol)
+    print("RandomSearch elapsed:\t",time.time()-t1)
+    print(sol)
+    #######################################
+
+    #######################################
+    hc = mo.algo.RandomWalk(rand_nhood,myeval,nborEval,1000)
+    hc.setMove(max_one.move)
 
     myinit(sol)
     myeval(sol)
 
     t1 = time.time()
     hc(sol)
-
-    print("RandomSearch elapsed:\t",time.time()-t1)
+    print("RandomWalk elapsed:\t",time.time()-t1)
     print(sol)
     #######################################
 
-
     #######################################
-    rnd_nhood = mo.neighborhood.RndWithoutReplNeighborhood(1000)
-
-
-    hc = mo.algo.RandomWalk(rnd_nhood,myeval,nborEval,10000)
-    # hc = mo.algo.RandomNeutralWalk(nhood,myeval,nborEval,10)
+    hc = mo.algo.RandomNeutralWalk(rand_nhood,myeval,nborEval,10000)
     # set move
     hc.setMove(max_one.move)
 
@@ -124,29 +132,13 @@ if __name__ == "__main__":
     t1 = time.time()
     hc(sol)
 
-    print("RandomSearch elapsed:\t",time.time()-t1)
-    print(sol)
-    #######################################
-
-    #######################################
-    # hc = mo.algo.RandomWalk(nhood,myeval,nborEval,100)
-    hc = mo.algo.RandomNeutralWalk(rnd_nhood,myeval,nborEval,10000)
-    # set move
-    hc.setMove(max_one.move)
-
-    myinit(sol)
-    myeval(sol)
-
-    t1 = time.time()
-    hc(sol)
-
-    print("RandomSearch elapsed:\t",time.time()-t1)
+    print("RandomNeutralWalk elapsed:\t",time.time()-t1)
     print(sol)
     #######################################
 
 
     # hc = mo.algo.RandomWalk(nhood,myeval,nborEval,100)
-    hc = mo.algo.MetropolisHasting(rnd_nhood,myeval,nborEval,1000000)
+    hc = mo.algo.MetropolisHasting(rand_nhood_repl,myeval,nborEval,10000)
     # set move
     hc.setMove(max_one.move)
 
@@ -162,7 +154,7 @@ if __name__ == "__main__":
 
 
     # hc = mo.algo.RandomWalk(nhood,myeval,nborEval,100)
-    hc = mo.algo.SA(rnd_nhood,myeval,nborEval,100,0.99)
+    hc = mo.algo.SA(rand_nhood_repl,myeval,nborEval,100,0.99)
     # set move
     hc.setMove(max_one.move)
 
