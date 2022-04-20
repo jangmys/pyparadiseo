@@ -12,6 +12,8 @@
 #include <utils/eoRndGenerators.h>
 
 #include <pyeot.h>
+#include <pypot.h>
+
 #include <utils/def_abstract_functor.h>
 
 #include <random>
@@ -72,8 +74,10 @@ private:
     eoUniformGenerator<T> _gen;
 };
 
+
 //TODO : merge with unbounded (FIxedLength)
-class pyRealInitBounded : public eoInit<PyEOT>{
+template<class T>
+class pyRealInitBounded : public eoInit<T>{
 public:
     /** Ctor - from eoRealVectorBounds */
     pyRealInitBounded(eoRealVectorBounds & _bounds):bounds(_bounds)
@@ -83,7 +87,7 @@ public:
     }
 
     /** simply passes the argument to the uniform method of the bounds */
-    virtual void operator()(PyEOT& _eo)
+    virtual void operator()(T& _eo)
     {
         _eo.encoding = np::zeros(p::make_tuple(bounds.size()),np::dtype::get_builtin<double>());
 
@@ -100,6 +104,9 @@ public:
 private:
     eoRealVectorBounds & bounds;
 };
+
+
+
 
 
 class pyInitPermutation : public eoInit<PyEOT>{
@@ -148,6 +155,20 @@ private:
 //     b.uniform(ind1);
 // }
 
+template<class T>
+void export_realInitBounded(){
+    using namespace boost::python;
+
+    class_<pyRealInitBounded<T>, bases<eoInit<T>>> ("RealBoundedInit",
+        init<eoRealVectorBounds&>()
+        [
+        with_custodian_and_ward<1,2>()
+        ]
+    )
+    .def("__call__", &pyRealInitBounded<T>::operator ())
+    ;
+}
+
 
 
 void
@@ -156,7 +177,7 @@ initialize()
     using namespace boost::python;
 
     // eoUF : PyMOEO ---> void
-    def_abstract_functor<eoInit<PyEOT> >("eoInit","docstring");
+    // def_abstract_functor<eoInit<PyEOT> >("eoInit","docstring");
 
     class_<pyeoInit, bases<eoInit<PyEOT> >, boost::noncopyable>
         ("pyeoInit", init<>())
@@ -170,14 +191,7 @@ initialize()
     .def("__call__", &FixedLengthInit<bool>::operator ())
     ;
 
-    class_<pyRealInitBounded, bases<eoInit<PyEOT>>, boost::noncopyable> ("RealBoundedInit",
-    init<eoRealVectorBounds&>()
-    [
-        with_custodian_and_ward<1,2>()
-    ]
-    )
-    .def("__call__", &pyRealInitBounded::operator ())
-    ;
+    export_realInitBounded<PyEOT>();
 
     class_<pyInitPermutation, bases<eoInit<PyEOT>>, boost::noncopyable> ("PermutationInit", init<unsigned,optional<unsigned>>())
     .def("__call__", &pyInitPermutation::operator ())

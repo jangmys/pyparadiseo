@@ -13,10 +13,6 @@ using namespace boost::python;
 void
 transform()
 {
-    // eoUF : eoPop<PyMOEO> ---> void
-    def_abstract_functor<eoTransform<PyEOT> >("eoTransform",
-        "Abstract Base Class.\n\n Functor : Population ==> void.\n\n Transforms a Population. ");
-
     class_<eoSGATransform<PyEOT>, bases<eoTransform<PyEOT> > >
         ("eoSGATransform",
         "Simple GA Transform\n\n"

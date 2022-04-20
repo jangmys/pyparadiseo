@@ -39,9 +39,11 @@ void add_checkpoint();
 void continuators()
 {
     /* Continuators */
-    def_abstract_functor<eoContinue<PyEOT> >("eoContinue");
+    // def_abstract_functor<eoContinue<PyEOT> >("eoContinue");
 
     /* Counters, wrappers etc */
+
+    // EVAL FUNC !!
     class_<eoEvalFuncCounter<PyEOT>, bases<eoEvalFunc<PyEOT> > >
         ("eoEvalFuncCounter",
          init< eoEvalFunc<PyEOT>&, optional<std::string>>()
@@ -52,6 +54,7 @@ void continuators()
         .def("__call__", &eoEvalFuncCounter<PyEOT>::operator())
         ;
 
+    // CONTINUATORS
     class_<eoGenContinue<PyEOT>, bases<eoContinue<PyEOT> >, boost::noncopyable >
         ("eoGenContinue", init<unsigned long>() )
         .def("__call__", &eoGenContinue<PyEOT>::operator())
@@ -77,7 +80,13 @@ void continuators()
         ;
 
     // JG : python object as fitness type? extraction done inside eoFitContinue? if r/o ... relying on [] operator...
-    // DEF2(eoFitContinue, object); // object is the fitness type
+    // DEF2(eoFitContinue, doubleFitness); // object is the fitness type
+
+    class_<eoFitContinue<PyEOT>, bases<eoContinue<PyEOT > > >
+    ("eoFitContinue", init<doubleFitness>())
+    .def("__call__", &eoContinue<PyEOT>::operator())
+    ;
+
     //
     DEF3(eoSteadyFitContinue, unsigned long, unsigned long);
 

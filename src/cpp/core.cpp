@@ -8,9 +8,10 @@
 #include <utils/index_error.h>
 #include <utils/eoLogger.h>
 
-// #include "fitness.h"
+#include "abstract.h"
 
 #include <pyeot.h>
+#include <pypot.h>
 
 namespace bp=boost::python;
 
@@ -35,7 +36,7 @@ struct PyEOT_pickle_suite : bp::pickle_suite
                 p.invalidObjectiveVector()?bp::object():bp::object(p.objectiveVector()),
                 p.invalidFitness()?bp::object():bp::object(p.fitness().get()),
                 p.invalidDiversity()?bp::object():bp::object(p.diversity()),
-                p.getEncoding());
+                p.get_encoding());
     }
 
     static void setstate(bp::object _eot, bp::tuple state)
@@ -65,6 +66,8 @@ struct PyEOT_pickle_suite : bp::pickle_suite
 
 
 extern void registerConverters();
+
+extern template void export_abstract<PyEOT>();
 
 extern void bounds();
 
@@ -104,6 +107,8 @@ extern void moContinuators();
 extern void moAlgos();
 extern void moComparators();
 
+extern void eoParticleSwarm();
+
 
 BOOST_PYTHON_MODULE(_core)
 {
@@ -119,6 +124,9 @@ BOOST_PYTHON_MODULE(_core)
 
     Py_Initialize(); //needed to call Python code from c++
     numpy::initialize();
+
+    implicitly_convertible<double, object>();
+    // implicitly_convertible<std::complex<double>, std::any>();
 
     registerConverters();//numpy scalar converter!!!
     iterable_converter()
@@ -190,7 +198,7 @@ BOOST_PYTHON_MODULE(_core)
 
     class_<PyEOT>("Solution",init<optional<object>>())
         .def(init<const PyEOT&>())
-        .add_property("encoding", &PyEOT::getEncoding, &PyEOT::setEncoding)
+        .add_property("encoding", &PyEOT::get_encoding, &PyEOT::setEncoding)
         .add_property("fitness", &PyEOT::getFitness, &PyEOT::setFitness)
         .add_property("objectiveVector", &PyEOT::getObjectiveVector, fx2)
         .add_property("diversity", &PyEOT::getDiversity, &PyEOT::setDiversity)
@@ -208,6 +216,17 @@ BOOST_PYTHON_MODULE(_core)
         .def("__eq__", &PyEOT::operator==)
         .def_pickle(PyEOT_pickle_suite())
     ;
+
+    //
+    // class_<eoVectorParticle<double,double,double>>("VectorParticle",init<optional<unsigned,double,double,double>>())
+    // ;
+    //
+    //
+    // class_<eoRealParticle<doubleFitness>,bases< eoVectorParticle<double,double,double>
+    //         > >("RealParticle",init<optional<unsigned,double,double,double>>())
+    // ;
+
+    export_abstract<PyEOT>();
 
     //common
     initialize();
@@ -245,6 +264,8 @@ BOOST_PYTHON_MODULE(_core)
     moContinuators();
     moAlgos();
     moComparators();
+
+    eoParticleSwarm();
 
     //MOEO
     // fitnessAssign();

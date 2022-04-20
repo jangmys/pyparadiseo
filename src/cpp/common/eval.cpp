@@ -84,8 +84,6 @@ private:
 void
 evaluate()
 {
-    def_abstract_functor<eoEvalFunc<PyEOT> >("eoEvalFunc");
-
     class_<pyeoFitnessEval, bases<eoEvalFunc<PyEOT>>>
         ("FitnessEval", init<>())
     .def(init<boost::python::object>()
@@ -105,9 +103,6 @@ evaluate()
     ;
 
     //===========================================================
-
-    def_abstract_functor<eoPopEvalFunc<PyEOT> >("eoPopEvalFunc");
-
     class_<eoPopLoopEval<PyEOT>, bases<eoPopEvalFunc<PyEOT> > >
     (
         "eoPopLoopEval",

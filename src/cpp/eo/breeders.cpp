@@ -43,8 +43,6 @@ using namespace boost::python;
 
 void breeders()
 {
-    def_abstract_functor<eoBreed<PyEOT> >("eoBreed");
-
     DEF3(eoSelectTransform, eoSelect<PyEOT>&, eoTransform<PyEOT>&);
 
     DEF3(eoGeneralBreeder, eoSelectOne<PyEOT>&, eoGenOp<PyEOT>&)

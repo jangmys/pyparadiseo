@@ -30,8 +30,6 @@ using namespace boost::python;
 
 void mergers()
 {
-    def_abstract_functor<eoMerge<PyEOT> >("eoMerge");
-
     DEF2(eoElitism, double)
         .def( init<double, bool>() );
     DEF(eoNoElitism);

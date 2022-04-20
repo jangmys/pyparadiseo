@@ -8,14 +8,18 @@
 
 #include <boost/python.hpp>
 #include <pyeot.h>
+
+#include <pypot.h>
+#include <eoFlight.h>
+#include <eoPSO.h>
+#include <eoSyncEasyPSO.h>
+
 #include <utils/def_abstract_functor.h>
 
 using namespace boost::python;
 
 void eoAlgos()
 {
-    def_abstract_functor<eoAlgo<PyEOT>>("eoAlgo","Abstract base class. Unary functor : Population -> void");
-
     class_<eoSGA<PyEOT>, bases<eoAlgo<PyEOT> >, boost::noncopyable>
     ("eoSGA","Simple genetic algorithm.",
     init<
@@ -198,3 +202,46 @@ void eoAlgos()
 
     //////////////////////////////////
 }
+
+//
+//
+// struct eoPSOWrap : eoPSO<PyPOT>,wrapper<eoPSO<PyPOT>>
+// {
+// public:
+//     void operator()(eoPop<PyPOT>& _pop)
+//     {
+//         this->get_override("operator()")(_pop);
+//     }
+// };
+//
+// struct eoFlightWrap : eoFlight<PyPOT>,wrapper<eoFlight<PyPOT>>
+// {
+// public:
+//     void operator()(PyPOT& _part)
+//     {
+//         this->get_override("operator()")(_part);
+//     }
+// };
+//
+//
+// void eoParticleSwarm(){
+//     def_abstract_functor<eoPSO<PyPOT>>("eoPSO","Abstract base class. Unary functor : Population -> void");
+//
+//     class_<eoSyncEasyPSO<PyPOT>,bases<eoPSO<PyPOT>>>
+//     ("eoSyncEasyPSO",init<
+//         eoInitializerBase<PyPOT> &,
+//         eoContinue < PyPOT > &,
+//         eoEvalFunc < PyPOT > &,
+//         eoVelocity < PyPOT > &,
+//         eoFlight < PyPOT > &
+//     >())
+//     ;
+//
+//
+//
+//
+//     class_< eoFlightWrap >
+//     ("eoFlight",init<>())
+//     .def("__call__", pure_virtual(&eoFlightWrap::operator()))
+//     ;
+// }

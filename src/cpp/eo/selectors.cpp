@@ -34,13 +34,7 @@ using namespace boost::python;
 
 void selectors()
 {
-    /* EO SELECTORS */
-    def_abstract_functor<eoSelect<PyEOT> >(
-        "eoSelect",
-        "Abstract Base Class.\n\n \
-        Functor : (Population, Population) ==> void.\n\n \
-        Selects individuals from first population, putting them in second. ");
-
+    // /* EO SELECTORS */
     class_<eoDetSelect<PyEOT>,bases<eoSelect<PyEOT>>>("eoDetSelect",
     "deterministic select\n\n"
     "select many individuals deterministically\n",

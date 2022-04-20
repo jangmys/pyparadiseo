@@ -43,8 +43,6 @@ using namespace boost::python;
 
 void replacement()
 {
-    def_abstract_functor<eoReplacement<PyEOT> >("eoReplacement");
-
     // eoReplacement.h
     DEF(eoGenerationalReplacement);
 
