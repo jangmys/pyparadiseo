@@ -25,3 +25,5 @@ from ._core import DetUniformMutation
 from ._core import SegmentCrossover
 from ._core import HypercubeCrossover
 from ._core import SBXCrossover
+
+# from ._core import RealUniformMutation

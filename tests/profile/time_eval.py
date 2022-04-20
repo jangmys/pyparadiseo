@@ -1,7 +1,7 @@
-from pyparadiseo import Solution,Pop
+from pyparadiseo import RealSolution,Solution,Pop
 
 from pyparadiseo import evaluator
-from pyparadiseo import initializer
+from pyparadiseo import initializer,bounds
 
 import time
 import functools
@@ -9,14 +9,6 @@ import functools
 import numpy as np
 import numba as nb
 
-ind = Solution()
-init = initializer.BinaryInit(12)
-init(ind)
-
-print(ind)
-
-solu = Solution([1,True,0.234,'abc'])
-print(solu)
 
 
 
@@ -27,7 +19,8 @@ print(solu)
 ################
 @nb.njit
 def baz(sol,data):
-    return 1.0
+    return np.sum(sol) + data
+    # return 1.0
     # return np.count_nonzero(sol) + data
 
 #### /1/ inherit from base class and specialize __call__
@@ -53,7 +46,8 @@ def get_foo(val):
     return functools.partial(baz,data=val)
 
 def time_eval(eval,init,N):
-    ind = Solution()
+    # ind = RealSolution()
+    # ind = Solution()
     pop = Pop(N,init)
 
     t1 = time.time()
@@ -66,21 +60,33 @@ off=42
 D=100
 N=10000
 
-time_eval(myEval(off),initializer.BinaryInit(D),N)
-time_eval(myEval(off),initializer.BinaryInit(D),N)
+ind = RealSolution(D)
+init = initializer.RealBoundedInit(bounds.RealVectorBounds(D,-1,1))
+init(ind)
+
+# print(ind)
+
+
+
+print("="*20)
+time_eval(myEval(off),init,N)
+time_eval(myEval(off),init,N)
+print("="*20)
 
 eval_count = evaluator.EvalFuncCounter(myEval(off))
-time_eval(eval_count,initializer.BinaryInit(D),N)
+time_eval(eval_count,init,N)
+print("="*20)
 
 f = get_foo(off)
-time_eval(evaluator.FitnessEval(f),initializer.BinaryInit(D),N)
+time_eval(evaluator.FitnessEval(f),init,N)
+print("="*20)
 
-time_eval(myPyEval(off,baz),initializer.BinaryInit(D),N)
+time_eval(myPyEval(off,baz),init,N)
 
-
+print("POP-LOOP","="*20)
 
 loopeval = evaluator.PopLoopEval(evaluator.FitnessEval(f))
-pop = Pop(N,initializer.BinaryInit(D))
+pop = Pop(N,init)
 
 t1 = time.time()
 loopeval(pop,pop)

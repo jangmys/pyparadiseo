@@ -104,7 +104,8 @@ public:
         np::dtype dt = np::dtype::get_builtin<double>();
 
         // get ndarray from object
-        np::ndarray ind = np::from_object(_eo.encoding, dt);
+        np::ndarray ind = p::extract<np::ndarray>(_eo.get_encoding())();
+        // np::ndarray ind = np::from_object(_eo.get_encoding(), dt);
         int size        = ind.shape(0);
 
         double * ind_ptr = reinterpret_cast<double *>(ind.get_data());

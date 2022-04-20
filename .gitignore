@@ -18,6 +18,9 @@ doc/source/pyparadiseo*.rst
 doc/source/installation.rst
 doc/source/modules.rst
 
+docs/doxygen
+
+
 # C extensions
 *.so
 

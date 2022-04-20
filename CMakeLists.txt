@@ -45,6 +45,7 @@ set(moSources
 )
 
 set(eoSources
+    src/cpp/eo/abstract.cpp
     src/cpp/eo/pop.cpp
     src/cpp/eo/geneticOps.cpp
     src/cpp/eo/mergers.cpp
@@ -59,6 +60,7 @@ set(eoSources
     src/cpp/eo/bounds.cpp
     src/cpp/eo/real_op.cpp
     src/cpp/eo/bit_op.cpp
+    src/cpp/eo/eoPSO.cpp
 )
 
 set(EO_SRC_DIR "src/cpp/eo/src" CACHE INTERNAL "ParadisEO-EO source directory" FORCE)
@@ -74,8 +76,10 @@ add_library(_core SHARED src/cpp/core.cpp ${commonSources} ${eoSources} ${moSour
 
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/operators)
+include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/src)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/src/es)
+include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/src/pso)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/mo/)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/mo/src)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/moeo/src)

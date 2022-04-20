@@ -22,10 +22,10 @@ class TestRealOp(unittest.TestCase):
         mutate(self.sol)
         print(self.sol)
 
-        mutate = operator.UniformMutation(0.8,0.2)
-        print(self.sol)
-        mutate(self.sol)
-        print(self.sol)
+        # mutate = operator.RealUniformMutation(0.1)
+        # print(self.sol)
+        # mutate(self.sol)
+        # print(self.sol)
 
     def test_DetUniformMutation(self):
         pass

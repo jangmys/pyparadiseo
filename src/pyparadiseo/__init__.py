@@ -17,6 +17,11 @@ from ._core import Pop
 from ._core import ObjectiveVectorTraits
 from ._core import ObjectiveVector
 
+# from ._core import RealParticle
+# from ._core import RealSolution
+
+# from ._core import testSolution
+
 #  EO RNG
 from ._core import eoRng
 from ._core import rng

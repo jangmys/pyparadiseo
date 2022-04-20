@@ -9,6 +9,7 @@
 
 #include <eoRealOp.h>
 #include <pyeot.h>
+#include <pypot.h>
 
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
@@ -24,10 +25,41 @@ real_op()
 {
     using namespace boost::python;
 
+
+    // class_<eoUniformMutation<PyEOT>, bases<eoMonOp<PyEOT> >, boost::noncopyable>
+    //     ("RealUniformMutation", init<
+    //       const double,
+    //       optional<const double>
+    //   >()
+    // )
+    // .def(init<
+    //           eoRealVectorBounds&,
+    //           const double,
+    //           optional<const double>
+    //       >()
+    //       [
+    //           with_custodian_and_ward<1, 2>()
+    //       ]
+    //     )
+    //     .def(init<
+    //               eoRealVectorBounds&,
+    //               const std::vector<double>&,
+    //               const std::vector<double>&
+    //           >()
+    //           [
+    //               with_custodian_and_ward<1, 2,
+    //               with_custodian_and_ward<1, 3,
+    //               with_custodian_and_ward<1, 4
+    //               > > >()
+    //           ]
+    //         )
+    //         .def("__call__", &eoUniformMutation<PyEOT>::operator ())
+    //         ;
+
     /*
      * C++ genetic operators need `double& operator[](int key)` for PyEOT (and size()...)
      *
-     * np pb for size(), but I couldn't get lvalue converters to work, so...
+     * no pb for size(), but I couldn't get lvalue converters to work, so...
      *
      * Solution (for now) : re-define classes as above, assuming that PyEOT.encoding is an ndarray with dtype double.
      *

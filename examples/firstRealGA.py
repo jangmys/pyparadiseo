@@ -1,9 +1,8 @@
 import pyparadiseo as pp
 
-from pyparadiseo import eo
-from pyparadiseo import Init
+from pyparadiseo import eo,initializer,bounds,evaluator
 from pyparadiseo.eo import selector,continuator,algo
-from pyparadiseo import MonOp,QuadOp
+from pyparadiseo.operator import MonOp,QuadOp
 
 import copy
 import numpy as np
@@ -29,14 +28,17 @@ if __name__ == "__main__":
 
     pp.set_minimize_fitness()
 
-    myeval = pp.FitnessEval(lambda sol: norm2(sol))
-    pop = pp.Pop()
+    myeval = pp.evaluator.FitnessEval(lambda sol: norm2(sol))
 
-    for i in range(POP_SIZE):
-        v = pp.Solution()
-        v.encoding = np.random.uniform(-1.0,1.0,VEC_SIZE)
-        myeval(v)
-        pop.push_back(v)
+    myinit = pp.initializer.RealBoundedInit(bounds.RealVectorBounds(VEC_SIZE,-1,1))
+
+    pop = pp.Pop(POP_SIZE,myinit)
+
+    for ind in pop:
+        myeval(ind)
+    #     v = pp.Solution()
+    #     v.encoding = np.random.uniform(-1.0,1.0,VEC_SIZE)
+    #     pop.push_back(v)
 
     select = selector.DetTournamentSelect(3)
     xover = pp.operator.SegmentCrossover(0.0)

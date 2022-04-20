@@ -1,3 +1,6 @@
+#ifndef FITNESS_H
+#define FITNESS_H
+
 class FitnessTraits
 {
 public:
@@ -76,4 +79,4 @@ private:
     double value;
 };
 
-typedef DoubleFitness<FitnessTraits> doubleFitness;
+#endif

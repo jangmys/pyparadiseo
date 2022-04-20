@@ -2,7 +2,9 @@
 #define PYEOT_H_
 
 #include <boost/python.hpp>
+#include <boost/python/numpy.hpp>
 
+#include <PO.h>
 #include <core/MOEO.h>
 #include <core/moeoObjectiveVectorTraits.h>
 #include <core/moeoObjectiveVector.h>
@@ -14,8 +16,9 @@
 #include "utils/index_error.h"
 
 namespace bp=boost::python;
+namespace np=boost::python::numpy;
 
-
+typedef DoubleFitness<FitnessTraits> doubleFitness;
 typedef moeoRealObjectiveVector<moeoObjectiveVectorTraits> realObjVec;
 
 
@@ -38,7 +41,7 @@ public:
 
     PyEOT(const PyEOT& p) : MOEO()
     {
-        setEncoding(p.deepcopy(p.getEncoding()));
+        setEncoding(p.deepcopy(p.get_encoding()));
         setFitness(p.deepcopy(p.getFitness()));
         setObjectiveVector(p.getObjectiveVector());
         setDiversity(p.deepcopy(p.getDiversity()));
@@ -46,7 +49,7 @@ public:
 
     PyEOT& operator=(const PyEOT& p)
     {
-        setEncoding(p.deepcopy(p.getEncoding()));
+        setEncoding(p.deepcopy(p.get_encoding()));
         setFitness(p.deepcopy(p.getFitness()));
         setObjectiveVector(p.getObjectiveVector());
         setDiversity(p.deepcopy(p.getDiversity()));
@@ -105,7 +108,7 @@ public:
     //solution encoding is a python object --> a property of pyEOT
     boost::python::object encoding;
 
-    boost::python::object getEncoding() const { return encoding; }
+    boost::python::object get_encoding() const { return encoding; }
     void setEncoding(boost::python::object enc){ encoding = enc; }
 
     //should check if the object is sliceable, indexable etc...
@@ -128,6 +131,50 @@ public:
     {
         return encoding == _other.encoding;
     }
+
+
+    int size(){
+        return boost::python::extract<int>(get_len())();
+        // return get_len();
+    }
+
+    template<typename T>
+    T& operator[](unsigned int i){
+        np::ndarray arr = np::from_object(encoding,np::dtype::get_builtin<T>());
+
+        T* ptr = reinterpret_cast<T*>(arr.get_data());
+
+        return ptr[i];
+    }
+
+    // double& operator[](unsigned int i){
+    //     np::ndarray arr = np::from_object(encoding,np::dtype::get_builtin<double>());
+    //
+    //     double* ptr = reinterpret_cast<double*>(arr.get_data());
+    //
+    //     return ptr[i];
+    // }
+    //
+    // bool& operator[](unsigned int i){
+    //     np::ndarray arr = np::from_object(encoding,np::dtype::get_builtin<bool>());
+    //
+    //     bool* ptr = reinterpret_cast<bool*>(arr.get_data());
+    //
+    //     return ptr[i];
+    // }
+
+
+
+
+    // template<typename T>
+    // T& operator[](unsigned int i){
+    //     np::ndarray arr = np::from_object(encoding,np::dtype::get_builtin<T>());
+    //
+    //     T* ptr = reinterpret_cast<T*>(arr.get_data());
+    //
+    //     return ptr[i];
+    // }
+
 
 
     //OBJECTIVE VECTOR
@@ -250,5 +297,7 @@ public:
         _os << to_string() << ' ';
     }
 };
+
+// std::ostream& operator<<(std::ostream& os, const PyEOT& _eo);
 
 #endif
