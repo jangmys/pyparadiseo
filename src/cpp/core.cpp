@@ -217,6 +217,11 @@ BOOST_PYTHON_MODULE(_core)
         .def_pickle(PyEOT_pickle_suite())
     ;
 
+    class_<RealSolution,bases<PyEOT,std::vector<double>>>("RealSolution",init<optional<unsigned int>>())
+    ;
+
+    class_<BinarySolution,bases<PyEOT>>("BinarySolution",init<optional<unsigned int>>());
+
     //
     // class_<eoVectorParticle<double,double,double>>("VectorParticle",init<optional<unsigned,double,double,double>>())
     // ;

@@ -88,12 +88,17 @@ class Test_Pop(unittest.TestCase):
         self.assertEqual(self.pop[10].fitness, 42)
 
     def test_swap(self):
-        pop2 = Pop(10,self.init)
+        pop2 = pp.create_population(10,self.init)
         self.assertEqual(len(pop2),10)
         pop2.swap(self.pop)
         self.assertEqual(len(self.pop),10)
         self.assertEqual(len(pop2),0)
 
+    def test_create_pop(self):
+        pop = pp.create_population()
+        self.assertEqual(len(pop),0)
+        pop.resize(100)
+        self.assertEqual(len(pop),100)
 
 
 if __name__ == '__main__':

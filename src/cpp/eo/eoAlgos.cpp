@@ -18,18 +18,19 @@
 
 using namespace boost::python;
 
-void eoAlgos()
+template<class SolutionType>
+void export_algos()
 {
-    class_<eoSGA<PyEOT>, bases<eoAlgo<PyEOT> >, boost::noncopyable>
+    class_<eoSGA<SolutionType>, bases<eoAlgo<SolutionType> >, boost::noncopyable>
     ("eoSGA","Simple genetic algorithm.",
     init<
-    eoSelectOne<PyEOT>&,
-    eoQuadOp<PyEOT>&,
+    eoSelectOne<SolutionType>&,
+    eoQuadOp<SolutionType>&,
     float,
-    eoMonOp<PyEOT>&,
+    eoMonOp<SolutionType>&,
     float,
-    eoEvalFunc<PyEOT>&,
-    eoContinue<PyEOT>&
+    eoEvalFunc<SolutionType>&,
+    eoContinue<SolutionType>&
     >()
     [
     with_custodian_and_ward<1,2,
@@ -43,18 +44,18 @@ void eoAlgos()
     >()
     ]
     )
-    .def("__call__", &eoSGA<PyEOT>::operator())
+    .def("__call__", &eoSGA<SolutionType>::operator())
     ;
 
 
 
-    class_<eoEasyEA<PyEOT>, bases<eoAlgo<PyEOT> > >
+    class_<eoEasyEA<SolutionType>, bases<eoAlgo<SolutionType> > >
     ("eoEasyEA","Evolutionary algorithm.",
     init<
-    eoContinue<PyEOT>&,
-    eoEvalFunc<PyEOT>&,
-    eoBreed<PyEOT>&,
-    eoReplacement<PyEOT>&
+    eoContinue<SolutionType>&,
+    eoEvalFunc<SolutionType>&,
+    eoBreed<SolutionType>&,
+    eoReplacement<SolutionType>&
     >()
     [
     with_custodian_and_ward<1,2,
@@ -68,10 +69,10 @@ void eoAlgos()
     ]
     )
     .def( init<
-    eoContinue<PyEOT>&,
-    eoEvalFunc<PyEOT>&,
-    eoBreed<PyEOT>&,
-    eoReplacement<PyEOT>&,
+    eoContinue<SolutionType>&,
+    eoEvalFunc<SolutionType>&,
+    eoBreed<SolutionType>&,
+    eoReplacement<SolutionType>&,
     unsigned
     >()
     [
@@ -86,10 +87,10 @@ void eoAlgos()
     ]
     )
     .def( init<
-    eoContinue<PyEOT>&,
-    eoPopEvalFunc<PyEOT>&,
-    eoBreed<PyEOT>&,
-    eoReplacement<PyEOT>&
+    eoContinue<SolutionType>&,
+    eoPopEvalFunc<SolutionType>&,
+    eoBreed<SolutionType>&,
+    eoReplacement<SolutionType>&
     >()
         [
     with_custodian_and_ward<1,2,
@@ -103,11 +104,11 @@ void eoAlgos()
     ]
     )
     .def( init<
-    eoContinue<PyEOT>&,
-    eoEvalFunc<PyEOT>&,
-    eoBreed<PyEOT>&,
-    eoMerge<PyEOT>&,
-    eoReduce<PyEOT>&
+    eoContinue<SolutionType>&,
+    eoEvalFunc<SolutionType>&,
+    eoBreed<SolutionType>&,
+    eoMerge<SolutionType>&,
+    eoReduce<SolutionType>&
     >()
     [
     with_custodian_and_ward<1,2,
@@ -123,11 +124,11 @@ void eoAlgos()
     ]
     )
     .def( init<
-    eoContinue<PyEOT>&,
-    eoEvalFunc<PyEOT>&,
-    eoSelect<PyEOT>&,
-    eoTransform<PyEOT>&,
-    eoReplacement<PyEOT>&
+    eoContinue<SolutionType>&,
+    eoEvalFunc<SolutionType>&,
+    eoSelect<SolutionType>&,
+    eoTransform<SolutionType>&,
+    eoReplacement<SolutionType>&
     >()
     [
     with_custodian_and_ward<1,2,
@@ -143,12 +144,12 @@ void eoAlgos()
     ]
     )
     .def( init<
-    eoContinue<PyEOT>&,
-    eoEvalFunc<PyEOT>&,
-    eoSelect<PyEOT>&,
-    eoTransform<PyEOT>&,
-    eoMerge<PyEOT>&,
-    eoReduce<PyEOT>&
+    eoContinue<SolutionType>&,
+    eoEvalFunc<SolutionType>&,
+    eoSelect<SolutionType>&,
+    eoTransform<SolutionType>&,
+    eoMerge<SolutionType>&,
+    eoReduce<SolutionType>&
     >()
     [
     with_custodian_and_ward<1,2,
@@ -165,24 +166,24 @@ void eoAlgos()
     >()
     ]
     )
-    .def("__call__", &eoEasyEA<PyEOT>::operator())
+    .def("__call__", &eoEasyEA<SolutionType>::operator())
     ;
 
 
 
-    class_<eoFastGA<PyEOT>, bases<eoAlgo<PyEOT> > >
+    class_<eoFastGA<SolutionType>, bases<eoAlgo<SolutionType> > >
     ("eoFastGA","Fast genetic algorithm.",
     init<
         double,
-        eoSelectOne<PyEOT>&,
-        eoQuadOp<PyEOT>&,
-        eoSelectOne<PyEOT>&,
+        eoSelectOne<SolutionType>&,
+        eoQuadOp<SolutionType>&,
+        eoSelectOne<SolutionType>&,
         double,
-        eoSelectOne<PyEOT>&,
-        eoMonOp<PyEOT>&,
-        eoPopEvalFunc<PyEOT>&,
-        eoReplacement<PyEOT>&,
-        eoContinue<PyEOT>&,
+        eoSelectOne<SolutionType>&,
+        eoMonOp<SolutionType>&,
+        eoPopEvalFunc<SolutionType>&,
+        eoReplacement<SolutionType>&,
+        eoContinue<SolutionType>&,
         double
     >()
     [
@@ -197,10 +198,16 @@ void eoAlgos()
     > > > > > > > >()
     ]
     )
-    .def("__call__", &eoFastGA<PyEOT>::operator())
+    .def("__call__", &eoFastGA<SolutionType>::operator())
     ;
 
     //////////////////////////////////
+}
+
+
+void eoAlgos()
+{
+    export_algos<PyEOT>();
 }
 
 //

@@ -6,7 +6,7 @@ import unittest
 
 class TestSolution(unittest.TestCase):
     def test_ctor(self):
-        sol = Solution()
+        sol = pp.create_solution()
         self.assertEqual(sol.fitness,None)
 
     def test_ctor_noinit(self):
@@ -122,6 +122,13 @@ class TestSolution(unittest.TestCase):
         self.assertEqual(sol2.objectiveVector[1],2.2)
         self.assertEqual(sol2.diversity,4.2)
 
+    def test_create_solution(self):
+        sol = pp.create_solution([1,2,3.0,'arf'])
+        self.assertEqual(sol.encoding,[1,2,3.0,'arf'])
+
+        sol = pp.create_solution(stype="real")
+
+
         #deepcopy needs pickling for members ? objectiveVector etc
         # sol3 = deepcopy(sol2)
         # sol2.encoding = [0]
@@ -134,4 +141,21 @@ class TestSolution(unittest.TestCase):
         # self.assertEqual(sol3.diversity,4.2)
 
 if __name__ == '__main__':
+    print("hello")
+
+    sol = pp.RealSolution()
+    print(sol)
+
+    sol = pp.RealSolution(10)
+
+
+    sol = pp.BinarySolution()
+    print(sol)
+
+    sol = pp.BinarySolution(10)
+    print(sol)
+
+    # print(sol[1])
+
+
     unittest.main()

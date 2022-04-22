@@ -22,11 +22,12 @@ namespace p=boost::python;
 namespace np=boost::python::numpy;
 
 
-struct pyeoInit : eoInit<PyEOT> {
-    pyeoInit() : eoInit<PyEOT>(){ };
+template<typename SolutionType>
+struct pyeoInit : eoInit<SolutionType> {
+    pyeoInit() : eoInit<SolutionType>(){ };
 
     pyeoInit(p::object _op) :
-        eoInit<PyEOT>(),
+        eoInit<SolutionType>(),
         init_op(_op)
     {
     };
@@ -39,7 +40,7 @@ struct pyeoInit : eoInit<PyEOT> {
     }
 
     void
-    operator () (PyEOT& _eo)
+    operator () (SolutionType& _eo)
     {
         if (init_op.ptr() != Py_None) {
             // std::cout << "*** init" << std::endl;
@@ -75,6 +76,27 @@ private:
 };
 
 
+struct BinarySolInit : eoInit<BinarySolution> {
+    BinarySolInit(unsigned _dim) : eoInit<BinarySolution>(),_dimension(_dim),_gen(eoUniformGenerator<bool>()){ };
+
+    void
+    operator () (BinarySolution& _eo)
+    {
+        _eo.encoding = np::zeros(p::make_tuple(_dimension),np::dtype::get_builtin<bool>());
+
+        for(unsigned i=0;i<_dimension;i++){
+            _eo.encoding[i] = _gen();
+        }
+        _eo.invalidate();
+    }
+
+private:
+    unsigned _dimension;
+    eoUniformGenerator<bool> _gen;
+};
+
+
+
 //TODO : merge with unbounded (FIxedLength)
 template<class T>
 class pyRealInitBounded : public eoInit<T>{
@@ -108,12 +130,12 @@ private:
 
 
 
-
-class pyInitPermutation : public eoInit<PyEOT>{
+template<class SolutionType>
+class pyInitPermutation : public eoInit<SolutionType>{
 public:
     pyInitPermutation(unsigned _chromSize, unsigned _startFrom = 0) : chromSize(_chromSize), startFrom(_startFrom){}
 
-    virtual void operator()(PyEOT& _eo)
+    virtual void operator()(SolutionType& _eo)
     {
         _eo.encoding = np::zeros(p::make_tuple(chromSize),np::dtype::get_builtin<int>());
 
@@ -159,6 +181,13 @@ template<class T>
 void export_realInitBounded(){
     using namespace boost::python;
 
+    class_<pyeoInit<T>, bases<eoInit<T> >, boost::noncopyable>
+        ("pyeoInit", init<>())
+    .def(init<boost::python::object>())
+    .def("set_generator", &pyeoInit<T>::setGenerator)
+    .def("__call__", &pyeoInit<T>::operator())
+    ;
+
     class_<pyRealInitBounded<T>, bases<eoInit<T>>> ("RealBoundedInit",
         init<eoRealVectorBounds&>()
         [
@@ -167,6 +196,12 @@ void export_realInitBounded(){
     )
     .def("__call__", &pyRealInitBounded<T>::operator ())
     ;
+
+    class_<pyInitPermutation<T>, bases<eoInit<T>>, boost::noncopyable> ("PermutationInit", init<unsigned,optional<unsigned>>())
+    .def("__call__", &pyInitPermutation<T>::operator ())
+    ;
+
+
 }
 
 
@@ -179,21 +214,26 @@ initialize()
     // eoUF : PyMOEO ---> void
     // def_abstract_functor<eoInit<PyEOT> >("eoInit","docstring");
 
-    class_<pyeoInit, bases<eoInit<PyEOT> >, boost::noncopyable>
-        ("pyeoInit", init<>())
-    .def(init<boost::python::object>())
-    .def("set_generator", &pyeoInit::setGenerator)
-    .def("__call__", &pyeoInit::operator())
-    ;
+    // class_<pyeoInit, bases<eoInit<PyEOT> >, boost::noncopyable>
+    //     ("pyeoInit", init<>())
+    // .def(init<boost::python::object>())
+    // .def("set_generator", &pyeoInit::setGenerator)
+    // .def("__call__", &pyeoInit::operator())
+    // ;
 
     class_<FixedLengthInit<bool>, bases<eoInit<PyEOT>>>
         ("BinaryInit", init<unsigned>())
     .def("__call__", &FixedLengthInit<bool>::operator ())
     ;
 
+    class_<BinarySolInit, bases<eoInit<BinarySolution>>>
+        ("BinarySolInit", init<unsigned>())
+    .def("__call__", &BinarySolInit::operator ())
+    ;
+
     export_realInitBounded<PyEOT>();
 
-    class_<pyInitPermutation, bases<eoInit<PyEOT>>, boost::noncopyable> ("PermutationInit", init<unsigned,optional<unsigned>>())
-    .def("__call__", &pyInitPermutation::operator ())
-    ;
+    // class_<pyInitPermutation, bases<eoInit<PyEOT>>, boost::noncopyable> ("PermutationInit", init<unsigned,optional<unsigned>>())
+    // .def("__call__", &pyInitPermutation::operator ())
+    // ;
 }

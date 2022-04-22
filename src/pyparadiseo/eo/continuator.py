@@ -10,3 +10,10 @@ from .._core import eoSteadyFitContinue as SteadyFitContinue
 from .._core import eoSecondsElapsedContinue as SecondsElapsedContinue
 
 from .._core import eoFitContinue as FitContinue
+
+
+def get_continue(name,*args,**kwargs):
+    if name == "GenContinue":
+        return GenContinue(kwargs["nb_gens"])
+    if name == "EvalContinue":
+        return EvalContinue(kwargs["count_eval_f"],kwargs["nb_evals"])

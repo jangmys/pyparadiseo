@@ -138,34 +138,6 @@ public:
         // return get_len();
     }
 
-    template<typename T>
-    T& operator[](unsigned int i){
-        np::ndarray arr = np::from_object(encoding,np::dtype::get_builtin<T>());
-
-        T* ptr = reinterpret_cast<T*>(arr.get_data());
-
-        return ptr[i];
-    }
-
-    // double& operator[](unsigned int i){
-    //     np::ndarray arr = np::from_object(encoding,np::dtype::get_builtin<double>());
-    //
-    //     double* ptr = reinterpret_cast<double*>(arr.get_data());
-    //
-    //     return ptr[i];
-    // }
-    //
-    // bool& operator[](unsigned int i){
-    //     np::ndarray arr = np::from_object(encoding,np::dtype::get_builtin<bool>());
-    //
-    //     bool* ptr = reinterpret_cast<bool*>(arr.get_data());
-    //
-    //     return ptr[i];
-    // }
-
-
-
-
     // template<typename T>
     // T& operator[](unsigned int i){
     //     np::ndarray arr = np::from_object(encoding,np::dtype::get_builtin<T>());
@@ -174,8 +146,6 @@ public:
     //
     //     return ptr[i];
     // }
-
-
 
     //OBJECTIVE VECTOR
     //======================================================
@@ -297,6 +267,47 @@ public:
         _os << to_string() << ' ';
     }
 };
+
+//=============================================================
+
+class BinarySolution : public PyEOT
+{
+public:
+    BinarySolution() : PyEOT(),_size(0)
+    {}
+
+    BinarySolution(unsigned int _size) : PyEOT(np::zeros(bp::make_tuple(_size),np::dtype::get_builtin<bool>())),_size(_size)
+    {}
+
+    size_t size(){
+        return _size;
+    }
+
+    bool& operator[](int i){
+        np::ndarray arr = np::from_object(encoding,np::dtype::get_builtin<bool>());
+
+        bool* ptr = reinterpret_cast<bool*>(arr.get_data());
+
+        return ptr[i];
+    }
+
+private:
+    size_t _size;
+};
+
+//==========================================================================
+
+class RealSolution : public PyEOT,public std::vector<double>
+{
+public:
+    RealSolution() : PyEOT(),std::vector<double>()
+    {}
+
+    RealSolution(unsigned int _size) : PyEOT(),std::vector<double>(_size)
+    {}
+};
+
+
 
 // std::ostream& operator<<(std::ostream& os, const PyEOT& _eo);
 

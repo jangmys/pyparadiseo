@@ -14,7 +14,7 @@
 #include <eoMerge.h>
 #include <eoReplacement.h>
 
-// #include <pyeot.h>
+#include <pyeot.h>
 
 
 
@@ -40,6 +40,8 @@ void export_abstract()
 
     // eoUF : PyMOEO ---> void
     def_abstract_functor<eoInit<SolutionType> >("eoInit","docstring");
+    def_abstract_functor<eoInit<BinarySolution> >("BinaryInit","docstring");
+
     def_abstract_functor<eoBreed<SolutionType> >("eoBreed");
     def_abstract_functor<eoContinue<SolutionType> >("eoContinue");
     def_abstract_functor<eoMerge<SolutionType> >("eoMerge");
