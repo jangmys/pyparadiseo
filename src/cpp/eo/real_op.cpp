@@ -26,7 +26,7 @@ public:
      * @param _epsilon the range for uniform nutation
      * @param _p_change the probability to change a given coordinate
      */
-    PyUniformMutation(const double& _epsilon, const double& _p_change = 1.0) :
+    PyUniformMutation(const double _epsilon, const double _p_change = 1.0) :
         homogeneous(true), bounds(eoDummyVectorNoBounds), epsilon(1, _epsilon),
         p_change(1, _p_change){ }
 
@@ -37,7 +37,7 @@ public:
      * @param _p_change the one probability to change all coordinates
      */
     PyUniformMutation(eoRealVectorBounds & _bounds,
-      const double& _epsilon, const double& _p_change = 1.0) :
+      const double _epsilon, const double _p_change = 1.0) :
         homogeneous(false), bounds(_bounds), epsilon(_bounds.size(), _epsilon),
         p_change(_bounds.size(), _p_change)
     {
@@ -509,25 +509,17 @@ real_op()
      */
     class_<PyUniformMutation<PyEOT>, bases<eoMonOp<PyEOT> >, boost::noncopyable>
         ("UniformMutation", init<
-          const double&,
-          const double&
+          const double,
+          optional<const double>
       >()
-      [
-          with_custodian_and_ward<1, 2,
-          with_custodian_and_ward<1, 3
-          > >()
-      ]
-        )
+    )
     .def(init<
           eoRealVectorBounds&,
-          const double&,
-          const double&
+          const double,
+          optional<const double>
       >()
       [
-          with_custodian_and_ward<1, 2,
-          with_custodian_and_ward<1, 3,
-          with_custodian_and_ward<1, 4
-          > > >()
+          with_custodian_and_ward<1, 2>()
       ]
     )
     .def(init<

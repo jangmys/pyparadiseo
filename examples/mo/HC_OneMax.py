@@ -5,6 +5,7 @@ from problems import onemax
 
 import pyparadiseo as pp
 
+from pyparadiseo import initializer,evaluator
 from pyparadiseo import mo
 from pyparadiseo.mo import eval,neighborhood,algo,Eval,Neighbor
 

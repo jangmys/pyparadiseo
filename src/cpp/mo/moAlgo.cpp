@@ -99,30 +99,6 @@ struct moSimpleHCWrap : moSimpleHC<PyNeighbor>,wrapper<moSimpleHC<PyNeighbor>>
     {
     }
 
-    // //with a move
-    // moSimpleHCWrap(
-    //     moNeighborhood<PyNeighbor>& _nhood,
-    //     eoEvalFunc<PyEOT>& _eval,
-    //     moEval<PyNeighbor>& _nborEval,
-    //     boost::python::object _move
-    // ) : moSimpleHC<PyNeighbor>(_nhood,_eval,_nborEval)
-    // {
-    //     setMove(_move);
-    // }
-    //
-    // moSimpleHCWrap(
-    //     moNeighborhood<PyNeighbor>& _nhood,
-    //     eoEvalFunc<PyEOT>& _eval,
-    //     moEval<PyNeighbor>& _nborEval,
-    //     moContinuator<PyNeighbor>& _cont,
-    //     boost::python::object _move
-    // ) : moSimpleHC<PyNeighbor>(_nhood,_eval,_nborEval,_cont)
-    // {
-    //     setMove(_move);
-    //     // explorer.getSelectedNeighbor().setMove(_move);
-    //     // explorer.getCurrentNeighbor().setMove(_move);
-    // }
-
     void setMove(boost::python::object _obj)
     {
         explorer.getSelectedNeighbor().setMove(_obj);
@@ -310,7 +286,9 @@ struct moNeutralHCWrap : moNeutralHC<PyNeighbor>,wrapper<moNeutralHC<PyNeighbor>
         .def(init<moNeighborhood<PyNeighbor>&,eoEvalFunc<PyEOT>&,moEval<PyNeighbor>&,moContinuator<PyNeighbor>&>()[WC4])\
         .def(init<moNeighborhood<PyNeighbor>&,eoEvalFunc<PyEOT>&,moEval<PyNeighbor>&,moContinuator<PyNeighbor>&,moNeighborComparator<PyNeighbor>&,moSolNeighborComparator<PyNeighbor>&>()[WC6])\
         .def("setMove",&X::setMove)\
-        .def("setMoveBack",&X::setMoveBack)
+        .def("setMoveBack",&X::setMoveBack)\
+        ;
+        // .def_readwrite("Neighbor",&X::EOT)
 
 
 template<typename X>
@@ -325,7 +303,7 @@ void setMove(X& _ls, boost::python::object _obj)
 
 void moAlgos()
 {
-    class_<moLocalSearchWrap,boost::noncopyable>
+    class_<moLocalSearchWrap,bases<eoMonOp<PyEOT>>,boost::noncopyable>
     ("moLocalSearch",
         init<
             moNeighborhoodExplorer<PyNeighbor>&,
