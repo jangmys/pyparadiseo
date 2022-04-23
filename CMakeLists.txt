@@ -73,6 +73,7 @@ set(eoDep
 add_library(_core SHARED src/cpp/core.cpp ${commonSources} ${eoSources} ${moSources} ${eoDep})
 
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/)
+include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/operators)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/src)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/src/es)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/mo/)

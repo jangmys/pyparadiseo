@@ -14,7 +14,8 @@ void
 transform()
 {
     // eoUF : eoPop<PyMOEO> ---> void
-    def_abstract_functor<eoTransform<PyEOT> >("eoTransform");
+    def_abstract_functor<eoTransform<PyEOT> >("eoTransform",
+        "Abstract Base Class.\n\n Functor : Population ==> void.\n\n Transforms a Population. ");
 
     class_<eoSGATransform<PyEOT>, bases<eoTransform<PyEOT> > >
         ("eoSGATransform",
@@ -27,7 +28,7 @@ transform()
             eoMonOp<PyEOT>&,
             double
         >((arg("self"),arg("_cross"),arg("_cProba"),arg("_mutate"),arg("_mProba")),
-        "Start the Foo.\n\n"
+        "Construct from a mutation and a crossover.\n\n"
         ":param _cross: a crossover\n"
         ":type _cross: eoQuadOp\n"
         ":param _cProba: crossover probabilty\n"
@@ -43,15 +44,4 @@ transform()
         "applies _mutate and _cross operators on _pop"
         )
         ;
-    //
-    // def_abstract_functor<eoPopEvalFunc<PyMOEO> >("eoPopEvalFunc");
-    //
-    // class_<eoPopLoopEval<PyMOEO>, bases<eoPopEvalFunc<PyMOEO> > >
-    // (
-    //     "eoPopLoopEval",
-    //     init<
-    //         eoEvalFunc<PyMOEO>&
-    //     >()
-    // )
-    // .def("__call__", &eoPopLoopEval<PyMOEO>::operator ());
 }

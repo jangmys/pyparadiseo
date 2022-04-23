@@ -55,7 +55,7 @@ template<class EOT> class eoUniformMutation: public eoMonOp<EOT>
    * @param _epsilon the range for uniform nutation
    * @param _p_change the probability to change a given coordinate
    */
-  eoUniformMutation(const double& _epsilon, const double& _p_change = 1.0):
+  eoUniformMutation(const double _epsilon, const double _p_change = 1.0):
     homogeneous(true), bounds(eoDummyVectorNoBounds), epsilon(1, _epsilon),
     p_change(1, _p_change) {}
 
@@ -66,7 +66,7 @@ template<class EOT> class eoUniformMutation: public eoMonOp<EOT>
    * @param _p_change the one probability to change all coordinates
    */
   eoUniformMutation(eoRealVectorBounds & _bounds,
-                    const double& _epsilon, const double& _p_change = 1.0):
+                    const double _epsilon, const double _p_change = 1.0):
     homogeneous(false), bounds(_bounds), epsilon(_bounds.size(), _epsilon),
     p_change(_bounds.size(), _p_change)
   {

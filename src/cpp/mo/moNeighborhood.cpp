@@ -144,7 +144,7 @@ void moNeighborhoods()
     ;
 
     class_<moRndWithReplNeighborhood<PyNeighbor>,bases<moIndexNeighborhood<PyNeighbor>>>
-    ("moRndWithReplNeighborhood",init<unsigned>())
+    ("moRndWithReplNeighborhood",init<unsigned,optional<unsigned int>>())
     .def("has_neighbor",&moRndWithReplNeighborhood<PyNeighbor>::hasNeighbor)
     .def("init",&moRndWithReplNeighborhood<PyNeighbor>::init)
     .def("next",&moRndWithReplNeighborhood<PyNeighbor>::next)

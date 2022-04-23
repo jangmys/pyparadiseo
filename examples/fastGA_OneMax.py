@@ -1,6 +1,7 @@
 import pyparadiseo as pp
 
 from pyparadiseo import eo
+from pyparadiseo import initializer,evaluator,operator
 from pyparadiseo.eo import selector,replacement,continuator,algo
 from pyparadiseo import rng
 
@@ -18,7 +19,7 @@ if __name__ == "__main__":
     DIM = 500
 
     myinit = pp.initializer.BinaryInit(DIM)
-    myeval = pp.FitnessEval(sum_bits)
+    myeval = pp.evaluator.FitnessEval(sum_bits)
     # myeval = pp.FitnessEval(lambda sol: np.sum(sol))
 
     #crossovers 5
@@ -50,7 +51,7 @@ if __name__ == "__main__":
     xover_rates = [r*0.1 for r in range(10)]
     mut_rate = [r*0.1 for r in range(10)]
 
-    pop_eval = pp.PopLoopEval(myeval)
+    pop_eval = pp.evaluator.PopLoopEval(myeval)
 
     i=0
 
@@ -122,19 +123,8 @@ if __name__ == "__main__":
                                         cnt,
                                         0
                                     )
-
                                 break
-
-                                # print(i,pop.best().fitness)
 
     print(time.time()-t1)
 
     print(bestFit)
-
-    # pop = pp.Pop(20, myinit)
-    # for ind in pop:
-    #     myeval(ind)
-
-    # print(pop)
-    # sga(pop)
-    # print(pop.best())
