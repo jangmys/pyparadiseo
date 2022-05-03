@@ -1,5 +1,6 @@
 import pyparadiseo as pp
 
+from pyparadiseo import config
 from pyparadiseo import Solution
 
 import unittest
@@ -70,11 +71,11 @@ class TestSolution(unittest.TestCase):
         sol1.fitness = 1.0
         sol2.fitness = 2.0
 
-        pp.set_minimize_fitness()
+        pp.config.set_minimize_fitness()
         self.assertTrue(sol1 > sol2)
         self.assertFalse(sol1 < sol2)
 
-        pp.set_maximize_fitness()
+        pp.config.set_maximize_fitness()
         self.assertFalse(sol1 > sol2)
         self.assertTrue(sol1 < sol2)
 

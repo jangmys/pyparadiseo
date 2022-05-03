@@ -1,6 +1,7 @@
 import pyparadiseo as pp
 
 from pyparadiseo import mo
+from pyparadiseo import config
 from pyparadiseo.mo import eval,neighborhood,algo
 
 from pyparadiseo import Pop
@@ -35,7 +36,7 @@ class test_simpleHC_onemax(unittest.TestCase):
         # neighborhood
         self.nhood = mo.neighborhood.OrderNeighborhood(self.DIM)
 
-        pp.set_maximize_fitness()
+        pp.config.set_maximize_fitness()
 
     def move(self,nbor,sol):
         ind = nbor.index()

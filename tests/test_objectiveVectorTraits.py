@@ -1,5 +1,6 @@
 import pyparadiseo as pp
 
+from pyparadiseo import config
 from pyparadiseo import ObjectiveVectorTraits
 
 import unittest
@@ -7,7 +8,7 @@ import unittest
 
 class TestObj(unittest.TestCase):
     def test_MinMaxMin(self):
-        pp.setup_objectives(3,[True,False,True])
+        pp.config.setup_objectives(3,[True,False,True])
 
         self.assertEqual(ObjectiveVectorTraits.nb_objectives(),3)
         self.assertTrue(ObjectiveVectorTraits.minimizing(0))

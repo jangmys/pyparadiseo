@@ -1,5 +1,7 @@
 import importlib
 
+from pyparadiseo import config
+
 # =====================================
 # GENERIC
 # =====================================
@@ -18,7 +20,7 @@ TYPES={
 # =====================================
 # SOLUTION
 def get_solution(name,encoding=None,type='gen'):
-    clazz = get_class("pyparadiseo._core",name+TYPES[type])
+    clazz = get_class("pyparadiseo._core",name+config.TYPES[type])
 
     if encoding is not None:
         return clazz(encoding)
@@ -47,7 +49,7 @@ def get_population(pop_size=None,f_init=None,type="gen"):
     -------
     A Population
     """
-    clazz = get_class("pyparadiseo._core","Pop"+TYPES[type])
+    clazz = get_class("pyparadiseo._core","Pop"+config.TYPES[type])
 
     if pop_size is None:
         return clazz()
