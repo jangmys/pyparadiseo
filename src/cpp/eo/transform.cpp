@@ -9,19 +9,19 @@
 
 using namespace boost::python;
 
-
+template<typename SolutionType>
 void
-transform()
+export_transform(std::string name)
 {
-    class_<eoSGATransform<PyEOT>, bases<eoTransform<PyEOT> > >
+    class_<eoSGATransform<SolutionType>, bases<eoTransform<SolutionType> > >
         ("eoSGATransform",
         "Simple GA Transform\n\n"
         "Transforms a population by successive application of crossover\n"
         "and mutation operators\n",
         init<
-            eoQuadOp<PyEOT>&,
+            eoQuadOp<SolutionType>&,
             double,
-            eoMonOp<PyEOT>&,
+            eoMonOp<SolutionType>&,
             double
         >((arg("self"),arg("_cross"),arg("_cProba"),arg("_mutate"),arg("_mProba")),
         "Construct from a mutation and a crossover.\n\n"
@@ -35,9 +35,15 @@ transform()
         ":type _mProba: float\n"
         )
         )
-        .def("__call__", &eoSGATransform<PyEOT>::operator (),
+        .def("__call__", &eoSGATransform<SolutionType>::operator (),
         (arg("_pop")),
         "applies _mutate and _cross operators on _pop"
         )
         ;
+}
+
+void transform(){
+    export_transform<PyEOT>("");
+    // export_transform<BinarySolution>("Bin");
+    // export_transform<RealSolution>("Real");
 }

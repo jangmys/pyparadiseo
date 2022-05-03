@@ -15,6 +15,7 @@ from ._core import OneBitFlip
 from ._core import DetBitFlip
 from ._core import DetSingleBitFlip
 from ._core import BitMutation
+
 from ._core import OnePtBitCrossover
 from ._core import UBitCrossover
 from ._core import NPtsBitCrossover
@@ -22,6 +23,7 @@ from ._core import NPtsBitCrossover
 # real ops
 from ._core import UniformMutation
 from ._core import DetUniformMutation
+
 from ._core import SegmentCrossover
 from ._core import HypercubeCrossover
 from ._core import SBXCrossover
