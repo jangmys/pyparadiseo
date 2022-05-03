@@ -1,93 +1,11 @@
 import importlib
 
-from pyparadiseo import config
-
-# =====================================
-# GENERIC
-# =====================================
-def get_class(modul,kls):
-    mod = importlib.import_module(modul)
-    class_=getattr(mod,kls)
-    return class_
+from pyparadiseo import config,utils
 
 
-TYPES={
-    'gen' : '',
-    'bin' : 'Bin',
-    'real' : 'Real'
-}
-
-# =====================================
-# SOLUTION
-def get_solution(name,encoding=None,type='gen'):
-    clazz = get_class("pyparadiseo._core",name+config.TYPES[type])
-
-    if encoding is not None:
-        return clazz(encoding)
-    else:
-        return clazz()
-
-
-# =====================================
-# POPULATION
-def get_population(pop_size=None,f_init=None,type="gen"):
-    """
-    create and initialize a Population class object
-
-    Parameters
-    ----------
-    stype : Solution type
-        "generic" (default)
-        "real"
-        "perm"
-        "particle"
-
-    pop_size, optional : int
-    f_init : initialization function
-
-    Returns
-    -------
-    A Population
-    """
-    clazz = get_class("pyparadiseo._core","Pop"+config.TYPES[type])
-
-    if pop_size is None:
-        return clazz()
-    else:
-        if f_init is None:
-            print("need init function")
-        else:
-            return clazz(pop_size,f_init)
-
-
-
-# =====================================
-# EVAL (directly from ._core) ... only factory?
-# =====================================
-def get_evaluator(name,fun=None,type='gen'):
-    clazz = get_class("pyparadiseo._core",name+TYPES[type])
-
-    if fun is not None:
-        return clazz(fun)
-    else:
-        return clazz()
-
-
-
-
-
-
-
-
-
-# =====================================
-# EVAL (through evaluator.py) .. additional python wrapper (doc:!)
-# =====================================
-
-# =======================================================================
-# Generic (from pymoo)
-# =========
-
+# ============================================================
+# Generic (from pymoo... ;-)
+# ============================================================
 def get_from_list(l, name, args, kwargs):
     i = None
 
@@ -122,8 +40,77 @@ def get_from_list(l, name, args, kwargs):
 
 
 
+# TYPES={
+#     'gen' : '',
+#     'bin' : 'Bin',
+#     'real' : 'Real'
+# }
 
-def get_eval_options():
+# =====================================
+# SOLUTION
+def get_solution(encoding=None,type=None):
+    if type is None:
+        type = config._SOLUTION_TYPE
+
+    clazz = utils.get_class("Solution"+config.TYPES[type])
+
+    if encoding is not None:
+        return clazz(encoding)
+    else:
+        return clazz()
+
+
+# =====================================
+# POPULATION
+def get_population(pop_size=None,f_init=None,type="gen"):
+    """
+    create and initialize a Population class object
+
+    Parameters
+    ----------
+    stype : Solution type
+        "generic" (default)
+        "real"
+        "perm"
+        "particle"
+
+    pop_size, optional : int
+    f_init : initialization function
+
+    Returns
+    -------
+    A Population
+    """
+    clazz = utils.get_class("Pop"+config.TYPES[type])
+
+    if pop_size is None:
+        return clazz()
+    else:
+        if f_init is None:
+            print("need init function")
+        else:
+            return clazz(pop_size,f_init)
+
+
+
+# =====================================
+# EVAL (directly from ._core) ... only factory?
+# =====================================
+def get_evaluator(name,fun=None,type='gen'):
+    clazz = utils.get_class(name+TYPES[type])
+
+    if fun is not None:
+        return clazz(fun)
+    else:
+        return clazz()
+
+
+
+
+# =====================================
+# EVAL (through evaluator.py) .. additional python wrapper (doc:!)
+# =====================================
+def get_eval_list():
     from pyparadiseo.evaluator import _FitnessEval
     from pyparadiseo.evaluator import _ObjectiveEval
 
@@ -136,14 +123,14 @@ def get_eval_options():
 
 
 def get_eval(name,*args,d={},**kwargs):
-    return get_from_list(get_eval_options(),name,args,{**d, **kwargs})
+    return get_from_list(get_eval_list(),name,args,{**d, **kwargs})
 
 
 
 # =====================================
 # CONTINUATORS
 # =====================================
-def get_continue_options():
+def get_continue_list():
     from pyparadiseo.eo.continuator import _GenContinue
     from pyparadiseo.eo.continuator import _CombinedContinue
     from pyparadiseo.eo.continuator import _EvalContinue
@@ -163,7 +150,7 @@ def get_continue_options():
 
 
 def get_continue(name,*args,d={},**kwargs):
-    return get_from_list(get_continue_options(),name,args,{**d, **kwargs})
+    return get_from_list(get_continue_list(),name,args,{**d, **kwargs})
 
 
 # =====================================
@@ -188,11 +175,10 @@ BIN_MUTATION = {
 
 def get_mutation(name,type='gen'):
     if type is 'real':
-        clazz = get_class("pyparadiseo._core",REAL_MUTATION[name])
+        return utils.get_class(REAL_MUTATION[name])
     if type is 'bin':
-        clazz = get_class("pyparadiseo._core",BIN_MUTATION[name])
+        return utils.get_class(BIN_MUTATION[name])
 
-    return clazz
 
 
 # =====================================

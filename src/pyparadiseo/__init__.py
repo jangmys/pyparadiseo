@@ -6,7 +6,7 @@ from pyparadiseo import initializer
 from pyparadiseo import operator
 from pyparadiseo import factory
 
-from .core import *
+# from .core import *
 from ._core import FitnessTraits
 
 

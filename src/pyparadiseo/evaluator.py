@@ -1,3 +1,5 @@
+from pyparadiseo import config,utils
+
 #abstract base classes
 from ._core import eoEvalFunc
 from ._core import eoEvalFuncBin
@@ -24,33 +26,27 @@ import importlib
 from pyparadiseo import _core
 
 
-## put this to "utils" (or similar)...
-def get_class(modul,kls):
-    mod = importlib.import_module(modul)
-    class_=getattr(mod,kls)
-    return class_
 
-TYPES={
-    'gen' : '',
-    'bin' : 'Bin',
-    'real' : 'Real'
-}
 # ===================================
 # ===================================
 # ===================================
 
 class _FitnessEval():
-    def __new__(cls,fun=None,type='gen'):
-        clazz = get_class("pyparadiseo._core","FitnessEval"+TYPES[type])
+    def __new__(cls,fun=None,type=None):
+        if type is None:
+            type = config._SOLUTION_TYPE
+
+        class_ = utils.get_class("FitnessEval"+config.TYPES[type])
         if fun is not None:
-            return clazz(fun)
+            return class_(fun)
         else:
-            return clazz()
+            return class_()
+
 
 class _ObjectiveEval():
     def __new__(cls,fun=None,type='gen'):
-        clazz = get_class("pyparadiseo._core","ObjectiveEval"+TYPES[type])
+        class_ = utils.get_class("ObjectiveEval"+config.TYPES[type])
         if fun is not None:
-            return clazz(fun)
+            return class_(fun)
         else:
-            return clazz()
+            return class_()
