@@ -52,6 +52,14 @@
         > > > > > >()
 
 
+namespace{
+    inline std::string make_name(const char name[],std::string postfix)
+    {
+        return std::string(name)+postfix;
+    }
+}
+
+
 namespace eoutils {
 
     using namespace boost::python;
