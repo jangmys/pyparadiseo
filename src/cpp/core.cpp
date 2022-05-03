@@ -67,7 +67,8 @@ struct PyEOT_pickle_suite : bp::pickle_suite
 
 extern void registerConverters();
 
-extern template void export_abstract<PyEOT>();
+extern template void export_abstract<PyEOT>(std::string s);
+extern template void export_abstract<BinarySolution>(std::string s);
 
 extern void bounds();
 
@@ -93,6 +94,8 @@ extern void eoAlgos();
 
 extern void algos();
 extern void continuators();
+extern void add_checkpoint();
+
 extern void reduce();
 
 extern void real_op();
@@ -231,7 +234,9 @@ BOOST_PYTHON_MODULE(_core)
     //         > >("RealParticle",init<optional<unsigned,double,double,double>>())
     // ;
 
-    export_abstract<PyEOT>();
+    export_abstract<PyEOT>("");
+    export_abstract<BinarySolution>("Bin");
+
 
     //common
     initialize();
@@ -254,6 +259,8 @@ BOOST_PYTHON_MODULE(_core)
     breeders();
     eoAlgos();
     continuators();
+    add_checkpoint();
+
     // algos();
     // reduce();
     bounds();
