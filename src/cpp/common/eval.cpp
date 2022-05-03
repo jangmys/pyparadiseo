@@ -82,10 +82,10 @@ private:
 };
 
 template<class SolutionType>
-void export_fitness()
+void export_fitness(std::string postfix)
 {
     class_<pyeoFitnessEval<SolutionType>, bases<eoEvalFunc<SolutionType>>>
-        ("FitnessEval", init<>())
+        (make_name("FitnessEval",postfix).c_str(), init<>())
         .def(init<boost::python::object>()
         [WC1]
     )
@@ -94,8 +94,8 @@ void export_fitness()
     ;
 
     //===========================================================
-    class_<pyeoObjectiveEval<SolutionType>, bases<eoEvalFunc<SolutionType> >, boost::noncopyable>
-    ("ObjectiveEval", init<>())
+    class_<pyeoObjectiveEval<SolutionType>, bases<eoEvalFunc<SolutionType>>>
+    (make_name("ObjectiveEval",postfix).c_str(), init<>())
     .def(init<boost::python::object>()
     [WC1]
     )
@@ -104,9 +104,9 @@ void export_fitness()
     ;
 
     //===========================================================
-    class_<eoPopLoopEval<SolutionType>, bases<eoPopEvalFunc<SolutionType> > >
+    class_<eoPopLoopEval<SolutionType>, bases<eoPopEvalFunc<SolutionType>>>
     (
-        "eoPopLoopEval",
+        make_name("eoPopLoopEval",postfix).c_str(),
         init<
         eoEvalFunc<SolutionType>&
         >()[WC1]
@@ -124,6 +124,6 @@ void export_fitness()
 void
 evaluate()
 {
-    export_fitness<PyEOT>();
-
+    export_fitness<PyEOT>("");
+    export_fitness<BinarySolution>("Bin");
 }
