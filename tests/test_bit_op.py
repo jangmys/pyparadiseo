@@ -12,7 +12,7 @@ import copy
 
 class TestBitOp(unittest.TestCase):
     def setUp(self):
-        self.init = initializer.BinaryInit(10)
+        self.init = initializer.Init(lambda : np.random.choice([True,False],10))
 
     def test_OneBitFlip(self):
         ind=Solution()
@@ -36,11 +36,11 @@ class TestBitOp(unittest.TestCase):
         return np.sum(np.logical_xor(ind.encoding,ind2.encoding))
 
     def test_OneBitFlip(self):
-        self.assertEqual(1,self.mut_and_count_diff(operator.OneBitFlip()))
+        self.assertEqual(1,self.mut_and_count_diff(operator._OneBitFlip()))
 
     def test_DetBitFlip(self):
         for i in range(1,10):
-            self.assertTrue(self.mut_and_count_diff(operator.DetBitFlip(i)) <= i)
+            self.assertTrue(self.mut_and_count_diff(operator._DetBitFlip(i)) <= i)
 
     def test_DetSingleBitFlip(self):
         for i in range(1,10):

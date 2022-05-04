@@ -13,10 +13,20 @@ from ._core import pyQuadOp
 #binary ops
 from ._core import OneBitFlip
 from ._core import DetBitFlip
+
+from ._core import _OneBitFlip
+from ._core import _DetBitFlip
+
+
+
+from ._core import DetBitFlipBin
+
 from ._core import DetSingleBitFlip
 from ._core import BitMutation
 
 from ._core import OnePtBitCrossover
+from ._core import OnePtBitCrossoverBin
+
 from ._core import UBitCrossover
 from ._core import NPtsBitCrossover
 

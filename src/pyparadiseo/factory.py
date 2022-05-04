@@ -1,3 +1,4 @@
+import re
 import importlib
 
 from pyparadiseo import config,utils
@@ -19,11 +20,12 @@ def get_from_list(l, name, args, kwargs):
             if re.match(e[0], name):
                 i = k
                 break
+    # print("number ",i)
 
     if i is not None:
-
         if len(l[i]) == 2:
             name, clazz = l[i]
+            # print(name,type(clazz))
 
         elif len(l[i]) == 3:
             name, clazz, default_kwargs = l[i]
@@ -32,6 +34,9 @@ def get_from_list(l, name, args, kwargs):
             for key, val in kwargs.items():
                 default_kwargs[key] = val
             kwargs = default_kwargs
+
+        for a in args:
+            print(a)
 
         return clazz(*args, **kwargs)
     else:
@@ -96,13 +101,35 @@ def get_population(pop_size=None,f_init=None,type="gen"):
 # =====================================
 # EVAL (directly from ._core) ... only factory?
 # =====================================
-def get_evaluator(name,fun=None,type='gen'):
-    clazz = utils.get_class(name+TYPES[type])
+# def get_evaluator(name,fun=None,type='gen'):
+#     clazz = utils.get_class(name+TYPES[type])
+#
+#     if fun is not None:
+#         return clazz(fun)
+#     else:
+#         return clazz()
 
-    if fun is not None:
-        return clazz(fun)
-    else:
-        return clazz()
+# =====================================
+# INIT (through initializer.py) .. additional python wrapper (doc:!)
+# =====================================
+def get_init_list():
+    from pyparadiseo.initializer import _Init
+
+    INIT = [
+        ("init",_Init)
+    ]
+
+    return INIT
+
+def get_init(name,*args,d={},**kwargs):
+    for a in args:
+        print(a)
+    for dd in d:
+        print(dd)
+    for i in kwargs:
+        print(i)
+
+    return get_from_list(get_init_list(),name,args,{**d, **kwargs})
 
 
 

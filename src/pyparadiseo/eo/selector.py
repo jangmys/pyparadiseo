@@ -1,3 +1,5 @@
+from pyparadiseo import config,utils
+
 """
 Test docstring for eo.selector module
 
@@ -51,3 +53,18 @@ from .._core import eoRandomSelect as RandomSelect
 from .._core import eoNoSelect as NoSelect
 from .._core import eoSequentialSelect as SequentialSelect
 from .._core import eoEliteSequentialSelect as EliteSequentialSelect
+
+
+class _DetTournamentSelect():
+    """Deterministic Tournament Selection
+
+    Parameters
+    ----------
+    _tSize tournament size
+    """
+    def __new__(cls,t_size=2,type=None):
+        if type is None:
+            type = config._SOLUTION_TYPE
+
+        class_ = utils.get_class("eoDetTournamentSelect"+config.TYPES[type])
+        return class_(t_size)

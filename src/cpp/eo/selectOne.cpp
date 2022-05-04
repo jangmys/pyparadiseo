@@ -40,14 +40,15 @@
 
 using namespace boost::python;
 
-class eoSelectOneWrapper : public eoSelectOne<PyEOT>
+template<typename SolutionType>
+class eoSelectOneWrapper : public eoSelectOne<SolutionType>
 {
 public:
     PyObject* self;
     eoSelectOneWrapper(PyObject* p) : self(p) {}
-    const PyEOT& operator()(const eoPop<PyEOT>& pop)
+    const SolutionType& operator()(const eoPop<SolutionType>& pop)
     {
-	return boost::python::call_method< const PyEOT& >(self, "__call__", boost::ref(pop));
+	return boost::python::call_method<const SolutionType& >(self, "__call__", boost::ref(pop));
     }
 };
 
@@ -79,6 +80,30 @@ void add_select(std::string name, Init1 init1, Init2 init2)
 	.def("setup", &Select::setup);
 }
 
+template<typename SolutionType>
+void expose_selectOne(std::string name)
+{
+    class_<eoSelectOne<SolutionType>, eoSelectOneWrapper<SolutionType>, boost::noncopyable>(make_name("eoSelectOne",name).c_str(), init<>())
+    .def("__call__", &eoSelectOneWrapper<SolutionType>::operator(), return_value_policy<copy_const_reference>() ) //return_internal_reference<>() )
+    .def("setup", &eoSelectOne<SolutionType>::setup);
+
+
+    class_<eoDetTournamentSelect<SolutionType>, bases<eoSelectOne<SolutionType> > >(make_name("eoDetTournamentSelect",name).c_str(), "Tournament Selection.",
+    init<>(
+        args("self"),"default tournament size = 2"
+    ))
+    .def(
+        init<unsigned>(
+            args("_tSize"),"tournament size"
+        ))
+    .def("__call__", &eoDetTournamentSelect<SolutionType>::operator(), return_value_policy<copy_const_reference>() )
+    .def("setup", &eoDetTournamentSelect<SolutionType>::setup)
+    ;
+}
+
+
+
+
 void selectOne()
 {
     /* the EO part ...*/
@@ -91,11 +116,16 @@ void selectOne()
 	   .def("__neg__", &eoHowMany::operator-)
 	   );
 
-    class_<eoSelectOne<PyEOT>, eoSelectOneWrapper, boost::noncopyable>("eoSelectOne", init<>())
-	.def("__call__", &eoSelectOneWrapper::operator(), return_value_policy<copy_const_reference>() ) //return_internal_reference<>() )
-	.def("setup", &eoSelectOne<PyEOT>::setup);
+    // class_<eoSelectOne<PyEOT>, eoSelectOneWrapper, boost::noncopyable>("eoSelectOne", init<>())
+	// .def("__call__", &eoSelectOneWrapper::operator(), return_value_policy<copy_const_reference>() ) //return_internal_reference<>() )
+	// .def("setup", &eoSelectOne<PyEOT>::setup);
+
+
 
     /* SelectOne derived classes */
+    expose_selectOne<PyEOT>("");
+    expose_selectOne<BinarySolution>("Bin");
+
     class_<eoDetTournamentSelect<PyEOT>, bases<eoSelectOne<PyEOT> > >("eoDetTournamentSelect", "Tournament Selection.",
     init<>(
         args("self"),"default tournament size = 2"

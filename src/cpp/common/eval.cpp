@@ -82,23 +82,25 @@ private:
 };
 
 template<class SolutionType>
-void export_fitness(std::string postfix)
+void export_eval(std::string postfix)
 {
     class_<pyeoFitnessEval<SolutionType>, bases<eoEvalFunc<SolutionType>>>
-        (make_name("FitnessEval",postfix).c_str(), init<>())
-        .def(init<boost::python::object>()
-        [WC1]
+    (
+        make_name("FitnessEval",postfix).c_str(),
+        init<>()
     )
+    .def(init<boost::python::object>()[WC1])
     .def("set_eval_func", &pyeoFitnessEval<SolutionType>::setEvalFunc)
     .def("__call__", &pyeoFitnessEval<SolutionType>::operator ())
     ;
 
     //===========================================================
     class_<pyeoObjectiveEval<SolutionType>, bases<eoEvalFunc<SolutionType>>>
-    (make_name("ObjectiveEval",postfix).c_str(), init<>())
-    .def(init<boost::python::object>()
-    [WC1]
+    (
+        make_name("ObjectiveEval",postfix).c_str(),
+        init<>()
     )
+    .def(init<boost::python::object>()[WC1])
     .def("set_eval_func", &pyeoObjectiveEval<SolutionType>::setEvalFunc)
     .def("__call__", &pyeoObjectiveEval<SolutionType>::operator ())
     ;
@@ -107,23 +109,15 @@ void export_fitness(std::string postfix)
     class_<eoPopLoopEval<SolutionType>, bases<eoPopEvalFunc<SolutionType>>>
     (
         make_name("eoPopLoopEval",postfix).c_str(),
-        init<
-        eoEvalFunc<SolutionType>&
-        >()[WC1]
+        init<eoEvalFunc<SolutionType>&>()[WC1]
     )
-    .def("__call__", &eoPopLoopEval<SolutionType>::operator ());
+    .def("__call__", &eoPopLoopEval<SolutionType>::operator ())
+    ;
 }
-
-
-
-
-
-
-
 
 void
 evaluate()
 {
-    export_fitness<PyEOT>("");
-    export_fitness<BinarySolution>("Bin");
+    export_eval<PyEOT>("");
+    export_eval<BinarySolution>("Bin");
 }

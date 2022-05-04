@@ -56,11 +56,11 @@ private:
 };
 
 template<typename T>
-struct FixedLengthInit : eoInit<PyEOT> {
-    FixedLengthInit(unsigned _dim) : eoInit<PyEOT>(),_dimension(_dim),_gen(eoUniformGenerator<T>()){ };
+struct FixedSizeInit : eoInit<FixedSizeSolution<T>> {
+    FixedSizeInit(unsigned _dim) : eoInit<FixedSizeSolution<T>>(),_dimension(_dim),_gen(eoUniformGenerator<T>()){ };
 
     void
-    operator () (PyEOT& _eo)
+    operator () (FixedSizeSolution<T>& _eo)
     {
         _eo.encoding = np::zeros(p::make_tuple(_dimension),np::dtype::get_builtin<T>());
 
@@ -221,9 +221,9 @@ initialize()
     // .def("__call__", &pyeoInit::operator())
     // ;
 
-    class_<FixedLengthInit<bool>, bases<eoInit<PyEOT>>>
+    class_<FixedSizeInit<bool>, bases<eoInit<FixedSizeSolution<bool>>>>
         ("BinaryInit", init<unsigned>())
-    .def("__call__", &FixedLengthInit<bool>::operator ())
+    .def("__call__", &FixedSizeInit<bool>::operator ())
     ;
 
     class_<BinarySolInit, bases<eoInit<BinarySolution>>>

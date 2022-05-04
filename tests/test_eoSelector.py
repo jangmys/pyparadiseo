@@ -16,10 +16,6 @@ class test_eoSelector(unittest.TestCase):
         for i in range(len(self.pop)):
             self.pop[i].fitness = i
 
-    def test_bases(self):
-        for name, obj in inspect.getmembers(selector):
-            if inspect.isclass(obj):
-                self.assertIn(obj.__bases__[0].__name__, {"eoSelect","eoSelectOne","instance"})
     def test_ctor(self):
         #abstract : should not be able to construct this
         sel = selector.SelectOne()

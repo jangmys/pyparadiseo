@@ -1,5 +1,6 @@
 #include <pyeot.h>
 #include <eoOp.h>
+#include <ga/eoBitOp.h>
 
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
@@ -427,15 +428,37 @@ bit_op()
     using namespace boost::python;
 
     //MUTATION
-    class_<PyOneBitFlip<PyEOT,bool>, bases<eoMonOp<PyEOT> > >
+    class_<eoOneBitFlip<BinarySolution>, bases<eoMonOp<BinarySolution> > >
         ("OneBitFlip", init<>())
+    .def("__call__", &eoOneBitFlip<BinarySolution>::operator ())
+    ;
+
+    class_<eoDetBitFlip<BinarySolution>, bases<eoMonOp<BinarySolution> > >
+        ("DetBitFlip", init<optional<const unsigned>>())
+    .def("__call__", &eoDetBitFlip<BinarySolution>::operator ())
+    ;
+
+
+
+    //MUTATION
+    class_<PyOneBitFlip<PyEOT,bool>, bases<eoMonOp<PyEOT> > >
+        ("_OneBitFlip", init<>())
     .def("__call__", &PyOneBitFlip<PyEOT,bool>::operator ())
     ;
 
     class_<PyDetBitFlip<PyEOT>, bases<eoMonOp<PyEOT> > >
-        ("DetBitFlip", init<optional<const unsigned>>())
+        ("_DetBitFlip", init<optional<const unsigned>>())
     .def("__call__", &PyDetBitFlip<PyEOT>::operator ())
     ;
+
+    class_<PyDetBitFlip<BinarySolution>, bases<eoMonOp<BinarySolution> > >
+        ("DetBitFlipBin", init<optional<const unsigned>>())
+    .def("__call__", &PyDetBitFlip<BinarySolution>::operator ())
+    ;
+
+
+
+
 
     class_<PyDetSingleBitFlip<PyEOT>, bases<eoMonOp<PyEOT> > >
         ("DetSingleBitFlip", init<optional<const unsigned>>())
@@ -458,6 +481,16 @@ bit_op()
         ("OnePtBitCrossover",init<>())
         .def("__call__",&Py1PtBitXover<PyEOT>::operator())
     ;
+
+    class_<Py1PtBitXover<BinarySolution>, bases<eoQuadOp<BinarySolution> > >
+        ("OnePtBitCrossoverBin",init<>())
+        .def("__call__",&Py1PtBitXover<BinarySolution>::operator())
+    ;
+
+    // class_<Py1PtBitXover<PyEOT>, bases<eoQuadOp<PyEOT> > >
+    //     ("_OnePtBitCrossover",init<>())
+    //     .def("__call__",&Py1PtBitXover<PyEOT>::operator())
+    // ;
 
     class_<PyUBitXover<PyEOT>, bases<eoQuadOp<PyEOT> > >
         ("UBitCrossover",init<optional<double>>())

@@ -14,7 +14,16 @@ if __name__ == "__main__":
     print(pop)
 
     #make pyparadiseo evaluator from python function
-    eval = FitnessEval(lambda sol: sum(sol)) #np.count_nonzero(sol))
+    eval = FitnessEval(lambda sol: sum(sol))
+    eval(pop[0])
+    print(pop)
+
+    print(pop[0])
+
+    PopLoopEval(eval)(pop,pop)
+
+
+     #np.count_nonzero(sol))
     #generate and evaluate population
     pop=pp.create_population(25,BinaryInit(20))
     # pop = Pop(25, BinaryInit(20))

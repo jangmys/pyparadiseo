@@ -138,15 +138,6 @@ public:
         // return get_len();
     }
 
-    // template<typename T>
-    // T& operator[](unsigned int i){
-    //     np::ndarray arr = np::from_object(encoding,np::dtype::get_builtin<T>());
-    //
-    //     T* ptr = reinterpret_cast<T*>(arr.get_data());
-    //
-    //     return ptr[i];
-    // }
-
     //OBJECTIVE VECTOR
     //======================================================
     //C++ functions use objectiveVector...so this should always return : an objectiveVector!
@@ -268,25 +259,25 @@ public:
     }
 };
 
-//=============================================================
 
-class BinarySolution : public PyEOT
+template<typename T>
+class FixedSizeSolution : public PyEOT
 {
 public:
-    BinarySolution() : PyEOT(),_size(0)
+    FixedSizeSolution() : PyEOT(),_size(0)
     {}
 
-    BinarySolution(unsigned int _size) : PyEOT(np::zeros(bp::make_tuple(_size),np::dtype::get_builtin<bool>())),_size(_size)
+    FixedSizeSolution(unsigned int _size) : PyEOT(np::zeros(bp::make_tuple(_size),np::dtype::get_builtin<T>())),_size(_size)
     {}
 
-    size_t size(){
+    size_t size() const{
         return _size;
     }
 
-    bool& operator[](int i){
-        np::ndarray arr = np::from_object(encoding,np::dtype::get_builtin<bool>());
+    T& operator[](int i){
+        np::ndarray arr = np::from_object(encoding,np::dtype::get_builtin<T>());
 
-        bool* ptr = reinterpret_cast<bool*>(arr.get_data());
+        T* ptr = reinterpret_cast<T*>(arr.get_data());
 
         return ptr[i];
     }
@@ -295,20 +286,12 @@ private:
     size_t _size;
 };
 
-//==========================================================================
-
-class RealSolution : public PyEOT,public std::vector<double>
-{
-public:
-    RealSolution() : PyEOT(),std::vector<double>()
-    {}
-
-    RealSolution(unsigned int _size) : PyEOT(),std::vector<double>(_size)
-    {}
-};
+typedef FixedSizeSolution<bool> BinarySolution;
+typedef FixedSizeSolution<double> RealSolution;
 
 
 
-// std::ostream& operator<<(std::ostream& os, const PyEOT& _eo);
+
+
 
 #endif

@@ -37,6 +37,7 @@ class _FitnessEval():
             type = config._SOLUTION_TYPE
 
         class_ = utils.get_class("FitnessEval"+config.TYPES[type])
+
         if fun is not None:
             return class_(fun)
         else:
@@ -44,9 +45,26 @@ class _FitnessEval():
 
 
 class _ObjectiveEval():
-    def __new__(cls,fun=None,type='gen'):
+    def __new__(cls,fun=None,type=None):
+        if type is None:
+            type = config._SOLUTION_TYPE
+
         class_ = utils.get_class("ObjectiveEval"+config.TYPES[type])
+
         if fun is not None:
             return class_(fun)
         else:
             return class_()
+
+
+class _PopEval():
+    def __new__(cls,f_eval,type=None):
+        if type is None:
+            type = config._SOLUTION_TYPE
+
+        class_ = utils.get_class("eoPopLoopEval"+config.TYPES[type])
+
+        if isinstance(f_eval,utils.get_class("eoEvalFunc"+config.TYPES[type])):
+            return class_(f_eval)
+        else:
+            return class_(_FitnessEval(fun=f_eval,type=type))

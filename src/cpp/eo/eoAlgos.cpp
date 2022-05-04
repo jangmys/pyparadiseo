@@ -18,37 +18,43 @@
 
 using namespace boost::python;
 
+
+template <class SolutionType>
+void
+export_algos2(std::string name)
+{
+    class_<eoSGA<SolutionType>, bases<eoAlgo<SolutionType> >, boost::noncopyable>
+        (make_name("eoSGA",name).c_str(), "Simple genetic algorithm.",
+      init<
+          eoSelectOne<SolutionType>&,
+          eoQuadOp<SolutionType>&,
+          float,
+          eoMonOp<SolutionType>&,
+          float,
+          eoEvalFunc<SolutionType>&,
+          eoContinue<SolutionType>&
+      >()
+      [
+          with_custodian_and_ward<1, 2,
+          with_custodian_and_ward<1, 3,
+          with_custodian_and_ward<1, 5,
+          with_custodian_and_ward<1, 7,
+          with_custodian_and_ward<1, 8>
+          >
+          >
+          >
+          >()
+      ]
+        )
+    .def("__call__", &eoSGA<SolutionType>::operator ())
+    ;
+}
+
+
+
 template<class SolutionType>
 void export_algos()
 {
-    class_<eoSGA<SolutionType>, bases<eoAlgo<SolutionType> >, boost::noncopyable>
-    ("eoSGA","Simple genetic algorithm.",
-    init<
-    eoSelectOne<SolutionType>&,
-    eoQuadOp<SolutionType>&,
-    float,
-    eoMonOp<SolutionType>&,
-    float,
-    eoEvalFunc<SolutionType>&,
-    eoContinue<SolutionType>&
-    >()
-    [
-    with_custodian_and_ward<1,2,
-    with_custodian_and_ward<1,3,
-    with_custodian_and_ward<1,5,
-    with_custodian_and_ward<1,7,
-    with_custodian_and_ward<1,8>
-    >
-    >
-    >
-    >()
-    ]
-    )
-    .def("__call__", &eoSGA<SolutionType>::operator())
-    ;
-
-
-
     class_<eoEasyEA<SolutionType>, bases<eoAlgo<SolutionType> > >
     ("eoEasyEA","Evolutionary algorithm.",
     init<
@@ -207,6 +213,9 @@ void export_algos()
 
 void eoAlgos()
 {
+    export_algos2<PyEOT>("");
+    export_algos2<BinarySolution>("Bin");
+    
     export_algos<PyEOT>();
 }
 
