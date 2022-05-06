@@ -4,22 +4,21 @@
 
 #include <boost/python.hpp>
 
-// BOOST_PYTHON_MODULE(_mo)
-//building different modules on the C++ level is difficult (possible?) because of
-//cross-dependencies : building ONE big library, split into python modules via
-//__init__ / import ....
-void mo()
+template<typename SolutionType>
+void expose_mo(std::string name)
 {
     using namespace boost::python;
 
     //disambiguate getter/setter
-    unsigned int (PyNeighbor::*getIndex)(void) const = &moIndexNeighbor<PyEOT>::index;
-    void (PyNeighbor::*setIndex)(unsigned int) = &moIndexNeighbor<PyEOT>::index;
-    void (PyNeighbor::*setIndexWithSol)(PyEOT&,unsigned int) = &moIndexNeighbor<PyEOT>::index;
+    unsigned int (PyNeighbor<SolutionType>::*getIndex)(void) const = &moIndexNeighbor<SolutionType>::index;
+    void (PyNeighbor<SolutionType>::*setIndex)(unsigned int) = &moIndexNeighbor<SolutionType>::index;
+    void (PyNeighbor<SolutionType>::*setIndexWithSol)(SolutionType&,unsigned int) = &moIndexNeighbor<SolutionType>::index;
 
-    class_<PyNeighbor,boost::noncopyable>("Neighbor",init<>())
+    class_<PyNeighbor<SolutionType>,boost::noncopyable>(
+        make_name("Neighbor",name).c_str(),
+        init<>())
     .def(init<
-        PyNeighbor&
+        PyNeighbor<SolutionType>&
     >()
     [WC1]
     )
@@ -30,22 +29,29 @@ void mo()
         boost::python::object,
         boost::python::object
     >())
-    .add_property("fitness",&PyNeighbor::getFitness,&PyNeighbor::setFitness)
-    .def("setMove", &PyNeighbor::setMove)
-    .def("setMoveBack", &PyNeighbor::setMoveBack)
-    .def("move", &PyNeighbor::move)
-    .def("moveBack", &PyNeighbor::moveBack)
-    .def("equals", &PyNeighbor::equals, &PyNeighbor::default_equals)
+    .add_property("fitness",&PyNeighbor<SolutionType>::getFitness,&PyNeighbor<SolutionType>::setFitness)
+    .def("setMove", &PyNeighbor<SolutionType>::setMove)
+    .def("setMoveBack", &PyNeighbor<SolutionType>::setMoveBack)
+    .def("move", &PyNeighbor<SolutionType>::move)
+    .def("moveBack", &PyNeighbor<SolutionType>::moveBack)
+    .def("equals", &PyNeighbor<SolutionType>::equals, &PyNeighbor<SolutionType>::default_equals)
     .def("index",setIndexWithSol)
     .def("index",getIndex)
     .def("index",setIndex)
-    .def("__lt__",&PyNeighbor::operator<)
-    .def("__str__",&PyNeighbor::to_string)
-    .def("reassign", &moIndexNeighbor<PyEOT>::operator=,return_internal_reference<>())
+    .def("__lt__",&PyNeighbor<SolutionType>::operator<)
+    .def("__str__",&PyNeighbor<SolutionType>::to_string)
+    .def("reassign", &moIndexNeighbor<SolutionType>::operator=,return_internal_reference<>())
     ;
 
     // moEvaluators();
 }
+
+void mo()
+{
+    expose_mo<PyEOT>("");
+    expose_mo<BinarySolution>("Bin");
+}
+
 
 
 // #include "def_abstract_functor.h"

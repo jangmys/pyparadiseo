@@ -10,19 +10,20 @@
 
 namespace bp = boost::python;
 
-struct PyNeighbor : moIndexNeighbor<PyEOT>,moBackableNeighbor<PyEOT>,bp::wrapper<moIndexNeighbor<PyEOT>>
+template<typename SolutionType>
+struct PyNeighbor : moIndexNeighbor<SolutionType>,moBackableNeighbor<SolutionType>,bp::wrapper<moIndexNeighbor<SolutionType>>
 {
 public:
-    typedef PyEOT EOT;
+    typedef SolutionType EOT;
 
-    PyNeighbor() : moIndexNeighbor<PyEOT>() { }
+    PyNeighbor() : moIndexNeighbor<SolutionType>() { }
 
-    PyNeighbor(bp::object move) : moIndexNeighbor<PyEOT>(),move_op(move) { }
+    PyNeighbor(bp::object move) : moIndexNeighbor<SolutionType>(),move_op(move) { }
 
-    PyNeighbor(bp::object move,bp::object move_back) : moIndexNeighbor<PyEOT>(),move_op(move),move_back_op(move_back) { }
+    PyNeighbor(bp::object move,bp::object move_back) : moIndexNeighbor<SolutionType>(),move_op(move),move_back_op(move_back) { }
 
-    PyNeighbor(const PyNeighbor& _n) : moNeighbor<PyEOT>(),moIndexNeighbor<PyEOT>(_n),moBackableNeighbor<PyEOT>(_n){
-        fitness(_n.fitness());
+    PyNeighbor(const PyNeighbor<SolutionType>& _n) : moNeighbor<SolutionType>(),moIndexNeighbor<SolutionType>(_n),moBackableNeighbor<SolutionType>(_n){
+        this->fitness(_n.fitness());
         move_op = _n.move_op;
         move_back_op = _n.move_op;
     };
@@ -36,7 +37,7 @@ public:
     }
 
     //overridng Nieghbor move (pure virtual) to with Python callback
-    void move(PyEOT& _solution)
+    void move(SolutionType& _solution)
     {
         if(move_op.ptr() != Py_None)
         {
@@ -47,7 +48,7 @@ public:
     }
 
 //     //overridng Nieghbor moveBack (pure virtual) to with Python callback
-    void moveBack(PyEOT& _solution)
+    void moveBack(SolutionType& _solution)
     {
         if(move_back_op.ptr() != Py_None)
         {
@@ -58,7 +59,7 @@ public:
     }
 
     //virtual with defaults
-    bool equals(PyNeighbor& _neighbor)
+    bool equals(PyNeighbor<SolutionType>& _neighbor)
     {
         if (bp::override eq = this->get_override("equals"))
         {
@@ -66,18 +67,18 @@ public:
         }
         return PyNeighbor::equals(_neighbor); //(false)
     }
-    bool default_equals(PyNeighbor& _neighbor) {
-        return this->moNeighbor<PyEOT>::equals(_neighbor);
+    bool default_equals(PyNeighbor<SolutionType>& _neighbor) {
+        return this->moNeighbor<SolutionType>::equals(_neighbor);
     }
 
     //like for PyEOT, "emulating" inheritance from EO ... this is not DRY
     bp::object getFitness() const {
-        return invalid()? bp::object(): bp::object(fitness().get());
+        return this->invalid()? bp::object(): bp::object(this->fitness().get());
     }
     void setFitness(bp::object f) {
         if(f.ptr() == Py_None)
         {
-            invalidate();
+            this->invalidate();
             return;
         }
 
@@ -85,15 +86,15 @@ public:
         if(x.check())
         {
             double d = x();
-            fitness(d);
+            this->fitness(d);
         }else{
             throw index_error("can't extract fitness\n");
         }
     }
 
-    bool operator<(const PyNeighbor& _other) const
+    bool operator<(const PyNeighbor<SolutionType>& _other) const
     {
-        return fitness() < _other.fitness();
+        return this->fitness() < _other.fitness();
         // return getFitness() < _other.getFitness();
     }
 
@@ -101,11 +102,11 @@ public:
     {
         std::string result;
         result += ' ';
-        if(!invalid())
+        if(!this->invalid())
             result += bp::extract<const char*>(bp::str(getFitness()));
         else result += std::string("invalid");
         result += ' ';
-        result += std::to_string(key);
+        result += std::to_string(this->key);
         return result;
     }
 //

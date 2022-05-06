@@ -15,29 +15,30 @@
 
 using namespace boost::python;
 
-struct moNeighborhoodWrap : moNeighborhood<PyNeighbor>,
-    wrapper<moNeighborhood<PyNeighbor>>
+template<typename SolutionType>
+struct moNeighborhoodWrap : moNeighborhood<PyNeighbor<SolutionType>>,
+    wrapper<moNeighborhood<PyNeighbor<SolutionType>>>
 {
     public:
-    moNeighborhoodWrap() : moNeighborhood(){}
+    moNeighborhoodWrap() : moNeighborhood<PyNeighbor<SolutionType>>(){}
 
     //pure virtuals
-    bool hasNeighbor(PyEOT& _solution)
+    bool hasNeighbor(SolutionType& _solution)
     {
         return this->get_override("hasNeighbor")(_solution);
     }
 
-    void init(PyEOT& _solution, PyNeighbor& _current)
+    void init(SolutionType& _solution, PyNeighbor<SolutionType>& _current)
     {
         this->get_override("init")(_solution,_current);
     }
 
-    void next(PyEOT& _solution, PyNeighbor& _current)
+    void next(SolutionType& _solution, PyNeighbor<SolutionType>& _current)
     {
         this->get_override("next")(_solution,_current);
     }
 
-    bool cont(PyEOT& _solution)
+    bool cont(SolutionType& _solution)
     {
         return this->get_override("cont")(_solution);
     }
@@ -49,39 +50,39 @@ struct moNeighborhoodWrap : moNeighborhood<PyNeighbor>,
         {
             return f();
         }
-        return moNeighborhood<PyNeighbor>::isRandom();
+        return moNeighborhood<PyNeighbor<SolutionType>>::isRandom();
     }
     bool default_isRandom() {
-        return this->moNeighborhood<PyNeighbor>::isRandom();
+        return this->moNeighborhood<PyNeighbor<SolutionType>>::isRandom();
     }
 };
 
-
-struct moIndexNeighborhoodWrap : moIndexNeighborhood<PyNeighbor>,
-    wrapper<moIndexNeighborhood<PyNeighbor>>
+template<typename SolutionType>
+struct moIndexNeighborhoodWrap : moIndexNeighborhood<PyNeighbor<SolutionType>>,
+    wrapper<moIndexNeighborhood<PyNeighbor<SolutionType>>>
 {
     public:
     // moIndexNeighborhoodWrap() : moIndexNeighborhood<PyNeighbor>(){}
 
-    moIndexNeighborhoodWrap(unsigned int _nhoodSize) : moIndexNeighborhood<PyNeighbor>(_nhoodSize){}
+    moIndexNeighborhoodWrap(unsigned int _nhoodSize) : moIndexNeighborhood<PyNeighbor<SolutionType>>(_nhoodSize){}
 
     //pure virtuals
-    bool hasNeighbor(PyEOT& _solution)
+    bool hasNeighbor(SolutionType& _solution)
     {
         return this->get_override("hasNeighbor")(_solution);
     }
 
-    void init(PyEOT& _solution, PyNeighbor& _current)
+    void init(SolutionType& _solution, PyNeighbor<SolutionType>& _current)
     {
         this->get_override("init")(_solution,_current);
     }
 
-    void next(PyEOT& _solution, PyNeighbor& _current)
+    void next(SolutionType& _solution, PyNeighbor<SolutionType>& _current)
     {
         this->get_override("next")(_solution,_current);
     }
 
-    bool cont(PyEOT& _solution)
+    bool cont(SolutionType& _solution)
     {
         return this->get_override("cont")(_solution);
     }
@@ -94,62 +95,69 @@ bool isRandom(X& _nhood)
     return true;
 }
 
+template<typename SolutionType>
+void expose_moNeighborhoods()
+{
+    typedef PyNeighbor<SolutionType> NborT;
+
+    //ABC
+    class_<moNeighborhoodWrap<SolutionType>,boost::noncopyable>("moNeighborhood",init<>())
+    .def("has_neighbor", pure_virtual(&moNeighborhood<NborT>::hasNeighbor))
+    .def("init", pure_virtual(&moNeighborhood<NborT>::init))
+    .def("next", pure_virtual(&moNeighborhood<NborT>::next))
+    .def("cont", pure_virtual(&moNeighborhood<NborT>::cont))
+    .def("is_random",&moNeighborhood<NborT>::isRandom,&moNeighborhoodWrap<SolutionType>::default_isRandom)
+    ;
+
+    //ABC
+    class_<moIndexNeighborhoodWrap<SolutionType>,bases<moNeighborhood<NborT>>,boost::noncopyable>("moIndexNeighborhood",init<unsigned int>())
+    .add_property("neighborhood_size",&moIndexNeighborhood<NborT>::getNeighborhoodSize,&moIndexNeighborhood<NborT>::setNeighborhoodSize)
+    .def("has_neighbor", pure_virtual(&moIndexNeighborhood<NborT>::hasNeighbor))
+    .def("init", pure_virtual(&moIndexNeighborhood<NborT>::init))
+    .def("next", pure_virtual(&moIndexNeighborhood<NborT>::next))
+    .def("cont", pure_virtual(&moIndexNeighborhood<NborT>::cont))
+    ;
+
+    class_<moOrderNeighborhood<NborT>,bases<moIndexNeighborhood<NborT>>>
+    ("moOrderNeighborhood",init<>())
+    .def(init<unsigned int>())
+    .def("has_neighbor",&moOrderNeighborhood<NborT>::hasNeighbor)
+    .def("init",&moOrderNeighborhood<NborT>::init)
+    .def("next",&moOrderNeighborhood<NborT>::next)
+    .def("cont",&moOrderNeighborhood<NborT>::cont)
+    .add_property("position",&moOrderNeighborhood<NborT>::position,&moOrderNeighborhood<NborT>::setPosition)
+    ;
+
+    class_<moDummyNeighborhood<NborT>,bases<moNeighborhood<NborT>>>
+    ("moDummyNeighborhood",init<>())
+    .def("has_neighbor",&moDummyNeighborhood<NborT>::hasNeighbor)
+    .def("init",&moDummyNeighborhood<NborT>::init)
+    .def("next",&moDummyNeighborhood<NborT>::next)
+    .def("cont",&moDummyNeighborhood<NborT>::cont)
+    ;
+
+    class_<moRndWithoutReplNeighborhood<NborT>,bases<moIndexNeighborhood<NborT>>>
+    ("moRndWithoutReplNeighborhood",init<unsigned>())
+    .def("has_neighbor",&moRndWithoutReplNeighborhood<NborT>::hasNeighbor)
+    .def("init",&moRndWithoutReplNeighborhood<NborT>::init)
+    .def("next",&moRndWithoutReplNeighborhood<NborT>::next)
+    .def("cont",&moRndWithoutReplNeighborhood<NborT>::cont)
+    .def("isRandom",isRandom<moRndWithoutReplNeighborhood<NborT>>)
+    .def("position",&moRndWithoutReplNeighborhood<NborT>::position)
+    ;
+
+    class_<moRndWithReplNeighborhood<NborT>,bases<moIndexNeighborhood<NborT>>>
+    ("moRndWithReplNeighborhood",init<unsigned,optional<unsigned int>>())
+    .def("has_neighbor",&moRndWithReplNeighborhood<NborT>::hasNeighbor)
+    .def("init",&moRndWithReplNeighborhood<NborT>::init)
+    .def("next",&moRndWithReplNeighborhood<NborT>::next)
+    .def("cont",&moRndWithReplNeighborhood<NborT>::cont)
+    .def("isRandom",isRandom<moRndWithReplNeighborhood<NborT>>)
+    ;
+
+}
 
 void moNeighborhoods()
 {
-    //ABC
-    class_<moNeighborhoodWrap,boost::noncopyable>("moNeighborhood",init<>())
-    .def("has_neighbor", pure_virtual(&moNeighborhood<PyNeighbor>::hasNeighbor))
-    .def("init", pure_virtual(&moNeighborhood<PyNeighbor>::init))
-    .def("next", pure_virtual(&moNeighborhood<PyNeighbor>::next))
-    .def("cont", pure_virtual(&moNeighborhood<PyNeighbor>::cont))
-    .def("is_random",&moNeighborhood<PyNeighbor>::isRandom,&moNeighborhoodWrap::default_isRandom)
-    ;
-
-    //ABC
-    class_<moIndexNeighborhoodWrap,bases<moNeighborhood<PyNeighbor>>,boost::noncopyable>("moIndexNeighborhood",init<unsigned int>())
-    .add_property("neighborhood_size",&moIndexNeighborhood<PyNeighbor>::getNeighborhoodSize,&moIndexNeighborhood<PyNeighbor>::setNeighborhoodSize)
-    .def("has_neighbor", pure_virtual(&moIndexNeighborhood<PyNeighbor>::hasNeighbor))
-    .def("init", pure_virtual(&moIndexNeighborhood<PyNeighbor>::init))
-    .def("next", pure_virtual(&moIndexNeighborhood<PyNeighbor>::next))
-    .def("cont", pure_virtual(&moIndexNeighborhood<PyNeighbor>::cont))
-    ;
-
-    class_<moOrderNeighborhood<PyNeighbor>,bases<moIndexNeighborhood<PyNeighbor>>>
-    ("moOrderNeighborhood",init<>())
-    .def(init<unsigned int>())
-    .def("has_neighbor",&moOrderNeighborhood<PyNeighbor>::hasNeighbor)
-    .def("init",&moOrderNeighborhood<PyNeighbor>::init)
-    .def("next",&moOrderNeighborhood<PyNeighbor>::next)
-    .def("cont",&moOrderNeighborhood<PyNeighbor>::cont)
-    .add_property("position",&moOrderNeighborhood<PyNeighbor>::position,&moOrderNeighborhood<PyNeighbor>::setPosition)
-    ;
-
-    class_<moDummyNeighborhood<PyNeighbor>,bases<moNeighborhood<PyNeighbor>>>
-    ("moDummyNeighborhood",init<>())
-    .def("has_neighbor",&moDummyNeighborhood<PyNeighbor>::hasNeighbor)
-    .def("init",&moDummyNeighborhood<PyNeighbor>::init)
-    .def("next",&moDummyNeighborhood<PyNeighbor>::next)
-    .def("cont",&moDummyNeighborhood<PyNeighbor>::cont)
-    ;
-
-    class_<moRndWithoutReplNeighborhood<PyNeighbor>,bases<moIndexNeighborhood<PyNeighbor>>>
-    ("moRndWithoutReplNeighborhood",init<unsigned>())
-    .def("has_neighbor",&moRndWithoutReplNeighborhood<PyNeighbor>::hasNeighbor)
-    .def("init",&moRndWithoutReplNeighborhood<PyNeighbor>::init)
-    .def("next",&moRndWithoutReplNeighborhood<PyNeighbor>::next)
-    .def("cont",&moRndWithoutReplNeighborhood<PyNeighbor>::cont)
-    .def("isRandom",isRandom<moRndWithoutReplNeighborhood<PyNeighbor>>)
-    .def("position",&moRndWithoutReplNeighborhood<PyNeighbor>::position)
-    ;
-
-    class_<moRndWithReplNeighborhood<PyNeighbor>,bases<moIndexNeighborhood<PyNeighbor>>>
-    ("moRndWithReplNeighborhood",init<unsigned,optional<unsigned int>>())
-    .def("has_neighbor",&moRndWithReplNeighborhood<PyNeighbor>::hasNeighbor)
-    .def("init",&moRndWithReplNeighborhood<PyNeighbor>::init)
-    .def("next",&moRndWithReplNeighborhood<PyNeighbor>::next)
-    .def("cont",&moRndWithReplNeighborhood<PyNeighbor>::cont)
-    .def("isRandom",isRandom<moRndWithReplNeighborhood<PyNeighbor>>)
-    ;
-
+    expose_moNeighborhoods<PyEOT>();
 }

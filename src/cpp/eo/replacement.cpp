@@ -34,12 +34,6 @@
 
 using namespace boost::python;
 
-// #define DEF(x) class_<x<PyEOT>, bases<eoReplacement<PyEOT > > >(#x).def("__call__", &eoReplacement<PyEOT>::operator())
-// #define DEF2(x, i1) class_<x<PyEOT>, bases<eoReplacement<PyEOT > > >(#x, init<i1>() ).def("__call__", &eoReplacement<PyEOT>::operator())
-// #define DEF3(x, i1, i2) class_<x<PyEOT>, bases<eoReplacement<PyEOT > > >	\
-//     (#x,								\
-//      init<i1, i2 >() [WC2])						\
-//     .def("__call__", &eoReplacement<PyEOT>::operator())
 
 template<typename SolutionType>
 void expose_replacement(std::string name)
@@ -209,7 +203,10 @@ void replacement()
 {
     expose_replacement<PyEOT>("");
     expose_replacement<BinarySolution>("Bin");
+    expose_replacement<RealSolution>("Real");
 
     moeoreplacement<PyEOT>("");
     moeoreplacement<BinarySolution>("Bin");
+    moeoreplacement<RealSolution>("Real");
+
 }

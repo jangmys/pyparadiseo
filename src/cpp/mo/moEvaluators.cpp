@@ -12,12 +12,12 @@
 #include <eval/moFullEvalByModif.h>
 
 
-
-struct pyNeighborEval : moEval<PyNeighbor> {
-    pyNeighborEval() : moEval<PyNeighbor>(){ };
+template<typename SolutionType>
+struct pyNeighborEval : moEval<PyNeighbor<SolutionType>> {
+    pyNeighborEval() : moEval<PyNeighbor<SolutionType>>(){ };
 
     pyNeighborEval(boost::python::object _op) :
-        moEval<PyNeighbor>(),
+        moEval<PyNeighbor<SolutionType>>(),
         eval_op(_op)
     { };
 
@@ -28,7 +28,7 @@ struct pyNeighborEval : moEval<PyNeighbor> {
     }
 
     void
-    operator () (PyEOT& _eo, PyNeighbor& _nbor)
+    operator () (SolutionType& _eo, PyNeighbor<SolutionType>& _nbor)
     {
         if (eval_op.ptr() != Py_None) {
             _nbor.setFitness(
@@ -45,44 +45,48 @@ private:
 
 
 
-
-void moEvaluators(){
+template<typename SolutionType>
+void expose_moEvaluators(){
     using namespace boost::python;
 
-    def_abstract_functor<moEval<PyNeighbor> >("moEval");
-    def_abstract_functor<moNeighborhoodEvaluation<PyNeighbor> >("moNeighborhoodEvaluation");
+    def_abstract_functor<moEval<PyNeighbor<SolutionType> > >("moEval");
+    def_abstract_functor<moNeighborhoodEvaluation<PyNeighbor<SolutionType>> >("moNeighborhoodEvaluation");
 
-    class_<pyNeighborEval, bases<moEval<PyNeighbor>>>
+    class_<pyNeighborEval<SolutionType>, bases<moEval<PyNeighbor<SolutionType>>>>
         ("NeighborEval", init<>())
     .def(init<boost::python::object>()
     [WC1]
     )
-    .def("set_eval_func", &pyNeighborEval::setEvalFunc)
-    .def("__call__", &pyNeighborEval::operator ())
+    .def("set_eval_func", &pyNeighborEval<SolutionType>::setEvalFunc)
+    .def("__call__", &pyNeighborEval<SolutionType>::operator ())
     ;
 
 
-    class_<moFullEvalByCopy<PyNeighbor>,bases<moEval<PyNeighbor>>>
+    class_<moFullEvalByCopy<PyNeighbor<SolutionType>>,bases<moEval<PyNeighbor<SolutionType>>>>
     ("moFullEvalByCopy",
     "parameters : eoEvalFunc \n \
     // __call__ evaluates neighbor by making a tmp copy of solution, move it, evaluate and set fitness of neighbor",
     init<
-        eoEvalFunc<PyEOT>&
+        eoEvalFunc<SolutionType>&
     >(args("_eoEval"), "__init__ docstring")
     [WC1]
     )
-    .def("__call__",&moFullEvalByCopy<PyNeighbor>::operator())
+    .def("__call__",&moFullEvalByCopy<PyNeighbor<SolutionType>>::operator())
     ;
 
-    class_<moFullEvalByModif<PyNeighbor>,bases<moEval<PyNeighbor>>>
+    class_<moFullEvalByModif<PyNeighbor<SolutionType>>,bases<moEval<PyNeighbor<SolutionType>>>>
     ("moFullEvalByModif",
     "parameters : eoEvalFunc \n \
     __call__ moves solution, evaluates it an moves it back : requires moveBack to be defined in PyNeighbor",
     init<
-        eoEvalFunc<PyEOT>&
+        eoEvalFunc<SolutionType>&
     >(args("_eoEval"), "__init__ docstring")
     [WC1]
     )
-    .def("__call__",&moFullEvalByModif<PyNeighbor>::operator())
+    .def("__call__",&moFullEvalByModif<PyNeighbor<SolutionType>>::operator())
     ;
 };
+
+void moEvaluators(){
+    expose_moEvaluators<PyEOT>();
+}

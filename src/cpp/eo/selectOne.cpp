@@ -109,8 +109,10 @@ void expose_selectOne(std::string name)
         init<eoSelectOne<SolutionType>&, eoHowMany >()[WC1]
     );
 
-    add_select<eoProportionalSelect<SolutionType>,SolutionType>
-    (make_name("eoProportionalSelect",name).c_str(), init<eoPop<SolutionType>&>() );
+    add_select<eoProportionalSelect<SolutionType>,SolutionType>(
+        make_name("eoProportionalSelect",name).c_str(),
+        init<eoPop<SolutionType>&>()
+    );
 
     add_select<eoRandomSelect<SolutionType>,SolutionType>
     (make_name("eoRandomSelect",name).c_str());
@@ -123,8 +125,6 @@ void expose_selectOne(std::string name)
     (make_name("eoSequentialSelect",name).c_str(), init<>(), init<bool>());
     add_select<eoEliteSequentialSelect<SolutionType>,SolutionType>
     (make_name("eoEliteSequentialSelect",name).c_str());
-
-
 }
 
 
@@ -151,6 +151,7 @@ void selectOne()
     /* SelectOne derived classes */
     expose_selectOne<PyEOT>("");
     expose_selectOne<BinarySolution>("Bin");
+    expose_selectOne<RealSolution>("Real");
 }
 
 

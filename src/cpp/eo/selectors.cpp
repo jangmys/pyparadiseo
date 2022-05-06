@@ -146,4 +146,5 @@ void selectors()
 {
     expose_selectors<PyEOT>("");
     expose_selectors<BinarySolution>("Bin");
+    expose_selectors<RealSolution>("Real");
 }

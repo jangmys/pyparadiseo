@@ -9,14 +9,17 @@
 using namespace boost::python;
 
 
-struct moNeighborComparatorWrap : moNeighborComparator<PyNeighbor>
+template<typename SolutionType>
+struct moNeighborComparatorWrap : moNeighborComparator<PyNeighbor<SolutionType>>
 {
-    moNeighborComparatorWrap() : moNeighborComparator<PyNeighbor>(){};
+    typedef PyNeighbor<SolutionType> NborT;
 
-    moNeighborComparatorWrap(boost::python::object obj) : moNeighborComparator<PyNeighbor>(),cmp_op(obj){};
+    moNeighborComparatorWrap() : moNeighborComparator<NborT>(){};
+
+    moNeighborComparatorWrap(boost::python::object obj) : moNeighborComparator<NborT>(),cmp_op(obj){};
 
     //"virtual with default"
-    bool operator()(const PyNeighbor& _neighbor1, const PyNeighbor& _neighbor2)
+    bool operator()(const NborT& _neighbor1, const NborT& _neighbor2)
     {
         if(cmp_op.ptr() != Py_None)
         {
@@ -24,7 +27,7 @@ struct moNeighborComparatorWrap : moNeighborComparator<PyNeighbor>
             return boost::python::call<bool>(cmp_op.ptr(),_neighbor1.fitness(),_neighbor2.fitness());
         }else{
             // std::cout<<"default\n";
-            return this->moNeighborComparator<PyNeighbor>::operator()(_neighbor1,_neighbor2);
+            return this->moNeighborComparator<NborT>::operator()(_neighbor1,_neighbor2);
         }
     }
 
@@ -37,15 +40,17 @@ private:
     boost::python::object cmp_op;
 };
 
-
-struct moSolNeighborComparatorWrap : moSolNeighborComparator<PyNeighbor>
+template<typename SolutionType>
+struct moSolNeighborComparatorWrap : moSolNeighborComparator<PyNeighbor<SolutionType>>
 {
-    moSolNeighborComparatorWrap() : moSolNeighborComparator<PyNeighbor>(){};
+    typedef PyNeighbor<SolutionType> NborT;
 
-    moSolNeighborComparatorWrap(boost::python::object obj) : moSolNeighborComparator<PyNeighbor>(),cmp_op(obj){};
+    moSolNeighborComparatorWrap() : moSolNeighborComparator<NborT>(){};
+
+    moSolNeighborComparatorWrap(boost::python::object obj) : moSolNeighborComparator<NborT>(),cmp_op(obj){};
 
     //"virtual with default"
-    bool operator()(const PyEOT& _sol, const PyNeighbor& _neighbor)
+    bool operator()(const PyEOT& _sol, const NborT& _neighbor)
     {
         if(cmp_op.ptr() != Py_None)
         {
@@ -53,7 +58,7 @@ struct moSolNeighborComparatorWrap : moSolNeighborComparator<PyNeighbor>
             return boost::python::call<bool>(cmp_op.ptr(),_sol.fitness(),_neighbor.fitness());
         }else{
             // std::cout<<"default\n";
-            return this->moSolNeighborComparator<PyNeighbor>::operator()(_sol,_neighbor);
+            return this->moSolNeighborComparator<NborT>::operator()(_sol,_neighbor);
         }
     }
 
@@ -66,23 +71,31 @@ private:
     boost::python::object cmp_op;
 };
 
+template<typename SolutionType>
+void expose_moComparators()
+{
+    typedef PyNeighbor<SolutionType> NborT;
+
+    //need to expose the base class
+    class_<moNeighborComparator<NborT>,boost::noncopyable>("moNCompBase",init<>());
+
+    class_<moNeighborComparatorWrap<SolutionType>,bases<moNeighborComparator<NborT>>, boost::noncopyable>("moNeighborComparator",init<>())
+    .def(init<boost::python::object>())
+    .def("__call__",&moNeighborComparatorWrap<SolutionType>::operator())
+    .def("setNborComp",&moNeighborComparatorWrap<SolutionType>::setNborComp)
+    ;
+
+    class_<moSolNeighborComparator<NborT>,boost::noncopyable>("moSNCompBase",init<>());
+
+    class_<moSolNeighborComparatorWrap<SolutionType>,bases<moSolNeighborComparator<NborT>>, boost::noncopyable>("moSolNeighborComparator",init<>())
+    .def(init<boost::python::object>())
+    .def("__call__",&moSolNeighborComparatorWrap<SolutionType>::operator())
+    .def("setSolNborComp",&moSolNeighborComparatorWrap<SolutionType>::setSolNborComp)
+    ;
+}
+
 
 void moComparators()
 {
-    //need to expose the base class
-    class_<moNeighborComparator<PyNeighbor>,boost::noncopyable>("moNCompBase",init<>());
-
-    class_<moNeighborComparatorWrap,bases<moNeighborComparator<PyNeighbor>>, boost::noncopyable>("moNeighborComparator",init<>())
-    .def(init<boost::python::object>())
-    .def("__call__",&moNeighborComparatorWrap::operator())
-    .def("setNborComp",&moNeighborComparatorWrap::setNborComp)
-    ;
-
-    class_<moSolNeighborComparator<PyNeighbor>,boost::noncopyable>("moSNCompBase",init<>());
-
-    class_<moSolNeighborComparatorWrap,bases<moSolNeighborComparator<PyNeighbor>>, boost::noncopyable>("moSolNeighborComparator",init<>())
-    .def(init<boost::python::object>())
-    .def("__call__",&moSolNeighborComparatorWrap::operator())
-    .def("setSolNborComp",&moSolNeighborComparatorWrap::setSolNborComp)
-    ;
+    expose_moComparators<PyEOT>();
 }
