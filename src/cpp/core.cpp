@@ -69,6 +69,7 @@ extern void registerConverters();
 
 extern template void export_abstract<PyEOT>(std::string s);
 extern template void export_abstract<BinarySolution>(std::string s);
+extern template void export_abstract<RealSolution>(std::string s);
 
 extern void bounds();
 
@@ -245,6 +246,7 @@ BOOST_PYTHON_MODULE(_core)
 
     export_abstract<PyEOT>("");
     export_abstract<BinarySolution>("Bin");
+    export_abstract<RealSolution>("Real");
 
 
     //common

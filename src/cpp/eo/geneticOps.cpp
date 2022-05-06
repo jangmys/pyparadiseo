@@ -30,7 +30,8 @@
 
 using namespace boost::python;
 
-class GenOpWrapper : public eoGenOp<PyEOT>
+template<typename SolutionType>
+class GenOpWrapper : public eoGenOp<SolutionType>
 {
 public:
 
@@ -45,7 +46,7 @@ public:
         return "GenOpDerivative"; // never saw the use of className anyway
     }
 
-    void apply(eoPopulator<PyEOT>& populator )
+    void apply(eoPopulator<SolutionType>& populator )
     {
         boost::python::call_method<void>(self,"apply", boost::ref( populator ) );
     }
@@ -216,6 +217,14 @@ void expose_gen_ops(std::string name)
 
     class_<eoQuadOp<SolutionType>, QuadOpWrapper<SolutionType>, bases<eoOp>, boost::noncopyable>(make_name("eoQuadOp",name).c_str(), init<>())
         .def("__call__", &QuadOpWrapper<SolutionType>::operator());
+
+    class_<eoGenOp<SolutionType>, GenOpWrapper<SolutionType>, bases<eoOp>, boost::noncopyable>(make_name("eoGenOp",name).c_str(), init<>())
+        .def("max_production", &GenOpWrapper<SolutionType>::max_production)
+        .def("className", &GenOpWrapper<SolutionType>::className)
+        .def("apply", &GenOpWrapper<SolutionType>::apply)
+        .def("__call__", &eoGenOp<SolutionType>::operator())
+    ;
+
 }
 
 void geneticOps()
@@ -297,12 +306,12 @@ void geneticOps()
         .def("__call__", &PyQuadOp::operator ())
     ;
 
-    class_<eoGenOp<PyEOT>, GenOpWrapper, bases<eoOp>, boost::noncopyable>("eoGenOp", init<>())
-        .def("max_production", &GenOpWrapper::max_production)
-        .def("className", &GenOpWrapper::className)
-        .def("apply", &GenOpWrapper::apply)
-        .def("__call__", &eoGenOp<PyEOT>::operator())
-        ;
+    // class_<eoGenOp<PyEOT>, GenOpWrapper, bases<eoOp>, boost::noncopyable>("eoGenOp", init<>())
+    //     .def("max_production", &GenOpWrapper::max_production)
+    //     .def("className", &GenOpWrapper::className)
+    //     .def("apply", &GenOpWrapper::apply)
+    //     .def("__call__", &eoGenOp<PyEOT>::operator())
+    //     ;
 
 
 

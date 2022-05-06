@@ -3,6 +3,7 @@
 
 #include <utils/def_abstract_functor.h>
 
+//EO
 #include <eoAlgo.h>
 #include <eoTransform.h>
 #include <eoSelect.h>
@@ -13,13 +14,33 @@
 #include <eoContinue.h>
 #include <eoMerge.h>
 #include <eoReplacement.h>
+//MOEO
+#include <replacement/moeoReplacement.h>
 
 #include <pyeot.h>
+
+// unfortunately have to define it specially -- why??
+template<typename SolutionType>
+class eoReduceWrapper : public eoReduce<SolutionType>
+{
+public:
+    PyObject* self;
+    eoReduceWrapper(PyObject* s) : self(s) {}
+    void operator()(eoPop<SolutionType>& pop, unsigned i)
+    {
+        boost::python::call_method<void>(self, "__call__", pop, i );
+    }
+};
 
 
 template <typename SolutionType>
 void export_abstract(std::string type)
 {
+    using namespace boost::python;
+
+    class_<eoReduce<SolutionType>, eoReduceWrapper<SolutionType>, boost::noncopyable>(make_name("eoReduce",type).c_str(), init<>())
+    .def("__call__", &eoReduceWrapper<SolutionType>::operator());
+
     // eoUF : eoPop<PyMOEO> ---> void
     def_abstract_functor<eoTransform<SolutionType> >(make_name("eoTransform",type).c_str(),
         "Abstract Base Class.\n\n Functor : Population ==> void.\n\n Transforms a Population. ");
@@ -45,6 +66,8 @@ void export_abstract(std::string type)
     def_abstract_functor<eoMerge<SolutionType> >(make_name("eoMerge",type).c_str());
 
     def_abstract_functor<eoReplacement<SolutionType> >(make_name("eoReplacement",type).c_str());
+
+    def_abstract_functor<moeoReplacement<SolutionType> >(make_name("moeoReplacement",type).c_str());
 }
 
 #endif

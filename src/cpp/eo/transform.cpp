@@ -13,8 +13,8 @@ template<typename SolutionType>
 void
 export_transform(std::string name)
 {
-    class_<eoSGATransform<SolutionType>, bases<eoTransform<SolutionType> > >
-        ("eoSGATransform",
+    class_<eoSGATransform<SolutionType>, bases<eoTransform<SolutionType>>>(
+        make_name("eoSGATransform",name).c_str(),
         "Simple GA Transform\n\n"
         "Transforms a population by successive application of crossover\n"
         "and mutation operators\n",
@@ -44,6 +44,6 @@ export_transform(std::string name)
 
 void transform(){
     export_transform<PyEOT>("");
-    // export_transform<BinarySolution>("Bin");
+    export_transform<BinarySolution>("Bin");
     // export_transform<RealSolution>("Real");
 }

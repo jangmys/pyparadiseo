@@ -52,28 +52,28 @@ public:
     }
 };
 
-template <class Select>
+template <class Select,class SolutionType>
 void add_select(std::string name)
 {
-    class_<Select, bases<eoSelectOne<PyEOT> > >(name.c_str(), init<>() )
+    class_<Select, bases<eoSelectOne<SolutionType> > >(name.c_str(), init<>() )
     .def("__call__", &Select::operator(), return_value_policy<copy_const_reference>() )
 	// .def("__call__", &Select::operator(), return_internal_reference<>() )
 	;
 }
 
-template <class Select, class Init>
+template <class Select,class SolutionType, class Init>
 void add_select(std::string name, Init init)
 {
-    class_<Select, bases<eoSelectOne<PyEOT> > >(name.c_str(), init)
+    class_<Select, bases<eoSelectOne<SolutionType> > >(name.c_str(), init)
 	.def("__call__", &Select::operator(), return_value_policy<copy_const_reference>() )
 	// .def("__call__", &Select::operator(), return_internal_reference<>() )
 	;
 }
 
-template <class Select, class Init1, class Init2>
+template <class Select,class SolutionType, class Init1, class Init2>
 void add_select(std::string name, Init1 init1, Init2 init2)
 {
-    class_<Select, bases<eoSelectOne<PyEOT> > >(name.c_str(), init1)
+    class_<Select, bases<eoSelectOne<SolutionType> > >(name.c_str(), init1)
 	.def( init2 )
 	.def("__call__", &Select::operator(), return_value_policy<copy_const_reference>() )
 	// .def("__call__", &Select::operator(), return_internal_reference<>() )
@@ -99,6 +99,32 @@ void expose_selectOne(std::string name)
     .def("__call__", &eoDetTournamentSelect<SolutionType>::operator(), return_value_policy<copy_const_reference>() )
     .def("setup", &eoDetTournamentSelect<SolutionType>::setup)
     ;
+
+    add_select<eoStochTournamentSelect<SolutionType>,SolutionType>
+    (make_name("eoStochTournamentSelect",name).c_str(), init<>(), init<double>() );
+
+    add_select<eoTruncatedSelectOne<SolutionType>,SolutionType>
+    (make_name("eoTruncatedSelectOne",name).c_str(),
+        init<eoSelectOne<SolutionType>&, double>()[WC1],
+        init<eoSelectOne<SolutionType>&, eoHowMany >()[WC1]
+    );
+
+    add_select<eoProportionalSelect<SolutionType>,SolutionType>
+    (make_name("eoProportionalSelect",name).c_str(), init<eoPop<SolutionType>&>() );
+
+    add_select<eoRandomSelect<SolutionType>,SolutionType>
+    (make_name("eoRandomSelect",name).c_str());
+    add_select<eoBestSelect<SolutionType>,SolutionType>
+    (make_name("eoBestSelect",name).c_str());
+    add_select<eoNoSelect<SolutionType>,SolutionType>
+    (make_name("eoNoSelect",name).c_str());
+
+    add_select<eoSequentialSelect<SolutionType>,SolutionType>
+    (make_name("eoSequentialSelect",name).c_str(), init<>(), init<bool>());
+    add_select<eoEliteSequentialSelect<SolutionType>,SolutionType>
+    (make_name("eoEliteSequentialSelect",name).c_str());
+
+
 }
 
 
@@ -125,40 +151,6 @@ void selectOne()
     /* SelectOne derived classes */
     expose_selectOne<PyEOT>("");
     expose_selectOne<BinarySolution>("Bin");
-
-    class_<eoDetTournamentSelect<PyEOT>, bases<eoSelectOne<PyEOT> > >("eoDetTournamentSelect", "Tournament Selection.",
-    init<>(
-        args("self"),"default tournament size = 2"
-    ))
-	.def(
-        init<unsigned>(
-            args("_tSize"),"tournament size"
-        ))
-	.def("__call__", &eoDetTournamentSelect<PyEOT>::operator(), return_value_policy<copy_const_reference>() )
-	.def("setup", &eoDetTournamentSelect<PyEOT>::setup);
-
-    add_select<eoStochTournamentSelect<PyEOT> >("eoStochTournamentSelect", init<>(), init<double>() );
-
-    add_select<eoTruncatedSelectOne<PyEOT> >("eoTruncatedSelectOne",
-					    init<eoSelectOne<PyEOT>&, double>()[WC1],
-					    init<eoSelectOne<PyEOT>&, eoHowMany >()[WC1]
-					    );
-
-    // eoProportionalSelect is not feasible to implement at this point as fitness is not recognizable as a float
-    // use eoDetTournament instead: with a t-size of 2 it is equivalent to eoProportional with linear scaling
-    add_select<eoProportionalSelect<PyEOT> >("eoProportionalSelect", init<eoPop<PyEOT>&>() );
-
-    add_select<eoRandomSelect<PyEOT> >("eoRandomSelect");
-    add_select<eoBestSelect<PyEOT> >("eoBestSelect");
-    add_select<eoNoSelect<PyEOT> >("eoNoSelect");
-
-    add_select<eoSequentialSelect<PyEOT> >("eoSequentialSelect", init<>(), init<bool>());
-    add_select<eoEliteSequentialSelect<PyEOT> >("eoEliteSequentialSelect");
-    /*
-     * eoSelectFromWorth.h:class eoSelectFromWorth : public eoSelectOne<EOT>
-     */
-
-    /* the EO part ...*/
 }
 
 

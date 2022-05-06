@@ -41,26 +41,82 @@ using namespace boost::python;
      )						\
     .def("__call__", &eoBreed<PyEOT>::operator())
 
+template<typename SolutionType>
+void expose_breeders(std::string name)
+{
+    class_<eoSelectTransform<SolutionType>, bases<eoBreed<SolutionType> > >
+    (make_name("eoSelectTransform",name).c_str(),
+        init<
+            eoSelect<SolutionType>&,
+            eoTransform<SolutionType>&
+        >()[
+            with_custodian_and_ward<1,2,
+            with_custodian_and_ward<1,3>>()
+        ]
+    )
+    .def("__call__", &eoBreed<SolutionType>::operator())
+    ;
+
+
+    class_<eoGeneralBreeder<SolutionType>, bases<eoBreed<SolutionType> > >
+    (make_name("eoGeneralBreeder",name).c_str(),
+        init<
+            eoSelectOne<SolutionType>&,
+            eoGenOp<SolutionType>&
+        >()[
+            with_custodian_and_ward<1,2,
+            with_custodian_and_ward<1,3>>()
+        ]
+    )
+    .def(
+        init<eoSelectOne<SolutionType>&, eoGenOp<SolutionType>&, double>()[WC2]
+    )
+    .def(
+        init<eoSelectOne<SolutionType>&, eoGenOp<SolutionType>&, double, bool>()[WC2]
+    )
+    .def(
+        init<eoSelectOne<SolutionType>&, eoGenOp<SolutionType>&, eoHowMany&>()
+        [
+            with_custodian_and_ward<1,2,
+            with_custodian_and_ward<1,3,
+            with_custodian_and_ward<1,4>>>()
+        ]
+    )
+    .def("__call__", &eoBreed<SolutionType>::operator())
+    ;
+
+
+    class_<eoOneToOneBreeder<SolutionType>, bases<eoBreed<SolutionType> > >
+    (make_name("eoOneToOneBreeder",name).c_str(),
+        init<
+            eoGenOp<SolutionType>&,
+            eoEvalFunc<SolutionType>&
+        >()[
+            with_custodian_and_ward<1,2,
+            with_custodian_and_ward<1,3>>()
+        ]
+    )
+    .def(
+        init<
+            eoGenOp<SolutionType>&,
+            eoEvalFunc<SolutionType>&,
+            double
+        >()[WC2]
+    )
+    .def(
+        init<
+            eoGenOp<SolutionType>&,
+            eoEvalFunc<SolutionType>&,
+            double,
+            eoHowMany
+        >()[WC2]
+    )
+    .def("__call__", &eoBreed<SolutionType>::operator())
+    ;
+}
+
 void breeders()
 {
-    DEF3(eoSelectTransform, eoSelect<PyEOT>&, eoTransform<PyEOT>&);
-
-    DEF3(eoGeneralBreeder, eoSelectOne<PyEOT>&, eoGenOp<PyEOT>&)
-        .def( init<eoSelectOne<PyEOT>&, eoGenOp<PyEOT>&, double>()[WC2])
-        .def( init<eoSelectOne<PyEOT>&, eoGenOp<PyEOT>&, double, bool>()[WC2] )
-        .def( init<eoSelectOne<PyEOT>&, eoGenOp<PyEOT>&, eoHowMany&>()
-        [
-        with_custodian_and_ward<1,2,
-        with_custodian_and_ward<1,3,
-        with_custodian_and_ward<1,4
-        >
-        >
-        >
-        ()
-        ]
-        );
-
-    DEF3(eoOneToOneBreeder, eoGenOp<PyEOT>&, eoEvalFunc<PyEOT>&)
-        .def( init<eoGenOp<PyEOT>&, eoEvalFunc<PyEOT>&, double>()[WC2] )
-        .def( init<eoGenOp<PyEOT>&, eoEvalFunc<PyEOT>&, double, eoHowMany>()[WC2] );
+    expose_breeders<PyEOT>("");
+    expose_breeders<BinarySolution>("Bin");
 }

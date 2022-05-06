@@ -34,107 +34,182 @@
 
 using namespace boost::python;
 
-#define DEF(x) class_<x<PyEOT>, bases<eoReplacement<PyEOT > > >(#x).def("__call__", &eoReplacement<PyEOT>::operator())
-#define DEF2(x, i1) class_<x<PyEOT>, bases<eoReplacement<PyEOT > > >(#x, init<i1>() ).def("__call__", &eoReplacement<PyEOT>::operator())
-#define DEF3(x, i1, i2) class_<x<PyEOT>, bases<eoReplacement<PyEOT > > >	\
-    (#x,								\
-     init<i1, i2 >() [WC2])						\
-    .def("__call__", &eoReplacement<PyEOT>::operator())
+// #define DEF(x) class_<x<PyEOT>, bases<eoReplacement<PyEOT > > >(#x).def("__call__", &eoReplacement<PyEOT>::operator())
+// #define DEF2(x, i1) class_<x<PyEOT>, bases<eoReplacement<PyEOT > > >(#x, init<i1>() ).def("__call__", &eoReplacement<PyEOT>::operator())
+// #define DEF3(x, i1, i2) class_<x<PyEOT>, bases<eoReplacement<PyEOT > > >	\
+//     (#x,								\
+//      init<i1, i2 >() [WC2])						\
+//     .def("__call__", &eoReplacement<PyEOT>::operator())
 
-void replacement()
+template<typename SolutionType>
+void expose_replacement(std::string name)
 {
     // eoReplacement.h
-    DEF(eoGenerationalReplacement);
+    class_<eoGenerationalReplacement<SolutionType>, bases<eoReplacement<SolutionType>>>(
+        make_name("eoGenerationalReplacement",name).c_str())
+    .def("__call__", &eoReplacement<SolutionType>::operator())
+    ;
 
-    class_<eoWeakElitistReplacement<PyEOT>, bases<eoReplacement<PyEOT> > >
-	("eoWeakElitistReplacement",
-	 init< eoReplacement<PyEOT>& >()[WC1]);
+    class_<eoWeakElitistReplacement<SolutionType>, bases<eoReplacement<SolutionType>>>(
+        make_name("eoWeakElitistReplacement",name).c_str(),
+        init< eoReplacement<SolutionType>& >()[WC1])
+    .def("__call__", &eoReplacement<SolutionType>::operator())
+    ;
 
     // eoMergeReduce.h
-    DEF3(eoMergeReduce, eoMerge<PyEOT>&, eoReduce<PyEOT>& );
-    DEF(eoPlusReplacement);
-    DEF(eoCommaReplacement);
-    DEF2(eoEPReplacement, unsigned);
+    class_<eoMergeReduce<SolutionType>, bases<eoReplacement<SolutionType>>>(
+        make_name("eoMergeReduce",name).c_str(),
+        init<eoMerge<SolutionType>&, eoReduce<SolutionType>&>() [WC2]
+    )
+    .def("__call__", &eoReplacement<SolutionType>::operator())
+    ;
+
+    class_<eoPlusReplacement<SolutionType>, bases<eoReplacement<SolutionType>>>(
+        make_name("eoPlusReplacement",name).c_str())
+    .def("__call__", &eoReplacement<SolutionType>::operator())
+    ;
+
+    class_<eoCommaReplacement<SolutionType>, bases<eoReplacement<SolutionType>>>(
+        make_name("eoCommaReplacement",name).c_str())
+    .def("__call__", &eoReplacement<SolutionType>::operator())
+    ;
+
+    class_<eoEPReplacement<SolutionType>, bases<eoReplacement<SolutionType>>>(
+        make_name("eoEPReplacement",name).c_str(),
+        init<unsigned>()
+    )
+    .def("__call__", &eoReplacement<SolutionType>::operator())
+    ;
 
     // eoReduceMerge.h
-    DEF3(eoReduceMerge, eoReduce<PyEOT>&, eoMerge<PyEOT>& );
-    DEF(eoSSGAWorseReplacement);
-    DEF2(eoSSGADetTournamentReplacement, unsigned);
-    DEF2(eoSSGAStochTournamentReplacement, double);
+    class_<eoReduceMerge<SolutionType>, bases<eoReplacement<SolutionType>>>(
+        make_name("eoReduceMerge",name).c_str(),
+        init<eoReduce<SolutionType>&, eoMerge<SolutionType>&>() [WC2]
+    )
+    .def("__call__", &eoReplacement<SolutionType>::operator())
+    ;
+
+    class_<eoSSGAWorseReplacement<SolutionType>, bases<eoReplacement<SolutionType>>>(
+        make_name("eoSSGAWorseReplacement",name).c_str())
+    .def("__call__", &eoReplacement<SolutionType>::operator())
+    ;
+
+
+    class_<eoSSGADetTournamentReplacement<SolutionType>, bases<eoReplacement<SolutionType>>>(
+        make_name("eoSSGADetTournamentReplacement",name).c_str(),
+        init<unsigned>()
+    )
+    .def("__call__", &eoReplacement<SolutionType>::operator())
+    ;
+
+    class_<eoSSGAStochTournamentReplacement<SolutionType>, bases<eoReplacement<SolutionType>>>(
+        make_name("eoSSGAStochTournamentReplacement",name).c_str(),
+        init<double>()
+    )
+    .def("__call__", &eoReplacement<SolutionType>::operator())
+    ;
+
 
     // eoReduceMergeReduce.h
-    //class_<eoReduceMergeReduce<PyEOT>, bases<eoReplacement<PyEOT> > >("eoReplacement",
-    //	    init<eoHowMany, bool, eoHowMany, eoReduce<PyEOT>&,
-    //		 eoHowMany, eoReduce<PyEOT>&, eoReduce<PyEOT>&>())
-    //	.def("__call__", &eoReplacement<PyEOT>::operator());
+    class_<eoReduceMergeReduce<SolutionType>, bases<eoReplacement<SolutionType>>>(
+        make_name("eoReduceMergeReduce",name).c_str(),
+        init<eoHowMany, bool, eoHowMany, eoReduce<SolutionType>&,
+        eoHowMany, eoReduce<SolutionType>&, eoReduce<SolutionType>&>()
+        [
+            with_custodian_and_ward<1,5,
+            with_custodian_and_ward<1,7,
+            with_custodian_and_ward<1,8>>>()
+        ]
+    )
+	.def("__call__", &eoReplacement<SolutionType>::operator())
+    ;
+
 
     //eoMGGReplacement
-    DEF(eoMGGReplacement)
-	.def( init<eoHowMany>() )
-	.def( init<eoHowMany, unsigned>() );
+    class_<eoMGGReplacement<SolutionType>, bases<eoReplacement<SolutionType>>>(
+        make_name("eoMGGReplacement",name).c_str())
+    .def( init<eoHowMany>() )
+    .def( init<eoHowMany, unsigned>() )
+    .def("__call__", &eoReplacement<SolutionType>::operator())
+    ;
 }
 
 
 
-void moeoreplacement()
+
+//
+template<typename SolutionType>
+void moeoreplacement(std::string name)
 {
-    def_abstract_functor<moeoReplacement<PyEOT> >("moeoReplacement");
+    // def_abstract_functor<moeoReplacement<PyEOT> >("moeoReplacement");
 
-    class_<moeoElitistReplacement<PyEOT>,bases<moeoReplacement<PyEOT> > >
-    ("moeoElitistReplacement",
+    class_<moeoElitistReplacement<SolutionType>,bases<moeoReplacement<SolutionType> > >
+    (make_name("moeoElitistReplacement",name).c_str(),
     init<
-        moeoFitnessAssignment < PyEOT > &,
-        moeoDiversityAssignment < PyEOT > &,
-        moeoComparator < PyEOT > &
+        moeoFitnessAssignment < SolutionType > &,
+        moeoDiversityAssignment < SolutionType > &,
+        moeoComparator < SolutionType > &
         >()
     )
     .def( init<
-        moeoFitnessAssignment < PyEOT > &,
-        moeoDiversityAssignment < PyEOT > &
+        moeoFitnessAssignment < SolutionType > &,
+        moeoDiversityAssignment < SolutionType > &
         >()
     )
     .def( init<
-        moeoFitnessAssignment < PyEOT > &,
-        moeoComparator < PyEOT > &
+        moeoFitnessAssignment < SolutionType > &,
+        moeoComparator < SolutionType > &
         >()
     )
     .def( init<
-        moeoFitnessAssignment < PyEOT > &
+        moeoFitnessAssignment < SolutionType > &
         >()
     )
-    .def("__call__",&moeoElitistReplacement<PyEOT>::operator())
+    .def("__call__",&moeoElitistReplacement<SolutionType>::operator())
     ;
 
-    class_<moeoGenerationalReplacement<PyEOT>,bases< moeoReplacement<PyEOT>, eoGenerationalReplacement<PyEOT> > >
-    ("moeoGenerationalReplacement",init<>()
+
+    class_<moeoGenerationalReplacement<SolutionType>,bases< moeoReplacement<SolutionType>, eoGenerationalReplacement<SolutionType> > >
+    (make_name("moeoGenerationalReplacement",name).c_str(),init<>()
     )
-    .def("__call__",&moeoGenerationalReplacement<PyEOT>::operator())
+    .def("__call__",&moeoGenerationalReplacement<SolutionType>::operator())
     ;
 
-    class_<moeoEnvironmentalReplacement<PyEOT>,bases<moeoReplacement<PyEOT>>>
-    ("moeoEnvironmentalReplacement",
+
+    class_<moeoEnvironmentalReplacement<SolutionType>,bases<moeoReplacement<SolutionType>>>
+    (make_name("moeoEnvironmentalReplacement",name).c_str(),
     init<
-        moeoFitnessAssignment < PyEOT > &,
-        moeoDiversityAssignment < PyEOT > &,
-        moeoComparator < PyEOT > &
+        moeoFitnessAssignment < SolutionType > &,
+        moeoDiversityAssignment < SolutionType > &,
+        moeoComparator < SolutionType > &
         >()
     )
     .def( init<
-        moeoFitnessAssignment < PyEOT > &,
-        moeoDiversityAssignment < PyEOT > &
+        moeoFitnessAssignment < SolutionType > &,
+        moeoDiversityAssignment < SolutionType > &
         >()
     )
     .def( init<
-        moeoFitnessAssignment < PyEOT > &,
-        moeoComparator < PyEOT > &
+        moeoFitnessAssignment < SolutionType > &,
+        moeoComparator < SolutionType > &
         >()
     )
     .def( init<
-        moeoFitnessAssignment < PyEOT > &
+        moeoFitnessAssignment < SolutionType > &
         >()
     )
-    .def("__call__",&moeoEnvironmentalReplacement<PyEOT>::operator())
+    .def("__call__",&moeoEnvironmentalReplacement<SolutionType>::operator())
     ;
 
 
+}
+
+
+void replacement()
+{
+    expose_replacement<PyEOT>("");
+    expose_replacement<BinarySolution>("Bin");
+
+    moeoreplacement<PyEOT>("");
+    moeoreplacement<BinarySolution>("Bin");
 }

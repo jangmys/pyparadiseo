@@ -7,11 +7,6 @@ import inspect
 
 #TODO : for now, just testing imports and base class name ...
 class test_eoTransform(unittest.TestCase):
-    def test_bases(self):
-        for name, obj in inspect.getmembers(transform):
-            if inspect.isclass(obj):
-                if name != "Transform":
-                    self.assertEqual(obj.__bases__[0].__name__,"eoTransform")
     def test_ctor(self):
         def mutate(ind1):
             for i in range(len(ind1)):
