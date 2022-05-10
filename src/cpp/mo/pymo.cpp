@@ -50,6 +50,7 @@ void mo()
 {
     expose_mo<PyEOT>("");
     expose_mo<BinarySolution>("Bin");
+    expose_mo<RealSolution>("Real");
 }
 
 

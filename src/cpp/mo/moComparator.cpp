@@ -6,6 +6,8 @@
 #include <comparator/moSolNeighborComparator.h>
 #include <comparator/moSolComparator.h>
 
+#include <utils/def_abstract_functor.h>
+
 using namespace boost::python;
 
 
@@ -50,7 +52,7 @@ struct moSolNeighborComparatorWrap : moSolNeighborComparator<PyNeighbor<Solution
     moSolNeighborComparatorWrap(boost::python::object obj) : moSolNeighborComparator<NborT>(),cmp_op(obj){};
 
     //"virtual with default"
-    bool operator()(const PyEOT& _sol, const NborT& _neighbor)
+    bool operator()(const SolutionType& _sol, const NborT& _neighbor)
     {
         if(cmp_op.ptr() != Py_None)
         {
@@ -72,22 +74,22 @@ private:
 };
 
 template<typename SolutionType>
-void expose_moComparators()
+void expose_moComparators(std::string name)
 {
     typedef PyNeighbor<SolutionType> NborT;
 
     //need to expose the base class
-    class_<moNeighborComparator<NborT>,boost::noncopyable>("moNCompBase",init<>());
+    class_<moNeighborComparator<NborT>,boost::noncopyable>(make_name("_moNeighborComparatorBase",name).c_str(),init<>());
 
-    class_<moNeighborComparatorWrap<SolutionType>,bases<moNeighborComparator<NborT>>, boost::noncopyable>("moNeighborComparator",init<>())
+    class_<moNeighborComparatorWrap<SolutionType>,bases<moNeighborComparator<NborT>>, boost::noncopyable>(make_name("moNeighborComparator",name).c_str(),init<>())
     .def(init<boost::python::object>())
     .def("__call__",&moNeighborComparatorWrap<SolutionType>::operator())
     .def("setNborComp",&moNeighborComparatorWrap<SolutionType>::setNborComp)
     ;
 
-    class_<moSolNeighborComparator<NborT>,boost::noncopyable>("moSNCompBase",init<>());
+    class_<moSolNeighborComparator<NborT>,boost::noncopyable>(make_name("moSNCompBase",name).c_str(),init<>());
 
-    class_<moSolNeighborComparatorWrap<SolutionType>,bases<moSolNeighborComparator<NborT>>, boost::noncopyable>("moSolNeighborComparator",init<>())
+    class_<moSolNeighborComparatorWrap<SolutionType>,bases<moSolNeighborComparator<NborT>>, boost::noncopyable>(make_name("moSolNeighborComparator",name).c_str(),init<>())
     .def(init<boost::python::object>())
     .def("__call__",&moSolNeighborComparatorWrap<SolutionType>::operator())
     .def("setSolNborComp",&moSolNeighborComparatorWrap<SolutionType>::setSolNborComp)
@@ -97,5 +99,6 @@ void expose_moComparators()
 
 void moComparators()
 {
-    expose_moComparators<PyEOT>();
+    expose_moComparators<PyEOT>("");
+    expose_moComparators<BinarySolution>("Bin");
 }

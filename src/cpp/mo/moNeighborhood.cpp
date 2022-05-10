@@ -12,6 +12,8 @@
 #include <neighborhood/moRndWithoutReplNeighborhood.h>
 #include <neighborhood/moRndWithReplNeighborhood.h>
 
+#include <utils/def_abstract_functor.h>
+
 
 using namespace boost::python;
 
@@ -96,12 +98,14 @@ bool isRandom(X& _nhood)
 }
 
 template<typename SolutionType>
-void expose_moNeighborhoods()
+void expose_moNeighborhoods(std::string name)
 {
     typedef PyNeighbor<SolutionType> NborT;
 
     //ABC
-    class_<moNeighborhoodWrap<SolutionType>,boost::noncopyable>("moNeighborhood",init<>())
+    class_<moNeighborhoodWrap<SolutionType>,boost::noncopyable>(
+        make_name("moNeighborhood",name).c_str(),
+        init<>())
     .def("has_neighbor", pure_virtual(&moNeighborhood<NborT>::hasNeighbor))
     .def("init", pure_virtual(&moNeighborhood<NborT>::init))
     .def("next", pure_virtual(&moNeighborhood<NborT>::next))
@@ -110,7 +114,9 @@ void expose_moNeighborhoods()
     ;
 
     //ABC
-    class_<moIndexNeighborhoodWrap<SolutionType>,bases<moNeighborhood<NborT>>,boost::noncopyable>("moIndexNeighborhood",init<unsigned int>())
+    class_<moIndexNeighborhoodWrap<SolutionType>,bases<moNeighborhood<NborT>>,boost::noncopyable>(
+        make_name("moIndexNeighborhood",name).c_str(),
+        init<unsigned int>())
     .add_property("neighborhood_size",&moIndexNeighborhood<NborT>::getNeighborhoodSize,&moIndexNeighborhood<NborT>::setNeighborhoodSize)
     .def("has_neighbor", pure_virtual(&moIndexNeighborhood<NborT>::hasNeighbor))
     .def("init", pure_virtual(&moIndexNeighborhood<NborT>::init))
@@ -118,8 +124,9 @@ void expose_moNeighborhoods()
     .def("cont", pure_virtual(&moIndexNeighborhood<NborT>::cont))
     ;
 
-    class_<moOrderNeighborhood<NborT>,bases<moIndexNeighborhood<NborT>>>
-    ("moOrderNeighborhood",init<>())
+    class_<moOrderNeighborhood<NborT>,bases<moIndexNeighborhood<NborT>>>(
+        make_name("moOrderNeighborhood",name).c_str(),
+        init<>())
     .def(init<unsigned int>())
     .def("has_neighbor",&moOrderNeighborhood<NborT>::hasNeighbor)
     .def("init",&moOrderNeighborhood<NborT>::init)
@@ -128,16 +135,18 @@ void expose_moNeighborhoods()
     .add_property("position",&moOrderNeighborhood<NborT>::position,&moOrderNeighborhood<NborT>::setPosition)
     ;
 
-    class_<moDummyNeighborhood<NborT>,bases<moNeighborhood<NborT>>>
-    ("moDummyNeighborhood",init<>())
+    class_<moDummyNeighborhood<NborT>,bases<moNeighborhood<NborT>>>(
+        make_name("moDummyNeighborhood",name).c_str(),
+        init<>())
     .def("has_neighbor",&moDummyNeighborhood<NborT>::hasNeighbor)
     .def("init",&moDummyNeighborhood<NborT>::init)
     .def("next",&moDummyNeighborhood<NborT>::next)
     .def("cont",&moDummyNeighborhood<NborT>::cont)
     ;
 
-    class_<moRndWithoutReplNeighborhood<NborT>,bases<moIndexNeighborhood<NborT>>>
-    ("moRndWithoutReplNeighborhood",init<unsigned>())
+    class_<moRndWithoutReplNeighborhood<NborT>,bases<moIndexNeighborhood<NborT>>>(
+        make_name("moRndWithoutReplNeighborhood",name).c_str(),
+        init<unsigned>())
     .def("has_neighbor",&moRndWithoutReplNeighborhood<NborT>::hasNeighbor)
     .def("init",&moRndWithoutReplNeighborhood<NborT>::init)
     .def("next",&moRndWithoutReplNeighborhood<NborT>::next)
@@ -146,8 +155,9 @@ void expose_moNeighborhoods()
     .def("position",&moRndWithoutReplNeighborhood<NborT>::position)
     ;
 
-    class_<moRndWithReplNeighborhood<NborT>,bases<moIndexNeighborhood<NborT>>>
-    ("moRndWithReplNeighborhood",init<unsigned,optional<unsigned int>>())
+    class_<moRndWithReplNeighborhood<NborT>,bases<moIndexNeighborhood<NborT>>>(
+        make_name("moRndWithReplNeighborhood",name).c_str(),
+        init<unsigned,optional<unsigned int>>())
     .def("has_neighbor",&moRndWithReplNeighborhood<NborT>::hasNeighbor)
     .def("init",&moRndWithReplNeighborhood<NborT>::init)
     .def("next",&moRndWithReplNeighborhood<NborT>::next)
@@ -159,5 +169,6 @@ void expose_moNeighborhoods()
 
 void moNeighborhoods()
 {
-    expose_moNeighborhoods<PyEOT>();
+    expose_moNeighborhoods<PyEOT>("");
+    expose_moNeighborhoods<BinarySolution>("Bin");
 }

@@ -46,14 +46,17 @@ private:
 
 
 template<typename SolutionType>
-void expose_moEvaluators(){
+void expose_moEvaluators(std::string name){
     using namespace boost::python;
 
-    def_abstract_functor<moEval<PyNeighbor<SolutionType> > >("moEval");
-    def_abstract_functor<moNeighborhoodEvaluation<PyNeighbor<SolutionType>> >("moNeighborhoodEvaluation");
+    def_abstract_functor<moEval<PyNeighbor<SolutionType> > >(make_name("moEval",name).c_str());
+
+
+    def_abstract_functor<moNeighborhoodEvaluation<PyNeighbor<SolutionType>> >(make_name("moNeighborhoodEvaluation",name).c_str());
+
 
     class_<pyNeighborEval<SolutionType>, bases<moEval<PyNeighbor<SolutionType>>>>
-        ("NeighborEval", init<>())
+        (make_name("NeighborEval",name).c_str(), init<>())
     .def(init<boost::python::object>()
     [WC1]
     )
@@ -63,7 +66,7 @@ void expose_moEvaluators(){
 
 
     class_<moFullEvalByCopy<PyNeighbor<SolutionType>>,bases<moEval<PyNeighbor<SolutionType>>>>
-    ("moFullEvalByCopy",
+    (make_name("moFullEvalByCopy",name).c_str(),
     "parameters : eoEvalFunc \n \
     // __call__ evaluates neighbor by making a tmp copy of solution, move it, evaluate and set fitness of neighbor",
     init<
@@ -74,8 +77,9 @@ void expose_moEvaluators(){
     .def("__call__",&moFullEvalByCopy<PyNeighbor<SolutionType>>::operator())
     ;
 
+
     class_<moFullEvalByModif<PyNeighbor<SolutionType>>,bases<moEval<PyNeighbor<SolutionType>>>>
-    ("moFullEvalByModif",
+    (make_name("moFullEvalByModif",name).c_str(),
     "parameters : eoEvalFunc \n \
     __call__ moves solution, evaluates it an moves it back : requires moveBack to be defined in PyNeighbor",
     init<
@@ -88,5 +92,6 @@ void expose_moEvaluators(){
 };
 
 void moEvaluators(){
-    expose_moEvaluators<PyEOT>();
+    expose_moEvaluators<PyEOT>("");
+    expose_moEvaluators<BinarySolution>("Bin");
 }

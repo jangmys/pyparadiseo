@@ -7,9 +7,9 @@
 #include <continuator/moTimeContinuator.h>
 
 #include <continuator/moTrueContinuator.h>
-
-
 #include <continuator/moStatBase.h>
+
+#include <utils/def_abstract_functor.h>
 
 using namespace boost::python;
 
@@ -17,35 +17,35 @@ template<typename SolutionType>
 struct moContinuatorWrap : moContinuator<PyNeighbor<SolutionType>>,wrapper<moContinuator<PyNeighbor<SolutionType>>>
 {
 public:
-    //pure virtual inherited from eoUF<PyEOT&,bool> ....
+    //pure virtual inherited from eoUF<SolutionType&,bool> ....
     bool operator()(SolutionType& _ind)
     {
         return this->get_override("operator()")(_ind);
     }
 };
 
-
-struct moStatBaseWrap : moStatBase<PyEOT>,wrapper<moStatBase<PyEOT>>
+template<typename SolutionType>
+struct moStatBaseWrap : moStatBase<SolutionType>,wrapper<moStatBase<SolutionType>>
 {
 public:
-    void operator()(PyEOT& _ind)
+    void operator()(SolutionType& _ind)
     {
         this->get_override("operator()")(_ind);
     }
 };
 
 template<typename SolutionType>
-void expose_moContinuators()
+void expose_moContinuators(std::string name)
 {
     typedef PyNeighbor<SolutionType> NborT;
 
     class_<moContinuatorWrap<SolutionType>,boost::noncopyable>
-    ("moContinuator")
+    (make_name("moContinuator",name).c_str())
     .def("__call__", pure_virtual(&moContinuatorWrap<SolutionType>::operator()))
     ;
 
     class_<moIterContinuator<NborT>,bases<moContinuator<NborT>>>
-    ("moIterContinuator",
+    (make_name("moIterContinuator",name).c_str(),
     init<unsigned int, bool>(args("maxIter,verbose"),"__init__ docstring")
     )
     .def("__call__",&moIterContinuator<NborT>::operator())
@@ -54,8 +54,8 @@ void expose_moContinuators()
     ;
 
     class_<moFullEvalContinuator<NborT>,bases<moContinuator<NborT>>>
-    ("moFullEvalContinuator",
-    init<eoEvalFuncCounter<PyEOT>&, unsigned int, bool>(args("_eval,_maxFullEval,_restartCounter"),"__init__ docstring")
+    (make_name("moFullEvalContinuator",name).c_str(),
+    init<eoEvalFuncCounter<SolutionType>&, unsigned int, bool>(args("_eval,_maxFullEval,_restartCounter"),"__init__ docstring")
     )
     .def("__call__",&moFullEvalContinuator<NborT>::operator())
     .def("init",&moFullEvalContinuator<NborT>::init)
@@ -63,7 +63,7 @@ void expose_moContinuators()
     ;
 
     class_<moTimeContinuator<NborT>,bases<moContinuator<NborT>>>
-    ("moTimeContinuator",
+    (make_name("moTimeContinuator",name).c_str(),
     init<time_t, bool>(args("_maxTime,_verbose"),"__init__ docstring")
     )
     .def("__call__",&moTimeContinuator<NborT>::operator())
@@ -73,7 +73,7 @@ void expose_moContinuators()
     ;
 
     class_<moTrueContinuator<NborT>,bases<moContinuator<NborT>>>
-    ("moTrueContinuator",init<>())
+    (make_name("moTrueContinuator",name).c_str(),init<>())
     .def("__call__",&moTrueContinuator<NborT>::operator())
     .def("init",&moTrueContinuator<NborT>::init)
     ;
@@ -91,15 +91,17 @@ void expose_moContinuators()
     */
 
 
-    class_<moStatBaseWrap,boost::noncopyable>
-    ("moStatBase")
-    .def("__call__", pure_virtual(&moStatBaseWrap::operator()))
-    .def("lastCall", &moStatBase<PyEOT>::lastCall)
-    .def("init", &moStatBase<PyEOT>::init)
+    //why is this here???
+    class_<moStatBaseWrap<SolutionType>,boost::noncopyable>
+    (make_name("moStatBase",name).c_str())
+    .def("__call__", pure_virtual(&moStatBaseWrap<SolutionType>::operator()))
+    .def("lastCall", &moStatBase<SolutionType>::lastCall)
+    .def("init", &moStatBase<SolutionType>::init)
     ;
 }
 
 void moContinuators()
 {
-    expose_moContinuators<PyEOT>();
+    expose_moContinuators<PyEOT>("");
+    expose_moContinuators<BinarySolution>("Bin");
 }

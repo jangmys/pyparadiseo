@@ -22,6 +22,8 @@
 #include <neighborhood/moNeighborhood.h>
 #include <neighborhood/moDummyNeighborhood.h>
 
+#include <utils/def_abstract_functor.h>
+
 using namespace boost::python;
 
 template<typename SolutionType>
@@ -114,11 +116,11 @@ public:
 // }
 
 template<typename SolutionType>
-void expose_moExplorers()
+void expose_moExplorers(std::string name)
 {
     typedef PyNeighbor<SolutionType> NborT;
 
-    class_<moNeighborhoodExplorerWrap<SolutionType>,boost::noncopyable>("moNeighborhoodExplorer",
+    class_<moNeighborhoodExplorerWrap<SolutionType>,boost::noncopyable>(make_name("moNeighborhoodExplorer",name).c_str(),
         init<>())
     .def(init<
         moNeighborhood<NborT>&,
@@ -138,7 +140,7 @@ void expose_moExplorers()
 
     //HillClimbers
     class_<moSimpleHCexplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>>
-    ("moSimpleHCexplorer",init<
+    (make_name("moSimpleHCexplorer",name).c_str(),init<
         moNeighborhood<NborT>&,
         moEval<NborT>&,
         moNeighborComparator<NborT>&,
@@ -153,7 +155,7 @@ void expose_moExplorers()
     ;
 
     class_<moFirstImprHCexplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>>
-    ("moFirstImprHCexplorer",init<
+    (make_name("moFirstImprHCexplorer",name).c_str(),init<
         moNeighborhood<NborT>&,
         moEval<NborT>&,
         moNeighborComparator<NborT>&,
@@ -169,7 +171,7 @@ void expose_moExplorers()
 
 
     class_<moRandomBestHCexplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>>
-    ("moRandomBestHCexplorer",init<
+    (make_name("moRandomBestHCexplorer",name).c_str(),init<
         moNeighborhood<NborT>&,
         moEval<NborT>&,
         moNeighborComparator<NborT>&,
@@ -184,7 +186,7 @@ void expose_moExplorers()
     ;
 
     class_<moNeutralHCexplorer<NborT>,bases<moRandomBestHCexplorer<NborT>>>
-    ("moNeutralHCexplorer",init<
+    (make_name("moNeutralHCexplorer",name).c_str(),init<
         moNeighborhood<NborT>&,
         moEval<NborT>&,
         moNeighborComparator<NborT>&,
@@ -203,9 +205,9 @@ void expose_moExplorers()
 
     //Random
     class_<moRandomSearchExplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>,boost::noncopyable>
-    ("moRandomSearchExplorer",init<
-        eoInit<PyEOT>&,
-        eoEvalFunc<PyEOT>&,
+    (make_name("moRandomSearchExplorer",name).c_str(),init<
+        eoInit<SolutionType>&,
+        eoEvalFunc<SolutionType>&,
         unsigned
     >())
     .def("initParam",&moRandomSearchExplorer<NborT>::initParam)
@@ -217,7 +219,7 @@ void expose_moExplorers()
     ;
 
     class_<moRandomWalkExplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>,boost::noncopyable>
-    ("moRandomWalkExplorer",init<
+    (make_name("moRandomWalkExplorer",name).c_str(),init<
         moNeighborhood<NborT>&,
         moEval<NborT>&
     >())
@@ -230,7 +232,7 @@ void expose_moExplorers()
     ;
 
     class_<moRandomNeutralWalkExplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>,boost::noncopyable>
-    ("moRandomNeutralWalkExplorer",init<
+    (make_name("moRandomNeutralWalkExplorer",name).c_str(),init<
         moNeighborhood<NborT>&,
         moEval<NborT>&,
         moSolNeighborComparator<NborT>&,
@@ -247,7 +249,7 @@ void expose_moExplorers()
 
 
     class_<moMetropolisHastingExplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>,boost::noncopyable>
-    ("moMetropolisHastingExplorer",init<
+    (make_name("moMetropolisHastingExplorer",name).c_str(),init<
         moNeighborhood<NborT>&,
         moEval<NborT>&,
         moNeighborComparator<NborT>&,
@@ -268,11 +270,11 @@ void expose_moExplorers()
 
 
     class_<moSAexplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>,boost::noncopyable>
-    ("moSAexplorer",init<
+    (make_name("moSAexplorer",name).c_str(),init<
     moNeighborhood<NborT>&,
     moEval<NborT>&,
     moSolNeighborComparator<NborT>&,
-    moCoolingSchedule<PyEOT>&
+    moCoolingSchedule<SolutionType>&
     >())
     .def("initParam",&moSAexplorer<NborT>::initParam)
     .def("updateParam",&moSAexplorer<NborT>::updateParam)
@@ -284,7 +286,7 @@ void expose_moExplorers()
     ;
 
     class_<moTSexplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>,boost::noncopyable>
-    ("moTSexplorer",init<
+    (make_name("moTSexplorer",name).c_str(),init<
         moNeighborhood<NborT>&,
         moEval<NborT>&,
         moNeighborComparator<NborT>&,
@@ -297,7 +299,7 @@ void expose_moExplorers()
     ;
 
     class_<moILSexplorer<NborT,NborT>,bases<moNeighborhoodExplorer<NborT>>,boost::noncopyable>
-    ("moILSexplorer",init<
+    (make_name("moILSexplorer",name).c_str(),init<
         moLocalSearch<NborT>&,
         moPerturbation<NborT>&,
         moAcceptanceCriterion<NborT>&
@@ -312,8 +314,8 @@ void expose_moExplorers()
     ;
 
     class_<moVNSexplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>,boost::noncopyable>
-    ("moVNSexplorer",init<
-        moVariableNeighborhoodSelection<PyEOT>&,
+    (make_name("moVNSexplorer",name).c_str(),init<
+        moVariableNeighborhoodSelection<SolutionType>&,
         moAcceptanceCriterion<NborT>&
     >())
     .def("initParam",&moVNSexplorer<NborT>::initParam)
@@ -330,5 +332,6 @@ void expose_moExplorers()
 
 void moExplorers()
 {
-    expose_moExplorers<PyEOT>();
+    expose_moExplorers<PyEOT>("");
+    expose_moExplorers<BinarySolution>("Bin");
 }

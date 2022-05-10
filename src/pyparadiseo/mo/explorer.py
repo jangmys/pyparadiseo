@@ -1,3 +1,8 @@
+"""
+explorers
+
+map to algorithms ...
+"""
 from .._core import moNeighborhoodExplorer
 
 from .._core import moSimpleHCexplorer as SimpleHCexplorer

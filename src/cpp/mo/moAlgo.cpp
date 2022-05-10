@@ -86,12 +86,12 @@ void setMoveBack(X& _ls, boost::python::object _obj)
 
 
 template<typename SolutionType>
-void expose_moAlgos()
+void expose_moAlgos(std::string name)
 {
     typedef PyNeighbor<SolutionType> NborT;
 
     class_<moLocalSearchWrap<SolutionType>,boost::noncopyable>
-    ("moLocalSearch",
+    (make_name("moLocalSearch",name).c_str(),
         init<
             moNeighborhoodExplorer<NborT>&,
             moContinuator<NborT>&,
@@ -108,7 +108,7 @@ void expose_moAlgos()
 
 
     class_<moSimpleHC<NborT>, bases<moLocalSearch<NborT>>, boost::noncopyable>
-    ("moSimpleHC",
+    (make_name("moSimpleHC",name).c_str(),
         init<
             moNeighborhood<NborT>&,
             eoEvalFunc<SolutionType>&,
@@ -140,7 +140,7 @@ void expose_moAlgos()
 
 
     class_<moFirstImprHC<NborT>, bases<moLocalSearch<NborT>>, boost::noncopyable>
-    ("moFirstImprHC",
+    (make_name("moFirstImprHC",name).c_str(),
         init<
             moNeighborhood<NborT>&,
             eoEvalFunc<SolutionType>&,
@@ -172,7 +172,7 @@ void expose_moAlgos()
 
 
     class_<moRandomBestHC<NborT>, bases<moLocalSearch<NborT>>, boost::noncopyable>
-    ("moRandomBestHC",
+    (make_name("moRandomBestHC",name).c_str(),
         init<
             moNeighborhood<NborT>&,
             eoEvalFunc<SolutionType>&,
@@ -204,7 +204,7 @@ void expose_moAlgos()
 
 
     class_<moNeutralHC<NborT>, bases<moLocalSearch<NborT>>, boost::noncopyable>
-    ("moNeutralHC",
+    (make_name("moNeutralHC",name).c_str(),
         init<
             moNeighborhood<NborT>&,
             eoEvalFunc<SolutionType>&,
@@ -253,7 +253,7 @@ void expose_moAlgos()
 
     //Random : What for ???
     class_<moRandomSearch<NborT>,bases<moLocalSearch<NborT>>,boost::noncopyable>
-    ("moRandomSearch",
+    (make_name("moRandomSearch",name).c_str(),
         init<
             eoInit<SolutionType>&,
             eoEvalFunc<SolutionType>&,
@@ -280,7 +280,7 @@ void expose_moAlgos()
     ;
 
     class_<moRandomWalk<NborT>,bases<moLocalSearch<NborT>>,boost::noncopyable>
-    ("moRandomWalk",
+    (make_name("moRandomWalk",name).c_str(),
         init<
             moNeighborhood<NborT>&,
             eoEvalFunc<SolutionType>&,
@@ -310,8 +310,9 @@ void expose_moAlgos()
     .def("setMove",setMove<moRandomWalk<NborT>>)
     ;
 
+
     class_<moRandomNeutralWalk<NborT>,bases<moLocalSearch<NborT>>,boost::noncopyable>
-    ("moRandomNeutralWalk",init<
+    (make_name("moRandomNeutralWalk",name).c_str(),init<
         moNeighborhood<NborT>&,
         eoEvalFunc<SolutionType>&,
         moEval<NborT>&,
@@ -359,9 +360,8 @@ void expose_moAlgos()
     ;
 
 
-
     class_<moMetropolisHasting<NborT>,bases<moLocalSearch<NborT>>,boost::noncopyable>
-    ("moMetropolisHasting",init<
+    (make_name("moMetropolisHasting",name).c_str(),init<
         moNeighborhood<NborT>&,
         eoEvalFunc<SolutionType>&,
         moEval<NborT>&,
@@ -410,8 +410,9 @@ void expose_moAlgos()
     .def("setMove",setMove<moMetropolisHasting<NborT>>)
     ;
 
+
     class_<moSA<NborT>,bases<moLocalSearch<NborT>>,boost::noncopyable>
-    ("moSA",init<
+    (make_name("moSA",name).c_str(),init<
         moNeighborhood<NborT>&,
         eoEvalFunc<SolutionType>&,
         moEval<NborT>&,optional<
@@ -480,7 +481,7 @@ void expose_moAlgos()
 
 
     class_<moTS<NborT>,bases<moLocalSearch<NborT>>,boost::noncopyable>
-    ("moTS",init<
+    (make_name("moTS",name).c_str(),init<
         moNeighborhood<NborT>&,
         eoEvalFunc<SolutionType>&,
         moEval<NborT>&,
@@ -519,7 +520,7 @@ void expose_moAlgos()
 
 
     class_<moILS<NborT,NborT>,bases<moLocalSearch<NborT>>,boost::noncopyable>
-    ("moILS",init<
+    (make_name("moILS",name).c_str(),init<
         moLocalSearch<NborT>&,
         eoEvalFunc<SolutionType>&,
         eoMonOp<SolutionType>&,
@@ -542,7 +543,7 @@ void expose_moAlgos()
 
 
     class_<moVNS<NborT>,bases<moLocalSearch<NborT>>,boost::noncopyable>
-    ("moVNS",init<
+    (make_name("moVNS",name).c_str(),init<
         moVariableNeighborhoodSelection<SolutionType>&,
         moAcceptanceCriterion<NborT>&,
         eoEvalFunc<SolutionType>&,
@@ -554,5 +555,6 @@ void expose_moAlgos()
 
 void moAlgos()
 {
-    expose_moAlgos<PyEOT>();
+    expose_moAlgos<PyEOT>("");
+    expose_moAlgos<BinarySolution>("Bin");
 }
