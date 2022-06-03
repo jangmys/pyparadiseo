@@ -1,8 +1,5 @@
-from pyparadiseo import Solution
-
 from pyparadiseo import bounds
 from pyparadiseo import rng
-# from pyparadiseo import core
 
 import unittest
 import numpy as np

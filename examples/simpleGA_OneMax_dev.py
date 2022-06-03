@@ -1,5 +1,5 @@
 # problem dependent
-from pyparadiseo import Pop
+from pyparadiseo import BinaryPop
 from pyparadiseo.evaluator import FitnessEval,PopLoopEval
 # encoding dependent
 from pyparadiseo.initializer import BinaryInit
@@ -11,7 +11,7 @@ if __name__ == "__main__":
     #make pyparadiseo evaluator from python function
     eval = FitnessEval(lambda sol: sum(sol)) #np.count_nonzero(sol))
     #generate and evaluate population
-    pop = Pop(25, BinaryInit(20))
+    pop = BinaryPop(25, BinaryInit(20))
     PopLoopEval(eval)(pop,pop)
 
     #assemble simple GA

@@ -56,6 +56,7 @@ autodoc_default_options = {
     'member-order': 'bysource',
     'special-members': '__init__,__call__',
     'undoc-members': True,
+    'private-members': True,
     'inherited-members': True,
     'exclude-members': '__weakref__,__new__'
 }
@@ -104,59 +105,59 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
 
-def setup(app):
-    # assign the names to classes imported 'as ...', otherwise autodoc won't document these classes,
-    # and will instead just say 'alias of ...'
-    import pyparadiseo
-    import pyparadiseo.operator
-    pyparadiseo.operator.MonOp.__name__ = 'MonOp'
-    pyparadiseo.operator.BinOp.__name__ = 'BinOp'
-    pyparadiseo.operator.QuadOp.__name__ = 'QuadOp'
-
-    import pyparadiseo.evaluator
-    pyparadiseo.evaluator.PopLoopEval.__name__ = 'PopLoopEval'
-
-    import pyparadiseo.initializer
-    pyparadiseo.initializer.Init.__name__ = 'Init'
-
-    import pyparadiseo.eo
-    pyparadiseo.eo.Algo.__name__ = 'Algo'
-    pyparadiseo.eo.Breed.__name__ = 'Breed'
-    pyparadiseo.eo.Continue.__name__ = 'Continue'
-    pyparadiseo.eo.Merge.__name__ = 'Merge'
-    pyparadiseo.eo.Reduce.__name__ = 'Reduce'
-    pyparadiseo.eo.Replacement.__name__ = 'Replacement'
-    pyparadiseo.eo.Select.__name__ = 'Select'
-    pyparadiseo.eo.Transform.__name__ = 'Transform'
-
-    import pyparadiseo.eo.algo
-    pyparadiseo.eo.algo.SGA.__name__ = 'SGA'
-    pyparadiseo.eo.algo.EasyEA.__name__ = 'EasyEA'
-    pyparadiseo.eo.algo.FastGA.__name__ = 'FastGA'
-
-    import pyparadiseo.eo.selector
-    pyparadiseo.eo.selector.SelectOne.__name__ = 'SelectOne'
-    pyparadiseo.eo.selector.DetTournamentSelect.__name__ = 'DetTournamentSelect'
-    pyparadiseo.eo.selector.TruncatedSelectOne.__name__ = 'TruncatedSelectOne'
-    pyparadiseo.eo.selector.RandomSelect.__name__ = 'RandomSelect'
-    pyparadiseo.eo.selector.NoSelect.__name__ = 'NoSelect'
-    pyparadiseo.eo.selector.SequentialSelect.__name__ = 'SequentialSelect'
-    pyparadiseo.eo.selector.EliteSequentialSelect.__name__ = 'EliteSequentialSelect'
-
-
-    pyparadiseo.eo.selector.DetSelect.__name__ = 'DetSelect'
-    pyparadiseo.eo.selector.SelectMany.__name__ = 'SelectMany'
-    pyparadiseo.eo.selector.SelectNumber.__name__ = 'SelectNumber'
-    pyparadiseo.eo.selector.SelectPerc.__name__ = 'SelectPerc'
-    pyparadiseo.eo.selector.TruncSelect.__name__ = 'TruncSelect'
-    pyparadiseo.eo.selector.TruncatedSelectMany.__name__ = 'TruncatedSelectMany'
-
-    import pyparadiseo.eo.continuator
-    pyparadiseo.eo.continuator.EvalContinue.__name__ = 'EvalContinue'
-    pyparadiseo.eo.continuator.GenContinue.__name__ = 'GenContinue'
-    pyparadiseo.eo.continuator.CombinedContinue.__name__ = 'CombinedContinue'
-    pyparadiseo.eo.continuator.SteadyFitContinue.__name__ = 'SteadyFitContinue'
-    pyparadiseo.eo.continuator.SecondsElapsedContinue.__name__ = 'SecondsElapsedContinue'
-
-    import pyparadiseo.eo.transform
-    pyparadiseo.eo.transform.SGATransform.__name__ = 'SGATransform'
+# def setup(app):
+#     # assign the names to classes imported 'as ...', otherwise autodoc won't document these classes,
+#     # and will instead just say 'alias of ...'
+#     import pyparadiseo
+#     import pyparadiseo.operator
+#     pyparadiseo.operator.MonOp.__name__ = 'MonOp'
+#     pyparadiseo.operator.BinOp.__name__ = 'BinOp'
+#     pyparadiseo.operator.QuadOp.__name__ = 'QuadOp'
+#
+#     import pyparadiseo.evaluator
+#     pyparadiseo.evaluator.PopLoopEval.__name__ = 'PopLoopEval'
+#
+#     import pyparadiseo.initializer
+#     pyparadiseo.initializer.Init.__name__ = 'Init'
+#
+#     import pyparadiseo.eo
+#     pyparadiseo.eo.Algo.__name__ = 'Algo'
+#     pyparadiseo.eo.Breed.__name__ = 'Breed'
+#     pyparadiseo.eo.Continue.__name__ = 'Continue'
+#     pyparadiseo.eo.Merge.__name__ = 'Merge'
+#     pyparadiseo.eo.Reduce.__name__ = 'Reduce'
+#     pyparadiseo.eo.Replacement.__name__ = 'Replacement'
+#     pyparadiseo.eo.Select.__name__ = 'Select'
+#     pyparadiseo.eo.Transform.__name__ = 'Transform'
+#
+#     import pyparadiseo.eo.algo
+#     pyparadiseo.eo.algo.SGA.__name__ = 'SGA'
+#     pyparadiseo.eo.algo.EasyEA.__name__ = 'EasyEA'
+#     pyparadiseo.eo.algo.FastGA.__name__ = 'FastGA'
+#
+#     import pyparadiseo.eo.selector
+#     pyparadiseo.eo.selector.SelectOne.__name__ = 'SelectOne'
+#     pyparadiseo.eo.selector.DetTournamentSelect.__name__ = 'DetTournamentSelect'
+#     pyparadiseo.eo.selector.TruncatedSelectOne.__name__ = 'TruncatedSelectOne'
+#     pyparadiseo.eo.selector.RandomSelect.__name__ = 'RandomSelect'
+#     pyparadiseo.eo.selector.NoSelect.__name__ = 'NoSelect'
+#     pyparadiseo.eo.selector.SequentialSelect.__name__ = 'SequentialSelect'
+#     pyparadiseo.eo.selector.EliteSequentialSelect.__name__ = 'EliteSequentialSelect'
+#
+#
+#     pyparadiseo.eo.selector.DetSelect.__name__ = 'DetSelect'
+#     pyparadiseo.eo.selector.SelectMany.__name__ = 'SelectMany'
+#     pyparadiseo.eo.selector.SelectNumber.__name__ = 'SelectNumber'
+#     pyparadiseo.eo.selector.SelectPerc.__name__ = 'SelectPerc'
+#     pyparadiseo.eo.selector.TruncSelect.__name__ = 'TruncSelect'
+#     pyparadiseo.eo.selector.TruncatedSelectMany.__name__ = 'TruncatedSelectMany'
+#
+#     import pyparadiseo.eo.continuator
+#     pyparadiseo.eo.continuator.EvalContinue.__name__ = 'EvalContinue'
+#     pyparadiseo.eo.continuator.GenContinue.__name__ = 'GenContinue'
+#     pyparadiseo.eo.continuator.CombinedContinue.__name__ = 'CombinedContinue'
+#     pyparadiseo.eo.continuator.SteadyFitContinue.__name__ = 'SteadyFitContinue'
+#     pyparadiseo.eo.continuator.SecondsElapsedContinue.__name__ = 'SecondsElapsedContinue'
+#
+#     import pyparadiseo.eo.transform
+#     pyparadiseo.eo.transform.SGATransform.__name__ = 'SGATransform'

@@ -31,7 +31,7 @@ class test_simpleHC_onemax(unittest.TestCase):
         self.myinit = pp.initializer.Init(lambda : np.random.choice([True,False],self.DIM))
         # self.myinit = pp.initializer.BinaryInit(self.DIM)
         # full evaluation
-        self.myeval = pp.evaluator.FitnessEval(sum_bits)
+        self.myeval = pp.evaluator.fitness(sum_bits)
         # nbor evaluation
         self.nborEval = pp.mo.eval.NeighborEval(eval_incremental)
         # neighborhood

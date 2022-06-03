@@ -41,7 +41,7 @@ class test_eocontinue(unittest.TestCase):
                     self.assertEqual(obj.__bases__[0].__name__,"eoContinue")
 
     def test_eoGenContinue(self):
-        myGenContinue = continuator.GenContinue(42)
+        myGenContinue = continuator.max_generations(42)
 
         c=0
         while True:
@@ -54,7 +54,7 @@ class test_eocontinue(unittest.TestCase):
         #make counting_eval_function object from FitnessEval
         myEvalFuncCounter = evaluator.EvalFuncCounter(self.eval,"test-string")
         #make eval_continuator : 100 evaluations
-        myEvalContinue = continuator.EvalContinue(myEvalFuncCounter,100)
+        myEvalContinue = continuator.eval_calls(myEvalFuncCounter,100)
 
         c=0
         # stop after 100 evaluations

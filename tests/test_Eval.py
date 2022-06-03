@@ -1,4 +1,8 @@
-from pyparadiseo import Solution,Pop
+from pyparadiseo import config
+from pyparadiseo import solution,pop
+
+
+from pyparadiseo import Pop
 
 from pyparadiseo import evaluator
 from pyparadiseo import initializer
@@ -13,7 +17,9 @@ import numba as nb
 
 class test_eval(unittest.TestCase):
     def setUp(self):
-        self.sol = Solution(np.arange(10))
+        config.set_solution_type('gen')
+
+        self.sol = solution.from_object(np.arange(10))
 
     def test_lambda(self):
         ev = evaluator.FitnessEval(lambda x: np.sum(x))
@@ -56,24 +62,17 @@ class test_eval(unittest.TestCase):
         self.assertEqual(self.sol.fitness,45)
 
     def test_popEval(self):
-        from pyparadiseo import Pop,Solution
-        from pyparadiseo.initializer import Init
-
-        p = Pop(5,Init(lambda : np.zeros(5,dtype=int)))
-        print(p)
+        p = pop.from_init(5,initializer.make_initializer(lambda : np.zeros(5,dtype=int)))
 
         for i in range(4):
-            p[i]=Solution(np.zeros(5,dtype=int))
+            p[i]=solution.from_object(np.zeros(5,dtype=int))
             for j in range(1,2+i):
                 p[i][j]=1
-
-        print(p)
 
         popeval = evaluator.PopLoopEval(evaluator.FitnessEval(lambda x: np.sum(x)))
         popeval(p,p)
         for i in range(4):
             self.assertEqual(p[i].fitness,i+1)
-        print(p)
 
 
 

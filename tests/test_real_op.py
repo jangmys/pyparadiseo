@@ -1,5 +1,5 @@
 # import pyparadiseo as pp
-
+from pyparadiseo import solution
 from pyparadiseo import Solution
 from pyparadiseo import rng
 from pyparadiseo import operator,initializer,bounds
@@ -12,8 +12,8 @@ import copy
 
 class TestRealOp(unittest.TestCase):
     def setUp(self):
-        self.init = initializer.RealBoundedInit(bounds.RealVectorBounds(10,-1,1))
-        self.sol = Solution()
+        self.init = initializer.random(stype='real',bounds=bounds.RealVectorBounds(10,-1,1))
+        self.sol = solution.empty(stype='real')
         self.init(self.sol)
 
     def test_UniformMutation(self):

@@ -1,6 +1,4 @@
-# import pyparadiseo as pp
-
-from pyparadiseo import Solution
+from pyparadiseo import solution
 from pyparadiseo import rng
 from pyparadiseo import operator,initializer
 
@@ -15,7 +13,7 @@ class TestBitOp(unittest.TestCase):
         self.init = initializer.Init(lambda : np.random.choice([True,False],10))
 
     def test_OneBitFlip(self):
-        ind=Solution()
+        ind=solution.empty()
         self.init(ind)
         ind2=copy.deepcopy(ind)
         bitFlip = operator.OneBitFlip()
@@ -24,7 +22,7 @@ class TestBitOp(unittest.TestCase):
         self.assertEqual(1,np.sum(np.logical_xor(ind.encoding,ind2.encoding)))
 
     def mut_and_count_diff(self,mut_op):
-        ind=Solution()
+        ind=solution.empty()
         self.init(ind)
         ind.fitness = 1.23
         ind2=copy.deepcopy(ind)
@@ -52,7 +50,7 @@ if __name__ == '__main__':
     unittest.main()
     init = initializer.BinaryInit(12)
 
-    ind=Solution()
+    ind=solution.empty()
     init(ind)
     ind2=copy.deepcopy(ind)
     bitFlip = operator.OneBitFlip()
@@ -76,8 +74,8 @@ if __name__ == '__main__':
     detSingleBitFlip8 = operator.DetSingleBitFlip(8)
 
 
-    ind1 = Solution()
-    ind2 = Solution()
+    ind1 = solution.empty()
+    ind2 = solution.empty()
 
     onePt = operator.OnePtBitCrossover()
     uBit = operator.UBitCrossover()

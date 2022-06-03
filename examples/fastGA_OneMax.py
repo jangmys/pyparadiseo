@@ -5,6 +5,8 @@ from pyparadiseo import initializer,evaluator,operator
 from pyparadiseo.eo import selector,replacement,continuator,algo
 from pyparadiseo import rng
 
+from pyparadiseo import initializer,evaluator
+
 import time
 import copy
 import numpy as np
@@ -18,8 +20,8 @@ if __name__ == "__main__":
     POP_SIZE = 10
     DIM = 500
 
-    myinit = pp.initializer.BinaryInit(DIM)
-    myeval = pp.evaluator.FitnessEval(sum_bits)
+    myinit = initializer.Init(lambda : np.random.choice([True,False],DIM))
+    myeval = evaluator.FitnessEval(sum_bits)
     # myeval = pp.FitnessEval(lambda sol: np.sum(sol))
 
     #crossovers 5

@@ -53,16 +53,16 @@ class _OrderNeighborhood():
 
     a special sort of IndexNeighborhood
     """
-    def __new__(cls,neighborhood_size,type=None):
+    def __new__(cls,neighborhood_size,stype=None):
         """
         Parameters
         ----------
         neighborhood_size
         """
-        if type is None:
-            type = config._SOLUTION_TYPE
+        if stype is None:
+            stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("moOrderedNeighborhood"+config.TYPES[type])
+        class_ = utils.get_class("moOrderNeighborhood"+config.TYPES[stype])
         return class_(neighborhood_size)
 
 
@@ -72,7 +72,7 @@ class _RandomNeighborhood():
 
     a special sort of IndexNeighborhood
     """
-    def __new__(cls,neighborhood_size,max_neighbors=0,with_replacement=True,type=None):
+    def __new__(cls,neighborhood_size,max_neighbors=0,with_replacement=True,stype=None):
         """
         Parameters
         ----------
@@ -80,13 +80,13 @@ class _RandomNeighborhood():
         max_neighors - int, max nb visited nbors (0 represents infinity)
         with_replacement = bool
         """
-        if type is None:
-            type = config._SOLUTION_TYPE
+        if stype is None:
+            stype = config._SOLUTION_TYPE
 
         class_=None
         if with_replacement:
-            class_ = utils.get_class("moRndWithReplNeighborhood"+config.TYPES[type])
+            class_ = utils.get_class("moRndWithReplNeighborhood"+config.TYPES[stype])
+            return class_(neighborhood_size,max_neighbors)
         else:
-            class_ = utils.get_class("moRndWithoutReplNeighborhood"+config.TYPES[type])
-
-        return class_(neighborhood_size,max_neighbors)
+            class_ = utils.get_class("moRndWithoutReplNeighborhood"+config.TYPES[stype])
+            return class_(neighborhood_size)

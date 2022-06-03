@@ -2,13 +2,16 @@ import unittest
 import numpy as np
 
 # problem dependent
-from pyparadiseo import Pop
+from pyparadiseo import population
+from pyparadiseo import config
+from pyparadiseo import evaluator
+
 from pyparadiseo.evaluator import FitnessEval,PopLoopEval
 # encoding dependent
 from pyparadiseo.initializer import Init,BinaryInit
 from pyparadiseo.operator import OnePtBitCrossover,_DetBitFlip
 # independent
-from pyparadiseo.eo import algo,selector,continuator
+from pyparadiseo.eo import algo,select_one,continuator
 
 
 class test_simpleHC_onemax(unittest.TestCase):
@@ -22,20 +25,22 @@ class test_simpleHC_onemax(unittest.TestCase):
         """
         run simple GA on OneMax. expect to find at least 18/20...unlikely to happen by chance and almost sure if it works
         """
+        config.set_solution_type('gen')
+
         #make pyparadiseo evaluator from python function
         eval = FitnessEval(lambda sol: np.count_nonzero(sol))
 
         #generate and evaluate population
-        pop = Pop(self.POPSIZE, Init(lambda : np.random.choice([True,False],self.DIM)))
+        pop = population.from_init(self.POPSIZE, Init(lambda : np.random.choice([True,False],self.DIM)))
         PopLoopEval(eval)(pop,pop)
 
         #assemble simple GA
-        sga = algo.SGA(
-            selector.DetTournamentSelect(4),
+        sga = algo.simpleGA(
+            select_one.det_tournament(4),
             OnePtBitCrossover(),.1,
             _DetBitFlip(),.7,
             eval,
-            continuator.GenContinue(self.NGENS)
+            continuator.max_generations(self.NGENS)
         )
         #run algo on pop and print best individual
         sga(pop)
@@ -49,9 +54,9 @@ class test_simpleHC_onemax(unittest.TestCase):
         from pyparadiseo import factory
         from pyparadiseo import config
 
-        from pyparadiseo.initializer import _Init
-        from pyparadiseo.evaluator import _FitnessEval,_PopEval
-        from pyparadiseo.pop import _Pop
+        from pyparadiseo import evaluator
+        from pyparadiseo import pop
+        from pyparadiseo import initializer
 
         from pyparadiseo.operator import OnePtBitCrossoverBin,DetBitFlipBin
 
@@ -59,18 +64,18 @@ class test_simpleHC_onemax(unittest.TestCase):
 
         #make pyparadiseo evaluator from python function
         # eval = factory.get_eval('fitness',lambda sol: np.count_nonzero(sol))
-        eval = _FitnessEval(lambda sol: np.count_nonzero(sol))
+        eval = evaluator.fitness(lambda sol: np.count_nonzero(sol))
         # print(type(eval))
 
-        init = _Init(size=self.DIM)
+        init = initializer.random(size=self.DIM)
         print(type(init))
         # FitnessEval(lambda sol: np.count_nonzero(sol))
 
         # #generate and evaluate population
-        pop = _Pop(self.POPSIZE, init)
+        pop = pop.from_init(self.POPSIZE, init, type='bin')
         print(type(pop))
 
-        p_eval=_PopEval(eval)
+        p_eval=evaluator.pop_eval_from_fitness(eval)
         p_eval(pop,pop)
 
         print(pop)
@@ -84,12 +89,12 @@ class test_simpleHC_onemax(unittest.TestCase):
         # PopLoopEval(eval)(pop,pop)
         #
         # #assemble simple GA
-        sga = algo._SGA(
-            selector._DetTournamentSelect(4),
+        sga = algo.simpleGA(
+            select_one.det_tournament(4),
             OnePtBitCrossoverBin(),.1,
             DetBitFlipBin(),.7,
             eval,
-            continuator._GenContinue(self.NGENS)
+            continuator.max_generations(self.NGENS)
         )
         #run algo on pop and print best individual
         sga(pop)

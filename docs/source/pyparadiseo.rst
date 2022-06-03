@@ -47,15 +47,6 @@ pyparadiseo.evaluator module
    :show-inheritance:
    :imported-members:
 
-pyparadiseo.get\_init module
-----------------------------
-
-.. automodule:: pyparadiseo.get_init
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :imported-members:
-
 pyparadiseo.initializer module
 ------------------------------
 

@@ -1,7 +1,7 @@
 """
 explorers
 
-map to algorithms ...
+map to algorithms ... (hide from python?)
 """
 from .._core import moNeighborhoodExplorer
 

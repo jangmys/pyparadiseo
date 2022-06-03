@@ -32,10 +32,27 @@ from ._core import NPtsBitCrossover
 
 # real ops
 from ._core import UniformMutation
+from ._core import UniformMutationReal
 from ._core import DetUniformMutation
 
 from ._core import SegmentCrossover
+from ._core import SegmentCrossoverReal
+
 from ._core import HypercubeCrossover
 from ._core import SBXCrossover
 
 # from ._core import RealUniformMutation
+
+def make_mutation(mutate):
+    """
+    make mutation from callable
+    """
+    pass
+
+def make_crossover(xover):
+    """
+    make crossover from callable
+    """
+    pass
+
+# def real_crossover()

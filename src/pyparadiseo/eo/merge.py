@@ -17,42 +17,34 @@ from pyparadiseo import config,utils
 
 from .._core import eoMerge as Merge
 
-from .._core import eoElitism as Elitism
-from .._core import eoNoElitism as NoElitism
-from .._core import eoPlus as Plus
+#TODO : make merger from python
 
-class _Elitism():
+
+
+
+def elitist(rate,interpret_as_rate=True,stype=None):
     """Straightforward elitism class, specify the number of individuals to copy
     into new geneneration or the rate w.r.t. pop size
     """
-    def __new__(cls,rate,interpret_as_rate=True,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoElitism"+config.TYPES[type])
+    class_ = utils.get_class("eoElitism"+config.TYPES[stype])
 
-        return class_(rate,interpret_as_rate)
+    return class_(rate,interpret_as_rate)
 
 
-class _NoElitism():
+def no_elitist(stype=None):
     """No Elitism (rate==0)
     """
-    def __new__(cls,rate,interpret_as_rate=True,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoNoElitism"+config.TYPES[type])
-
-        return class_()
+    return utils.get_class("eoNoElitism"+config.TYPES[stype])()
 
 
-class _Plus():
-    """Very elitist class, copies entire population into next gen
-    """
-    def __new__(cls,rate,interpret_as_rate=True,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+def plus(stype=None):
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoPlus"+config.TYPES[type])
-
-        return class_()
+    return utils.get_class("eoPlus"+config.TYPES[stype])()

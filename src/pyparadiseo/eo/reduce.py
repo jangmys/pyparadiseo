@@ -12,75 +12,69 @@
 """
 from pyparadiseo import config,utils
 
-class _Truncate():
+def truncate(stype=None):
     """Sort and Truncate (keep best)
     """
-    def __new__(cls,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoTruncate"+config.TYPES[type])
-        return class_()
+    class_ = utils.get_class("eoTruncate"+config.TYPES[stype])
+    return class_()
 
 
-class _RandomReduce():
+def random(stype=None):
     """Shuffle and truncate (keep random)
     """
-    def __new__(cls,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoRandomReduce"+config.TYPES[type])
-        return class_()
+    class_ = utils.get_class("eoRandomReduce"+config.TYPES[stype])
+    return class_()
 
 
-class  _EPReduce():
+def ep_reduce(tournament_size,stype=None):
     """EP truncation method (some global stochastic tournament +  sort)
     Softer selective pressure than pure truncate
 
     tournament_size=2
     """
-    def __new__(cls,tournament_size=2,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoEPReduce"+config.TYPES[type])
-        return class_(tournament_size)
+    class_ = utils.get_class("eoEPReduce"+config.TYPES[stype])
+    return class_(tournament_size)
 
 
-class _LinearTruncate():
+def linear(stype=None):
     """a truncate class that does not sort, but repeatidely kills the worse.
 To be used in SSGA-like replacements (e.g. see eoSSGAWorseReplacement)
     """
-    def __new__(cls,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoLinearReduce"+config.TYPES[type])
-        return class_()
+    class_ = utils.get_class("eoLinearReduce"+config.TYPES[stype])
+    return class_()
 
 
-class _DetTournamentTruncate():
+def det_tournament(tournament_size,stype=None):
     """a truncate class based on a repeated deterministic (reverse!) tournament
 To be used in SSGA-like replacements (e.g. see eoSSGADetTournamentReplacement)
     """
-    def __new__(cls,tournament_size=2,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoDetTournamentTruncate"+config.TYPES[type])
-        return class_(tournament_size)
+    class_ = utils.get_class("eoDetTournamentTruncate"+config.TYPES[stype])
+    return class_(tournament_size)
 
 
-class _StochTournamentTruncate():
+def stoch_tournament(t_rate,stype=None):
     """a truncate class based on a repeated deterministic (reverse!) tournament
 To be used in SSGA-like replacements (e.g. see eoSSGADetTournamentReplacement)
 
     t_rate \in [0.51,1.0]
     """
-    def __new__(cls,t_rate,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoStochTournamentTruncate"+config.TYPES[type])
-        return class_(t_rate)
+    class_ = utils.get_class("eoStochTournamentTruncate"+config.TYPES[stype])
+    return class_(t_rate)

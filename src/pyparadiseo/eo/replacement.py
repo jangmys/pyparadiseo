@@ -16,10 +16,10 @@ from .._core import eoReplacement as Replacement
 
 # from .._core import eoWeakElitistReplacement as WeakElitistReplacement
 
-from .._core import eoMergeReduce as MergeReduce
-from .._core import eoPlusReplacement as PlusReplacement
-from .._core import eoCommaReplacement as CommaReplacement
-from .._core import eoEPReplacement as EPReplacement
+# from .._core import eoMergeReduce as MergeReduce
+# from .._core import eoPlusReplacement as PlusReplacement
+# from .._core import eoCommaReplacement as CommaReplacement
+# from .._core import eoEPReplacement as EPReplacement
 
 from .._core import eoReduceMerge as ReduceMerge
 from .._core import eoSSGAWorseReplacement as SSGAWorseReplacement
@@ -28,20 +28,17 @@ from .._core import eoSSGAStochTournamentReplacement as SSGAStochTournamentRepla
 from .._core import eoMGGReplacement as MGGReplacement
 
 
-class _GenerationalReplacement():
+def generational(stype=None):
     """generational replacement
 
     swap populations"""
-    def __new__(cls,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoGenerationalReplacement"+config.TYPES[type])
-
-        return class_()
+    return utils.get_class("eoGenerationalReplacement"+config.TYPES[stype])()
 
 
-class _WeakElitistReplacement():
+def weak_elitist(replacement,stype=None):
     """a wrapper for other replacement procedures.
 Copies in the new pop the best individual from the old pop,
 AFTER normal replacement, if the best of the new pop is worse than the best
@@ -52,16 +49,14 @@ This could be changed by adding a selector there...
     ----------
     replacement
     """
-    def __new__(cls,replacement,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoWeakElitistReplacement"+config.TYPES[type])
-
-        return class_(replacement)
+    class_ = utils.get_class("eoWeakElitistReplacement"+config.TYPES[stype])
+    return class_(replacement)
 
 
-class _MergeReduce():
+def merge_reduce(merge,reduce,stype=None):
     """eoMergeReduce: abstract replacement strategy that is just an application of
     an embedded merge, followed by an embedded reduce
 
@@ -69,44 +64,37 @@ class _MergeReduce():
     reduce(offspring,parents.size())
     swap(parents,offspring)
     """
-    def __new__(cls,merge,reduce,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoWeakElitistReplacement"+config.TYPES[type])
-
-        return class_(merge,reduce)
+    class_ = utils.get_class("eoMergeReduce"+config.TYPES[stype])
+    return class_(merge,reduce)
 
 
-class _PlusReplace():
+def plus(stype=None):
     """ES type of replacement strategy: first add parents to population, then truncate"""
-    def __new__(cls,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoPlusReplacement"+config.TYPES[type])
-
-        return class_()
+    class_ = utils.get_class("eoPlusReplacement"+config.TYPES[stype])
+    return class_()
 
 
-class _CommaReplace():
+def comma(stype=None):
     """ES type of replacement strategy: ignore parents, truncate offspring"""
-    def __new__(cls,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoCommaReplacement"+config.TYPES[type])
-
-        return class_()
+    class_ = utils.get_class("eoCommaReplacement"+config.TYPES[stype])
+    return class_()
 
 
-class _EPReplacement():
-    """EP type of replacement strategy: first add parents to population,
-       then truncate using EP tournament"""
-    def __new__(cls,t_size,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+def ep_replacement(t_size,stype=None):
+    """EP stype of replacement strategy: first add parents to population,
+       then truncate using EP tournament
+    """
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoEPReplacement"+config.TYPES[type])
-
-        return class_(t_size)
+    class_ = utils.get_class("eoEPReplacement"+config.TYPES[stype])
+    return class_(t_size)

@@ -1,4 +1,6 @@
 """
+Continuators : Stopping criteria
+================================
 /** @defgroup Continuators Stopping criteria
  *
  * A stopping criterion is called a "continue". This is a functor that is called at each generation end
@@ -24,79 +26,79 @@ eoEvalContinue.h
 ...
  """
 
-
 from pyparadiseo import config,utils
 
-from .._core import eoGenContinue as GenContinue
-from .._core import eoCombinedContinue as CombinedContinue
-from .._core import eoEvalContinue as EvalContinue
-from .._core import eoSteadyFitContinue as SteadyFitContinue
-from .._core import eoSecondsElapsedContinue as SecondsElapsedContinue
-
-from .._core import eoFitContinue as FitContinue
-
-
-class _GenContinue():
+def max_generations(nb_gens,stype=None):
     """Generational continuator: continues until a number of generations is reached
     """
-    def __new__(cls,nb_gens,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoGenContinue"+config.TYPES[type])
-        return class_(nb_gens)
+    class_ = utils.get_class("eoGenContinue"+config.TYPES[stype])
 
-class _EvalContinue():
+    return class_(nb_gens)
+
+
+def eval_calls(f,nb_evals,stype=None):
     """Continues until a number of evaluations has been made
 
     Parameters
     ----------
-    - an EvalFuncCounter function
-    - number of evaluations
+    f : an EvalFuncCounter function
+    nb_evals : number of evaluations
     """
-    def __new__(cls,f,nb_evals,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoEvalContinue"+config.TYPES[type])
-        #if fun is callable...
-        #if fun is evalFunc...
-        return class_(f,nb_evals)
+    class_ = utils.get_class("eoEvalContinue"+config.TYPES[stype])
+    #if fun is callable...
+    #if fun is evalFunc...
+    return class_(f,nb_evals)
 
-class _CombinedContinue():
+
+def combined_continue(continue1,continue2=None,stype=None):
     """
     Combined continuators - logical AND:
     Continues until one of the embedded continuators says halt!
     """
-    def __new__(cls,continue1,continue2=None,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoCombinedContinue"+config.TYPES[type])
-        if continue2 is None:
-            return class_(continue1)
-        else:
-            return class_(continue1,continue2)
+    class_ = utils.get_class("eoCombinedContinue"+config.TYPES[stype])
+    if continue2 is None:
+        return class_(continue1)
+    else:
+        return class_(continue1,continue2)
 
-class _SteadyFitContinue():
+
+def steady_fitness(min_gens,steady_gens,stype=None):
     """
     A continuator:  does a minimum number of generations, then
     stops whenever a given number of generations takes place without improvement
     """
-    def __new__(cls,min_gens,steady_gens,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+    class_ = utils.get_class("eoSteadyFitContinue"+config.TYPES[stype])
+    return class_(min_gens,steady_gens)
 
-        class_ = utils.get_class("eoSteadyFitContinue"+config.TYPES[type])
-        return class_(min_gens,steady_gens)
 
-class _SecondsElapsedContinue():
+def target_fitness(fitness,stype=None):
+    """
+    A continuator:  does a minimum number of generations, then
+    stops whenever a given number of generations takes place without improvement
+    """
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+    class_ = utils.get_class("eoFitContinue"+config.TYPES[stype])
+    return class_(fitness)
+
+
+def seconds_elapsed(seconds,stype=None):
     """
     Timed continuator: continues until a number of seconds is used
     """
-    def __new__(cls,seconds,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoSecondsElapsedContinue"+config.TYPES[type])
-        return class_(seconds)
+    class_ = utils.get_class("eoSecondsElapsedContinue"+config.TYPES[stype])
+    return class_(seconds)

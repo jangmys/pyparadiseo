@@ -1,10 +1,13 @@
 """
+Breeding
+========
 Breeding: combination of selecting and transforming a population
 
-Breeding is thought of a combination of selecting and transforming a
+Breeding is thought of as a combination of selecting and transforming a
 population. For efficiency reasons you might want to build your own
 eoBreed derived class rather than relying on a seperate select and
 transform function.
+
 
 @see eoSelect, eoTransform, eoSelectTransform
 
@@ -17,14 +20,19 @@ eoOneToOneBreeder.h
 
 from pyparadiseo import config,utils
 
-from .._core import eoSelectTransform as SelectTransform
-from .._core import eoGeneralBreeder as GeneralBreeder
-from .._core import eoOneToOneBreeder as OneToOneBreeder
 
-__all__ = [SelectTransform,GeneralBreeder,OneToOneBreeder]
+def make_breeder(breed_f):
+    """
+    transform python breeder operator to pyparadiseo breeeder (TODO)
+    """
+    pass
 
-class _SelectTransform():
-    """SelectTransform(parents,offspring)
+
+def select_transform(select,transform,stype=None):
+    """
+    make a breeder from a select and transform operators
+
+    SelectTransform(parents,offspring)
 
     eoBreed.h
 
@@ -38,65 +46,60 @@ class _SelectTransform():
     select :
     transform :
     """
-    def __new__(cls,select,transform,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoSelectTransform"+config.TYPES[type])
+    class_ = utils.get_class("eoSelectTransform"+config.TYPES[stype])
 
-        return class_(select,transform)
+    return class_(select,transform)
 
 
-class _GeneralBreeder():
+
+def general_breeder(select_one,gen_op,rate=1.0,interpret_as_rate=True,stype=None):
     """GeneralBreeder
 
     eoGeneralBreeder.h
 
     applies select_one to get a number (...) of offspring and calls gen_op on selected individuals
+
+    Parameters
+    ----------
+    select_one : a selectoOne, to be used for all selections
+    gen_op : a general operator (will generally be an eoOpContainer)
+    rate : pour howMany, le nbre d'enfants a generer
+    _interpret_as_rate  <a href="../../tutorial/html/eoEngine.html#howmany">explanation</a>
     """
-    def __new__(cls,select_one,gen_op,rate=1.0,interpret_as_rate=True,type=None):
-        """
-          /** Ctor:
-           *
-           * @param _select a selectoOne, to be used for all selections
-           * @param _op a general operator (will generally be an eoOpContainer)
-           * @param _rate               pour howMany, le nbre d'enfants a generer
-           * @param _interpret_as_rate  <a href="../../tutorial/html/eoEngine.html#howmany">explanation</a>
-           */
-        """
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoGeneralBreeder"+config.TYPES[type])
+    class_ = utils.get_class("eoGeneralBreeder"+config.TYPES[stype])
 
-        return class_(select_one,gen_op,rate,interpret_as_rate)
+    return class_(select_one,gen_op,rate,interpret_as_rate)
 
 
-class _OneToOneBreeder():
+def one_to_one_breeder(gen_op,f_eval,p_replace=1.0,stype=None):
     """OneToOneBreeder
 
     eoOneToOneBreeder.h
 
     transforms a population using
-     *   - an operator that MODIFIES only one parent from the populator
+    - an operator that MODIFIES only one parent from the populator
      *     (though it can use any number aside) and thus generates ONE offspring)
      *   - a local replacement between the parent and its offspring
      *
+    /** Ctor:
+    * @param _op       a general operator (must MODIFY only ONE parent)
+    * @param _eval     an eoEvalFunc to evaluate the offspring
+    * @param _pReplace probability that the best of parent/offspring wins [1]
+    * @param _howMany  eoHowMany offpsring to generate [100%]
+    */
+    *
      * Typically, Differential Evolution (Storn and Price 94) and Deb et al's
      *   G3 can be built on this
     """
-    def __new__(cls,gen_op,f_eval,p_replace=1.0,type=None):
-        """
-        /** Ctor:
-        * @param _op       a general operator (must MODIFY only ONE parent)
-        * @param _eval     an eoEvalFunc to evaluate the offspring
-        * @param _pReplace probability that the best of parent/offspring wins [1]
-        * @param _howMany  eoHowMany offpsring to generate [100%]
-        */
-        """
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoOneToOneBreeder"+config.TYPES[type])
+    class_ = utils.get_class("eoOneToOneBreeder"+config.TYPES[stype])
 
-        return class_(gen_op,f_eval,p_replace)
+    return class_(gen_op,f_eval,p_replace)
