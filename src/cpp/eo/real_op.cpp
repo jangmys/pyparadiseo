@@ -14,48 +14,19 @@
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
 
+#include <utils/def_abstract_functor.h>
+
 namespace p  = boost::python;
 namespace np = boost::python::numpy;
+
 
 // almost copies from eoRealOp.h .... not nice.
 // PROBLEM: can't instantiate classes from eoRealOp unless EOT inherits from std::vector<double> (needs operator[], size(), ...).
 
-void
-real_op()
+template<typename SolutionType>
+void expose_uniform_mutation(std::string name)
 {
     using namespace boost::python;
-
-
-    // class_<eoUniformMutation<PyEOT>, bases<eoMonOp<PyEOT> >, boost::noncopyable>
-    //     ("RealUniformMutation", init<
-    //       const double,
-    //       optional<const double>
-    //   >()
-    // )
-    // .def(init<
-    //           eoRealVectorBounds&,
-    //           const double,
-    //           optional<const double>
-    //       >()
-    //       [
-    //           with_custodian_and_ward<1, 2>()
-    //       ]
-    //     )
-    //     .def(init<
-    //               eoRealVectorBounds&,
-    //               const std::vector<double>&,
-    //               const std::vector<double>&
-    //           >()
-    //           [
-    //               with_custodian_and_ward<1, 2,
-    //               with_custodian_and_ward<1, 3,
-    //               with_custodian_and_ward<1, 4
-    //               > > >()
-    //           ]
-    //         )
-    //         .def("__call__", &eoUniformMutation<PyEOT>::operator ())
-    //         ;
-
     /*
      * C++ genetic operators need `double& operator[](int key)` for PyEOT (and size()...)
      *
@@ -65,17 +36,18 @@ real_op()
      *
      * TODO
      */
-    class_<PyUniformMutation<PyEOT>, bases<eoMonOp<PyEOT> >, boost::noncopyable>
-        ("UniformMutation", init<
+    class_<PyUniformMutation<SolutionType>, bases<eoMonOp<SolutionType> >, boost::noncopyable>(
+            make_name("UniformMutation",name).c_str(),
+        init<
           const double,
           optional<const double>
-      >()
+      >((arg("epsilon"),arg("p_change")))
     )
     .def(init<
           eoRealVectorBounds&,
           const double,
           optional<const double>
-      >()
+      >((arg("bounds"),arg("epsilon"),arg("p_change")))
       [
           with_custodian_and_ward<1, 2>()
       ]
@@ -84,7 +56,7 @@ real_op()
           eoRealVectorBounds&,
           const std::vector<double>&,
           const std::vector<double>&
-      >()
+      >((arg("bounds"),arg("epsilons"),arg("p_changes")))
       [
           with_custodian_and_ward<1, 2,
           with_custodian_and_ward<1, 3,
@@ -92,9 +64,49 @@ real_op()
           > > >()
       ]
     )
-    .def("__call__", &PyUniformMutation<PyEOT>::operator ())
+    .def("__call__", &PyUniformMutation<SolutionType>::operator ())
+    ;
+};
+
+
+void
+real_op()
+{
+    using namespace boost::python;
+
+    class_<eoUniformMutation<RealSolution>, bases<eoMonOp<RealSolution> >, boost::noncopyable>
+        ("UniformMutationReal", init<
+          const double,
+          optional<const double>
+      >((arg("epsilon"),arg("p_change")))
+        )
+    .def(init<
+          eoRealVectorBounds&,
+          const double,
+          optional<const double>
+      >((arg("bounds"),arg("epsilon"),arg("p_change")))
+      [
+          with_custodian_and_ward<1, 2>()
+      ]
+    )
+    .def(init<
+          eoRealVectorBounds&,
+          const std::vector<double>&,
+          const std::vector<double>&
+      >((arg("bounds"),arg("epsilons"),arg("p_changes")))
+      [
+          with_custodian_and_ward<1, 2,
+          with_custodian_and_ward<1, 3,
+          with_custodian_and_ward<1, 4
+          > > >()
+      ]
+    )
+    .def("__call__", &eoUniformMutation<RealSolution>::operator ())
     ;
 
+
+    expose_uniform_mutation<PyEOT>("");
+    expose_uniform_mutation<RealSolution>("Real");
 
     class_<PyDetUniformMutation<PyEOT>, bases<eoMonOp<PyEOT> >, boost::noncopyable>
         ("DetUniformMutation", init<
@@ -151,6 +163,42 @@ real_op()
     )
     .def("__call__", &PySegmentCrossover<PyEOT>::operator ())
     ;
+
+    class_<PySegmentCrossover<RealSolution>, bases<eoQuadOp<RealSolution> >, boost::noncopyable>
+        ("SegmentCrossoverReal", init<double>()
+        [
+            with_custodian_and_ward<1,2>()
+        ]
+    )
+    .def(init<
+          eoRealVectorBounds&,
+          const double
+      >()
+      [
+          with_custodian_and_ward<1, 2>()
+      ]
+    )
+    .def("__call__", &PySegmentCrossover<RealSolution>::operator ())
+    ;
+
+    // class_<eoSegmentCrossover<RealSolution>, bases<eoQuadOp<RealSolution> >, boost::noncopyable>
+    //     ("SegmentCrossoverReal", init<double>()
+    //     [
+    //         with_custodian_and_ward<1,2>()
+    //     ]
+    // )
+    // .def(init<
+    //       eoRealVectorBounds&,
+    //       const double
+    //   >()
+    //   [
+    //       with_custodian_and_ward<1, 2>()
+    //   ]
+    // )
+    // .def("__call__", &eoSegmentCrossover<RealSolution>::operator ())
+    // ;
+
+
 
 
     class_<PyHypercubeCrossover<PyEOT>, bases<eoQuadOp<PyEOT> >, boost::noncopyable>

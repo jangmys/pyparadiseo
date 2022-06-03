@@ -120,4 +120,5 @@ evaluate()
 {
     export_eval<PyEOT>("");
     export_eval<BinarySolution>("Bin");
+    export_eval<RealSolution>("Real");
 }

@@ -56,9 +56,10 @@ void expose_continuators(std::string name)
         ;
 
     // CONTINUATORS
-    class_<eoGenContinue<SolutionType>, bases<eoContinue<SolutionType> >, boost::noncopyable >
+    class_<eoGenContinue<SolutionType>, bases<eoContinue<SolutionType> > >//, boost::noncopyable >
         (make_name("eoGenContinue",name).c_str(), init<unsigned long>() )
         .def("__call__", &eoGenContinue<SolutionType>::operator())
+        // .def("totalGenerations",&eoGenContinue<SolutionType>::totalGenerations)
         ;
 
     class_<eoCombinedContinue<SolutionType>, bases<eoContinue<SolutionType> > >
@@ -96,7 +97,7 @@ void continuators()
 {
     expose_continuators<PyEOT>("");
     expose_continuators<BinarySolution>("Bin");
-    // expose_continuators<RealSolution>("Real");
+    expose_continuators<RealSolution>("Real");
 }
 
 

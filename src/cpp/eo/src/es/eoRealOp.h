@@ -113,9 +113,12 @@ template<class EOT> class eoUniformMutation: public eoMonOp<EOT>
           if (_eo.size() != bounds.size())
             throw eoException("Invalid size of indi in eoUniformMutation");
 
+
+
           for (unsigned lieu=0; lieu<_eo.size(); lieu++)
             if (rng.flip(p_change[lieu]))
               {
+                  // std::cout<<_eo[lieu]<<" >> ";
                 // check the bounds
                 double emin = _eo[lieu]-epsilon[lieu];
                 double emax = _eo[lieu]+epsilon[lieu];
@@ -124,6 +127,8 @@ template<class EOT> class eoUniformMutation: public eoMonOp<EOT>
                 if (bounds.isMaxBounded(lieu))
                   emax = std::min(bounds.maximum(lieu), emax);
                 _eo[lieu] = emin + (emax-emin)*rng.uniform();
+                // std::cout<<_eo[lieu]<<" << ";
+
                 hasChanged = true;
               }
         }
@@ -282,47 +287,47 @@ template<class EOT> class eoSegmentCrossover: public eoQuadOp<EOT>
   virtual std::string className() const { return "eoSegmentCrossover"; }
 
 
-    void do_crossover(double* v1, double* v2, size_t len)
-    {
-        double alphaMin = -alpha;
-        double alphaMax = 1+alpha;
-        double r1, r2, fact;
-
-        if (alpha == 0.0)            // no check to perform
-        {
-            fact = -alpha + rng.uniform(range); // in [-alpha,1+alpha)
-        }
-        else                         // look for the bounds for fact
-        {
-            for (unsigned i=0; i<len; i++){
-                r1=*(v1+i);
-                r2=*(v2+i);
-                if (r1 != r2) {      // otherwise you'll get NAN's
-                    double rmin = std::min(r1, r2);
-                    double rmax = std::max(r1, r2);
-                    double length = rmax - rmin;
-                    if (bounds.isMinBounded(i))
-                    {
-                        alphaMin = std::max(alphaMin, (bounds.minimum(i)-rmin)/length);
-                        alphaMax = std::min(alphaMax, (rmax-bounds.minimum(i))/length);
-                    }
-                    if (bounds.isMaxBounded(i))
-                    {
-                        alphaMax = std::min(alphaMax, (bounds.maximum(i)-rmin)/length);
-                        alphaMin = std::max(alphaMin, (rmax-bounds.maximum(i))/length);
-                    }
-                }
-            }
-            fact = alphaMin + (alphaMax-alphaMin)*rng.uniform();
-        }
-
-        for(unsigned i=0; i<len; i++){
-            r1=*(v1+i);
-            r2=*(v2+i);
-            *(v1+i) = fact * r1 + (1-fact) * r2;
-            *(v2+i) = (1-fact) * r1 + fact * r2;
-        }
-    }
+    // void do_crossover(double* v1, double* v2, size_t len)
+    // {
+    //     double alphaMin = -alpha;
+    //     double alphaMax = 1+alpha;
+    //     double r1, r2, fact;
+    //
+    //     if (alpha == 0.0)            // no check to perform
+    //     {
+    //         fact = -alpha + rng.uniform(range); // in [-alpha,1+alpha)
+    //     }
+    //     else                         // look for the bounds for fact
+    //     {
+    //         for (unsigned i=0; i<len; i++){
+    //             r1=*(v1+i);
+    //             r2=*(v2+i);
+    //             if (r1 != r2) {      // otherwise you'll get NAN's
+    //                 double rmin = std::min(r1, r2);
+    //                 double rmax = std::max(r1, r2);
+    //                 double length = rmax - rmin;
+    //                 if (bounds.isMinBounded(i))
+    //                 {
+    //                     alphaMin = std::max(alphaMin, (bounds.minimum(i)-rmin)/length);
+    //                     alphaMax = std::min(alphaMax, (rmax-bounds.minimum(i))/length);
+    //                 }
+    //                 if (bounds.isMaxBounded(i))
+    //                 {
+    //                     alphaMax = std::min(alphaMax, (bounds.maximum(i)-rmin)/length);
+    //                     alphaMin = std::max(alphaMin, (rmax-bounds.maximum(i))/length);
+    //                 }
+    //             }
+    //         }
+    //         fact = alphaMin + (alphaMax-alphaMin)*rng.uniform();
+    //     }
+    //
+    //     for(unsigned i=0; i<len; i++){
+    //         r1=*(v1+i);
+    //         r2=*(v2+i);
+    //         *(v1+i) = fact * r1 + (1-fact) * r2;
+    //         *(v2+i) = (1-fact) * r1 + fact * r2;
+    //     }
+    // }
 
   //Note: this works only with EOT's having
   //size() and double& operator[] (eoReal)
@@ -336,46 +341,45 @@ template<class EOT> class eoSegmentCrossover: public eoQuadOp<EOT>
    */
    bool operator()(EOT& _eo1, EOT& _eo2)
    {
-       do_crossover(_eo1.data(),_eo2.data(),_eo1.size());
+       // do_crossover(_eo1.data(),_eo2.data(),_eo1.size());
+      unsigned i;
+      double r1, r2, fact;
+      double alphaMin = -alpha;
+      double alphaMax = 1+alpha;
+      if (alpha == 0.0)            // no check to perform
+        fact = -alpha + rng.uniform(range); // in [-alpha,1+alpha)
+      else                         // look for the bounds for fact
+        {
+          for (i=0; i<_eo1.size(); i++)
+            {
+              r1=_eo1[i];
+              r2=_eo2[i];
+              if (r1 != r2) {      // otherwise you'll get NAN's
+                double rmin = std::min(r1, r2);
+                double rmax = std::max(r1, r2);
+                double length = rmax - rmin;
+                if (bounds.isMinBounded(i))
+                  {
+                    alphaMin = std::max(alphaMin, (bounds.minimum(i)-rmin)/length);
+                    alphaMax = std::min(alphaMax, (rmax-bounds.minimum(i))/length);
+                  }
+                if (bounds.isMaxBounded(i))
+                  {
+                    alphaMax = std::min(alphaMax, (bounds.maximum(i)-rmin)/length);
+                    alphaMin = std::max(alphaMin, (rmax-bounds.maximum(i))/length);
+                  }
+              }
+            }
+          fact = alphaMin + (alphaMax-alphaMin)*rng.uniform();
+        }
 
-      // unsigned i;
-      // double r1, r2, fact;
-      // double alphaMin = -alpha;
-      // double alphaMax = 1+alpha;
-      // if (alpha == 0.0)            // no check to perform
-      //   fact = -alpha + rng.uniform(range); // in [-alpha,1+alpha)
-      // else                         // look for the bounds for fact
-      //   {
-      //     for (i=0; i<_eo1.size(); i++)
-      //       {
-      //         r1=_eo1[i];
-      //         r2=_eo2[i];
-      //         if (r1 != r2) {      // otherwise you'll get NAN's
-      //           double rmin = std::min(r1, r2);
-      //           double rmax = std::max(r1, r2);
-      //           double length = rmax - rmin;
-      //           if (bounds.isMinBounded(i))
-      //             {
-      //               alphaMin = std::max(alphaMin, (bounds.minimum(i)-rmin)/length);
-      //               alphaMax = std::min(alphaMax, (rmax-bounds.minimum(i))/length);
-      //             }
-      //           if (bounds.isMaxBounded(i))
-      //             {
-      //               alphaMax = std::min(alphaMax, (bounds.maximum(i)-rmin)/length);
-      //               alphaMin = std::max(alphaMin, (rmax-bounds.maximum(i))/length);
-      //             }
-      //         }
-      //       }
-      //     fact = alphaMin + (alphaMax-alphaMin)*rng.uniform();
-      //   }
-      //
-      // for (i=0; i<_eo1.size(); i++)
-      //   {
-      //     r1=_eo1[i];
-      //     r2=_eo2[i];
-      //     _eo1[i] = fact * r1 + (1-fact) * r2;
-      //     _eo2[i] = (1-fact) * r1 + fact * r2;
-      //   }
+      for (i=0; i<_eo1.size(); i++)
+        {
+          r1=_eo1[i];
+          r2=_eo2[i];
+          _eo1[i] = fact * r1 + (1-fact) * r2;
+          _eo2[i] = (1-fact) * r1 + fact * r2;
+        }
       return true;         // shoudl test if fact was 0 or 1 :-)))
     }
 

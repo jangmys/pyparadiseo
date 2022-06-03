@@ -271,7 +271,9 @@ public:
     {}
 
     size_t size() const{
-        return _size;
+        return len(encoding);
+        // what if encoding is set directly?
+        // return _size;
     }
 
     T& operator[](int i){
@@ -288,10 +290,5 @@ private:
 
 typedef FixedSizeSolution<bool> BinarySolution;
 typedef FixedSizeSolution<double> RealSolution;
-
-
-
-
-
 
 #endif

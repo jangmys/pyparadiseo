@@ -215,7 +215,9 @@ void eoAlgos()
 {
     export_algos2<PyEOT>("");
     export_algos2<BinarySolution>("Bin");
-    
+    export_algos2<RealSolution>("Real");
+
+
     export_algos<PyEOT>();
 }
 

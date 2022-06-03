@@ -273,6 +273,7 @@ void geneticOps()
 
     expose_gen_ops<PyEOT>("");
     expose_gen_ops<BinarySolution>("Bin");
+    expose_gen_ops<RealSolution>("Real");
 
     // class_<eoOp<PyEOT> >("eoOp", init<eoOp<PyEOT>::OpType>())
     //     .def("getType", &eoOp<PyEOT>::getType);

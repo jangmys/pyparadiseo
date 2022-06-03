@@ -105,7 +105,7 @@ void expose_selectOne(std::string name)
 
     add_select<eoTruncatedSelectOne<SolutionType>,SolutionType>
     (make_name("eoTruncatedSelectOne",name).c_str(),
-        init<eoSelectOne<SolutionType>&, double>()[WC1],
+        init<eoSelectOne<SolutionType>&, double, optional<bool>>()[WC1],
         init<eoSelectOne<SolutionType>&, eoHowMany >()[WC1]
     );
 

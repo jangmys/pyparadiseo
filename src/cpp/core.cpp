@@ -10,6 +10,8 @@
 
 #include "abstract.h"
 
+#include <es/eoReal.h>
+
 #include <pyeot.h>
 #include <pypot.h>
 
@@ -221,28 +223,26 @@ BOOST_PYTHON_MODULE(_core)
         .def_pickle(PyEOT_pickle_suite())
     ;
 
-    class_<FixedSizeSolution<double>,bases<PyEOT>>("RealSolution",init<optional<unsigned int>>())
+    class_<FixedSizeSolution<double>,bases<PyEOT>>("RealSolution",init<optional<unsigned int>>(
+        (arg("self"),arg("size"))
+    ))
         .def("size",&FixedSizeSolution<double>::size)
     ;
 
-    class_<FixedSizeSolution<bool>,bases<PyEOT>>("BinarySolution",init<optional<unsigned int>>())
+    class_<FixedSizeSolution<bool>,bases<PyEOT>>("BinarySolution",init<optional<unsigned int>>(
+        (arg("self"),arg("size"))
+    ))
         .def("size",&FixedSizeSolution<double>::size)
     ;
 
 
-    // class_<RealSolution,bases<PyEOT,std::vector<double>>>("RealSolution",init<optional<unsigned int>>())
-    // ;
-    //
-    // class_<BinarySolution,bases<PyEOT>>("BinarySolution",init<optional<unsigned int>>());
+    //maybe inheriting from vector is better than using ndarray encodings...
+    //(at least for reuse of c++ operators it should be....)
+    class_<eoVector<double,double>,bases<std::vector<double>>>("eoVector",init<unsigned,double>())
+    .def(vector_indexing_suite<std::vector<double>>())
+    ;
 
-    //
-    // class_<eoVectorParticle<double,double,double>>("VectorParticle",init<optional<unsigned,double,double,double>>())
-    // ;
-    //
-    //
-    // class_<eoRealParticle<doubleFitness>,bases< eoVectorParticle<double,double,double>
-    //         > >("RealParticle",init<optional<unsigned,double,double,double>>())
-    // ;
+
 
     export_abstract<PyEOT>("");
     export_abstract<BinarySolution>("Bin");

@@ -171,4 +171,5 @@ void moNeighborhoods()
 {
     expose_moNeighborhoods<PyEOT>("");
     expose_moNeighborhoods<BinarySolution>("Bin");
+    expose_moNeighborhoods<RealSolution>("Real");
 }
