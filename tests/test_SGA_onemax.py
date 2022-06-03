@@ -6,7 +6,6 @@ from pyparadiseo import population
 from pyparadiseo import config
 from pyparadiseo import evaluator
 
-from pyparadiseo.evaluator import FitnessEval,PopLoopEval
 # encoding dependent
 from pyparadiseo.initializer import Init,BinaryInit
 from pyparadiseo.operator import OnePtBitCrossover,_DetBitFlip
@@ -28,11 +27,11 @@ class test_simpleHC_onemax(unittest.TestCase):
         config.set_solution_type('gen')
 
         #make pyparadiseo evaluator from python function
-        eval = FitnessEval(lambda sol: np.count_nonzero(sol))
+        eval = evaluator.fitness(lambda sol: np.count_nonzero(sol))
 
         #generate and evaluate population
         pop = population.from_init(self.POPSIZE, Init(lambda : np.random.choice([True,False],self.DIM)))
-        PopLoopEval(eval)(pop,pop)
+        evaluator.pop_eval_from_fitness(eval)(pop,pop)
 
         #assemble simple GA
         sga = algo.simpleGA(
@@ -69,7 +68,6 @@ class test_simpleHC_onemax(unittest.TestCase):
 
         init = initializer.random(size=self.DIM)
         print(type(init))
-        # FitnessEval(lambda sol: np.count_nonzero(sol))
 
         # #generate and evaluate population
         pop = pop.from_init(self.POPSIZE, init, type='bin')
@@ -85,9 +83,6 @@ class test_simpleHC_onemax(unittest.TestCase):
         # p_eval=_PopEval(lambda sol: np.count_nonzero(sol))
         # print(type(p_eval))
 
-
-        # PopLoopEval(eval)(pop,pop)
-        #
         # #assemble simple GA
         sga = algo.simpleGA(
             select_one.det_tournament(4),

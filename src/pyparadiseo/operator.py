@@ -43,13 +43,13 @@ from ._core import SBXCrossover
 
 # from ._core import RealUniformMutation
 
-def make_mutation(mutate):
+def make_mutation(mutate,stype=None):
     """
     make mutation from callable
     """
     pass
 
-def make_crossover(xover):
+def make_crossover(xover,stype=None):
     """
     make crossover from callable
     """

@@ -36,7 +36,7 @@ def realGA_generic_sol():
     config.set_minimize_fitness()
 
     # myeval = pp.evaluator.EvalFuncProxy(lambda sol: norm2(sol))
-    myeval = pp.evaluator.FitnessEval(lambda sol: norm2(sol))
+    myeval = evaluator.fitness(lambda sol: norm2(sol))
 
     mybounds=bounds.RealVectorBounds(VEC_SIZE,-1,1)
     myinit = pp.initializer.RealBoundedInit(mybounds)

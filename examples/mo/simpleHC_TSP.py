@@ -6,7 +6,10 @@ from problems import onemax
 
 import pyparadiseo as pp
 
+from pyparadiseo import evaluator
+
 from pyparadiseo import mo
+
 from pyparadiseo.mo import continuator,comparator
 from pyparadiseo.mo import eval,neighborhood,algo,Eval,Neighbor
 
@@ -21,7 +24,7 @@ if __name__ == "__main__":
     tsp = tsp.TravelingSalesman("berlin52")
 
     tsp_init = pp.initializer.PermutationInit(tsp.ncities)
-    toureval = pp.FitnessEval(tsp.eval)
+    toureval = evaluator.fitness(tsp.eval)
 
     sol = pp.Solution()
     tsp_init(sol)

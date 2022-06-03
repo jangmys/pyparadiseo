@@ -8,7 +8,6 @@ from pyparadiseo import evaluator
 from pyparadiseo import operator
 
 # from pyparadiseo import Pop
-# from pyparadiseo.evaluator import FitnessEval,PopLoopEval
 # encoding dependent
 from pyparadiseo.initializer import BinaryInit,BinarySolInit
 from pyparadiseo.operator import OnePtBitCrossover,DetBitFlip

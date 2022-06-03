@@ -5,7 +5,6 @@ from pyparadiseo.eo import continuator
 from pyparadiseo import evaluator
 
 from pyparadiseo.initializer import Init
-from pyparadiseo.evaluator import FitnessEval
 from pyparadiseo import Pop
 
 
@@ -17,7 +16,7 @@ import numpy as np
 class test_eocontinue(unittest.TestCase):
     def setUp(self):
         self.init = Init(lambda : np.random.randint(0,2,10))
-        self.eval = FitnessEval(lambda x: np.sum(x))
+        self.eval = evaluator.fitness(lambda x: np.sum(x))
 
         self.pop = Pop(10,self.init)
 

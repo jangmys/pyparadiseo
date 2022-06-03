@@ -84,7 +84,7 @@ if __name__ == '__main__':
         #     sum += i
         # return sum
     #
-    ev = evaluator.FitnessEval(eval)
+    ev = evaluator.fitness(eval)
     #
     ev(sol)
     # # sol.fitness = eval(sol)

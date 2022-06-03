@@ -3,6 +3,7 @@ sys.path.append("..")
 
 from problems import onemax
 
+from pyparadiseo import evaluator
 import pyparadiseo as pp
 
 from pyparadiseo import mo
@@ -16,10 +17,10 @@ if __name__ == "__main__":
     DIM = 200
     max_one = onemax.OneMax(DIM)
 
-    # standard initializer object 
+    # standard initializer object
     myinit = pp.initializer.BinaryInit(DIM)
     # full evaluation
-    myeval = pp.FitnessEval(max_one.sum_bits)
+    myeval = evaluator.fitness(max_one.sum_bits)
     # nbor evaluation
     nborEval = pp.mo.eval.NeighborEval(max_one.eval_incremental)
     # neighborhood

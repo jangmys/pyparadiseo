@@ -1,6 +1,6 @@
 # problem dependent
 from pyparadiseo import BinaryPop
-from pyparadiseo.evaluator import FitnessEval,PopLoopEval
+from pyparadiseo import evaluator
 # encoding dependent
 from pyparadiseo.initializer import BinaryInit
 from pyparadiseo.operator import OnePtBitCrossover,DetBitFlip
@@ -9,10 +9,10 @@ from pyparadiseo.eo import algo,selector,continuator
 
 if __name__ == "__main__":
     #make pyparadiseo evaluator from python function
-    eval = FitnessEval(lambda sol: sum(sol)) #np.count_nonzero(sol))
+    eval = evaluator.fitness(lambda sol: sum(sol)) #np.count_nonzero(sol))
     #generate and evaluate population
     pop = BinaryPop(25, BinaryInit(20))
-    PopLoopEval(eval)(pop,pop)
+    evaluator.pop_eval_from_fitness(eval)(pop,pop)
 
     #assemble simple GA
     sga = algo.SGA(

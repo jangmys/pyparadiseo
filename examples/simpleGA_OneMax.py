@@ -31,13 +31,13 @@ def cross(ind1,ind2):
 
 if __name__ == "__main__":
     myinit = initializer.Init(lambda : np.random.randint(0,2,16))
-    myeval = evaluator.FitnessEval(lambda sol: np.sum(sol))
+    myeval = evaluator.fitness(lambda sol: np.sum(sol))
 
     sga = eo.algo.SGA(
         selector.DetTournamentSelect(),
         operator.pyQuadOp(cross),0.2,
         operator.pyMonOp(mut),0.5,
-        evaluator.FitnessEval(lambda sol: np.sum(sol)),
+        evaluator.fitness(lambda sol: np.sum(sol)),
         continuator.GenContinue(100)
     )
 

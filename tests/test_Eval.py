@@ -22,7 +22,7 @@ class test_eval(unittest.TestCase):
         self.sol = solution.from_object(np.arange(10))
 
     def test_lambda(self):
-        ev = evaluator.FitnessEval(lambda x: np.sum(x))
+        ev = evaluator.fitness(lambda x: np.sum(x))
         self.assertTrue(isinstance(ev,evaluator.eoEvalFunc))
         ev(self.sol)
         self.assertEqual(self.sol.fitness,45)
@@ -31,7 +31,7 @@ class test_eval(unittest.TestCase):
         # take encoding as argument return fitness
         def foo(x):
             return np.sum(x)
-        ev = evaluator.FitnessEval(foo)
+        ev = evaluator.fitness(foo)
         self.assertTrue(isinstance(ev,evaluator.eoEvalFunc))
         ev(self.sol)
         self.assertEqual(self.sol.fitness,45)
@@ -56,7 +56,7 @@ class test_eval(unittest.TestCase):
             for i in x:
                 s += i
             return s
-        ev = evaluator.FitnessEval(foo)
+        ev = evaluator.fitness(foo)
         self.assertTrue(isinstance(ev,evaluator.eoEvalFunc))
         ev(self.sol)
         self.assertEqual(self.sol.fitness,45)
@@ -69,7 +69,7 @@ class test_eval(unittest.TestCase):
             for j in range(1,2+i):
                 p[i][j]=1
 
-        popeval = evaluator.PopLoopEval(evaluator.FitnessEval(lambda x: np.sum(x)))
+        popeval = evaluator.PopLoopEval(evaluator.fitness(lambda x: np.sum(x)))
         popeval(p,p)
         for i in range(4):
             self.assertEqual(p[i].fitness,i+1)

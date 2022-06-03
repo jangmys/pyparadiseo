@@ -21,8 +21,7 @@ if __name__ == "__main__":
     DIM = 500
 
     myinit = initializer.Init(lambda : np.random.choice([True,False],DIM))
-    myeval = evaluator.FitnessEval(sum_bits)
-    # myeval = pp.FitnessEval(lambda sol: np.sum(sol))
+    myeval = evaluator.fitness(sum_bits)
 
     #crossovers 5
     crossovers = [pp.operator.OnePtBitCrossover(),pp.operator.UBitCrossover(0.5)]
