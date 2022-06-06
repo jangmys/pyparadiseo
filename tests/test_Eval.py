@@ -1,5 +1,5 @@
 from pyparadiseo import config
-from pyparadiseo import solution,pop
+from pyparadiseo import solution,population
 
 
 from pyparadiseo import Pop
@@ -62,7 +62,7 @@ class test_eval(unittest.TestCase):
         self.assertEqual(self.sol.fitness,45)
 
     def test_popEval(self):
-        p = pop.from_init(5,initializer.make_initializer(lambda : np.zeros(5,dtype=int)))
+        p = population.from_init(5,initializer.make_initializer(lambda : np.zeros(5,dtype=int)))
 
         for i in range(4):
             p[i]=solution.from_object(np.zeros(5,dtype=int))
