@@ -54,7 +54,7 @@ class test_simpleHC_onemax(unittest.TestCase):
         from pyparadiseo import config
 
         from pyparadiseo import evaluator
-        from pyparadiseo import pop
+        from pyparadiseo import population
         from pyparadiseo import initializer
 
         from pyparadiseo.operator import OnePtBitCrossoverBin,DetBitFlipBin
