@@ -44,6 +44,11 @@ set(moSources
     src/cpp/mo/moComparator.cpp
 )
 
+set(moeoSources
+    src/cpp/moeo/moeoAbstract.cpp
+    src/cpp/moeo/moeoAlgos.cpp
+)
+
 set(eoSources
     src/cpp/eo/abstract.cpp
     src/cpp/eo/pop.cpp
@@ -72,16 +77,20 @@ set(eoDep
     ${EO_SRC_DIR}/utils/eoRealBounds.cpp
 )
 
-add_library(_core SHARED src/cpp/core.cpp ${commonSources} ${eoSources} ${moSources} ${eoDep})
+add_library(_core SHARED src/cpp/core.cpp ${commonSources} ${eoSources} ${moSources} ${moeoSources} ${eoDep})
 
+#COMMON
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/)
+#EO
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/operators)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/src)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/src/es)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/src/pso)
+#MO
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/mo/)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/mo/src)
+#MOEO
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/moeo/src)
 
 set_target_properties(_core PROPERTIES PREFIX "")

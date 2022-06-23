@@ -70,9 +70,11 @@ struct PyEOT_pickle_suite : bp::pickle_suite
 
 extern void registerConverters();
 
-extern template void export_abstract<PyEOT>(std::string s);
-extern template void export_abstract<RealSolution>(std::string s);
-extern template void export_abstract<BinarySolution>(std::string s);
+extern void eo_abstract();
+
+// extern template void export_abstract<PyEOT>(std::string s);
+// extern template void export_abstract<RealSolution>(std::string s);
+// extern template void export_abstract<BinarySolution>(std::string s);
 
 extern void bounds();
 
@@ -113,6 +115,11 @@ extern void moExplorers();
 extern void moContinuators();
 extern void moAlgos();
 extern void moComparators();
+
+//MOEO
+extern void moeo_abstract();
+extern void moeo_algos();
+
 
 extern void eoParticleSwarm();
 
@@ -300,11 +307,7 @@ BOOST_PYTHON_MODULE(_core)
     //Operators
     // =====================
 
-
-    export_abstract<PyEOT>("");
-    export_abstract<BinarySolution>("Bin");
-    export_abstract<RealSolution>("Real");
-
+    eo_abstract();
 
     //common
     initialize();
@@ -335,7 +338,6 @@ BOOST_PYTHON_MODULE(_core)
     real_op();
     bit_op();
 
-
     //MO (localsearch)
     mo();
     moEvaluators();
@@ -345,9 +347,14 @@ BOOST_PYTHON_MODULE(_core)
     moAlgos();
     moComparators();
 
+    //PSO
     eoParticleSwarm();
 
     //MOEO
+    moeo_abstract();
+    moeo_algos();
+
+
     // fitnessAssign();
     // diversityAssign();
     // moeoreplacement();
