@@ -76,28 +76,4 @@ void reduce()
     expose_reduce<PyEOT>("");
     expose_reduce<BinarySolution>("Bin");
     expose_reduce<RealSolution>("Real");
-
-    // class_<eoTruncate<PyEOT>, bases<eoReduce<PyEOT> > >("eoTruncate", init<>() )
-	// .def("__call__", &eoReduce<PyEOT>::operator())
-	// ;
-
-    // class_<eoRandomReduce<PyEOT>, bases<eoReduce<PyEOT> > >("eoRandomReduce")
-	// .def("__call__", &eoReduce<PyEOT>::operator())
-	// ;
-
-    // class_<eoEPReduce<PyEOT>, bases<eoReduce<PyEOT> > >("eoEPReduce", init<unsigned>())
-	// .def("__call__", &eoReduce<PyEOT>::operator())
-	// ;
-
-    // class_<eoLinearTruncate<PyEOT>, bases<eoReduce<PyEOT> > >("eoLinearTruncate")
-	// .def("__call__", &eoReduce<PyEOT>::operator())
-	// ;
-
-    // class_<eoDetTournamentTruncate<PyEOT>, bases<eoReduce<PyEOT> > >("eoDetTournamentTruncate", init<unsigned>())
-	// .def("__call__", &eoReduce<PyEOT>::operator())
-	// ;
-
-    // class_<eoStochTournamentTruncate<PyEOT>, bases<eoReduce<PyEOT> > >("eoStochTournamentTruncate", init<double>())
-	// .def("__call__", &eoReduce<PyEOT>::operator())
-	// ;
 }

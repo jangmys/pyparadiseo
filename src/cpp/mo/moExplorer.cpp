@@ -334,4 +334,5 @@ void moExplorers()
 {
     expose_moExplorers<PyEOT>("");
     expose_moExplorers<BinarySolution>("Bin");
+    expose_moExplorers<RealSolution>("Real");
 }

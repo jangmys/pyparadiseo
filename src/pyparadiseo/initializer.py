@@ -6,8 +6,8 @@ from ._core import eoInit
 from ._core import pyeoInit as Init
 from ._core import BinaryInit
 
-from ._core import BinarySolInit
-from ._core import RealBoundedInit
+# from ._core import BinarySolInit
+# from ._core import RealBoundedInit
 
 
 def random(size=0,stype=None,**kwargs):
@@ -28,7 +28,7 @@ def random(size=0,stype=None,**kwargs):
         raise TypeError("initializer.random : not availble for generic solution type")
 
     if stype == 'bin':
-        class_ = utils.get_class("BinarySolInit")
+        class_ = utils.get_class("BinaryInit")
         return class_(size)
 
     if stype == 'real':

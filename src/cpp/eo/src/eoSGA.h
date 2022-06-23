@@ -75,6 +75,11 @@ public :
       {
         select(_pop, offspring);
 
+        // std::cout<<"POP:\n";
+        // std::cout<<_pop<<std::endl;
+        // std::cout<<"OFFSPRING:\n";
+        // std::cout<<offspring<<std::endl;
+
         unsigned i;
 
         for (i=0; i<_pop.size()/2; i++)
@@ -90,6 +95,9 @@ public :
       }
           }
 
+          // std::cout<<"AFTER XOVER:\n";
+          // std::cout<<offspring<<std::endl;
+
         for (i=0; i < offspring.size(); i++)
           {
             if (rng.flip(mutationRate) )
@@ -99,8 +107,27 @@ public :
             }
           }
 
+          // std::cout<<"AFTER MUTATE:\n";
+          // std::cout<<offspring<<std::endl;
+          //
+          // std::cout<<"AFTER MUTATE POP:\n";
+          // std::cout<<_pop<<std::endl;
+
+
         _pop.swap(offspring);
+
+        // std::cout<<"SWAP:\n";
+        // std::cout<<offspring<<std::endl;
+        //
+        // std::cout<<"SWAPPPOP:\n";
+        // std::cout<<_pop<<std::endl;
+
+
         apply<EOT>(eval, _pop);
+
+        // std::cout<<"EVAL POP:\n";
+        // std::cout<<_pop<<std::endl;
+
 
       } while (cont(_pop));
   }

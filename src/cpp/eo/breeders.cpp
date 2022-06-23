@@ -119,4 +119,5 @@ void breeders()
 {
     expose_breeders<PyEOT>("");
     expose_breeders<BinarySolution>("Bin");
+    expose_breeders<RealSolution>("Real");
 }

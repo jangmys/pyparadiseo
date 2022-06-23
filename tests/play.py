@@ -4,147 +4,39 @@ from pyparadiseo import evaluator
 
 from pyparadiseo.evaluator import *
 
-EVALUATORS={
-    'fitness' : 'FitnessEval',
-    'objective' : 'ObjectiveEval',
-    # 'pop' : 'PopLoopEval'
-}
+from pyparadiseo._core import eoVector
+from pyparadiseo._core import moeoVector
+from pyparadiseo._core import realSol
 
-TYPES={
-    'gen' : '',
-    'bin' : 'Bin'
-}
-
-FITNESSEVALS={
-    'gen' : FitnessEval,
-    'bin' : FitnessEvalBin
-}
-
-class FitEval:
-    def __new__(cls,type,f_eval=None):
-        return FITNESSEVALS[type](f_eval)
-
-def foo():
-    return 42
-
-f=FitEval('gen')
-print(f)
-print(type(f))
-
-f=FitEval('gen',foo)
-print(f)
-print(type(f))
-
-f=FitEval('bin')
-print(f)
-print(type(f))
-
-f=FitEval('bin',foo)
-print(f)
-print(type(f))
-
-import importlib
-
-def get_class(modul,kls):
-    mod = importlib.import_module(modul)
-    class_=getattr(mod,kls)
-    return class_
-
-for e in EVALUATORS.values():
-    for type in TYPES.values():
-        print('-'*10)
-        c=get_class('pyparadiseo.evaluator',e+type)
-        print(e+type)
-        print(c)
-        print(c())
-        print('-'*10)
+import numpy as np
 
 
+eoVec=eoVector(10,0)
+print(eoVec)
 
-def get_evaluator(klass,fun=None,type='gen'):
-    clazz = get_class("pyparadiseo._core",klass+TYPES[type])
+print("#"*20)
 
-    if fun is not None:
-        return clazz(fun)
-    else:
-        return clazz()
+moeoVec=moeoVector(10,0)
+print(moeoVec)
 
-eval = get_evaluator("FitnessEval")
-print(eval)
+for i in moeoVec:
+    print(i)
 
-eval = get_evaluator("FitnessEval","bin")
-print(eval)
+print("size: ",len(moeoVec))
 
-def foo():
-    return 420
+moeoVec[1]=1.0
 
+print(np.sum(moeoVec))
 
-eval = get_evaluator("FitnessEval",foo,type="bin")
-print(eval)
-
-eval = get_evaluator("ObjectiveEval",foo,type="bin")
-print(eval)
-
-eval = get_evaluator("ObjectiveEval",foo)
-print(eval)
-
-#
-#
-#
-# def get_from_list(l, name, args, kwargs):
-#     i = None
-#
-#     for k, e in enumerate(l):
-#         if e[0] == name:
-#             i = k
-#             break
-#
-#     if i is None:
-#         for k, e in enumerate(l):
-#             if re.match(e[0], name):
-#                 i = k
-#                 break
-#
-#     if i is not None:
-#
-#         if len(l[i]) == 2:
-#             name, clazz = l[i]
-#
-#         elif len(l[i]) == 3:
-#             name, clazz, default_kwargs = l[i]
-#
-#             # overwrite the default if provided
-#             for key, val in kwargs.items():
-#                 default_kwargs[key] = val
-#             kwargs = default_kwargs
-#
-#         return clazz(*args, **kwargs)
-#     else:
-#         raise Exception("Object '%s' for not found in %s" % (name, [e[0] for e in l]))
-#
-#
-#
-#
-#
-#
-#
-# def get_evaluator_options():
-#     from pyparadiseo.evaluator import FitnessEval
-#
-#
-#     EVALUATORS = [
-#         ("fitness", FitnessEval),
-#         ("objective", ObjectiveEval),
-#         ("pop", ObjectiveEval)
-#     ]
-#
-#     return SELECTION
-#
-#
-# def get_selection(name, *args, d={}, **kwargs):
-#     return get_from_list(get_selection_options(), name, args, {**d, **kwargs})
-#
-
+print(moeoVec)
 
 
 print("#"*20)
+
+realVec = realSol(8)
+
+print(dir(realSol))
+
+realVec.append(4)
+
+print(realVec)

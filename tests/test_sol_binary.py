@@ -20,8 +20,10 @@ class TestBinary(unittest.TestCase):
         init = initializer.random(10,stype='bin')
         init(self.sol)
         #check that we can iterate solution and it contains bools
-        for i in self.sol:
-            self.assertTrue(isinstance(i, np.bool_))
+        for i in self.sol.array:
+            self.assertTrue(isinstance(i, np.int32))
+        for i in self.sol.c_array:
+            self.assertTrue(isinstance(i, np.int))
 
 if __name__ == '__main__':
     unittest.main()

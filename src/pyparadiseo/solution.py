@@ -54,6 +54,7 @@ def from_object(obj,stype=None):
     if isinstance(obj,klass):
         return klass(obj)
 
+    #else make from python object
     if stype=='gen':
         klass=SOLUTIONS[stype]
         return klass(obj)

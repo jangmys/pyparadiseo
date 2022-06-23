@@ -59,7 +59,7 @@ void export_abstract(std::string type)
 
     // eoUF : PyMOEO ---> void
     def_abstract_functor<eoInit<SolutionType> >(make_name("eoInit",type).c_str(),"docstring");
-    def_abstract_functor<eoInit<BinarySolution> >(make_name("BinaryInit",type).c_str(),"docstring");
+    // def_abstract_functor<eoInit<BinarySolution> >(make_name("BinaryInit",type).c_str(),"docstring");
 
     def_abstract_functor<eoBreed<SolutionType> >(make_name("eoBreed",type).c_str());
     def_abstract_functor<eoContinue<SolutionType> >(make_name("eoContinue",type).c_str());

@@ -1,7 +1,9 @@
 from pyparadiseo import RealSolution,Solution,Pop
 
+from pyparadiseo import solution
 from pyparadiseo import evaluator
 from pyparadiseo import initializer,bounds
+from pyparadiseo import _core
 
 import time
 import functools
@@ -34,9 +36,9 @@ class myEval(evaluator.eoEvalFunc):
         # set .fitness from .encoding ...
         sol.fitness = baz(sol.encoding,self.data)
 
-class myPyEval(evaluator.FitnessEval):
+class myPyEval(_core.FitnessEval):
     def __init__(self,val,fun):
-        evaluator.FitnessEval.__init__(self)
+        _core.FitnessEval.__init__(self)
         self.foo = fun
         self.data = val
     def __call__(self,sol):
@@ -55,14 +57,24 @@ def time_eval(eval,init,N):
         eval(i)
     print(time.time()-t1)
 
+
 off=42
 
 D=100
 N=10000
 
-ind = RealSolution(D)
-init = initializer.RealBoundedInit(bounds.RealVectorBounds(D,-1,1))
-init(ind)
+print("Evaluate np.sum(x) + a ",N," times for len(x)=",D)
+print("Solution type 'gen' with encoding=np.random.random(",D,")")
+print("="*20)
+print("first call : Eval twice (numba.njit!)")
+print("="*20)
+
+
+ind = solution.empty()
+init = initializer.make_initializer(lambda : 2*np.random.random(D)-1)
+
+# ind = RealSolution(D)
+# init(ind)
 
 # print(ind)
 
@@ -70,22 +82,26 @@ init(ind)
 
 print("="*20)
 time_eval(myEval(off),init,N)
+print("callable class inherited from eoEvalFunc")
 time_eval(myEval(off),init,N)
 print("="*20)
 
 eval_count = evaluator.EvalFuncCounter(myEval(off))
+print("callable class inherited from eoEvalFunc")
 time_eval(eval_count,init,N)
 print("="*20)
 
 f = get_foo(off)
-time_eval(evaluator.FitnessEval(f),init,N)
+print("functools partial")
+time_eval(evaluator.fitness(f),init,N)
 print("="*20)
+
 
 time_eval(myPyEval(off,baz),init,N)
 
 print("POP-LOOP","="*20)
 
-loopeval = evaluator.PopLoopEval(evaluator.FitnessEval(f))
+loopeval = evaluator.PopLoopEval(evaluator.fitness(f))
 pop = Pop(N,init)
 
 t1 = time.time()

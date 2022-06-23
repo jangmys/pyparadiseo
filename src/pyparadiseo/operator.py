@@ -10,38 +10,32 @@ from ._core import pyMonOp
 from ._core import pyBinOp
 from ._core import pyQuadOp
 
-#binary ops
+#binary ops (defined on BinarySolution)
 from ._core import OneBitFlip
 from ._core import DetBitFlip
-
-from ._core import _OneBitFlip
-from ._core import _DetBitFlip
-
-
-
-from ._core import DetBitFlipBin
-
 from ._core import DetSingleBitFlip
 from ._core import BitMutation
+from ._core import BitInversion
+from ._core import BitNext
+from ._core import BitPrevious
 
 from ._core import OnePtBitCrossover
-from ._core import OnePtBitCrossoverBin
-
 from ._core import UBitCrossover
 from ._core import NPtsBitCrossover
+from ._core import BitGxOver
 
-# real ops
+# real ops (defined on RealSolution)
 from ._core import UniformMutation
-from ._core import UniformMutationReal
 from ._core import DetUniformMutation
-
 from ._core import SegmentCrossover
-from ._core import SegmentCrossoverReal
-
 from ._core import HypercubeCrossover
 from ._core import SBXCrossover
+from ._core import RealUXover
 
-# from ._core import RealUniformMutation
+
+
+
+
 
 def make_mutation(mutate,stype=None):
     """

@@ -48,15 +48,10 @@ export_algos2(std::string name)
         )
     .def("__call__", &eoSGA<SolutionType>::operator ())
     ;
-}
 
 
-
-template<class SolutionType>
-void export_algos()
-{
     class_<eoEasyEA<SolutionType>, bases<eoAlgo<SolutionType> > >
-    ("eoEasyEA","Evolutionary algorithm.",
+    (make_name("eoEasyEA",name).c_str(),"Evolutionary algorithm.",
     init<
     eoContinue<SolutionType>&,
     eoEvalFunc<SolutionType>&,
@@ -176,9 +171,8 @@ void export_algos()
     ;
 
 
-
     class_<eoFastGA<SolutionType>, bases<eoAlgo<SolutionType> > >
-    ("eoFastGA","Fast genetic algorithm.",
+    (make_name("eoFastGA",name).c_str(),"Fast genetic algorithm.",
     init<
         double,
         eoSelectOne<SolutionType>&,
@@ -206,6 +200,164 @@ void export_algos()
     )
     .def("__call__", &eoFastGA<SolutionType>::operator())
     ;
+}
+
+
+
+template<class SolutionType>
+void export_algos()
+{
+    // class_<eoEasyEA<SolutionType>, bases<eoAlgo<SolutionType> > >
+    // ("eoEasyEA","Evolutionary algorithm.",
+    // init<
+    // eoContinue<SolutionType>&,
+    // eoEvalFunc<SolutionType>&,
+    // eoBreed<SolutionType>&,
+    // eoReplacement<SolutionType>&
+    // >()
+    // [
+    // with_custodian_and_ward<1,2,
+    // with_custodian_and_ward<1,3,
+    // with_custodian_and_ward<1,4,
+    // with_custodian_and_ward<1,5
+    // >
+    // >
+    // >
+    // >()
+    // ]
+    // )
+    // .def( init<
+    // eoContinue<SolutionType>&,
+    // eoEvalFunc<SolutionType>&,
+    // eoBreed<SolutionType>&,
+    // eoReplacement<SolutionType>&,
+    // unsigned
+    // >()
+    // [
+    // with_custodian_and_ward<1,2,
+    // with_custodian_and_ward<1,3,
+    // with_custodian_and_ward<1,4,
+    // with_custodian_and_ward<1,5
+    // >
+    // >
+    // >
+    // >()
+    // ]
+    // )
+    // .def( init<
+    // eoContinue<SolutionType>&,
+    // eoPopEvalFunc<SolutionType>&,
+    // eoBreed<SolutionType>&,
+    // eoReplacement<SolutionType>&
+    // >()
+    //     [
+    // with_custodian_and_ward<1,2,
+    // with_custodian_and_ward<1,3,
+    // with_custodian_and_ward<1,4,
+    // with_custodian_and_ward<1,5
+    // >
+    // >
+    // >
+    // >()
+    // ]
+    // )
+    // .def( init<
+    // eoContinue<SolutionType>&,
+    // eoEvalFunc<SolutionType>&,
+    // eoBreed<SolutionType>&,
+    // eoMerge<SolutionType>&,
+    // eoReduce<SolutionType>&
+    // >()
+    // [
+    // with_custodian_and_ward<1,2,
+    // with_custodian_and_ward<1,3,
+    // with_custodian_and_ward<1,4,
+    // with_custodian_and_ward<1,5,
+    // with_custodian_and_ward<1,6
+    // >
+    // >
+    // >
+    // >
+    // >()
+    // ]
+    // )
+    // .def( init<
+    // eoContinue<SolutionType>&,
+    // eoEvalFunc<SolutionType>&,
+    // eoSelect<SolutionType>&,
+    // eoTransform<SolutionType>&,
+    // eoReplacement<SolutionType>&
+    // >()
+    // [
+    // with_custodian_and_ward<1,2,
+    // with_custodian_and_ward<1,3,
+    // with_custodian_and_ward<1,4,
+    // with_custodian_and_ward<1,5,
+    // with_custodian_and_ward<1,6
+    // >
+    // >
+    // >
+    // >
+    // >()
+    // ]
+    // )
+    // .def( init<
+    // eoContinue<SolutionType>&,
+    // eoEvalFunc<SolutionType>&,
+    // eoSelect<SolutionType>&,
+    // eoTransform<SolutionType>&,
+    // eoMerge<SolutionType>&,
+    // eoReduce<SolutionType>&
+    // >()
+    // [
+    // with_custodian_and_ward<1,2,
+    // with_custodian_and_ward<1,3,
+    // with_custodian_and_ward<1,4,
+    // with_custodian_and_ward<1,5,
+    // with_custodian_and_ward<1,6,
+    // with_custodian_and_ward<1,7
+    // >
+    // >
+    // >
+    // >
+    // >
+    // >()
+    // ]
+    // )
+    // .def("__call__", &eoEasyEA<SolutionType>::operator())
+    // ;
+
+
+
+    // class_<eoFastGA<SolutionType>, bases<eoAlgo<SolutionType> > >
+    // ("eoFastGA","Fast genetic algorithm.",
+    // init<
+    //     double,
+    //     eoSelectOne<SolutionType>&,
+    //     eoQuadOp<SolutionType>&,
+    //     eoSelectOne<SolutionType>&,
+    //     double,
+    //     eoSelectOne<SolutionType>&,
+    //     eoMonOp<SolutionType>&,
+    //     eoPopEvalFunc<SolutionType>&,
+    //     eoReplacement<SolutionType>&,
+    //     eoContinue<SolutionType>&,
+    //     double
+    // >()
+    // [
+    // with_custodian_and_ward<1,3,
+    // with_custodian_and_ward<1,4,
+    // with_custodian_and_ward<1,5,
+    // with_custodian_and_ward<1,7,
+    // with_custodian_and_ward<1,8,
+    // with_custodian_and_ward<1,9,
+    // with_custodian_and_ward<1,10,
+    // with_custodian_and_ward<1,11
+    // > > > > > > > >()
+    // ]
+    // )
+    // .def("__call__", &eoFastGA<SolutionType>::operator())
+    // ;
 
     //////////////////////////////////
 }

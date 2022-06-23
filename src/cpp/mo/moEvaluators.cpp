@@ -94,4 +94,5 @@ void expose_moEvaluators(std::string name){
 void moEvaluators(){
     expose_moEvaluators<PyEOT>("");
     expose_moEvaluators<BinarySolution>("Bin");
+    expose_moEvaluators<RealSolution>("Real");
 }

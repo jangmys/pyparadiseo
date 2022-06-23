@@ -82,10 +82,15 @@ struct BinarySolInit : eoInit<BinarySolution> {
     void
     operator () (BinarySolution& _eo)
     {
-        _eo.encoding = np::zeros(p::make_tuple(_dimension),np::dtype::get_builtin<bool>());
+        _eo.resize(_dimension);
+
+        _eo.encoding = np::from_data(_eo.data(), np::dtype::get_builtin<int>(),
+            p::make_tuple(_eo.size()),p::make_tuple(sizeof(int)),
+            p::object()
+        );
 
         for(unsigned i=0;i<_dimension;i++){
-            _eo.encoding[i] = _gen();
+            _eo[i] = (int)_gen();
         }
         _eo.invalidate();
     }
@@ -111,17 +116,17 @@ public:
     /** simply passes the argument to the uniform method of the bounds */
     virtual void operator()(T& _eo)
     {
-        _eo.encoding = np::zeros(p::make_tuple(bounds.size()),np::dtype::get_builtin<double>());
+        _eo.resize(bounds.size());
 
-        // get ndarray from object
-        np::ndarray arr = np::from_object(_eo.encoding, np::dtype::get_builtin<double>());
+        _eo.encoding = np::from_data(_eo.data(), np::dtype::get_builtin<double>(),
+            p::make_tuple(_eo.size()),p::make_tuple(sizeof(double)),
+            p::object()
+        );
 
-        for(unsigned i=0;i<arr.shape(0);i++)
+        for(unsigned i=0;i<_eo.size();i++)
         {
-            arr[i] = bounds.uniform(i);
+            _eo[i] = bounds.uniform(i);
         }
-
-        _eo.invalidate();
     }
 private:
     eoRealVectorBounds & bounds;
@@ -188,15 +193,15 @@ void export_realInitBounded(std::string name){
     .def("__call__", &pyeoInit<T>::operator())
     ;
 
-    class_<pyRealInitBounded<T>, bases<eoInit<T>>>
-        (make_name("RealBoundedInit",name).c_str(),
-        init<eoRealVectorBounds&>()
-        [
-        with_custodian_and_ward<1,2>()
-        ]
-    )
-    .def("__call__", &pyRealInitBounded<T>::operator ())
-    ;
+    // class_<pyRealInitBounded<T>, bases<eoInit<T>>>
+    //     (make_name("RealBoundedInit",name).c_str(),
+    //     init<eoRealVectorBounds&>()
+    //     [
+    //     with_custodian_and_ward<1,2>()
+    //     ]
+    // )
+    // .def("__call__", &pyRealInitBounded<T>::operator ())
+    // ;
 
     class_<pyInitPermutation<T>, bases<eoInit<T>>, boost::noncopyable> (make_name("PermutationInit",name).c_str(), init<unsigned,optional<unsigned>>())
     .def("__call__", &pyInitPermutation<T>::operator ())
@@ -222,20 +227,26 @@ initialize()
     // .def("__call__", &pyeoInit::operator())
     // ;
 
-    class_<FixedSizeInit<bool>, bases<eoInit<FixedSizeSolution<bool>>>>
-        ("BinaryInit", init<unsigned>())
-    .def("__call__", &FixedSizeInit<bool>::operator ())
-    ;
+    // class_<FixedSizeInit<bool>, bases<eoInit<FixedSizeSolution<bool>>>>
+    //     ("BinaryInit", init<unsigned>())
+    // .def("__call__", &FixedSizeInit<bool>::operator ())
+    // ;
 
     class_<BinarySolInit, bases<eoInit<BinarySolution>>>
-        ("BinarySolInit", init<unsigned>())
+        ("BinaryInit", init<unsigned>())
     .def("__call__", &BinarySolInit::operator ())
     ;
 
     export_realInitBounded<PyEOT>("");
-    export_realInitBounded<RealSolution>("Real");
 
-    // class_<pyInitPermutation, bases<eoInit<PyEOT>>, boost::noncopyable> ("PermutationInit", init<unsigned,optional<unsigned>>())
-    // .def("__call__", &pyInitPermutation::operator ())
-    // ;
+
+    class_<pyRealInitBounded<RealSolution>, bases<eoInit<RealSolution>>>
+        (make_name("RealBoundedInit","Real").c_str(),
+        init<eoRealVectorBounds&>()
+        [
+        with_custodian_and_ward<1,2>()
+        ]
+    )
+    .def("__call__", &pyRealInitBounded<RealSolution>::operator ())
+    ;
 }

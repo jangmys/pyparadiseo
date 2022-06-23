@@ -104,4 +104,6 @@ void moContinuators()
 {
     expose_moContinuators<PyEOT>("");
     expose_moContinuators<BinarySolution>("Bin");
+    expose_moContinuators<RealSolution>("Real");
+
 }

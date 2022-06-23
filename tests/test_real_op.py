@@ -14,14 +14,20 @@ class TestRealOp(unittest.TestCase):
     def setUp(self):
         self.init = initializer.random(stype='real',bounds=bounds.RealVectorBounds(10,-1,1))
         self.sol = solution.empty(stype='real')
+
+        print(type(self.init))
+        print(type(self.sol))
+
         self.init(self.sol)
 
     def test_UniformMutation(self):
         mutate = operator.UniformMutation(0.1)
+        print()
         print(self.sol)
+        print(self.sol.array)
         mutate(self.sol)
         print(self.sol)
-
+        print(self.sol.array)
         # mutate = operator.RealUniformMutation(0.1)
         # print(self.sol)
         # mutate(self.sol)

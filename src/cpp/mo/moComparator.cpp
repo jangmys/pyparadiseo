@@ -101,4 +101,5 @@ void moComparators()
 {
     expose_moComparators<PyEOT>("");
     expose_moComparators<BinarySolution>("Bin");
+    expose_moComparators<RealSolution>("Real");
 }

@@ -59,11 +59,11 @@ def bound_box(*args):
         try:
             #either we got two vectors or (int,bounds)
             #trust python to figure it out
-            ret = eoRealVectorBounds(args[0],args[1])
+            ret = RealVectorBounds(args[0],args[1])
             return ret
         except ValueError:
             print("failed to construct bound_box")
 
     if len(args) == 3:
         #should be one int and two floats
-        return eoRealVectorBounds(args[0],args[1],args[2])
+        return RealVectorBounds(args[0],args[1],args[2])

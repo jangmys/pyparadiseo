@@ -1,3 +1,5 @@
+from pyparadiseo import config
+
 from pyparadiseo import Solution
 
 from pyparadiseo import eo
@@ -15,6 +17,8 @@ import numpy as np
 
 class test_eocontinue(unittest.TestCase):
     def setUp(self):
+        config.set_solution_type('gen')
+
         self.init = Init(lambda : np.random.randint(0,2,10))
         self.eval = evaluator.fitness(lambda x: np.sum(x))
 

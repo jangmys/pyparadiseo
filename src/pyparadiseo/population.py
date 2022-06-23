@@ -69,9 +69,26 @@ def from_init(pop_size,f_init,stype=None):
     if f_init.__class__.__name__=='RealBoundedInit':
         class_ = utils.get_class("Pop")
 
-    if f_init.__class__.__name__=='BinarySolInit':
+    if f_init.__class__.__name__=='BinaryInit':
         class_ = utils.get_class("BinaryPop")
     if f_init.__class__.__name__=='RealBoundedInitReal':
         class_ = utils.get_class("RealPop")
 
+    if class_ is None:
+        raise TypeError("invalid init function")
+
     return class_(pop_size,f_init)
+
+
+def from_list(pop_list,stype=None):
+    """
+    create population from python list of solutions
+    """
+    p=empty(stype)
+
+    # p.resize(len(pop_list))
+
+    for ind in pop_list:
+        p.push_back(ind)
+
+    return p

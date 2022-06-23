@@ -557,4 +557,5 @@ void moAlgos()
 {
     expose_moAlgos<PyEOT>("");
     expose_moAlgos<BinarySolution>("Bin");
+    expose_moAlgos<RealSolution>("Real");    
 }

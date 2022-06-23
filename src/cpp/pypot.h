@@ -25,67 +25,27 @@ namespace np=boost::python::numpy;
 // typedef moeoRealObjectiveVector<moeoObjectiveVectorTraits> realObjVec;
 
 
-class PyPOT : public eoVectorParticle<doubleFitness,double,double>
+class PyPOT : public PyEO
+{
+public:
+    doubleFitness bestFitness;
+
+
+
+
+};
+
+
+template<typename PositionType>
+class VectorParticle : public PyPOT
 {
 public:
 
-};
-//
-// template<class T>
-// class RealSolution : public PyEOT
-// {
-// public:
-//     typedef T PyEOT;
-//
-//     RealSolution(unsigned int _size) : PyEOT(
-//         np::zeros(p::make_tuple(_size),np::dtype::get_builtin<double>())
-//     ),_size(_size)
-//     {
-//     }
-//
-//     int size(){
-//         return _size;
-//         // return encoding.shape(0);//_size;
-//     }
-//
-//     double& operator[](int i){
-//         np::ndarray arr = np::from_object(encoding,np::dtype::get_builtin<double>());
-//
-//         double* ptr = reinterpret_cast<double*>(arr.get_data());
-//
-//         return ptr[i];
-//     }
-//
-// private:
-//     int _size;
-// };
-//
-//
-// class BinarySolution : public PyEOT
-// {
-// public:
-//     BinarySolution(unsigned int _size) : PyEOT(),_size(_size)
-//     {
-//         encoding = np::zeros(p::make_tuple(_size),np::dtype::get_builtin<bool>());
-//     }
-//
-//     size_t size(){
-//         return _size;
-//     }
-//
-//     bool& operator[](int i){
-//         np::ndarray arr = np::from_object(encoding,np::dtype::get_builtin<bool>());
-//
-//         bool* ptr = reinterpret_cast<bool*>(arr.get_data());
-//
-//         return ptr[i];
-//     }
-//
-// private:
-//     size_t _size;
-// };
-//
-//
 
+
+    std::vector<PositionType> _position;
+    std::vector<PositionType> _best_positions;
+    std::vector<PositionType> _velocities;
+};
 
 #endif

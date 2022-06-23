@@ -45,5 +45,5 @@ export_transform(std::string name)
 void transform(){
     export_transform<PyEOT>("");
     export_transform<BinarySolution>("Bin");
-    // export_transform<RealSolution>("Real");
+    export_transform<RealSolution>("Real");
 }
