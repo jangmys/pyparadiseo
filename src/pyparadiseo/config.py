@@ -18,8 +18,6 @@ def set_solution_type(sol_type):
         _SOLUTION_TYPE = sol_type
 
 
-
-
 #setter for fitness traits
 def set_maximize_fitness():
     """sets fitness maximization (default)"""

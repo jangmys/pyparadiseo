@@ -136,6 +136,7 @@ public:
         // evaluate fitness and diversity
         fitnessAssignment(_pop);
         diversityAssignment(_pop);
+
         do
         {
             // generate offspring, worths are recalculated if necessary

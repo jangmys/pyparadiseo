@@ -1,3 +1,6 @@
+#abstract base classes?
+
+
 from .algo import *
 from .comparator import *
 from .continuator import *

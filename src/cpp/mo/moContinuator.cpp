@@ -44,27 +44,33 @@ void expose_moContinuators(std::string name)
     .def("__call__", pure_virtual(&moContinuatorWrap<SolutionType>::operator()))
     ;
 
+
     class_<moIterContinuator<NborT>,bases<moContinuator<NborT>>>
     (make_name("moIterContinuator",name).c_str(),
-    init<unsigned int, bool>(args("maxIter,verbose"),"__init__ docstring")
+    init<unsigned int, optional<bool>>(
+        args("maxIter,verbose"),"__init__ docstring")
     )
     .def("__call__",&moIterContinuator<NborT>::operator())
     .def("init",&moIterContinuator<NborT>::init)
     .def("value",&moIterContinuator<NborT>::value)
     ;
 
+
     class_<moFullEvalContinuator<NborT>,bases<moContinuator<NborT>>>
     (make_name("moFullEvalContinuator",name).c_str(),
-    init<eoEvalFuncCounter<SolutionType>&, unsigned int, bool>(args("_eval,_maxFullEval,_restartCounter"),"__init__ docstring")
+    init<eoEvalFuncCounter<SolutionType>&, unsigned int, optional<bool>>(
+        args("_eval,_maxFullEval,_restartCounter"),"__init__ docstring")
     )
     .def("__call__",&moFullEvalContinuator<NborT>::operator())
     .def("init",&moFullEvalContinuator<NborT>::init)
     .def("value",&moFullEvalContinuator<NborT>::value)
     ;
 
+
     class_<moTimeContinuator<NborT>,bases<moContinuator<NborT>>>
     (make_name("moTimeContinuator",name).c_str(),
-    init<time_t, bool>(args("_maxTime,_verbose"),"__init__ docstring")
+    init<time_t, optional<bool>>(
+        args("_maxTime,_verbose"),"__init__ docstring")
     )
     .def("__call__",&moTimeContinuator<NborT>::operator())
     .def("init",&moTimeContinuator<NborT>::init)

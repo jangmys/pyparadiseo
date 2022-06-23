@@ -1,4 +1,9 @@
+"""
+genetic operators
+"""
 # EO OPS ....
+
+from pyparadiseo import config,utils
 
 # Base classes C++
 from ._core import eoMonOp as MonOp
@@ -9,6 +14,9 @@ from ._core import eoQuadOp as QuadOp
 from ._core import pyMonOp
 from ._core import pyBinOp
 from ._core import pyQuadOp
+
+from ._core import eoSGAGenOp as SGAGenOp
+
 
 #binary ops (defined on BinarySolution)
 from ._core import OneBitFlip
@@ -41,12 +49,31 @@ def make_mutation(mutate,stype=None):
     """
     make mutation from callable
     """
-    pass
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    if stype == 'gen':
+        class_ = utils.get_class("pyMonOp")
+        return class_(mutate)
+    else:
+        NotImplementedError("Not yet implemented")
+
 
 def make_crossover(xover,stype=None):
     """
     make crossover from callable
     """
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    if stype == 'gen':
+        class_ = utils.get_class("pyQuadOp")
+        return class_(xover)
+    else:
+        NotImplementedError("Not yet implemented")
+
+
+
     pass
 
 # def real_crossover()

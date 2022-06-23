@@ -24,7 +24,6 @@ eoSelectOne.h
 from pyparadiseo import config,utils
 
 
-from .._core import eoSelect as Select
 
 # from selectors.cpp
 from .._core import eoDetSelect as DetSelect
@@ -39,17 +38,16 @@ from .._core import eoTruncatedSelectMany as TruncatedSelectMany
 #### SELECT (src_pop,dest_pop)
 ################################################
 ################################################
-class _DetSelect():
+def det_select(rate=1.0,interpret_as_rate=True,stype=None):
     """
     eoDetSelect selects many individuals deterministically
     """
-    def __new__(cls,rate=1.0,interpret_as_rate=True,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if type is None:
+        type = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoDetSelect"+config.TYPES[type])
+    class_ = utils.get_class("eoDetSelect"+config.TYPES[type])
 
-        return class_(rate,interpret_as_rate)
+    return class_(rate,interpret_as_rate)
 
 
 class _SelectMany():
