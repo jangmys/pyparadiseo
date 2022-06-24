@@ -165,7 +165,7 @@ void moeo_expose_algos(std::string stype)
 
     // ==========================================================================
     class_<moeoEasyEA<SolutionType>, bases<moeoEA<SolutionType> > >
-        ("moeoEasyEA",
+        (make_name("moeoEasyEA",stype).c_str(),
       init<
           eoContinue<SolutionType>&,
           eoEvalFunc<SolutionType>&,
@@ -253,7 +253,7 @@ void moeo_expose_algos(std::string stype)
     // why is noncopyable needed? (else compilation error, does it hurt?)
     // ==========================================================================
     class_<moeoMOGA<SolutionType>, bases<moeoEA<SolutionType> >, boost::noncopyable>
-        ("moeoMOGA",
+        (make_name("moeoMOGA",stype).c_str(),
       init<
           unsigned int,
           eoEvalFunc<SolutionType>&,
@@ -327,7 +327,7 @@ void moeo_expose_algos(std::string stype)
 
     // ==========================================================================
     class_<moeoSPEA2<SolutionType>, bases<moeoEA<SolutionType> >, boost::noncopyable>
-        ("moeoSPEA2",
+        (make_name("moeoSPEA2",stype).c_str(),
       init<
           unsigned int,
           eoEvalFunc<SolutionType>&,
@@ -370,7 +370,7 @@ void moeo_expose_algos(std::string stype)
     ;
 
     class_<moeoSEEA<SolutionType>, bases<moeoEA<SolutionType> >, boost::noncopyable>
-        ("moeoSEEA", init<
+        (make_name("moeoSEEA",stype).c_str(), init<
           unsigned int,
           eoEvalFunc<SolutionType> &,
           eoQuadOp<SolutionType> &,
@@ -390,6 +390,8 @@ void moeo_expose_algos(std::string stype)
     .def("__call__", &moeoSEEA<SolutionType>::operator ())
     ;
 
+
+    //missing MOEO neighborhood
   //   class_<moeoUnifiedDominanceBasedLS<SolutionType>, boost::noncopyable>
   //       ("moeoUnifiedDominanceBasedLS", init<
   //         eoContinue<SolutionType>&,

@@ -1,3 +1,9 @@
+"""
+generate solutions
+
+initializers generate new solutions
+"""
+
 from pyparadiseo import config,utils
 
 from ._core import eoInit

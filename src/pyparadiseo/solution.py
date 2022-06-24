@@ -1,5 +1,8 @@
 from pyparadiseo import config
 
+
+
+
 from ._core import Solution
 from ._core import RealSolution
 from ._core import BinarySolution
@@ -62,9 +65,15 @@ def from_object(obj,stype=None):
         return zeros(len(obj),stype)
 
 
-def from_init(initializer) :
+def from_init(initializer,stype=None) :
     """
     create solution from initializer
     """
+    from pyparadiseo import _core
+
+    if isinstance(initializer,_core.eoInit):
+        print("got init")
+
+
     #### try to get SolutionType from initializer-type?
-    pass
+    # pass

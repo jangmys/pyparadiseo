@@ -5,6 +5,8 @@ base : eoTransform.h
 
 __call__(pop) --> void
 """
+from pyparadiseo import config,utils
+
 from .._core import eoSGATransform as SGATransform
 
 def SGA(crossover, c_proba, mutate, m_proba, stype=None):
@@ -16,5 +18,5 @@ def SGA(crossover, c_proba, mutate, m_proba, stype=None):
     if stype is None:
         stype = config._SOLUTION_TYPE
 
-    class_ = utils.get_class("eoSGATransform"+config.TYPES[type])
+    class_ = utils.get_class("eoSGATransform"+config.TYPES[stype])
     return class_(crossover,c_proba,mutate,m_proba)

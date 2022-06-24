@@ -52,7 +52,7 @@ if __name__ == "__main__":
     xover_rates = [r*0.1 for r in range(10)]
     mut_rate = [r*0.1 for r in range(10)]
 
-    pop_eval = pp.evaluator.PopLoopEval(myeval)
+    pop_eval = pp.evaluator.pop_eval_from_fitness(myeval)
 
     i=0
 

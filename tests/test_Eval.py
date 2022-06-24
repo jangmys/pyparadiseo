@@ -69,7 +69,7 @@ class test_eval(unittest.TestCase):
             for j in range(1,2+i):
                 p[i][j]=1
 
-        popeval = evaluator.PopLoopEval(evaluator.fitness(lambda x: np.sum(x)))
+        popeval = evaluator.pop_eval_from_fitness(evaluator.fitness(lambda x: np.sum(x)))
         popeval(p,p)
         for i in range(4):
             self.assertEqual(p[i].fitness,i+1)

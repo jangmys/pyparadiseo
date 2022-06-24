@@ -32,3 +32,4 @@ from ._core import rng
 #ObjectiveVector.setup(0,[])
 
 from pyparadiseo import config,utils
+from pyparadiseo import decorators

@@ -1,3 +1,8 @@
+"""
+evaluate solutions
+
+evaluators assign fitness or objective values to solutions
+"""
 from pyparadiseo import config,utils
 
 #abstract base classes
@@ -19,9 +24,9 @@ from ._core import eoPopLoopEvalBin as PopLoopEvalBin
 ### counting eval function (for eoContinuator)
 from ._core import eoEvalFuncCounter as EvalFuncCounter
 
-import importlib
+# import importlib
 
-from pyparadiseo import _core
+# from pyparadiseo import _core
 
 
 def fitness(fun=None,stype=None):

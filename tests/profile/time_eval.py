@@ -101,7 +101,7 @@ time_eval(myPyEval(off,baz),init,N)
 
 print("POP-LOOP","="*20)
 
-loopeval = evaluator.PopLoopEval(evaluator.fitness(f))
+loopeval = evaluator.pop_eval_from_fitness(evaluator.fitness(f))
 pop = Pop(N,init)
 
 t1 = time.time()
