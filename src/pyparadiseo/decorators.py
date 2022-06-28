@@ -52,7 +52,7 @@ def decoratorFunctionWithArguments(arg1, arg2, arg3):
 
 
 
-def fitness(stype=None):
+def fitness(fun=None,stype=None):
     """
     fitness decorator
 
@@ -64,11 +64,18 @@ def fitness(stype=None):
 
     # print(a)
     class_ = utils.get_class("FitnessEval"+config.TYPES[stype])
+
+    print(class_)
+
     # @functools.wraps(f)
     def wrap(f):
         # print("Inside wrap()")
         return class_(f)
-    return wrap
+
+    if fun is None:
+        return wrap
+    else:
+        return wrap(fun)
 
 
 def objectives(fun=None,stype=None):

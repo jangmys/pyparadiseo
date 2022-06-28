@@ -1,6 +1,8 @@
 import matplotlib
 import matplotlib.pyplot as plt
 
+from pyparadiseo import decorators
+
 import random
 
 

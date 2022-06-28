@@ -12,6 +12,9 @@ from pyparadiseo import initializer
 from pyparadiseo import evaluator
 from pyparadiseo import solution
 
+from pyparadiseo import decorators
+
+
 from pyparadiseo.mo import eval,neighborhood,algo,Eval,Neighbor
 
 import time
@@ -27,7 +30,8 @@ if __name__ == "__main__":
     #use initializer class for binary solutions
     myinit = initializer.random(DIM)
     #make pyparadiseo fitness evaluator (callable with appropriate signature...)
-    myeval = evaluator.fitness(max_one.sum_bits)
+    myeval = decorators.fitness(max_one.sum_bits)
+    # myeval = evaluator.fitness(max_one.sum_bits)
     # nbor evaluation
     nborEval = pp.mo.eval._NeighborEval(max_one.eval_incremental)
     # # neighborhood
@@ -52,7 +56,7 @@ if __name__ == "__main__":
     hc(sol)
 
     print("simpleHC elapsed:\t",time.time()-t1)
-    print(sol)
+    print(sol.fitness)
     print("#"*20)
     # #######################################
     #
@@ -69,7 +73,7 @@ if __name__ == "__main__":
     hc(sol)
 
     print("FirstImprHC elapsed:\t",time.time()-t1)
-    print(sol)
+    print(sol.fitness)
     print("#"*20)
     # #######################################
     #
@@ -86,7 +90,7 @@ if __name__ == "__main__":
     hc(sol)
 
     print("RandomBestHC elapsed:\t",time.time()-t1)
-    print(sol)
+    print(sol.fitness)
     print("#"*20)
     # #######################################
     #
@@ -102,7 +106,7 @@ if __name__ == "__main__":
     hc(sol)
 
     print("NeutralHC elapsed:\t",time.time()-t1)
-    print(sol)
+    print(sol.fitness)
     print("#"*20)
     # #######################################
     #
@@ -114,7 +118,7 @@ if __name__ == "__main__":
     t1 = time.time()
     hc(sol)
     print("RandomSearch elapsed:\t",time.time()-t1)
-    print(sol)
+    print(sol.fitness)
     print("#"*20)
     # #######################################
     #
@@ -128,7 +132,7 @@ if __name__ == "__main__":
     t1 = time.time()
     hc(sol)
     print("RandomWalk elapsed:\t",time.time()-t1)
-    print(sol)
+    # print(sol)
     print("#"*20)
     # #######################################
     #
@@ -146,7 +150,7 @@ if __name__ == "__main__":
     hc(sol)
 
     print("RandomNeutralWalk elapsed:\t",time.time()-t1)
-    print(sol)
+    # print(sol)
     print("#"*20)
     # #######################################
     hc = mo.algo.metropolis_hastings(rand_nhood_repl,myeval,nborEval,10000)
@@ -160,7 +164,7 @@ if __name__ == "__main__":
     hc(sol)
 
     print("MetropolisHasting elapsed:\t",time.time()-t1)
-    print(sol)
+    # print(sol)
     print("#"*20)
     ####################################
     hc = mo.algo.simulated_annealing(rand_nhood_repl,myeval,nborEval,100,0.99)
@@ -174,22 +178,22 @@ if __name__ == "__main__":
     hc(sol)
 
     print("SA elapsed:\t",time.time()-t1)
-    print(sol)
-    print("#"*20)
-    ####################################
-    hc = mo.algo.tabu_search(nhood,myeval,nborEval,100,100)
-    # set move
-    hc.setMove(max_one.move)
-
-    myinit(sol)
-    myeval(sol)
-
-    # t1 = time.time()
-    hc(sol)
-    #
-    # print("SA elapsed:\t",time.time()-t1)
     # print(sol)
     print("#"*20)
+    ####################################
+    # hc = mo.algo.tabu_search(nhood,myeval,nborEval,100,100)
+    # # set move
+    # hc.setMove(max_one.move)
+    #
+    # myinit(sol)
+    # myeval(sol)
+    #
+    # # t1 = time.time()
+    # hc(sol)
+    # #
+    # # print("SA elapsed:\t",time.time()-t1)
+    # # print(sol)
+    # print("#"*20)
 
 
 #

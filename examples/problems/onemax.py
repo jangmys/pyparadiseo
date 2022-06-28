@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class OneMax():
     def __init__(self,_dim):
         self.dim = _dim
@@ -17,10 +16,10 @@ class OneMax():
 
     def move(self,nbor,sol):
         ind = nbor.index()
-        if sol[ind]:
-            sol[ind] = False
+        if sol.array[ind]:
+            sol.array[ind] = False
         else:
-            sol[ind] = True
+            sol.array[ind] = True
 
 
 # def sum_bits(sol):
