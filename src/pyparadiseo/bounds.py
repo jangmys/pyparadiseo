@@ -23,23 +23,26 @@ from ._core import RealVectorBounds #a vector of bounds
 
 # (bound,bound) --> only 2D (why the particular case?)
 
-def bound_below():
+def bound_below(lb):
     """
     half-open bounds [a,inf[ (1D)
     """
-    pass
+    return RealBoundBelow(lb)
 
 
-def bound_above():
+def bound_above(ub):
     """
     half-open bounds ]inf,a] (1D)
     """
-    pass
+    return RealAboveBound(ub)
 
-def bound_interval():
+
+def bound_interval(lb,ub):
     """
     1D
     """
+    return RealInterval(lb,ub)
+
 
 def bound_box(*args):
     r"""Box-bounds for real-valued solutions

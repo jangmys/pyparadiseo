@@ -71,6 +71,25 @@ def fitness(stype=None):
     return wrap
 
 
+def neighbor_fitness(stype=None):
+    """
+    fitness decorator
+
+    applied to a python callable it returns a FitnessEval class object initialized with that callable
+    """
+    # print("Inside fitness decorator")
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    # print(a)
+    class_ = utils.get_class("NeighborEval"+config.TYPES[stype])
+    # @functools.wraps(f)
+    def wrap(f):
+        # print("Inside wrap()")
+        return class_(f)
+    return wrap
+
+
 def objectives(fun=None,stype=None):
     """
     fitness decorator
