@@ -36,6 +36,21 @@ class _NeighborEval():
             return class_()
 
 
+def neighbor_eval(f_eval,sol_type=None):
+    """
+    wrap function into neighbor evaluator
+
+    incremental
+    """
+    if sol_type is None:
+        sol_type = config._SOLUTION_TYPE
+
+    class_ = utils.get_class("NeighborEval"+config.TYPES[sol_type])
+
+    return class_(f_eval)
+
+
+
 class _NeighborFullEval():
     """
     backable : bool (True if Neighbor has moveBack defined)
