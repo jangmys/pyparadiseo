@@ -32,7 +32,7 @@ def random(size=0,stype=None,**kwargs):
 
     if stype == 'gen':
         raise TypeError("initializer.random : not availble for generic solution type")
-
+    
     if stype == 'bin':
         class_ = utils.get_class("BinaryInit")
         return class_(size)

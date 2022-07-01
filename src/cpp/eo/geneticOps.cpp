@@ -125,7 +125,8 @@ public:
         if (mon_op.ptr() != Py_None) {
             _eo.invalidate();
             // std::cout << "*** mut" << std::endl;
-            return boost::python::call<bool>(mon_op.ptr(),_eo.encoding);
+            // return boost::python::call<bool>(mon_op.ptr(),_eo.encoding);
+            return mon_op(_eo.encoding);
         } else  {
             std::cout << "no MonOp defined : do nothing";
             return false;
@@ -159,7 +160,9 @@ public:
     {
         if (bin_op.ptr() != Py_None) {
             _eo.invalidate();
-            return boost::python::call<bool>(bin_op.ptr(),_eo.encoding,_eo2.encoding);
+            bin_op(_eo.encoding,_eo2.encoding);
+            return true;            
+            // return boost::python::call<bool>(bin_op.ptr(),_eo.encoding,_eo2.encoding);
         } else  {
             std::cout << "no BinOp defined : do nothing";
             return false;
@@ -184,7 +187,6 @@ public:
     void
     setOp(boost::python::object obj)
     {
-        // std::cout << "Setting generator\n";
         quad_op = obj;
     }
 
@@ -195,7 +197,9 @@ public:
             _eo.invalidate();
             _eo2.invalidate();
             // std::cout << "*** mut" << std::endl;
-            return boost::python::call<bool>(quad_op.ptr(),_eo.encoding,_eo2.encoding);
+            quad_op(_eo.encoding,_eo2.encoding);
+            return true; //let's assume the quad_op modifies the eo's ;-)
+            // return boost::python::call<bool>(quad_op.ptr(),_eo.encoding,_eo2.encoding);
         } else  {
             std::cout << "no QuadOp defined : do nothing";
             return false;

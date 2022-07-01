@@ -74,3 +74,53 @@ compute_sum(s)
 print(s)
 
 solution.from_init(init)
+
+
+####################################################
+### FITNESS
+from pyparadiseo import initializer
+from pyparadiseo import bounds
+
+
+def return_fitness(arr):
+    return np.sum(arr)
+
+def apply_to_sol(sol):
+    sol.fitness = np.sum(sol.array)
+
+sol = solution.random(10,stype='real',bounds=bounds.bound_box(10,-1,1))
+
+print(sol)
+
+fit1 = decorators.fitness(return_fitness,stype='real')
+
+fit1(sol)
+print(sol)
+
+
+
+print("x"*20)
+
+###################################################
+@decorators.MyDecoratorClass("un arg")
+def foo():
+    print("gello")
+
+@decorators.MyDecoratorClass
+def bar():
+    print("hello")
+
+foo()
+bar()
+
+
+# class bar():
+#     def __init__(self,value):
+#         self.value = value
+#
+#     @decorators.MyDecorator("another arg")
+#     def foo(self,sol):
+#         return np.sum(sol)
+#
+# b=bar(42)
+# print(b.foo(sol.array))

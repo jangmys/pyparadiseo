@@ -87,7 +87,7 @@ time_eval(myEval(off),init,N)
 print("="*20)
 
 eval_count = evaluator.EvalFuncCounter(myEval(off))
-print("callable class inherited from eoEvalFunc")
+print("counting")
 time_eval(eval_count,init,N)
 print("="*20)
 
@@ -96,8 +96,9 @@ print("functools partial")
 time_eval(evaluator.fitness(f),init,N)
 print("="*20)
 
-
+print("myPyEval")
 time_eval(myPyEval(off,baz),init,N)
+print("="*20)
 
 print("POP-LOOP","="*20)
 
@@ -118,3 +119,13 @@ t1 = time.time()
 for i,ind in enumerate(p):
     v[i]=baz(ind,off)
 print(time.time()-t1)
+
+print("#"*22)
+
+eval = evaluator.fitness(None)
+
+def f2(sol):
+    sol.fitness = baz(sol.encoding,42)
+
+eval.set_eval_func(f2)
+time_eval(eval,init,N)

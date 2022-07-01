@@ -22,6 +22,14 @@ def eval_incremental(sol_enc,sol_fit,index) -> float:
     else:
         return sol_fit + 1
 
+#
+# def eval_incremental(sol,nbor):
+#     if sol.array[nbor.index()]:
+#         return sol.fitness - 1
+#     else:
+#         return sol.fitness + 1
+#
+
 
 
 class test_simpleHC_onemax(unittest.TestCase):

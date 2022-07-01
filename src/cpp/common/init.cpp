@@ -101,6 +101,43 @@ private:
 };
 
 
+//see eoInit.h
+struct PermutationInit : eoInit<IntSolution> {
+
+    PermutationInit(unsigned _chromSize, unsigned _startFrom = 0) : chromSize(_chromSize), startFrom(_startFrom){}
+
+    virtual void operator()(IntSolution& _eo)
+    {
+        _eo.resize(chromSize);
+
+        for(unsigned i=0;i<chromSize;i++){
+            _eo[i]=i;
+        }
+
+        //the numpy array
+        _eo.encoding = np::from_data(_eo.data(), np::dtype::get_builtin<int>(),
+            p::make_tuple(_eo.size()),p::make_tuple(sizeof(int)),
+            p::object()
+        );
+
+        std::random_device rd;
+        std::mt19937 g(rd());
+
+        std::shuffle(_eo.begin(),_eo.end(), g);
+
+
+
+        // std::copy(vec.begin(), vec.end(), ptr);
+
+        _eo.invalidate();
+    }
+
+private:
+    unsigned chromSize;
+    unsigned startFrom;
+    UF_random_generator<unsigned int> gen;
+};
+
 
 //TODO : merge with unbounded (FIxedLength)
 template<class T>
@@ -131,44 +168,6 @@ public:
 private:
     eoRealVectorBounds & bounds;
 };
-
-
-
-
-template<class SolutionType>
-class pyInitPermutation : public eoInit<SolutionType>{
-public:
-    pyInitPermutation(unsigned _chromSize, unsigned _startFrom = 0) : chromSize(_chromSize), startFrom(_startFrom){}
-
-    virtual void operator()(SolutionType& _eo)
-    {
-        _eo.encoding = np::zeros(p::make_tuple(chromSize),np::dtype::get_builtin<int>());
-
-        np::ndarray arr = np::from_object(_eo.encoding, np::dtype::get_builtin<int>());
-
-        int* ptr = reinterpret_cast<int*>(arr.get_data());
-        std::vector<int> vec(ptr, ptr + arr.shape(0));
-
-        for(unsigned i=0;i<arr.shape(0);i++)
-        {
-            vec[i] = startFrom + i;
-        }
-
-        std::random_device rd;
-        std::mt19937 g(rd());
-
-        std::shuffle(vec.begin(),vec.end(), g);
-        std::copy(vec.begin(), vec.end(), ptr);
-
-        _eo.invalidate();
-    }
-
-private:
-    unsigned chromSize;
-    unsigned startFrom;
-    UF_random_generator<unsigned int> gen;
-};
-
 
 // void operator_wrap(eoRealVectorBounds& b, PyEOT& _eo)
 // {
@@ -203,9 +202,9 @@ void export_realInitBounded(std::string name){
     // .def("__call__", &pyRealInitBounded<T>::operator ())
     // ;
 
-    class_<pyInitPermutation<T>, bases<eoInit<T>>, boost::noncopyable> (make_name("PermutationInit",name).c_str(), init<unsigned,optional<unsigned>>())
-    .def("__call__", &pyInitPermutation<T>::operator ())
-    ;
+    // class_<pyInitPermutation<T>, bases<eoInit<T>>, boost::noncopyable> (make_name("PermutationInit",name).c_str(), init<unsigned,optional<unsigned>>())
+    // .def("__call__", &pyInitPermutation<T>::operator ())
+    // ;
 
 
 }
@@ -236,6 +235,12 @@ initialize()
         ("BinaryInit", init<unsigned>())
     .def("__call__", &BinarySolInit::operator ())
     ;
+
+    class_<PermutationInit, bases<eoInit<IntSolution>>>
+        ("PermutationInit", init<unsigned,optional<unsigned>>())
+    .def("__call__", &PermutationInit::operator ())
+    ;
+
 
     export_realInitBounded<PyEOT>("");
 

@@ -140,7 +140,10 @@ BOOST_PYTHON_MODULE(_core)
     numpy::initialize();
 
     implicitly_convertible<double, object>();
+    implicitly_convertible<int, object>();
+    implicitly_convertible<unsigned int, object>();
     implicitly_convertible<bool, object>();
+
     // implicitly_convertible<std::complex<double>, std::any>();
 
     registerConverters();//numpy scalar converter!!!
@@ -149,6 +152,7 @@ BOOST_PYTHON_MODULE(_core)
         .from_python<std::vector<float> >()
         .from_python<std::vector<double> >()
         .from_python<std::vector<int> >()
+        .from_python<std::vector<unsigned int> >()
     ;
 
     // from MOEO, but in Pyparadiseo the basic solution type PyEOT has an objective vector too
@@ -186,7 +190,9 @@ BOOST_PYTHON_MODULE(_core)
     class_< std::vector<int> >("IntVec")
         .def(bp::vector_indexing_suite<std::vector<int> >())
         ;
-
+    class_< std::vector<unsigned int> >("UIntVec")
+        .def(bp::vector_indexing_suite<std::vector<unsigned int> >())
+        ;
 
 
     //only doubles ... need to expose this to use it as a base class for moeoRealObjectiveVector
@@ -282,6 +288,16 @@ BOOST_PYTHON_MODULE(_core)
     .add_property("array",&BinarySolution::get_array,&BinarySolution::set_array)
     ;
 
+    class_<IntSolution,bases<PyEO>>("IntSolution",init<optional<unsigned int>>())
+    .def(init<const IntSolution&>())
+    .def("resize", &IntSolution::resize)
+    .def("__len__", &IntSolution::size)
+    .def("__repr__", &IntSolution::repr)
+    .def("__str__", &IntSolution::to_string)
+    .def_readwrite("c_array",&IntSolution::vec)
+    .add_property("array",&IntSolution::get_array,&IntSolution::set_array)
+    ;
+
     // .def(vector_indexing_suite<std::vector<bool>>())
     // .def(init<const VectorSolution<bool>&>())
     // .def("resize", vec_resize<bool>)
@@ -340,10 +356,10 @@ BOOST_PYTHON_MODULE(_core)
 
     //MO (localsearch)
     mo();
+    moContinuators(); //BEFORE Evaluators! (moUpdater)
     moEvaluators();
     moNeighborhoods();
     moExplorers();
-    moContinuators();
     moAlgos();
     moComparators();
 

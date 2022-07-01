@@ -38,7 +38,7 @@ def realGA_generic_sol():
     # myeval = pp.evaluator.EvalFuncProxy(lambda sol: norm2(sol))
     myeval = evaluator.fitness(lambda sol: norm2(sol))
 
-    mybounds=bounds.RealVectorBounds(VEC_SIZE,-1,1)
+    mybounds=bounds.RealVectorBounds(VEC_SIZE,-100,100)
     myinit = pp.initializer.RealBoundedInit(mybounds)
 
     # print(type(myinit))
@@ -111,8 +111,8 @@ def realGA_real_sol():
     # print('-'*10)
 
     # select = selector._DetTournamentSelect(3)
-    xover = operator.SegmentCrossoverReal(0.0)
-    mutat = operator.UniformMutationReal(bounds=mybounds,epsilon=EPSILON,p_change=1.0)
+    xover = operator.SegmentCrossover(0.0)
+    mutat = operator.UniformMutation(bounds=mybounds,epsilon=EPSILON,p_change=1.0)
 
     # print(type(mutat))
 
@@ -141,4 +141,4 @@ def realGA_real_sol():
 if __name__ == "__main__":
     realGA_real_sol()
     print("#"*20)
-    realGA_generic_sol()
+    # realGA_generic_sol()

@@ -1,16 +1,18 @@
 from pyparadiseo import config
-
-
+from pyparadiseo import initializer
+from pyparadiseo import bounds
 
 
 from ._core import Solution
 from ._core import RealSolution
 from ._core import BinarySolution
+from ._core import IntSolution
 
 SOLUTIONS={
     'gen' : Solution,
     'bin' : BinarySolution,
-    'real': RealSolution
+    'real': RealSolution,
+    'perm': IntSolution
 }
 
 def empty(stype=None):
@@ -40,6 +42,28 @@ def zeros(size=0,stype=None):
         return klass()
 
     return klass(size)
+
+
+def random(size=0,stype=None,**kwargs):
+    """
+    create and intialize fixed size solution ('bin' or 'real')
+
+    Notes
+    -----
+    if type is 'gen' encoding is set to None
+    """
+    sol = empty(stype)
+
+    if 'bounds' in kwargs:
+        init = initializer.random(size,stype,bounds=kwargs["bounds"])
+        init(sol)
+    else:
+        init = initializer.random(size,stype)
+        init(sol)
+
+    return sol
+
+
 
 
 def from_object(obj,stype=None):

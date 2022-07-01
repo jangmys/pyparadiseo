@@ -20,10 +20,11 @@ from pyparadiseo.mo import eval,neighborhood,algo,Eval,Neighbor
 import time
 
 import numpy as np
+import inspect
 
 if __name__ == "__main__":
     DIM = 2000
-    max_one = onemax.OneMax(DIM)
+    max_one = onemax.OneMax(DIM,42.0)
 
     config.set_solution_type('bin')
 
@@ -31,14 +32,24 @@ if __name__ == "__main__":
     myinit = initializer.random(DIM)
     #make pyparadiseo fitness evaluator (callable with appropriate signature...)
     myeval = decorators.fitness(max_one.sum_bits)
-    # myeval = evaluator.fitness(max_one.sum_bits)
+    # myeval = max_one.sum_bits
+
+    # print("#"*20)
+    # print("myeval : ",myeval)
+
+    sol = solution.empty('bin')
+    myinit(sol)
+    # max_one.feval(sol)
+    myeval(sol)
+
     # nbor evaluation
-    nborEval = pp.mo.eval._NeighborEval(max_one.eval_incremental)
+    # nborEval = onemax.inherit_incr_eval()
+    nborEval = mo.eval.neighbor_eval(max_one.eval_incremental)
+
     # # neighborhood
-    nhood = mo.neighborhood._OrderNeighborhood(DIM)
-    rand_nhood = mo.neighborhood._RandomNeighborhood(neighborhood_size=DIM,with_replacement=False)
-    rand_nhood_repl = mo.neighborhood._RandomNeighborhood(neighborhood_size=DIM,with_replacement=True)
-    # rand_nhood_repl = mo.neighborhood.RndWithReplNeighborhood(DIM)
+    nhood = mo.neighborhood.ordered(DIM)
+    rand_nhood = mo.neighborhood.random(neighborhood_size=DIM,with_replacement=False)
+    rand_nhood_repl = mo.neighborhood.random(neighborhood_size=DIM,with_replacement=True)
 
 
     # algo

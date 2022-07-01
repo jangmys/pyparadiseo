@@ -57,25 +57,115 @@ def fitness(fun=None,stype=None):
     fitness decorator
 
     applied to a python callable it returns a FitnessEval class object initialized with that callable
+
+    function must have follwing signature :
+
+    solution_encoding --> fitness
+
+    Example
+    -------
+    @decorators.fitness
+    def some_function(array):
+        return sum(array)
     """
-    # print("Inside fitness decorator")
     if stype is None:
         stype = config._SOLUTION_TYPE
 
-    # print(a)
     class_ = utils.get_class("FitnessEval"+config.TYPES[stype])
 
-    print(class_)
-
-    # @functools.wraps(f)
     def wrap(f):
-        # print("Inside wrap()")
         return class_(f)
 
     if fun is None:
         return wrap
     else:
         return wrap(fun)
+
+
+
+
+
+def fitnessmethod(fun=None,stype=None):
+    """
+    fitness method decorator
+
+    applied to a python callable it returns a FitnessEval class object initialized with that callable
+
+    function must have follwing signature :
+
+    solution_encoding --> fitness
+
+    Example
+    -------
+    @decorators.fitness
+    def some_function(array):
+        return sum(array)
+    """
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    class_ = utils.get_class("FitnessEval"+config.TYPES[stype])
+
+    print(class_)
+
+    def methodwrapper(self,method):
+        print('self is ',self)
+        return class_(method)
+
+    if fun is None:
+        return methodwrapper(self)
+    else:
+        return methodwrapper(self,fun)
+
+
+
+# def MyDecorator(argument,stype=None):
+#     if stype is None:
+#         stype = config._SOLUTION_TYPE
+#
+#     class_ = utils.get_class("FitnessEval"+config.TYPES[stype])
+#
+#     class _MyDecorator(class_):
+#         def __init__(self, fn):
+#             print("init this thing")
+#             class_.__init__(self,fn)
+#             self.fn = fn
+#
+#         def __get__(self, obj, type=None):
+#             return functools.partial(self, obj)
+#
+#         def __call__(self, *args, **kwargs):
+#             print("In my decorator before call, with arg ",argument)
+#             self.fn(*args, **kwargs)
+#             print("In my decorator after call, with arg ",argument)
+#
+#
+#     return _MyDecorator
+#
+
+
+class MyDecoratorClass(object):
+    def __init__(self, argument):
+        if hasattr('argument', '__call__'):
+            self.fn = argument
+            self.argument = 'default foo baby'
+        else:
+            self.argument = argument
+
+    def __get__(self, obj, type=None):
+        return functools.partial(self, obj)
+
+    def __call__(self, *args, **kwargs):
+        if not hasattr(self, 'fn'):
+            self.fn = args[0]
+            return self
+        print("In my decorator before call, with arg %s",self.argument)
+        self.fn(*args, **kwargs)
+        print("In my decorator after call, with arg %s" ,self.argument)
+
+
+
+
 
 
 def neighbor_fitness(stype=None):

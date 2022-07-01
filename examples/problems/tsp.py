@@ -1,9 +1,6 @@
-# from pyparadiseo.problem.problem import PermutationProblem
-
 import os
-import numpy as np
-#import numba
 import math
+import numpy as np
 
 class TravelingSalesman():
     def __init__(self, instance : str = None):
@@ -89,7 +86,7 @@ class TravelingSalesman():
         """assuming i<j"""
         i,j=self.moves[nbor.index()]
         while i<j:
-            sol[i],sol[j]=sol[j],sol[i]
+            sol.array[i],sol.array[j]=sol.array[j],sol.array[i]
             i += 1
             j -= 1
         return sol

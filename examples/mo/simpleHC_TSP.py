@@ -1,12 +1,16 @@
 import sys
 sys.path.append("..")
 
-from problems import tsp
 from problems import onemax
 
+#provisoire
 import pyparadiseo as pp
+from pyparadiseo import _core
 
 from pyparadiseo import evaluator
+from pyparadiseo import initializer
+
+from pyparadiseo import solution
 
 from pyparadiseo import mo
 
@@ -18,38 +22,43 @@ import time
 import numpy as np
 
 
+from problems import tsp
+#### tsp class is pure python containing
+#
+
 
 
 if __name__ == "__main__":
     tsp = tsp.TravelingSalesman("berlin52")
 
-    tsp_init = pp.initializer.PermutationInit(tsp.ncities)
-    toureval = evaluator.fitness(tsp.eval)
+    tsp_init = initializer.random(tsp.ncities,stype='perm')
+    toureval = evaluator.fitness(tsp.eval,stype='perm')
+    tsp_nbor_eval = mo.eval.neighbor_eval(tsp.eval_incremental,stype='perm')
 
-    sol = pp.Solution()
+    sol = solution.empty(stype='perm')
     tsp_init(sol)
     toureval(sol)
     print(sol)
 
-    tsp_nbor_eval = mo.eval.NeighborEval(tsp.eval_incremental)
 
-    nbor = mo.Neighbor()
+    nbor = _core.NeighborPerm()
     tsp_nbor_eval(sol,nbor)
+    print(nbor)
 
-    # print(nbor)
-
-    nhood = mo.neighborhood.OrderNeighborhood(len(tsp.moves))
+    nhood = mo.neighborhood.ordered(len(tsp.moves),stype='perm')
 
     comp = lambda n1,n2 : n1 > n2
 
-    hc = mo.algo.SimpleHC(
+    hc = mo.algo.simple_hill_climber(
         nhood,
         toureval,
         tsp_nbor_eval,
-        mo.continuator.TrueContinuator(),
-        mo.comparator.moNeighborComparator(comp),
-        mo.comparator.moSolNeighborComparator(comp)
+        mo.continuator.always_true(stype='perm'),
+        mo.comparator.neighbor_compare(comp,stype='perm'),
+        mo.comparator.sol_neighbor_compare(comp,stype='perm'),
+        stype='perm'
     )
+
     hc.setMove(tsp.move)
 
     t1 = time.time()

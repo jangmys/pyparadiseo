@@ -9,6 +9,8 @@
 #include <continuator/moTrueContinuator.h>
 #include <continuator/moStatBase.h>
 
+#include <continuator/moUpdater.h>
+
 #include <utils/def_abstract_functor.h>
 
 using namespace boost::python;
@@ -38,6 +40,10 @@ template<typename SolutionType>
 void expose_moContinuators(std::string name)
 {
     typedef PyNeighbor<SolutionType> NborT;
+
+    def_abstract_functor<moUpdater>("moUpdater");
+
+
 
     class_<moContinuatorWrap<SolutionType>,boost::noncopyable>
     (make_name("moContinuator",name).c_str())
@@ -111,5 +117,5 @@ void moContinuators()
     expose_moContinuators<PyEOT>("");
     expose_moContinuators<BinarySolution>("Bin");
     expose_moContinuators<RealSolution>("Real");
-
+    expose_moContinuators<IntSolution>("Perm");
 }

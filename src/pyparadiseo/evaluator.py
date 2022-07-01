@@ -90,7 +90,7 @@ def pop_eval_from_fitness(f_eval,stype=None):
     if isinstance(f_eval,utils.get_class("eoEvalFunc"+config.TYPES[stype])):
         return class_(f_eval)
     else:
-        return class_(fitness(fun=f_eval,type=stype))
+        return class_(fitness(fun=f_eval,stype=stype))
 
 # ===================================
 # ===================================

@@ -1,10 +1,34 @@
 """
 MO continuators
 """
+from pyparadiseo import utils,config
+
 from .._core import moIterContinuator as IterContinuator
 from .._core import moFullEvalContinuator as FullEvalContinuator
 from .._core import moTimeContinuator as TimeContinuator
 from .._core import moTrueContinuator as TrueContinuator
+
+
+def always_true(stype=None):
+    """
+    Iteration-continuator: continues until a number of iterations is reached
+
+    Parameters
+    ----------
+    nb_iters : max iterations
+    verbose : print message at end
+
+    See also
+    --------
+    eoGenContinue (max_generation)
+    """
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    class_ = utils.get_class("moTrueContinuator"+config.TYPES[stype])
+
+    return class_()
+
 
 def max_iterations(nb_iters,verbose=False,stype=None):
     """

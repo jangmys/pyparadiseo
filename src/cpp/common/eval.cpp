@@ -26,7 +26,7 @@ struct pyeoFitnessEval : eoEvalFunc<SolutionType> {
     setEvalFunc(boost::python::object obj)
     {
         std::cout << "Setting fitness eval\n"<<std::endl;
-        eval_op = obj;
+        eo_eval_op = obj;
     }
 
     void
@@ -34,17 +34,36 @@ struct pyeoFitnessEval : eoEvalFunc<SolutionType> {
     {
         if (eval_op.ptr() != Py_None) {
             _eo.setFitness(
-                boost::python::call<boost::python::object>(eval_op.ptr(),_eo.encoding)
+                // boost::python::call<boost::python::object>(eval_op.ptr(),_eo.encoding)
+                eval_op(_eo.encoding)
             );
-            // _eo.invalidate();
-        } else {
+            // _eo.setFitness(
+            //     boost::python::call<boost::python::object>(eval_op.ptr(),_eo.encoding)
+            // );
+        }
+        else if(eo_eval_op.ptr() != Py_None){
+            eo_eval_op(boost::ref(_eo));
+        }
+        else {
             std::cout << "no function defined : do nothing";
         }
     }
 
+    std::string className() const
+    {
+        return "pyeoFitnessEval"; // never saw the use of className anyway
+    }
+
 private:
     boost::python::object eval_op;
+    boost::python::object eo_eval_op;
 };
+
+
+
+
+
+
 
 
 template<class SolutionType>
@@ -92,6 +111,7 @@ void export_eval(std::string postfix)
     .def(init<boost::python::object>()[WC1])
     .def("set_eval_func", &pyeoFitnessEval<SolutionType>::setEvalFunc)
     .def("__call__", &pyeoFitnessEval<SolutionType>::operator ())
+    // .def("__name__", &pyeoFitnessEval<SolutionType>::className)
     ;
 
     //===========================================================
@@ -120,5 +140,6 @@ evaluate()
 {
     export_eval<PyEOT>("");
     export_eval<BinarySolution>("Bin");
+    export_eval<IntSolution>("Perm");
     export_eval<RealSolution>("Real");
 }

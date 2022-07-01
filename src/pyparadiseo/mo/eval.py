@@ -19,50 +19,34 @@ class _Eval():
         pass
 
 
-class _NeighborEval():
-    """
-    neighbor evaluator
-    """
-    def __new__(cls,f_eval=None,sol_type=None):
-        if sol_type is None:
-            sol_type = config._SOLUTION_TYPE
-
-        class_ = utils.get_class("NeighborEval"+config.TYPES[sol_type])
-
-        if f_eval is not None:
-            return class_(f_eval)
-        else:
-            print("warning : no evaluation function provided to NeighborEval")
-            return class_()
-
-
-def neighbor_eval(f_eval,sol_type=None):
+def neighbor_eval(f_eval,stype=None):
     """
     wrap function into neighbor evaluator
 
     incremental
-    """
-    if sol_type is None:
-        sol_type = config._SOLUTION_TYPE
 
-    class_ = utils.get_class("NeighborEval"+config.TYPES[sol_type])
+    f_eval(solution-encoding, solution-fitness, index) --> new-solution-fitness
+
+    """
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    class_ = utils.get_class("NeighborEval"+config.TYPES[stype])
 
     return class_(f_eval)
 
 
-
-class _NeighborFullEval():
+def neighbor_full_eval(f_eval,stype=None):
     """
     backable : bool (True if Neighbor has moveBack defined)
     """
-    def __new__(cls,f_eval,backable=False,sol_type=None):
-        if sol_type is None:
-            sol_type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_=None
-        if not backable:
-            class_ = utils.get_class("moFullEvalByCopy"+config.TYPES[sol_type])
-        else:
-            class_ = utils.get_class("moFullEvalByModif"+config.TYPES[sol_type])
+    class_=None
+    if not backable:
+        class_ = utils.get_class("moFullEvalByCopy"+config.TYPES[sol_type])
+    else:
+        class_ = utils.get_class("moFullEvalByModif"+config.TYPES[sol_type])
 
-        return class_(f_eval)
+    return class_(f_eval)

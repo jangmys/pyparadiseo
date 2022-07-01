@@ -507,8 +507,9 @@ public:
 };
 
 
+typedef VectorSolution<int> IntSolution;
 //for some reason the compiler doesn't accept <bool>
-typedef VectorSolution<int> BinarySolution;
+typedef VectorSolution<unsigned int> BinarySolution;
 typedef VectorSolution<double> RealSolution;
 
 

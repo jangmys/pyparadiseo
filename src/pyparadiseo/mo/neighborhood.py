@@ -30,63 +30,57 @@ class _Neighborhood():
         return class_()
 
 
-class _IndexNeighborhood():
+def indexed(neighborhood_size,stype=None):
     """
     A neighborhood based on indices
+
+    Parameters
+    ----------
+    neighborhood_size
     """
-    def __new__(cls,neighborhood_size,type=None):
-        """
-        Parameters
-        ----------
-        neighborhood_size
-        """
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("moIndexNeighborhood"+config.TYPES[type])
-        return class_(neighborhood_size)
+    class_ = utils.get_class("moIndexNeighborhood"+config.TYPES[stype])
+    return class_(neighborhood_size)
 
 
-class _OrderNeighborhood():
+def ordered(neighborhood_size,stype=None):
     """
     An ordered indexed neighborhood
 
     a special sort of IndexNeighborhood
+
+    Parameters
+    ----------
+    neighborhood_size
     """
-    def __new__(cls,neighborhood_size,stype=None):
-        """
-        Parameters
-        ----------
-        neighborhood_size
-        """
-        if stype is None:
-            stype = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("moOrderNeighborhood"+config.TYPES[stype])
-        return class_(neighborhood_size)
+    class_ = utils.get_class("moOrderNeighborhood"+config.TYPES[stype])
+    return class_(neighborhood_size)
 
 
-class _RandomNeighborhood():
+def random(neighborhood_size,max_neighbors=0,with_replacement=True,stype=None):
     """
-    An ordered indexed neighborhood
+    A random neighborhood
 
     a special sort of IndexNeighborhood
-    """
-    def __new__(cls,neighborhood_size,max_neighbors=0,with_replacement=True,stype=None):
-        """
-        Parameters
-        ----------
-        neighborhood_size - int, size of neighborhood
-        max_neighors - int, max nb visited nbors (0 represents infinity)
-        with_replacement = bool
-        """
-        if stype is None:
-            stype = config._SOLUTION_TYPE
 
-        class_=None
-        if with_replacement:
-            class_ = utils.get_class("moRndWithReplNeighborhood"+config.TYPES[stype])
-            return class_(neighborhood_size,max_neighbors)
-        else:
-            class_ = utils.get_class("moRndWithoutReplNeighborhood"+config.TYPES[stype])
-            return class_(neighborhood_size)
+    Parameters
+    ----------
+    neighborhood_size - int, size of neighborhood
+    max_neighors - int, max nb visited nbors (0 represents infinity)
+    with_replacement = bool
+    """
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    class_=None
+    if with_replacement:
+        class_ = utils.get_class("moRndWithReplNeighborhood"+config.TYPES[stype])
+        return class_(neighborhood_size,max_neighbors)
+    else:
+        class_ = utils.get_class("moRndWithoutReplNeighborhood"+config.TYPES[stype])
+        return class_(neighborhood_size)

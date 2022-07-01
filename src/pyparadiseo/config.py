@@ -4,7 +4,8 @@ from ._core import ObjectiveVectorTraits
 TYPES={
     'gen' : '',
     'bin' : 'Bin',
-    'real' : 'Real'
+    'real' : 'Real',
+    'perm' : 'Perm'
 }
 
 _SOLUTION_TYPE = 'gen'

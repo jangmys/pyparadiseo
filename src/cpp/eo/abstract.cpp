@@ -75,6 +75,7 @@ void eo_abstract()
 {
     export_abstract<PyEOT>("");
     export_abstract<BinarySolution>("Bin");
+    export_abstract<IntSolution>("Int");
     export_abstract<RealSolution>("Real");
 }
 

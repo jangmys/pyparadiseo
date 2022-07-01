@@ -47,7 +47,7 @@ class test_simpleHC_onemax(unittest.TestCase):
         pop = population.from_init(self.POPSIZE, init, stype='bin')
         print(type(pop))
 
-        p_eval=evaluator.pop_eval_from_fitness(eval)
+        p_eval=evaluator.pop_eval_from_fitness(eval,stype='bin')
         p_eval(pop,pop)
 
         # print(pop)
