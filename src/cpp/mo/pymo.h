@@ -10,6 +10,20 @@
 
 namespace bp = boost::python;
 
+
+// template<typename Nbor,typename Sol>
+// struct Move
+// {
+//     void operator()(const Nbor& n, Sol& s){
+//         s[n.index()] = !s[n.index()];
+//         s.invalidate();
+//     }
+// };
+
+
+
+
+
 //Neighbor and derivatives IndexNeighbor and BackableNeighbor are ABC with move, moveBack as pure virtuals.
 //In paradiseo users will specialize those before instantiating algorithms with derived neighbor types (specializing )
 
@@ -17,14 +31,16 @@ namespace bp = boost::python;
 //BASE Neighbor : PyEO + MOVE
 //MOVE needs solution type
 
+
+//NOT deriving from moNeighbor,moIndexNeighbor etc because this is used as a template parameter : mo-classes are instantiated with PyNeighbor...specializing MO for usage in Python.
 template<typename SolutionType>
 struct PyNeighbor : SolutionType
 {
     typedef SolutionType EOT;
 
-    PyNeighbor() : SolutionType(){}
+    PyNeighbor() : SolutionType(),key(0){}
 
-    PyNeighbor(bp::object move,bp::object move_back) : move_op(move),move_back_op(move_back) { }
+    PyNeighbor(bp::object move,bp::object move_back) : key(0),move_op(move),move_back_op(move_back) { }
 
     void setMove(bp::object obj) {
         move_op = obj;
@@ -37,7 +53,10 @@ struct PyNeighbor : SolutionType
     //overridng Nieghbor move (pure virtual) to with Python callback
     virtual void move(SolutionType& _solution)
     {
-        if(move_op.ptr() != Py_None)
+        if(external_move){
+            std::cout<<"apply external move\n";
+            external_move(*this,_solution);
+        }else if(move_op.ptr() != Py_None)
         {
             move_op(bp::ptr(this), boost::ref(_solution));
             //should be a bit faster but less generic...
@@ -87,12 +106,36 @@ struct PyNeighbor : SolutionType
 
     unsigned int key;
 
+    typedef void (*ExtMove)(PyNeighbor& n, SolutionType& s);//Function definition   // magic word!
+
+    void set_external_move(ExtMove func){external_move = func;} //so clean!!!
+
+    // ExtMove get_external_move(){return external_move;}
+
 protected:
     //base
     bp::object move_op;
     //backable
     bp::object move_back_op;
+
+    ExtMove external_move;
+    // void (*external_move)(PyNeighbor&,SolutionType&);
 };
+
+template class PyNeighbor<PyEOT>;
+template class PyNeighbor<RealSolution>;
+template class PyNeighbor<BinarySolution>;
+template class PyNeighbor<IntSolution>;
+
+void bitflip_move(PyNeighbor<BinarySolution>& n, BinarySolution& s);
+
+
+void choose_ext_move(PyNeighbor<BinarySolution>& n, std::string choice);
+// {
+//     if(choice == "bitflip_move"){
+//         n.set_external_move(bitflip_move);
+//     }
+// }
 
 
 //BinFlipNeighbor ....
@@ -132,6 +175,12 @@ struct BinNeighbor : PyNeighbor<BinarySolution>
 };
 
 
+
+
+// {
+//     s[n.index()] = !s[n.index()];
+//     s.invalidate();
+// }
 
 
 

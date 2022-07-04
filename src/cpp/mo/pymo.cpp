@@ -5,6 +5,24 @@
 #include <boost/python.hpp>
 
 
+void bitflip_move(PyNeighbor<BinarySolution>& n, BinarySolution& s)
+{
+    std::cout<<"make bitflip move "<<n.index()<<std::endl;
+
+    s[n.index()] = !s[n.index()];
+    s.invalidate();
+}
+
+void choose_ext_move(PyNeighbor<BinarySolution>& n, std::string choice)
+{
+    if(choice == "bitflip_move"){
+        n.set_external_move(bitflip_move);
+    }
+}
+
+
+
+
 template<typename SolutionType>
 void expose_nbor(std::string name)
 {
@@ -15,7 +33,8 @@ void expose_nbor(std::string name)
     void (PyNeighbor<SolutionType>::*_setIndex)(unsigned int) = &PyNeighbor<SolutionType>::index;
     void (PyNeighbor<SolutionType>::*_setIndexWithSol)(SolutionType&,unsigned int) = &PyNeighbor<SolutionType>::index;
 
-    class_<PyNeighbor<SolutionType>,bases<SolutionType>>(
+
+    auto obj = class_<PyNeighbor<SolutionType>,bases<SolutionType>>(
         make_name("Neighbor",name).c_str(),
         init<>())
         .def("setMove", &PyNeighbor<SolutionType>::setMove)
@@ -27,7 +46,14 @@ void expose_nbor(std::string name)
         .def("index",_getIndex)
         .def("index",_setIndex)
         .def("reassign", &PyNeighbor<SolutionType>::operator=,return_internal_reference<>())
+        // .def("choose_external_move", choose_ext_move)
+        // .def("set_external_move", &PyNeighbor<SolutionType>::set_external_move)
+        // .def("get_external_move", &PyNeighbor<SolutionType>::get_external_move)
         ;
+
+    if(name == "Bin"){
+        obj.def("choose_external_move",choose_ext_move);
+    }
 }
 
 void mo()
