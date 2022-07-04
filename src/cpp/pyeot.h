@@ -165,11 +165,12 @@ public:
     {
         std::string result;
 
-        result += "< ";
+        result += " ======================\n";
         result += "Fitness: ";
         if(!invalidFitness())
             result += boost::python::extract<const char*>(boost::python::str(fitness().get()));
         else result += std::string("[]");
+        result += "\n";
 
         if(!invalidObjectiveVector()){
             result += " , ObjVect: ";
@@ -177,15 +178,16 @@ public:
                 result += std::to_string(v);
                 result += ' ';
             }
+            result += "\n";
         }
         // result += PyEO::to_string();
 
         if(!invalidDiversity()){
             result += ", Diversity: ";
             result += boost::python::extract<const char*>(boost::python::str(diversity()));
-
+            result += "\n";
         }
-        result += " >";
+        // result += " >";
 
         return result;
     }

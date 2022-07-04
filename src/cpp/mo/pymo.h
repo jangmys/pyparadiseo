@@ -37,6 +37,7 @@ template<typename SolutionType>
 struct PyNeighbor : SolutionType
 {
     typedef SolutionType EOT;
+    typedef void (*ExtMove)(PyNeighbor& n, SolutionType& s);//Function definition   // magic word!
 
     PyNeighbor() : SolutionType(),key(0){}
 
@@ -54,10 +55,12 @@ struct PyNeighbor : SolutionType
     virtual void move(SolutionType& _solution)
     {
         if(external_move){
-            std::cout<<"apply external move\n";
+            // std::cout<<"apply external move\n";
             external_move(*this,_solution);
         }else if(move_op.ptr() != Py_None)
         {
+            // std::cout<<"apply python move\n";
+            // boost::python::call<void>(move_op.ptr(), bp::ptr(this), boost::ref(_solution));
             move_op(bp::ptr(this), boost::ref(_solution));
             //should be a bit faster but less generic...
             // move_op(bp::ptr(this), _solution.encoding);
@@ -104,21 +107,22 @@ struct PyNeighbor : SolutionType
 		return *this;
 	}
 
-    unsigned int key;
 
-    typedef void (*ExtMove)(PyNeighbor& n, SolutionType& s);//Function definition   // magic word!
 
-    void set_external_move(ExtMove func){external_move = func;} //so clean!!!
+    void set_external_move(ExtMove func){
+        external_move = func;
+    }
 
     // ExtMove get_external_move(){return external_move;}
 
 protected:
+    unsigned int key;
     //base
     bp::object move_op;
     //backable
     bp::object move_back_op;
 
-    ExtMove external_move;
+    ExtMove external_move = nullptr;
     // void (*external_move)(PyNeighbor&,SolutionType&);
 };
 
