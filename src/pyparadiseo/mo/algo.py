@@ -28,7 +28,7 @@ from .._core import moTS as TS
 #SimpleHC(Neighborhood,solEval,nborEval)
 #SimpleHC(Neighborhood,solEval,nborEval,moContinuator)
 #SimpleHC(Neighborhood,solEval,nborEval,moContinuator,moNeighborComparator,moSolNeighborComparator)
-def simple_hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=None,compareSN=None,hc_type='simple',stype=None):
+def simple_hill_climber(neighborhood,f_eval,nbor_eval,move,continuator=None,compareN=None,compareSN=None,hc_type='simple',stype=None):
     """
      * Simple HC:
      * Hill-Climbing local search
@@ -50,6 +50,7 @@ def simple_hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=
     if stype is None:
         stype = config._SOLUTION_TYPE
 
+    #get hill-climber class
     class_ = None
     if hc_type == 'simple':
         class_ = utils.get_class("moSimpleHC"+config.TYPES[stype])
@@ -61,15 +62,21 @@ def simple_hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=
     if class_ is None:
         raise TypeError("invalid hc_type")
 
+    if config.is_minimizing():
+        print("IS MIN\n")
+
+    algo = None
     if compareN is not None:
         if compareSN is None:
             raise TypeError("must provide both, compareN and compareSN.")
-        return class_(neighborhood,f_eval,nbor_eval,continuator,compareN,compareSN)
+        algo = class_(neighborhood,f_eval,nbor_eval,continuator,compareN,compareSN)
     elif continuator is not None:
-        return class_(neighborhood,f_eval,nbor_eval,continuator)
+        algo = class_(neighborhood,f_eval,nbor_eval,continuator)
     else:
-        return class_(neighborhood,f_eval,nbor_eval)
+        algo = class_(neighborhood,f_eval,nbor_eval)
 
+    algo.set_move(move)
+    return algo
 
 
 def random_search(init,eval,max_eval,stype=None):

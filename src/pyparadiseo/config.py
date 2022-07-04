@@ -19,8 +19,6 @@ def set_solution_type(sol_type):
         _SOLUTION_TYPE = sol_type
 
 
-
-
 #setter for fitness traits
 def set_maximize_fitness():
     """sets fitness maximization (default)"""
@@ -29,6 +27,9 @@ def set_maximize_fitness():
 def set_minimize_fitness():
     """sets fitness minimization (maximize is default)"""
     FitnessTraits.set_minimizing(True)
+
+def is_minimizing():
+    return FitnessTraits.is_minimizing()
 
 def setup_objectives(nObj,bObj):
     """set number of objectives and optimization directions

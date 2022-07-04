@@ -366,6 +366,13 @@ public:
             bp::object())
         ){}
 
+    np::ndarray get_encoding() const {
+        return encoding;
+    }
+    void setEncoding(boost::python::object enc){
+        encoding = np::array(enc,np::dtype::get_builtin<T>());
+    }
+
     VectorSolution& operator=(const VectorSolution& p)
     {
         PyEO::operator=(p);

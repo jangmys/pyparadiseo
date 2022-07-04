@@ -5,6 +5,8 @@ from problems import onemax
 
 #provisoire
 import pyparadiseo as pp
+
+from pyparadiseo import config
 from pyparadiseo import _core
 
 from pyparadiseo import evaluator
@@ -29,37 +31,55 @@ from problems import tsp
 
 
 if __name__ == "__main__":
-    tsp = tsp.TravelingSalesman("berlin52")
+    #Permutation encoding / minimize fitness
+    config.set_solution_type('perm')
+    config.set_minimize_fitness()
 
-    tsp_init = initializer.random(tsp.ncities,stype='perm')
-    toureval = evaluator.fitness(tsp.eval,stype='perm')
-    tsp_nbor_eval = mo.eval.neighbor_eval(tsp.eval_incremental,stype='perm')
+    #read instance data
+    tsp_inst = tsp.TravelingSalesman("berlin52")
+    #solution initializer
+    tsp_init = initializer.random(tsp_inst.ncities)
+    #full and incremental evaluation
+    toureval = evaluator.fitness(tsp_inst.eval)
+    tsp_nbor_eval = mo.eval.neighbor_eval(tsp_inst.eval_incremental)
 
-    sol = solution.empty(stype='perm')
+    #move and neighborhood
+
+
+    moves = tsp.TwoOptMove(tsp_inst.ncities)
+    nhood = mo.neighborhood.ordered(len(moves.moves),stype='perm')
+
+    sol = solution.empty()
     tsp_init(sol)
     toureval(sol)
     print(sol)
 
+    # nbor = _core.NeighborPerm()
+    # tsp_nbor_eval(sol,nbor)
+    # print(nbor)
 
-    nbor = _core.NeighborPerm()
-    tsp_nbor_eval(sol,nbor)
-    print(nbor)
 
-    nhood = mo.neighborhood.ordered(len(tsp.moves),stype='perm')
-
-    comp = lambda n1,n2 : n1 > n2
+    # comp = lambda n1,n2 : n1 > n2
 
     hc = mo.algo.simple_hill_climber(
         nhood,
         toureval,
         tsp_nbor_eval,
-        mo.continuator.always_true(stype='perm'),
-        mo.comparator.neighbor_compare(comp,stype='perm'),
-        mo.comparator.sol_neighbor_compare(comp,stype='perm'),
-        stype='perm'
+        moves,
+        mo.continuator.always_true()
     )
 
-    hc.setMove(tsp.move)
+
+    # hc = mo.algo.simple_hill_climber(
+    #     nhood,
+    #     toureval,
+    #     tsp_nbor_eval,
+    #     mo.continuator.always_true(),
+    #     mo.comparator.neighbor_compare(comp),
+    #     mo.comparator.sol_neighbor_compare(comp)
+    # )
+
+    hc.setMove(moves)
 
     t1 = time.time()
     hc(sol)

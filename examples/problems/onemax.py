@@ -22,18 +22,19 @@ class inherit_incr_eval(moEvalBin):
 
 
 class OneMax():
-    def __init__(self,dim,value):
+    def __init__(self,dim,value = 42):
         self.dim = dim
-        self.value = value
+        self.value = value #just a value that represent problem data
 
     def sum_bits(self,sol) -> float:
         return float(np.count_nonzero(sol))+self.value
 
-    def eval_incremental(self,sol_encoding,sol_fitness,nbor_index):
-        if sol_encoding[nbor_index]:
-            return sol_fitness - 1
+    #"encoding" works only for stype "gen"
+    def eval_incremental(self,sol,nbor):
+        if sol.encoding[nbor.index()]:
+            return sol.fitness - 1
         else:
-            return sol_fitness + 1
+            return sol.fitness + 1
 
     def move(self,nbor,sol):
         ind = nbor.index()

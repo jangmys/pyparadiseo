@@ -101,8 +101,8 @@ void expose_moAlgos(std::string name)
     )
     .def("__call__",&moLocalSearch<NborT>::operator(),&moLocalSearchWrap<SolutionType>::default_op)
     .def("getNeighborhoodExplorer",&moLocalSearch<NborT>::getNeighborhoodExplorer,return_internal_reference<>())
-    .def("setMove",&moLocalSearchWrap<SolutionType>::setMove)
-    .def("setMoveBack",&moLocalSearchWrap<SolutionType>::setMoveBack)
+    .def("set_move",&moLocalSearchWrap<SolutionType>::setMove)
+    .def("set_move_back",&moLocalSearchWrap<SolutionType>::setMoveBack)
     ;
 
 
@@ -133,8 +133,8 @@ void expose_moAlgos(std::string name)
             moSolNeighborComparator<NborT>&
         >()[WC6]
     )
-    .def("setMove",setMove<moSimpleHC<NborT>>)
-    .def("setMoveBack",setMoveBack<moSimpleHC<NborT>>)
+    .def("set_move",setMove<moSimpleHC<NborT>>)
+    .def("set_move_back",setMoveBack<moSimpleHC<NborT>>)
     ;
 
 
@@ -165,8 +165,8 @@ void expose_moAlgos(std::string name)
             moSolNeighborComparator<NborT>&
         >()[WC6]
     )
-    .def("setMove",setMove<moFirstImprHC<NborT>>)
-    .def("setMoveBack",setMoveBack<moFirstImprHC<NborT>>)
+    .def("set_move",setMove<moFirstImprHC<NborT>>)
+    .def("set_move_back",setMoveBack<moFirstImprHC<NborT>>)
     ;
 
 
@@ -197,8 +197,8 @@ void expose_moAlgos(std::string name)
             moSolNeighborComparator<NborT>&
         >()[WC6]
     )
-    .def("setMove",setMove<moRandomBestHC<NborT>>)
-    .def("setMoveBack",setMoveBack<moRandomBestHC<NborT>>)
+    .def("set_move",setMove<moRandomBestHC<NborT>>)
+    .def("set_move_back",setMoveBack<moRandomBestHC<NborT>>)
     ;
 
 
@@ -246,8 +246,8 @@ void expose_moAlgos(std::string name)
             with_custodian_and_ward<1,8>>>>>>()
         ]
     )
-    .def("setMove",setMove<moNeutralHC<NborT>>)
-    .def("setMoveBack",setMoveBack<moNeutralHC<NborT>>)
+    .def("set_move",setMove<moNeutralHC<NborT>>)
+    .def("set_move_back",setMoveBack<moNeutralHC<NborT>>)
     ;
 
 
@@ -307,7 +307,7 @@ void expose_moAlgos(std::string name)
             with_custodian_and_ward<1,5>>>>()
         ]
     )
-    .def("setMove",setMove<moRandomWalk<NborT>>)
+    .def("set_move",setMove<moRandomWalk<NborT>>)
     ;
 
 
@@ -356,7 +356,7 @@ void expose_moAlgos(std::string name)
         >>>>>()
     ]
     )
-    .def("setMove",setMove<moRandomNeutralWalk<NborT>>)
+    .def("set_move",setMove<moRandomNeutralWalk<NborT>>)
     ;
 
 
@@ -407,7 +407,7 @@ void expose_moAlgos(std::string name)
         >>>>>>()
     ]
     )
-    .def("setMove",setMove<moMetropolisHasting<NborT>>)
+    .def("set_move",setMove<moMetropolisHasting<NborT>>)
     ;
 
 
@@ -476,7 +476,7 @@ void expose_moAlgos(std::string name)
         >>>>>>()
     ]
     )
-    .def("setMove",setMove<moSA<NborT>>)
+    .def("set_move",setMove<moSA<NborT>>)
     ;
 
 
@@ -515,7 +515,7 @@ void expose_moAlgos(std::string name)
         moDiversification<NborT>&,
         moAspiration<NborT>&
     >())
-    .def("setMove",setMove<moTS<NborT>>)
+    .def("set_move",setMove<moTS<NborT>>)
     ;
 
 
@@ -558,5 +558,5 @@ void moAlgos()
     expose_moAlgos<PyEOT>("");
     expose_moAlgos<BinarySolution>("Bin");
     expose_moAlgos<RealSolution>("Real");
-    expose_moAlgos<IntSolution>("Perm");    
+    expose_moAlgos<IntSolution>("Perm");
 }

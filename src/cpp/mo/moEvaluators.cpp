@@ -36,14 +36,15 @@ struct pyNeighborEval : moEval<PyNeighbor<SolutionType>> {
             //this works, but VERY SLOW
             // eval_op(boost::ref(_eo),boost::ref(_nbor));
 
+            //keep "GENERAL" case here
             //a BIT BETTER...python function returns fitness
-            // _nbor.setFitness(eval_op(boost::ref(_eo),boost::ref(_nbor)));
+            _nbor.setFitness(eval_op(boost::ref(_eo),boost::ref(_nbor)));
 
             //FASTER : but have to write eval_op accordingly
             // _nbor.setFitness(eval_op(_eo.encoding,_eo.getFitness(),boost::ref(_nbor)));
 
-            //FASTEST : but have to write eval_op accordingly
-            _nbor.setFitness(eval_op(_eo.encoding,_eo.getFitness(),_nbor.index()));
+            //FASTEST : but have to write eval_op accordingly!!!
+            // _nbor.setFitness(eval_op(_eo.encoding,_eo.getFitness(),_nbor.index()));
         } else {
             std::cout << "no function defined : do nothing";
         }

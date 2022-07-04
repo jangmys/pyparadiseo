@@ -1,11 +1,18 @@
+#general
+from pyparadiseo import config
+
 # problem dependent
-from pyparadiseo import Pop,Solution
-from pyparadiseo.evaluator import FitnessEval,PopLoopEval
+from pyparadiseo import population,solution
+from pyparadiseo import evaluator
+
+# from pyparadiseo import Pop,Solution
+# from pyparadiseo.evaluator import PopLoopEval
+# import FitnessEval,PopLoopEval
 # encoding dependent
-from pyparadiseo.initializer import BinaryInit
-from pyparadiseo.operator import OnePtBitCrossover,DetBitFlip
+from pyparadiseo import initializer
+from pyparadiseo import operator
 # eo
-from pyparadiseo.eo import algo,selector,continuator
+from pyparadiseo.eo import algo,selector,select_one,continuator
 # mo
 from pyparadiseo import mo
 
@@ -15,32 +22,27 @@ from problems import onemax
 
 
 if __name__ == "__main__":
+    config.set_solution_type("bin")
+
     DIM = 200
     onemax=onemax.OneMax(DIM)
 
     #make pyparadiseo evaluator from python function
-    eval = FitnessEval(lambda sol: sum(sol)) #np.count_nonzero(sol))
-
-
-    # max_one = onemax.OneMax(DIM)
+    eval = evaluator.fitness(lambda sol: sum(sol)) #np.count_nonzero(sol))
 
     # standard initializer object
-    myinit = BinaryInit(DIM)
-    # full evaluation
-    # myeval = pp.FitnessEval(max_one.sum_bits)
+    myinit = initializer.random(DIM)
     # nbor evaluation
-    nborEval = mo.eval.NeighborEval(onemax.eval_incremental)
+    nborEval = mo.eval.neighbor_eval(onemax.eval_incremental)
     # neighborhood
-    nhood = mo.neighborhood.OrderNeighborhood(DIM)
+    nhood = mo.neighborhood.ordered(DIM)
 
     # algo
-    hc = mo.algo.SimpleHC(nhood,eval,nborEval)
-    # set move
-    hc.setMove(onemax.move)
+    hc = mo.algo.simple_hill_climber(nhood,eval,nborEval,onemax.move)
 
     ########################################
     # define sol / init / eval
-    sol = Solution()
+    sol = solution.empty()
     myinit(sol)
     eval(sol)
     print(sol)
@@ -49,19 +51,27 @@ if __name__ == "__main__":
     hc(sol)
 
     print(sol)
-#
 
     #generate and evaluate population
-    pop = Pop(25, BinaryInit(DIM))
-    PopLoopEval(eval)(pop,pop)
+    pop = population.from_init(25, initializer.random(DIM))
+    evaluator.pop_eval_from_fitness(eval)(pop,pop)
+
+    sel = select_one.det_tournament(4)
+
+
+    print(sel.__bases__)
+
+    print(operator.OnePtBitCrossover()(pop[0],pop[1]))
+
+    eval(pop[0])
 
     #assemble simple GA
-    sga = algo.SGA(
-        selector.DetTournamentSelect(4),
-        OnePtBitCrossover(),.1,
+    sga = algo.simpleGA(
+        select_one.det_tournament(4),
+        operator.OnePtBitCrossover(),.1,
         hc,.7,
         eval,
-        continuator.GenContinue(50)
+        continuator.max_generations(50)
     )
     #run algo on pop and print best individual
     sga(pop)

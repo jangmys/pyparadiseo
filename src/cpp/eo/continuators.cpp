@@ -98,6 +98,7 @@ void continuators()
     expose_continuators<PyEOT>("");
     expose_continuators<BinarySolution>("Bin");
     expose_continuators<RealSolution>("Real");
+    expose_continuators<IntSolution>("Perm");
 }
 
 

@@ -13,7 +13,7 @@ import functools
 import unittest
 
 import numpy as np
-import numba as nb
+# import numba as nb
 
 class test_eval(unittest.TestCase):
     def setUp(self):
@@ -50,7 +50,7 @@ class test_eval(unittest.TestCase):
         self.assertEqual(self.sol.fitness,45)
 
     def test_njit(self):
-        @nb.njit
+        # @nb.njit
         def foo(x):
             s = 0
             for i in x:

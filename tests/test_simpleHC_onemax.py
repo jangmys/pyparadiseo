@@ -1,85 +1,65 @@
-import pyparadiseo as pp
+from pyparadiseo import config
 
 from pyparadiseo import mo
-from pyparadiseo import config
-from pyparadiseo.mo import eval,neighborhood,algo
 
-from pyparadiseo import Pop
-from pyparadiseo.initializer import Init
-from pyparadiseo.eo import selector
+from pyparadiseo import solution
+from pyparadiseo import evaluator
+from pyparadiseo import initializer
 
 import numpy as np
 import unittest
-import inspect
 
 def sum_bits(sol):
     return np.count_nonzero(sol)
 
-
-def eval_incremental(sol_enc,sol_fit,index) -> float:
-    if sol_enc[index]:
-        return sol_fit - 1
+def eval_incremental(sol,nbor):
+    if sol.encoding[nbor.index()]:
+        return sol.fitness - 1
     else:
-        return sol_fit + 1
+        return sol.fitness + 1
 
-#
-# def eval_incremental(sol,nbor):
-#     if sol.array[nbor.index()]:
-#         return sol.fitness - 1
-#     else:
-#         return sol.fitness + 1
-#
-
+def move(nbor,sol):
+    ind = nbor.index()
+    if sol[ind]:
+        sol[ind] = False
+    else:
+        sol[ind] = True
 
 
 class test_simpleHC_onemax(unittest.TestCase):
     def setUp(self):
         self.DIM = 20
         # initializer
-        self.myinit = pp.initializer.Init(lambda : np.random.choice([True,False],self.DIM))
-        # self.myinit = pp.initializer.BinaryInit(self.DIM)
+        self.myinit = initializer.make_initializer(lambda : np.random.choice([True,False],self.DIM))
         # full evaluation
-        self.myeval = pp.evaluator.fitness(sum_bits)
+        self.myeval = evaluator.fitness(sum_bits)
         # nbor evaluation
-        self.nborEval = pp.mo.eval.NeighborEval(eval_incremental)
+        self.nborEval = mo.eval.neighbor_eval(eval_incremental)
         # neighborhood
         self.nhood = mo.neighborhood.OrderNeighborhood(self.DIM)
 
-        pp.config.set_maximize_fitness()
-
-    def move(self,nbor,sol):
-        ind = nbor.index()
-        if sol[ind]:
-            sol[ind] = False
-        else:
-            sol[ind] = True
-
+        config.set_maximize_fitness()
 
     def test_onemax(self):
         """
         run simple hill climber on OneMax. expect to find global optimum [True ... True]
         """
-        # algo
-        hc = mo.algo.SimpleHC(self.nhood,self.myeval,self.nborEval)
-        # set move
-        hc.setMove(self.move)
+        #assemble algo
+        hc = mo.algo.simple_hill_climber(self.nhood,self.myeval,self.nborEval,move)
 
         # define sol / init / eval
-        sol = pp.Solution()
+        sol = solution.empty()
         self.myinit(sol)
-        self.myeval(sol)
 
-        print(sol)
+        # self.myeval(sol)
+        # print(sol)
 
         # run algo
         hc(sol)
 
-        print(sol)
-
+        # print(sol)
         self.assertTrue(np.all(sol))
         self.assertAlmostEqual(sol.fitness, self.DIM)
-
-
 
 
 if __name__ == "__main__":
