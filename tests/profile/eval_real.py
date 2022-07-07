@@ -136,7 +136,7 @@ print(sol.array)
 print("#"*10)
 # ===================================================
 
-sol[4] = 1.1111
+sol.carray[4] = 1.1111
 
 print(sol.array)
 print(sol)

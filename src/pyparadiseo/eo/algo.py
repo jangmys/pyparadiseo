@@ -57,8 +57,8 @@ def easyEA(continuator,eval,selector,transformer,replacer,stype=None):
     return class_(continuator,eval,selector,transformer,replacer)
 
 
-def fastGA(rate_crossover,select_cross,crossover,select_aftercross,rate_mutation,
-        select_mutation,pop_eval,replacer,continuator,offsprings_size,stype=None):
+def fastGA(rate_crossover,select_cross,crossover,select_aftercross,
+    rate_mutation,select_mut,mutation,pop_eval,replacer,continuator,offsprings_size=0,stype=None):
     """Fast GA
 
     Parameters
@@ -68,7 +68,8 @@ def fastGA(rate_crossover,select_cross,crossover,select_aftercross,rate_mutation
     crossover : eoQuadOp<SolutionType>&,
     select_aftercross : eoSelectOne<SolutionType>&
     rate_mutation : double
-    select_mutation : eoMonOp<SolutionType>&,
+    select_mut : eoSelectOne<EOT>&
+    mutation : eoMonOp<SolutionType>&,
     pop_eval : eoPopEvalFunc<SolutionType>&,
     replacer : eoReplacement<SolutionType>&,
     contiuator : eoContinue<SolutionType>&,
@@ -85,7 +86,8 @@ def fastGA(rate_crossover,select_cross,crossover,select_aftercross,rate_mutation
         crossover,
         select_aftercross,
         rate_mutation,
-        select_mutation,
+        select_mut,
+        mutation,
         pop_eval,
         replacer,
         continuator,

@@ -98,3 +98,40 @@ def ep_replacement(t_size,stype=None):
 
     class_ = utils.get_class("eoEPReplacement"+config.TYPES[stype])
     return class_(t_size)
+
+
+def ssga_worse(stype=None):
+    """
+    ssga worse replacement : a reduce-merge
+    """
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    class_ = utils.get_class("eoSSGAWorseReplacement"+config.TYPES[stype])
+    return class_()
+
+
+def ssga_stoch_tournament(rate,stype=None):
+    """
+     SSGA stochastic tournament replacement. Is an eoReduceMerge.
+It much cleaner to insert directly the offspring in the parent population,
+but it is NOT equivalent in case of more than 1 offspring as already
+replaced could be removed , which is not possible in the eoReduceMerge
+So what the heck !
+    """
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    class_ = utils.get_class("eoSSGAStochTournamentReplacement"+config.TYPES[stype])
+    return class_(rate)
+
+
+def ssga_det_tournament(t_size,stype=None):
+    """
+    SSGA deterministic tournament replacement. Is an eoReduceMerge.
+    """
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    class_ = utils.get_class("eoSSGADetTournamentReplacement"+config.TYPES[stype])
+    return class_(t_size)

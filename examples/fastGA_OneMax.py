@@ -1,8 +1,12 @@
+from pyparadiseo import config
+
+from pyparadiseo import population
+
 import pyparadiseo as pp
 
 from pyparadiseo import eo
 from pyparadiseo import initializer,evaluator,operator
-from pyparadiseo.eo import selector,replacement,continuator,algo
+from pyparadiseo.eo import selector,select_one,replacement,continuator,algo
 from pyparadiseo import rng
 
 from pyparadiseo import initializer,evaluator
@@ -17,10 +21,12 @@ def sum_bits(sol):
     return np.sum(sol)
 
 if __name__ == "__main__":
+    config.set_solution_type('bin')
+
     POP_SIZE = 10
     DIM = 500
 
-    myinit = initializer.Init(lambda : np.random.choice([True,False],DIM))
+    myinit = initializer.random(DIM) #Init(lambda : np.random.choice([True,False],DIM))
     myeval = evaluator.fitness(sum_bits)
 
     #crossovers 5
@@ -36,17 +42,17 @@ if __name__ == "__main__":
     #selectors 4 (+2)
     #add StochTournamentSelect
     #add ProportionalSelect
-    selectors = [selector.RandomSelect(),selector.SequentialSelect(),selector.StochTournamentSelect(0.5)]
+    selectors = [select_one.random(),select_one.sequential(),select_one.stoch_tournament(0.5)]
     for i in range(2,11,4):
-        selectors.append(selector.DetTournamentSelect(i))
+        selectors.append(select_one.det_tournament(i))
 
     #replacement
-    replacements = [replacement.CommaReplacement(),replacement.PlusReplacement(),replacement.SSGAWorseReplacement(),replacement.SSGAStochTournamentReplacement(0.51)]
+    replacements = [replacement.comma(),replacement.plus(),replacement.ssga_worse(),replacement.ssga_stoch_tournament(0.51)]
     for i in range(2,10,4):
-        replacements.append(replacement.SSGADetTournamentReplacement(i))
+        replacements.append(replacement.ssga_det_tournament(i))
 
 
-    continuators = [continuator.SteadyFitContinue(10,10),continuator.SteadyFitContinue(10,20)]
+    continuators = [continuator.steady_fitness(10,10),continuator.steady_fitness(10,20)]
     # continuators = [continuator.GenContinue(100)]
 
     xover_rates = [r*0.1 for r in range(10)]
@@ -79,17 +85,17 @@ if __name__ == "__main__":
                             for cont_ind in range(1,2): # 2
                                 rng().reseed(42)
 
-                                pop = pp.Pop(10,myinit)
+                                pop = population.from_init(10,myinit)
                                 for ind in pop:
                                     myeval(ind)
 
                                 i = i+1
 
-                                cnt = continuator.GenContinue(10)
+                                cnt = continuator.max_generations(10)
                                 # cnt = continuator.SteadyFitContinue(10,cont_ind*10)
                                 # print(crossselect,xover,aftercrossselect,mutselect,mut,repl,cnt)
 
-                                ga = eo.algo.FastGA(
+                                ga = eo.algo.fastGA(
                                     0.5,
                                     crossselect,
                                     xover,
@@ -99,8 +105,7 @@ if __name__ == "__main__":
                                     mut,
                                     pop_eval,
                                     repl,
-                                    cnt,
-                                    0
+                                    cnt
                                 )
 
                                 tstart = time.time()
@@ -111,7 +116,7 @@ if __name__ == "__main__":
                                 if pop.best().fitness > bestFit:
                                     bestFit = pop.best().fitness
 
-                                    bestGA = eo.algo.FastGA(
+                                    bestGA = eo.algo.fastGA(
                                         0.5,
                                         crossselect,
                                         xover,
