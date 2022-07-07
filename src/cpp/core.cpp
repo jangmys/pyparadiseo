@@ -192,6 +192,10 @@ BOOST_PYTHON_MODULE(_core)
     class_< std::vector<int> >("IntVec")
         .def(bp::vector_indexing_suite<std::vector<int> >())
         ;
+    class_< std::vector<std::vector<int>> >("IntVec2")
+        .def(bp::vector_indexing_suite<std::vector<std::vector<int>> >())
+        ;
+
     class_< std::vector<unsigned int> >("UIntVec")
         .def(bp::vector_indexing_suite<std::vector<unsigned int> >())
         ;

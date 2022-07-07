@@ -122,6 +122,8 @@ protected:
     static bp::object move_op;
     //backable
     static bp::object move_back_op;
+
+    ExtMove external_move=nullptr;
 };
 
 //static members

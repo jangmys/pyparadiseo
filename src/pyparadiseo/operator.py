@@ -71,9 +71,3 @@ def make_crossover(xover,stype=None):
         return class_(xover)
     else:
         NotImplementedError("Not yet implemented")
-
-
-
-    pass
-
-# def real_crossover()
