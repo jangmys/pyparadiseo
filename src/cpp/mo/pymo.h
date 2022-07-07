@@ -10,6 +10,20 @@
 
 namespace bp = boost::python;
 
+
+// template<typename Nbor,typename Sol>
+// struct Move
+// {
+//     void operator()(const Nbor& n, Sol& s){
+//         s[n.index()] = !s[n.index()];
+//         s.invalidate();
+//     }
+// };
+
+
+
+
+
 //Neighbor and derivatives IndexNeighbor and BackableNeighbor are ABC with move, moveBack as pure virtuals.
 //In paradiseo users will specialize those before instantiating algorithms with derived neighbor types (specializing )
 
@@ -17,12 +31,15 @@ namespace bp = boost::python;
 //BASE Neighbor : PyEO + MOVE
 //MOVE needs solution type
 
+
+//NOT deriving from moNeighbor,moIndexNeighbor etc because this is used as a template parameter : mo-classes are instantiated with PyNeighbor...specializing MO for usage in Python.
 template<typename SolutionType>
 struct PyNeighbor : SolutionType
 {
     typedef SolutionType EOT;
+    typedef void (*ExtMove)(PyNeighbor& n, SolutionType& s);//Function definition   // magic word!
 
-    PyNeighbor() : SolutionType(){}
+    PyNeighbor() : SolutionType(),key(0){}
 
     // PyNeighbor is not supposed to be instantiated directly, move_op is static
     // PyNeighbor(bp::object move,bp::object move_back) : move_op(move),move_back_op(move_back) { }
@@ -38,8 +55,13 @@ struct PyNeighbor : SolutionType
     //overridng Nieghbor move (pure virtual) to with Python callback
     virtual void move(SolutionType& _solution)
     {
-        if(move_op.ptr() != Py_None)
+        if(external_move){
+            // std::cout<<"apply external move\n";
+            external_move(*this,_solution);
+        }else if(move_op.ptr() != Py_None)
         {
+            // std::cout<<"apply python move\n";
+            // boost::python::call<void>(move_op.ptr(), bp::ptr(this), boost::ref(_solution));
             move_op(bp::ptr(this), boost::ref(_solution));
             //should be a bit faster but less generic...
             // move_op(bp::ptr(this), _solution.encoding);
@@ -86,9 +108,16 @@ struct PyNeighbor : SolutionType
 		return *this;
 	}
 
-    unsigned int key;
+
+
+    void set_external_move(ExtMove func){
+        external_move = func;
+    }
+
+    // ExtMove get_external_move(){return external_move;}
 
 protected:
+    unsigned int key;
     //base
     static bp::object move_op;
     //backable
@@ -141,6 +170,12 @@ struct BinNeighbor : PyNeighbor<BinarySolution>
 };
 
 
+
+
+// {
+//     s[n.index()] = !s[n.index()];
+//     s.invalidate();
+// }
 
 
 
