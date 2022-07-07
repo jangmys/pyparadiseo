@@ -40,7 +40,9 @@ void expose_replacement(std::string name)
 {
     // eoReplacement.h
     class_<eoGenerationalReplacement<SolutionType>, bases<eoReplacement<SolutionType>>>(
-        make_name("eoGenerationalReplacement",name).c_str())
+        make_name("eoGenerationalReplacement",name).c_str(),
+        init<>()
+    )
     .def("__call__", &eoReplacement<SolutionType>::operator())
     ;
 
@@ -59,12 +61,16 @@ void expose_replacement(std::string name)
     ;
 
     class_<eoPlusReplacement<SolutionType>, bases<eoReplacement<SolutionType>>>(
-        make_name("eoPlusReplacement",name).c_str())
+        make_name("eoPlusReplacement",name).c_str(),
+        init<>()
+    )
     .def("__call__", &eoReplacement<SolutionType>::operator())
     ;
 
     class_<eoCommaReplacement<SolutionType>, bases<eoReplacement<SolutionType>>>(
-        make_name("eoCommaReplacement",name).c_str())
+        make_name("eoCommaReplacement",name).c_str(),
+        init<>()
+    )
     .def("__call__", &eoReplacement<SolutionType>::operator())
     ;
 
@@ -84,7 +90,9 @@ void expose_replacement(std::string name)
     ;
 
     class_<eoSSGAWorseReplacement<SolutionType>, bases<eoReplacement<SolutionType>>>(
-        make_name("eoSSGAWorseReplacement",name).c_str())
+        make_name("eoSSGAWorseReplacement",name).c_str(),
+        init<>()
+    )
     .def("__call__", &eoReplacement<SolutionType>::operator())
     ;
 
