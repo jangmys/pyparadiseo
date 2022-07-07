@@ -22,7 +22,7 @@ class TestBinary(unittest.TestCase):
         #check that we can iterate solution and it contains bools
         for i in self.sol.array:
             self.assertTrue(isinstance(i, np.int32))
-        for i in self.sol.c_array:
+        for i in self.sol.carray:
             self.assertTrue(isinstance(i, np.int))
 
 if __name__ == '__main__':

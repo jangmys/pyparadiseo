@@ -18,7 +18,7 @@ class TestSolution(unittest.TestCase):
 
     def test_zeros(self):
         sol = solution.zeros(4,'real')
-        for i in sol.c_array:
+        for i in sol.carray:
             self.assertEqual(i,0.0)
         self.assertEqual(len(sol),4)
 
@@ -26,8 +26,8 @@ class TestSolution(unittest.TestCase):
         sol = solution.zeros(4,'real')
 
         #set std::vector ...
-        sol.c_array[3]=3.0
-        self.assertEqual(sol.c_array[3],3.0)
+        sol.carray[3]=3.0
+        self.assertEqual(sol.carray[3],3.0)
         #check that ndarray is modified
         self.assertEqual(sol.array[3],3.0)
 
@@ -35,16 +35,16 @@ class TestSolution(unittest.TestCase):
         sol.array = np.ones(4)
 
         #iterate over std::vector, check if all one
-        for i in sol.c_array:
+        for i in sol.carray:
             self.assertEqual(i,1.0)
         #same for ndarray
         for i in sol.array:
             self.assertEqual(i,1.0)
 
         #set std::vector again
-        sol.c_array[2]=2.0
+        sol.carray[2]=2.0
         self.assertEqual(sol.array[2],2.0)
-        self.assertEqual(sol.c_array[2],2.0)
+        self.assertEqual(sol.carray[2],2.0)
 
     def test_copy_ctor(self):
         self.sol.resize(4)

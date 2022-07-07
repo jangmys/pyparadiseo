@@ -276,7 +276,7 @@ BOOST_PYTHON_MODULE(_core)
     .def("__len__", &RealSolution::size)
     .def("__repr__", &RealSolution::repr)
     .def("__str__", &RealSolution::to_string)
-    .def_readwrite("c_array",&RealSolution::vec)
+    .def_readwrite("carray",&RealSolution::vec)
     .add_property("array",&RealSolution::get_array,&RealSolution::set_array)
     ;
 
@@ -288,7 +288,7 @@ BOOST_PYTHON_MODULE(_core)
     .def("__len__", &BinarySolution::size)
     .def("__repr__", &BinarySolution::repr)
     .def("__str__", &BinarySolution::to_string)
-    .def_readwrite("c_array",&BinarySolution::vec)
+    .def_readwrite("carray",&BinarySolution::vec)
     .add_property("array",&BinarySolution::get_array,&BinarySolution::set_array)
     ;
 
@@ -298,7 +298,7 @@ BOOST_PYTHON_MODULE(_core)
     .def("__len__", &IntSolution::size)
     .def("__repr__", &IntSolution::repr)
     .def("__str__", &IntSolution::to_string)
-    .def_readwrite("c_array",&IntSolution::vec)
+    .def_readwrite("carray",&IntSolution::vec)
     .add_property("array",&IntSolution::get_array,&IntSolution::set_array)
     ;
 
