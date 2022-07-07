@@ -70,10 +70,20 @@ template<class EOT> class eoUniformMutation: public eoMonOp<EOT>
     homogeneous(false), bounds(_bounds), epsilon(_bounds.size(), _epsilon),
     p_change(_bounds.size(), _p_change)
   {
+      // std::cout<<"============"<<std::endl;
+      // std::cout<<"eps: "<<_epsilon<<"range: "<<bounds.range(0)<<std::endl;
+
     // scale to the range - if any
     for (unsigned i=0; i<bounds.size(); i++)
-      if (bounds.isBounded(i))
-          epsilon[i] *= _epsilon*bounds.range(i);
+        if (bounds.isBounded(i))
+            epsilon[i] *= bounds.range(i);
+            // epsilon[i] *= _epsilon*bounds.range(i); //JG: A BUG?!
+
+    // for(auto &c : epsilon)
+    // {
+    //     std::cout<<c<<" ";
+    // }
+    // std::cout<<"============"<<std::endl;
   }
 
   /**
@@ -178,7 +188,10 @@ template<class EOT> class eoDetUniformMutation: public eoMonOp<EOT>
     // scale to the range - if any
     for (unsigned i=0; i<bounds.size(); i++)
       if (bounds.isBounded(i))
-          epsilon[i] *= _epsilon*bounds.range(i);
+          epsilon[i] *= bounds.range(i);
+
+            //JG: BUG ?? Why SQUARE _epsilon ???
+          // epsilon[i] *= _epsilon*bounds.range(i);
   }
 
   /**
@@ -195,7 +208,9 @@ template<class EOT> class eoDetUniformMutation: public eoMonOp<EOT>
     // scale to the range - if any
     for (unsigned i=0; i<bounds.size(); i++)
       if (bounds.isBounded(i))
-          epsilon[i] *= _epsilon[i]*bounds.range(i);
+        epsilon[i] *= bounds.range(i);
+
+          // epsilon[i] *= _epsilon[i]*bounds.range(i); //JG: SAME BUG?!
   }
 
   /// The class name.
