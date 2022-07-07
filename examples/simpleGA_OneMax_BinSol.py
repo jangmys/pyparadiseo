@@ -1,20 +1,16 @@
 from pyparadiseo import config
 
-import pyparadiseo as pp
 # problem dependent
 from pyparadiseo import population
 from pyparadiseo import initializer
 from pyparadiseo import evaluator
 from pyparadiseo import operator
 
-# from pyparadiseo import Pop
-# encoding dependent
-from pyparadiseo.initializer import BinaryInit,BinarySolInit
-from pyparadiseo.operator import OnePtBitCrossover,DetBitFlip
-# from pyparadiseo.pop import _Pop
-# independent
 from pyparadiseo.eo import algo,select_one,continuator
 
+DIM=20
+POP_SIZE=25
+MAX_GEN=100
 
 if __name__ == "__main__":
     #set global solution type 'bin'
@@ -24,16 +20,16 @@ if __name__ == "__main__":
     eval = evaluator.fitness(lambda sol: sum(sol))
 
     #generate and evaluate population
-    pop=population.from_init(25,initializer.random(20))
+    pop=population.from_init(POP_SIZE,initializer.random(DIM))
     evaluator.pop_eval_from_fitness(eval)(pop,pop)
 
     #assemble simple GA
     sga = algo.simpleGA(
         select_one.det_tournament(4),
-        operator.OnePtBitCrossoverBin(),.1,
-        operator.DetBitFlipBin(),.7,
+        operator.OnePtBitCrossover(),.1,
+        operator.DetBitFlip(),.7,
         eval,
-        continuator.max_generations(50)
+        continuator.max_generations(MAX_GEN)
     )
     # #run algo on pop and print best individual
     sga(pop)

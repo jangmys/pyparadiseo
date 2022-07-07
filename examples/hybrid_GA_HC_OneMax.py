@@ -4,11 +4,6 @@ from pyparadiseo import config
 # problem dependent
 from pyparadiseo import population,solution
 from pyparadiseo import evaluator
-
-# from pyparadiseo import Pop,Solution
-# from pyparadiseo.evaluator import PopLoopEval
-# import FitnessEval,PopLoopEval
-# encoding dependent
 from pyparadiseo import initializer
 from pyparadiseo import operator
 # eo
@@ -45,12 +40,10 @@ if __name__ == "__main__":
     sol = solution.empty()
     myinit(sol)
     eval(sol)
-    print(sol)
-
+    print("random solution: ",sol)
 
     hc(sol)
-
-    print(sol)
+    print("after hill climb: ",sol)
 
     #generate and evaluate population
     pop = population.from_init(25, initializer.random(DIM))
@@ -58,12 +51,7 @@ if __name__ == "__main__":
 
     sel = select_one.det_tournament(4)
 
-
-    print(sel.__bases__)
-
-    print(operator.OnePtBitCrossover()(pop[0],pop[1]))
-
-    eval(pop[0])
+    print("best of pop(25): ",pop.best())
 
     #assemble simple GA
     sga = algo.simpleGA(
@@ -75,4 +63,4 @@ if __name__ == "__main__":
     )
     #run algo on pop and print best individual
     sga(pop)
-    print(pop.best())
+    print("after hybrid GA-HC: ",pop.best())

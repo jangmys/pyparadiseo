@@ -20,9 +20,10 @@ def norm2(ind):
 VEC_SIZE = 500 # Number of object variables in genotypes
 POP_SIZE = 20 # Size of population
 T_SIZE = 3 # size for tournament selection
-MAX_GEN = 5000 # Maximum number of generation before STOP
+MAX_GEN = 10000 # Maximum number of generation before STOP
+DOMAIN_BOUND = 10
 CROSS_RATE = 0.8 # Crossover rate
-EPSILON = 0.1 # range for real uniform mutation
+EPSILON = 0.001 # range for real uniform mutation
 MUT_RATE = 0.5 # mutation rate
 
 def realGA_generic_sol():
@@ -38,7 +39,7 @@ def realGA_generic_sol():
     # myeval = pp.evaluator.EvalFuncProxy(lambda sol: norm2(sol))
     myeval = evaluator.fitness(lambda sol: norm2(sol))
 
-    mybounds=bounds.RealVectorBounds(VEC_SIZE,-100,100)
+    mybounds=bounds.RealVectorBounds(VEC_SIZE,(-1.0)*DOMAIN_BOUND,DOMAIN_BOUND)
     myinit = pp.initializer.RealBoundedInit(mybounds)
 
     # print(type(myinit))
@@ -77,27 +78,21 @@ def realGA_generic_sol():
 
 def realGA_real_sol():
     config.set_solution_type('real')
+    config.set_minimize_fitness()
 
     #only the internal paradiseo RNG
     pp.rng().reseed(42)
     #seed
     nprng = np.random.default_rng(42)
 
-    config.set_minimize_fitness()
-
     # myeval = pp.evaluator.EvalFuncProxy(lambda sol: norm2(sol),"real")
-    myeval = pp.evaluator.fitness(lambda sol: norm2(sol),"real")
-
-    mybounds = bounds.RealVectorBounds(VEC_SIZE,-1,1)
+    myeval = evaluator.fitness(lambda sol: norm2(sol),"real")
+    mybounds = bounds.bound_box(VEC_SIZE,(-1.0)*DOMAIN_BOUND,DOMAIN_BOUND)
 
     myinit = initializer.random(stype='real',bounds=mybounds)
-    #
-    print(type(myinit))
 
-    #
     p = population.from_init(POP_SIZE,myinit,stype='real')
-    print(type(p[0]))
-    #
+
     for ind in p:
         myeval(ind)
 
@@ -105,12 +100,6 @@ def realGA_real_sol():
 
     select = select_one.det_tournament(3)
 
-    # print(select(p))
-    # print(select(p))
-    # print(select(p))
-    # print('-'*10)
-
-    # select = selector._DetTournamentSelect(3)
     xover = operator.SegmentCrossover(0.0)
     mutat = operator.UniformMutation(bounds=mybounds,epsilon=EPSILON,p_change=1.0)
 
@@ -139,6 +128,13 @@ def realGA_real_sol():
 
 # mimic eo/tutorial/Lesson1/FirstRealGA.cpp
 if __name__ == "__main__":
+    print("Simple GA\n","="*20)
+    print("Minimizing Sphere function with DIM: ",VEC_SIZE)
+    print("Domain: [-",DOMAIN_BOUND,',',DOMAIN_BOUND,"]")
+
+    print("#Generations: ", MAX_GEN)
+
+
     realGA_real_sol()
     print("#"*20)
     # realGA_generic_sol()
