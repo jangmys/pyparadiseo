@@ -184,7 +184,7 @@ export_algos2(std::string name)
         eoPopEvalFunc<SolutionType>&,
         eoReplacement<SolutionType>&,
         eoContinue<SolutionType>&,
-        double
+        optional<double>
     >()
     [
     with_custodian_and_ward<1,3,
