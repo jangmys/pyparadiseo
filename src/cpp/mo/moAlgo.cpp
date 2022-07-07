@@ -90,7 +90,7 @@ void expose_moAlgos(std::string name)
 {
     typedef PyNeighbor<SolutionType> NborT;
 
-    class_<moLocalSearchWrap<SolutionType>,boost::noncopyable>
+    class_<moLocalSearchWrap<SolutionType>,bases<eoMonOp<SolutionType>>,boost::noncopyable>
     (make_name("moLocalSearch",name).c_str(),
         init<
             moNeighborhoodExplorer<NborT>&,
@@ -101,10 +101,11 @@ void expose_moAlgos(std::string name)
     )
     .def("__call__",&moLocalSearch<NborT>::operator(),&moLocalSearchWrap<SolutionType>::default_op)
     .def("getNeighborhoodExplorer",&moLocalSearch<NborT>::getNeighborhoodExplorer,return_internal_reference<>())
-    .def("set_move",&moLocalSearchWrap<SolutionType>::setMove)
-    .def("set_move_back",&moLocalSearchWrap<SolutionType>::setMoveBack)
+    .def("set_move",setMove<moLocalSearchWrap<SolutionType>>)
+    .def("set_move_back",setMoveBack<moLocalSearchWrap<SolutionType>>)
+    // .def("set_move",&moLocalSearchWrap<SolutionType>::setMove)
+    // .def("set_move_back",&moLocalSearchWrap<SolutionType>::setMoveBack)
     ;
-
 
 
     class_<moSimpleHC<NborT>, bases<moLocalSearch<NborT>>, boost::noncopyable>
