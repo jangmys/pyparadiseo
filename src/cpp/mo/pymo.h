@@ -24,13 +24,14 @@ struct PyNeighbor : SolutionType
 
     PyNeighbor() : SolutionType(){}
 
-    PyNeighbor(bp::object move,bp::object move_back) : move_op(move),move_back_op(move_back) { }
+    // PyNeighbor is not supposed to be instantiated directly, move_op is static
+    // PyNeighbor(bp::object move,bp::object move_back) : move_op(move),move_back_op(move_back) { }
 
-    void setMove(bp::object obj) {
+    static void setMove(bp::object obj) {
         move_op = obj;
     }
 
-    void setMoveBack(bp::object obj) {
+    static void setMoveBack(bp::object obj) {
         move_back_op = obj;
     }
 
@@ -89,10 +90,18 @@ struct PyNeighbor : SolutionType
 
 protected:
     //base
-    bp::object move_op;
+    static bp::object move_op;
     //backable
-    bp::object move_back_op;
+    static bp::object move_back_op;
 };
+
+//static members
+template<typename SolutionType>
+boost::python::object PyNeighbor<SolutionType>::move_op;
+
+template<typename SolutionType>
+boost::python::object PyNeighbor<SolutionType>::move_back_op;
+
 
 
 //BinFlipNeighbor ....
