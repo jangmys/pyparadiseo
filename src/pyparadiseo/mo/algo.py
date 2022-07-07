@@ -28,7 +28,7 @@ from .._core import moTS as TS
 #SimpleHC(Neighborhood,solEval,nborEval)
 #SimpleHC(Neighborhood,solEval,nborEval,moContinuator)
 #SimpleHC(Neighborhood,solEval,nborEval,moContinuator,moNeighborComparator,moSolNeighborComparator)
-def simple_hill_climber(neighborhood,f_eval,nbor_eval,move,continuator=None,compareN=None,compareSN=None,hc_type='simple',stype=None):
+def simple_hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=None,compareSN=None,hc_type='simple',stype=None):
     """
      * Simple HC:
      * Hill-Climbing local search
@@ -75,7 +75,6 @@ def simple_hill_climber(neighborhood,f_eval,nbor_eval,move,continuator=None,comp
     else:
         algo = class_(neighborhood,f_eval,nbor_eval)
 
-    algo.set_move(move)
     return algo
 
 

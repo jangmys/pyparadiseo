@@ -10,6 +10,7 @@ from pyparadiseo import operator
 from pyparadiseo.eo import algo,selector,select_one,continuator
 # mo
 from pyparadiseo import mo
+from pyparadiseo import _core
 
 from problems import onemax
 
@@ -33,7 +34,8 @@ if __name__ == "__main__":
     nhood = mo.neighborhood.ordered(DIM)
 
     # algo
-    hc = mo.algo.simple_hill_climber(nhood,eval,nborEval,onemax.move)
+    _core.NeighborBin.setMove(onemax.move)
+    hc = mo.algo.simple_hill_climber(nhood,eval,nborEval) #,onemax.move)
 
     ########################################
     # define sol / init / eval

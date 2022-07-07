@@ -71,14 +71,14 @@ struct moLocalSearchWrap : moLocalSearch<PyNeighbor<SolutionType>>,wrapper<moLoc
 
 
 template<typename X>
-void setMove(X& _ls, boost::python::object _obj)
+void setMove(const X& _ls, boost::python::object _obj)
 {
     _ls.getNeighborhoodExplorer().getSelectedNeighbor().setMove(_obj);
     _ls.getNeighborhoodExplorer().getCurrentNeighbor().setMove(_obj);
 }
 
 template<typename X>
-void setMoveBack(X& _ls, boost::python::object _obj)
+void setMoveBack(const X& _ls, boost::python::object _obj)
 {
     _ls.getNeighborhoodExplorer().getSelectedNeighbor().setMoveBack(_obj);
     _ls.getNeighborhoodExplorer().getCurrentNeighbor().setMoveBack(_obj);
@@ -108,7 +108,7 @@ void expose_moAlgos(std::string name)
     ;
 
 
-    class_<moSimpleHC<NborT>, bases<moLocalSearch<NborT>>, boost::noncopyable>
+    class_<moSimpleHC<NborT>, bases<moLocalSearch<NborT>>>
     (make_name("moSimpleHC",name).c_str(),
         init<
             moNeighborhood<NborT>&,
@@ -140,7 +140,7 @@ void expose_moAlgos(std::string name)
 
 
 
-    class_<moFirstImprHC<NborT>, bases<moLocalSearch<NborT>>, boost::noncopyable>
+    class_<moFirstImprHC<NborT>, bases<moLocalSearch<NborT>>>
     (make_name("moFirstImprHC",name).c_str(),
         init<
             moNeighborhood<NborT>&,
@@ -171,8 +171,7 @@ void expose_moAlgos(std::string name)
     ;
 
 
-
-    class_<moRandomBestHC<NborT>, bases<moLocalSearch<NborT>>, boost::noncopyable>
+    class_<moRandomBestHC<NborT>, bases<moLocalSearch<NborT>>>
     (make_name("moRandomBestHC",name).c_str(),
         init<
             moNeighborhood<NborT>&,
