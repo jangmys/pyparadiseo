@@ -161,7 +161,7 @@ public:
         if (bin_op.ptr() != Py_None) {
             _eo.invalidate();
             bin_op(_eo.encoding,_eo2.encoding);
-            return true;            
+            return true;
             // return boost::python::call<bool>(bin_op.ptr(),_eo.encoding,_eo2.encoding);
         } else  {
             std::cout << "no BinOp defined : do nothing";
@@ -278,6 +278,7 @@ void geneticOps()
     expose_gen_ops<PyEOT>("");
     expose_gen_ops<BinarySolution>("Bin");
     expose_gen_ops<RealSolution>("Real");
+    expose_gen_ops<IntSolution>("Perm");
 
     // class_<eoOp<PyEOT> >("eoOp", init<eoOp<PyEOT>::OpType>())
     //     .def("getType", &eoOp<PyEOT>::getType);
