@@ -34,8 +34,9 @@ if __name__ == "__main__":
     nhood = mo.neighborhood.ordered(DIM)
 
     # algo
-    _core.NeighborBin.setMove(onemax.move)
+    # _core.NeighborBin.setMove(onemax.move)
     hc = mo.algo.simple_hill_climber(nhood,eval,nborEval) #,onemax.move)
+    hc.set_move_(onemax.move)
 
     ########################################
     # define sol / init / eval

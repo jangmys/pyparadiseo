@@ -44,12 +44,12 @@ struct PyNeighbor : SolutionType
     // PyNeighbor is not supposed to be instantiated directly, move_op is static
     // PyNeighbor(bp::object move,bp::object move_back) : move_op(move),move_back_op(move_back) { }
 
-    static
+    // static
     void setMove(bp::object obj) {
         move_op = obj;
     }
 
-    static
+    // static
     void setMoveBack(bp::object obj) {
         move_back_op = obj;
     }
@@ -104,12 +104,11 @@ struct PyNeighbor : SolutionType
     PyNeighbor& operator=(const PyNeighbor& _source) {
 		SolutionType::operator=(_source);
 		this->key = _source.key;
-        // this->move_op = _source.move_op;
-        // this->move_back_op = _source.move_back_op;
+        this->move_op = _source.move_op;
+        this->move_back_op = _source.move_back_op;
 
 		return *this;
 	}
-
 
 
     void set_external_move(ExtMove func){
@@ -126,19 +125,19 @@ struct PyNeighbor : SolutionType
 protected:
     unsigned int key;
     //base
-    static bp::object move_op;
+    bp::object move_op;
     //backable
-    static bp::object move_back_op;
+    bp::object move_back_op;
 
     ExtMove external_move=nullptr;
 };
 
 //static members
-template<typename SolutionType>
-boost::python::object PyNeighbor<SolutionType>::move_op;
-
-template<typename SolutionType>
-boost::python::object PyNeighbor<SolutionType>::move_back_op;
+// template<typename SolutionType>
+// boost::python::object PyNeighbor<SolutionType>::move_op;
+//
+// template<typename SolutionType>
+// boost::python::object PyNeighbor<SolutionType>::move_back_op;
 
 template<typename SolutionType>
 std::vector<std::vector<int>> PyNeighbor<SolutionType>::index_table(0,std::vector<int>(0));

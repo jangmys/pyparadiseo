@@ -23,7 +23,18 @@ from .._core import moSA as SA
 from .._core import moTS as TS
 
 
+def set_move(self,move_op,move_back_op=None,index_table=None):
+    self.set_move(move_op)
 
+    if move_back_op is not None:
+        self.set_move_back(move_back_op)
+
+    if index_table is not None:
+        self.set_index_table(index_table)
+
+
+LocalSearch.set_move_ = set_move
+# moSimpleHCBin.set_move_ = set_move
 
 #SimpleHC(Neighborhood,solEval,nborEval)
 #SimpleHC(Neighborhood,solEval,nborEval,moContinuator)
@@ -61,6 +72,8 @@ def simple_hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=
 
     if class_ is None:
         raise TypeError("invalid hc_type")
+
+    class_.set_move_ = set_move
 
     if config.is_minimizing():
         print("IS MIN\n")

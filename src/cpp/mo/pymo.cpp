@@ -37,9 +37,10 @@ void expose_nbor(std::string name)
     auto obj = class_<PyNeighbor<SolutionType>,bases<SolutionType>>(
         make_name("Neighbor",name).c_str(),
         init<>())
-        .def("setMove", &PyNeighbor<SolutionType>::setMove).staticmethod("setMove")
+        .def("setMove", &PyNeighbor<SolutionType>::setMove)
+        // .staticmethod("setMove")
         .def("setMoveBack", &PyNeighbor<SolutionType>::setMoveBack)
-        .staticmethod("setMoveBack")
+        // .staticmethod("setMoveBack")
         .def("move", &PyNeighbor<SolutionType>::move)
         .def("moveBack", &PyNeighbor<SolutionType>::moveBack)
         .def("equals", &PyNeighbor<SolutionType>::equals)

@@ -56,16 +56,16 @@ struct moLocalSearchWrap : moLocalSearch<PyNeighbor<SolutionType>>,wrapper<moLoc
         return this->moLocalSearch<NborT>::operator()(_sol);
     }
 
-    void setMove(boost::python::object _obj)
-    {
-        this->searchExplorer.getSelectedNeighbor().setMove(_obj);
-        this->searchExplorer.getCurrentNeighbor().setMove(_obj);
-    }
-    void setMoveBack(boost::python::object _obj)
-    {
-        this->searchExplorer.getSelectedNeighbor().setMoveBack(_obj);
-        this->searchExplorer.getCurrentNeighbor().setMoveBack(_obj);
-    }
+    // void setMove(boost::python::object _obj)
+    // {
+    //     this->searchExplorer.getSelectedNeighbor().setMove(_obj);
+    //     this->searchExplorer.getCurrentNeighbor().setMove(_obj);
+    // }
+    // void setMoveBack(boost::python::object _obj)
+    // {
+    //     this->searchExplorer.getSelectedNeighbor().setMoveBack(_obj);
+    //     this->searchExplorer.getCurrentNeighbor().setMoveBack(_obj);
+    // }
 };
 
 
