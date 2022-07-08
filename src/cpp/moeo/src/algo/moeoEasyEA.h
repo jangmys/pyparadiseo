@@ -58,7 +58,6 @@ template < class MOEOT >
 class moeoEasyEA: public moeoEA < MOEOT >
 {
 public:
-
     /**
      * Ctor taking a breed.
      * @param _continuator the stopping criteria

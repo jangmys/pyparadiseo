@@ -21,6 +21,7 @@ sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.6/cmake-instal
 # sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.6/cmake-install/src'))
 sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.6/cmake-install/src/pyparadiseo'))
 sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.6/cmake-install/src/pyparadiseo/mo'))
+sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.6/cmake-install/src/pyparadiseo/moeo'))
 sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.6/cmake-install/src/pyparadiseo/eo'))
 sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.6/cmake-install/src/pyparadiseo/core'))
 

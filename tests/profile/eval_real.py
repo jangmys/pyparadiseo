@@ -69,7 +69,7 @@ print("first call : Eval twice (numba.njit!)")
 print("="*20)
 
 ind = solution.empty()
-init = initializer.make_initializer(lambda : 2*np.random.random(D)-1)
+init = initializer.initializer(lambda : 2*np.random.random(D)-1)
 
 print("="*20)
 f=evaluator.fitness(functools.partial(baz,data=off))
@@ -81,7 +81,7 @@ print("="*20)
 
 ind = solution.empty(stype='real')
 init = initializer.random(D,stype='real',bounds=bounds.bound_box(D,-1,1))
-# # init = initializer.make_initializer(lambda : 2*np.random.random(D)-1,stype='real')
+
 #
 # print("="*20)
 # f=evaluator.fitness(functools.partial(baz,data=off),stype='real')

@@ -31,7 +31,6 @@ namespace bp = boost::python;
 //BASE Neighbor : PyEO + MOVE
 //MOVE needs solution type
 
-
 //NOT deriving from moNeighbor,moIndexNeighbor etc because this is used as a template parameter : mo-classes are instantiated with PyNeighbor...specializing MO for usage in Python.
 template<typename SolutionType>
 struct PyNeighbor : SolutionType
@@ -118,6 +117,11 @@ struct PyNeighbor : SolutionType
     static void set_index_table(const std::vector<std::vector<int>>& _index_table)
     {
         index_table = _index_table;
+    }
+
+    std::vector<int>& get_indices()
+    {
+        return index_table[key];
     }
 
     // ExtMove get_external_move(){return external_move;}

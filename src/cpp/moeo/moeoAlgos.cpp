@@ -44,7 +44,7 @@ void moeo_expose_algos(std::string stype)
           eoContinue<SolutionType>&,
           eoEvalFunc<SolutionType>&,
           eoGenOp<SolutionType>&,
-          double
+          optional<double>
       >()
       [
           with_custodian_and_ward<1, 2,
@@ -57,7 +57,7 @@ void moeo_expose_algos(std::string stype)
           eoContinue<SolutionType>&,
           eoPopEvalFunc<SolutionType>&,
           eoGenOp<SolutionType>&,
-          double
+          optional<double>
       >()
       [
           with_custodian_and_ward<1, 2,
@@ -70,7 +70,7 @@ void moeo_expose_algos(std::string stype)
           eoContinue<SolutionType>&,
           eoEvalFunc<SolutionType>&,
           eoTransform<SolutionType>&,
-          double
+          optional<double>
       >()
       [
           with_custodian_and_ward<1, 2,
@@ -83,7 +83,7 @@ void moeo_expose_algos(std::string stype)
           eoContinue<SolutionType>&,
           eoPopEvalFunc<SolutionType>&,
           eoTransform<SolutionType>&,
-          double
+          optional<double>
       >()
       [
           with_custodian_and_ward<1, 2,
@@ -336,8 +336,7 @@ void moeo_expose_algos(std::string stype)
           eoMonOp<SolutionType>&,
           double,
           moeoArchive<SolutionType>&,
-          unsigned int,
-          bool
+          optional<unsigned int,bool>
       >()
       [
           with_custodian_and_ward<1, 3,
@@ -355,8 +354,7 @@ void moeo_expose_algos(std::string stype)
           eoMonOp<SolutionType>&,
           double,
           moeoArchive<SolutionType>&,
-          unsigned int,
-          bool
+          optional<unsigned int,bool>
       >()
       [
           with_custodian_and_ward<1, 2,
@@ -366,6 +364,35 @@ void moeo_expose_algos(std::string stype)
           with_custodian_and_ward<1, 8
           > > > > >()
       ])
+    .def(init<
+              eoContinue<SolutionType>&,
+              eoEvalFunc<SolutionType>&,
+              eoTransform<SolutionType>&,
+              moeoArchive<SolutionType>&,
+              optional<unsigned int,bool>
+          >()
+          [
+              with_custodian_and_ward<1, 2,
+              with_custodian_and_ward<1, 3,
+              with_custodian_and_ward<1, 4,
+              with_custodian_and_ward<1, 5
+              > > > >()
+          ])
+    .def(init<
+            eoContinue<SolutionType>&,
+            eoPopEvalFunc<SolutionType>&,
+            eoTransform<SolutionType>&,
+            moeoArchive<SolutionType>&,
+            optional<unsigned int,bool>
+        >()
+        [
+            with_custodian_and_ward<1, 2,
+            with_custodian_and_ward<1, 3,
+            with_custodian_and_ward<1, 4,
+            with_custodian_and_ward<1, 5
+            > > > >()
+        ])
+
     .def("__call__", &moeoSPEA2<SolutionType>::operator ())
     ;
 
@@ -387,6 +414,45 @@ void moeo_expose_algos(std::string stype)
           > > > >()
       ]
     )
+    .def(init<
+            eoContinue<SolutionType>&,
+            eoEvalFunc<SolutionType>&,
+            eoGenOp<SolutionType>&,
+            moeoArchive<SolutionType>&
+        >()
+        [
+            with_custodian_and_ward<1, 2,
+            with_custodian_and_ward<1, 3,
+            with_custodian_and_ward<1, 4,
+            with_custodian_and_ward<1, 5
+            > > > >()
+        ])
+    .def(init<
+            eoContinue<SolutionType>&,
+            eoPopEvalFunc<SolutionType>&,
+            eoGenOp<SolutionType>&,
+            moeoArchive<SolutionType>&
+        >()
+        [
+            with_custodian_and_ward<1, 2,
+            with_custodian_and_ward<1, 3,
+            with_custodian_and_ward<1, 4,
+            with_custodian_and_ward<1, 5
+            > > > >()
+        ])
+    .def(init<
+            eoContinue<SolutionType>&,
+            eoEvalFunc<SolutionType>&,
+            eoTransform<SolutionType>&,
+            moeoArchive<SolutionType>&
+        >()
+        [
+            with_custodian_and_ward<1, 2,
+            with_custodian_and_ward<1, 3,
+            with_custodian_and_ward<1, 4,
+            with_custodian_and_ward<1, 5
+            > > > >()
+        ])
     .def("__call__", &moeoSEEA<SolutionType>::operator ())
     ;
 

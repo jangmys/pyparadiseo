@@ -1,5 +1,9 @@
+#ABC
+from pyparadiseo import eoEvalFunc
+
 from pyparadiseo import config
 from pyparadiseo import solution,population
+
 
 
 from pyparadiseo import Pop
@@ -23,7 +27,7 @@ class test_eval(unittest.TestCase):
 
     def test_lambda(self):
         ev = evaluator.fitness(lambda x: np.sum(x))
-        self.assertTrue(isinstance(ev,evaluator.eoEvalFunc))
+        self.assertTrue(isinstance(ev,eoEvalFunc))
         ev(self.sol)
         self.assertEqual(self.sol.fitness,45)
 
@@ -32,20 +36,20 @@ class test_eval(unittest.TestCase):
         def foo(x):
             return np.sum(x)
         ev = evaluator.fitness(foo)
-        self.assertTrue(isinstance(ev,evaluator.eoEvalFunc))
+        self.assertTrue(isinstance(ev,eoEvalFunc))
         ev(self.sol)
         self.assertEqual(self.sol.fitness,45)
 
     def test_inherit(self):
-        class myEval(evaluator.eoEvalFunc):
+        class myEval(eoEvalFunc):
             def __init__(self):
-                evaluator.eoEvalFunc.__init__(self)
+                eoEvalFunc.__init__(self)
             def __call__(self, sol):
                 # take solution as argument, set fitness
                 sol.fitness = np.sum(sol.encoding)
 
         ev = myEval()
-        self.assertTrue(isinstance(ev,evaluator.eoEvalFunc))
+        self.assertTrue(isinstance(ev,eoEvalFunc))
         ev(self.sol)
         self.assertEqual(self.sol.fitness,45)
 
@@ -57,12 +61,12 @@ class test_eval(unittest.TestCase):
                 s += i
             return s
         ev = evaluator.fitness(foo)
-        self.assertTrue(isinstance(ev,evaluator.eoEvalFunc))
+        self.assertTrue(isinstance(ev,eoEvalFunc))
         ev(self.sol)
         self.assertEqual(self.sol.fitness,45)
 
     def test_popEval(self):
-        p = population.from_init(5,initializer.make_initializer(lambda : np.zeros(5,dtype=int)))
+        p = population.from_init(5,initializer.initializer(lambda : np.zeros(5,dtype=int)))
 
         for i in range(4):
             p[i]=solution.from_object(np.zeros(5,dtype=int))

@@ -55,20 +55,19 @@ struct moLocalSearchWrap : moLocalSearch<PyNeighbor<SolutionType>>,wrapper<moLoc
     bool default_op(SolutionType& _sol){
         return this->moLocalSearch<NborT>::operator()(_sol);
     }
-
-    // void setMove(boost::python::object _obj)
-    // {
-    //     this->searchExplorer.getSelectedNeighbor().setMove(_obj);
-    //     this->searchExplorer.getCurrentNeighbor().setMove(_obj);
-    // }
-    // void setMoveBack(boost::python::object _obj)
-    // {
-    //     this->searchExplorer.getSelectedNeighbor().setMoveBack(_obj);
-    //     this->searchExplorer.getCurrentNeighbor().setMoveBack(_obj);
-    // }
 };
 
+template<typename X,typename S>
+PyNeighbor<S>& getCurrentNeighbor(const X& _ls)
+{
+    return _ls.getNeighborhoodExplorer().getCurrentNeighbor();
+}
 
+template<typename X,typename S>
+PyNeighbor<S>& getSelectedNeighbor(const X& _ls)
+{
+    return _ls.getNeighborhoodExplorer().getSelectedNeighbor();
+}
 
 template<typename X>
 void setMove(const X& _ls, boost::python::object _obj)
@@ -103,6 +102,8 @@ void expose_moAlgos(std::string name)
     .def("getNeighborhoodExplorer",&moLocalSearch<NborT>::getNeighborhoodExplorer,return_internal_reference<>())
     .def("set_move",setMove<moLocalSearchWrap<SolutionType>>)
     .def("set_move_back",setMoveBack<moLocalSearchWrap<SolutionType>>)
+    .def("get_current_neighbor",getCurrentNeighbor<moLocalSearchWrap<SolutionType>,SolutionType>,return_internal_reference<>())
+    .def("get_selected_neighbor",getSelectedNeighbor<moLocalSearchWrap<SolutionType>,SolutionType>,return_internal_reference<>())
     // .def("set_move",&moLocalSearchWrap<SolutionType>::setMove)
     // .def("set_move_back",&moLocalSearchWrap<SolutionType>::setMoveBack)
     ;
@@ -136,6 +137,8 @@ void expose_moAlgos(std::string name)
     )
     .def("set_move",setMove<moSimpleHC<NborT>>)
     .def("set_move_back",setMoveBack<moSimpleHC<NborT>>)
+    .def("get_current_neighbor",getCurrentNeighbor<moSimpleHC<NborT>,SolutionType>,return_internal_reference<>())
+    .def("get_selected_neighbor",getSelectedNeighbor<moSimpleHC<NborT>,SolutionType>,return_internal_reference<>())
     ;
 
 

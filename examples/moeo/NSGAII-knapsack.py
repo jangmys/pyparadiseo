@@ -35,8 +35,7 @@ myEvalCount = decorators.counting_eval(myEval)#cannot nest directly...?
 #basic moeoNSGA
 #[problem+xover+mutation]
 def nsgaII_test_1():
-    alg = algo.moeoNSGAII(100,myEval,myXover,0.1,myMutate,0.5)
-
+    alg = algo.nsgaII(myEval,(myXover,0.1,myMutate,0.5),100)
     pop = population.from_init(50,myInit)
 
     # #run algorithm
@@ -51,8 +50,7 @@ def nsgaII_test_1():
 def nsgaII_test_2():
     myContinue=continuator.eval_calls(myEvalCount,5000)
     myGenOp = operator.SGAGenOp(myXover,0.1,myMutate,0.5)
-
-    alg = algo.moeoNSGAII(myContinue,myEvalCount,myGenOp)
+    alg = algo.nsgaII(myEvalCount,myGenOp,myContinue)
 
     pop = population.from_init(50,myInit)
 
@@ -67,10 +65,8 @@ def nsgaII_test_2():
 #using a population evaluator...
 def nsgaII_test_3():
     myPopEval = evaluator.pop_eval_from_fitness(myEval)
-    myContinue = continuator.max_generations(100)
     myGenOp = operator.SGAGenOp(myXover,0.1,myMutate,0.5)
-
-    alg = algo.moeoNSGAII(myContinue,myPopEval,myGenOp)
+    alg = algo.nsgaII(myPopEval,myGenOp,100)
 
     pop = population.from_init(50,myInit)
     # #run algorithm
@@ -83,10 +79,8 @@ def nsgaII_test_3():
 
 #using a eoTransform and standard Eval...
 def nsgaII_test_4():
-    myContinue = continuator.max_generations(100)
     myTransform = transform.SGA(myXover,0.5,myMutate,0.5)
-
-    alg = algo.moeoNSGAII(myContinue,myEval,myTransform)
+    alg = algo.nsgaII(myEval,myTransform,100)
 
     pop = population.from_init(50,myInit)
 
@@ -99,11 +93,9 @@ def nsgaII_test_4():
 
 #using a eoTransform and population evaluator...
 def nsgaII_test_5():
-    myContinue = continuator.max_generations(100)
-    myTransform = transform.SGA(myXover,0.5,myMutate,0.5)
     myPopEval = evaluator.pop_eval_from_fitness(myEval)
-
-    alg = algo.moeoNSGAII(myContinue,myPopEval,myTransform)
+    myTransform = transform.SGA(myXover,0.5,myMutate,0.5)
+    alg = algo.nsgaII(myPopEval,myTransform,100)
 
     pop = population.from_init(50,myInit)
 

@@ -34,6 +34,9 @@ void expose_nbor(std::string name)
     void (PyNeighbor<SolutionType>::*_setIndexWithSol)(SolutionType&,unsigned int) = &PyNeighbor<SolutionType>::index;
 
 
+    //could make move(back) static (to allow definition before instantiation (neighbor is only instantiated in "Explorer")
+    //to set move and index_table, algo needs to be constructed first.
+    //(TODO)
     auto obj = class_<PyNeighbor<SolutionType>,bases<SolutionType>>(
         make_name("Neighbor",name).c_str(),
         init<>())
@@ -48,6 +51,9 @@ void expose_nbor(std::string name)
         .def("index",_getIndex)
         .def("index",_setIndex)
         .def("reassign", &PyNeighbor<SolutionType>::operator=,return_internal_reference<>())
+        .def("set_index_table", &PyNeighbor<SolutionType>::set_index_table)
+        .staticmethod("set_index_table")
+        .def("get_indices",&PyNeighbor<SolutionType>::get_indices,return_internal_reference<>())
         // .def("choose_external_move", choose_ext_move)
         // .def("set_external_move", &PyNeighbor<SolutionType>::set_external_move)
         // .def("get_external_move", &PyNeighbor<SolutionType>::get_external_move)

@@ -10,7 +10,7 @@ import copy
 
 class TestBitOp(unittest.TestCase):
     def setUp(self):
-        self.init = initializer.Init(lambda : np.random.choice([True,False],10))
+        self.init = initializer.initializer(lambda : np.random.choice([True,False],10))
         self.bin_init = initializer.random(10,stype='bin')
 
     def test_OneBitFlip(self):

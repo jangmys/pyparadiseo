@@ -36,7 +36,20 @@ if __name__ == "__main__":
     # algo
     # _core.NeighborBin.setMove(onemax.move)
     hc = mo.algo.simple_hill_climber(nhood,eval,nborEval) #,onemax.move)
-    hc.set_move_(onemax.move)
+    # hc.set_move_(onemax.move)
+
+    hc.get_selected_neighbor().setMove(onemax.move)
+    hc.get_current_neighbor().setMove(onemax.move)
+
+    from pyparadiseo._core import IntVec2
+
+    tab = IntVec2()
+    for i in range(DIM):
+        tab.append([i])
+
+    hc.get_selected_neighbor().set_index_table(tab)
+    hc.get_current_neighbor().set_index_table(tab)
+
 
     ########################################
     # define sol / init / eval

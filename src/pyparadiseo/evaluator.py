@@ -5,31 +5,8 @@ evaluators assign fitness or objective values to solutions
 """
 from pyparadiseo import config,utils
 
-#abstract base classes
-from ._core import eoEvalFunc
-from ._core import eoEvalFuncBin
 
-# __import__("._core.eoEvalFuncBin")
-
-from ._core import eoPopEvalFunc
-
-# from ._core import FitnessEval
-from ._core import ObjectiveEval
-from ._core import eoPopLoopEval as PopLoopEval
-
-from ._core import FitnessEvalBin
-from ._core import ObjectiveEvalBin
-from ._core import eoPopLoopEvalBin as PopLoopEvalBin
-
-### counting eval function (for eoContinuator)
-from ._core import eoEvalFuncCounter as EvalFuncCounter
-
-# import importlib
-
-# from pyparadiseo import _core
-
-
-def fitness(fun=None,stype=None):
+def fitness(fun=None,counting=False,stype=None):
     """
     make fitness evaluation
 
@@ -51,7 +28,24 @@ def fitness(fun=None,stype=None):
 
     if fun is not None:
         return class_(fun)
-    else:
+    else: # to use as decorator
+        return class_()
+
+
+def counting(fun=None,stype=None):
+    """
+    make counting fitness function
+    """
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    class_ = utils.get_class("eoEvalFuncCounter"+config.TYPES[stype])
+
+    ### TODO : check if we get python function or eoEvalFunc ...
+
+    if fun is not None:
+        return class_(fun)
+    else: # to use as decorator
         return class_()
 
 

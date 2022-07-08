@@ -71,7 +71,7 @@ print("="*20)
 
 
 ind = solution.empty()
-init = initializer.make_initializer(lambda : 2*np.random.random(D)-1)
+init = initializer.initializer(lambda : 2*np.random.random(D)-1)
 
 # ind = RealSolution(D)
 # init(ind)

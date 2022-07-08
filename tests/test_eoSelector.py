@@ -1,7 +1,7 @@
 import pyparadiseo
 
 from pyparadiseo import Pop
-from pyparadiseo.initializer import Init
+from pyparadiseo import initializer
 from pyparadiseo.eo import selector
 
 from pyparadiseo.eo import select_one
@@ -13,7 +13,7 @@ import inspect
 #TODO : for now, just testing imports and base class name ...
 class test_eoSelector(unittest.TestCase):
     def setUp(self):
-        self.init = Init(lambda : np.random.randint(0,2,10))
+        self.init = initializer.initializer(lambda : np.random.randint(0,2,10))
         self.pop = Pop(10,self.init)
         for i in range(len(self.pop)):
             self.pop[i].fitness = i

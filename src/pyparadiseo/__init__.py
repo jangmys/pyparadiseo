@@ -22,6 +22,13 @@ from ._core import Pop
 from ._core import RealPop
 from ._core import BinaryPop
 
+from ._core import eoInit
+from ._core import eoEvalFunc
+from ._core import eoPopLoopEval
+# from ._core import eoEvalFuncCounter
+
+from ._core import ObjectiveEval
+
 from ._core import ObjectiveVectorTraits
 from ._core import ObjectiveVector
 

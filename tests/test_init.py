@@ -1,12 +1,9 @@
-from pyparadiseo import Solution
-
 from pyparadiseo import eo
 from pyparadiseo import initializer
 from pyparadiseo import solution
 
-
-from pyparadiseo.initializer import eoInit
-from pyparadiseo.initializer import Init
+#ABC
+from pyparadiseo import eoInit
 
 import inspect
 import unittest
@@ -26,7 +23,7 @@ class test_init(unittest.TestCase):
                 return np.arange(n)
             return init
         #construct a Pyparadiseo initalizer passing a function
-        init = initializer.make_initializer(init_fun(10))
+        init = initializer.initializer(init_fun(10))
         #check that we have an instance of eoInit
         self.assertTrue(isinstance(init,eoInit))
 
@@ -38,7 +35,7 @@ class test_init(unittest.TestCase):
             self.assertEqual(self.sol[i],i)
 
         #construct a Pyparadiseo initalizer passing a lambda
-        init = initializer.make_initializer(lambda : np.arange(1,5))
+        init = initializer.initializer(lambda : np.arange(1,5))
         self.assertTrue(isinstance(init,eoInit))
 
         init(self.sol)
@@ -57,7 +54,7 @@ class test_init(unittest.TestCase):
                 return np.arange(self.arg)
 
         pb = testProblem(9)
-        init = initializer.make_initializer(pb)
+        init = initializer.initializer(pb)
         self.assertTrue(isinstance(init,eoInit))
 
         init(self.sol)

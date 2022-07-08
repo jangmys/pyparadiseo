@@ -26,7 +26,7 @@ class Test_Pop(unittest.TestCase):
         self.binpop = population.empty(stype='bin')
         self.realpop = population.empty(stype='real')
 
-        self.init = initializer.make_initializer(lambda : np.arange(10)) #just something
+        self.init = initializer.initializer(lambda : np.arange(10)) #just something
         self.bininit = initializer.random(10,'bin')
         self.realinit = initializer.random(stype='real',bounds=bounds.RealVectorBounds(10,-1,1))
 

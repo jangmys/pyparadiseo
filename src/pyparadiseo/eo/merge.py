@@ -15,13 +15,6 @@
  """
 from pyparadiseo import config,utils
 
-from .._core import eoMerge as Merge
-
-#TODO : make merger from python
-
-
-
-
 def elitist(rate,interpret_as_rate=True,stype=None):
     """Straightforward elitism class, specify the number of individuals to copy
     into new geneneration or the rate w.r.t. pop size

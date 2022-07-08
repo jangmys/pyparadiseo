@@ -51,8 +51,6 @@ def init4():
 def init5():
     return np.arange(14)
 
-# init = initializer.make_initializer(lambda:np.arange(10))
-
 init(s)
 compute_sum(s)
 print(s)

@@ -7,7 +7,6 @@ from pyparadiseo import config
 from pyparadiseo import evaluator
 
 # encoding dependent
-from pyparadiseo.initializer import Init,BinaryInit
 from pyparadiseo.operator import OnePtBitCrossover
 # independent
 from pyparadiseo.eo import algo,select_one,continuator

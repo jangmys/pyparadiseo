@@ -33,7 +33,7 @@ def set_move(self,move_op,move_back_op=None,index_table=None):
         self.set_index_table(index_table)
 
 
-LocalSearch.set_move_ = set_move
+# LocalSearch.set_move_ = set_move
 # moSimpleHCBin.set_move_ = set_move
 
 #SimpleHC(Neighborhood,solEval,nborEval)

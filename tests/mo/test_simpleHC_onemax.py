@@ -22,7 +22,7 @@ class test_simpleHC_onemax(unittest.TestCase):
     def setUp(self):
         self.DIM = 20
         # initializer
-        self.myinit = initializer.make_initializer(lambda : np.random.choice([True,False],self.DIM))
+        self.myinit = initializer.initializer(lambda : np.random.choice([True,False],self.DIM))
         # full evaluation
         self.myeval = evaluator.fitness(sum_bits)
         # nbor evaluation

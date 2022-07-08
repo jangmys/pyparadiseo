@@ -29,10 +29,19 @@ pyparadiseo.bounds module
    :show-inheritance:
    :imported-members:
 
-pyparadiseo.core module
------------------------
+pyparadiseo.config module
+-------------------------
 
-.. automodule:: pyparadiseo.core
+.. automodule:: pyparadiseo.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :imported-members:
+
+pyparadiseo.decorators module
+-----------------------------
+
+.. automodule:: pyparadiseo.decorators
    :members:
    :undoc-members:
    :show-inheritance:
@@ -42,6 +51,15 @@ pyparadiseo.evaluator module
 ----------------------------
 
 .. automodule:: pyparadiseo.evaluator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :imported-members:
+
+pyparadiseo.factory module
+--------------------------
+
+.. automodule:: pyparadiseo.factory
    :members:
    :undoc-members:
    :show-inheritance:
@@ -60,6 +78,33 @@ pyparadiseo.operator module
 ---------------------------
 
 .. automodule:: pyparadiseo.operator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :imported-members:
+
+pyparadiseo.population module
+-----------------------------
+
+.. automodule:: pyparadiseo.population
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :imported-members:
+
+pyparadiseo.solution module
+---------------------------
+
+.. automodule:: pyparadiseo.solution
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :imported-members:
+
+pyparadiseo.utils module
+------------------------
+
+.. automodule:: pyparadiseo.utils
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,5 +1,5 @@
 """
-genetic operators
+Genetic Operators
 """
 # EO OPS ....
 

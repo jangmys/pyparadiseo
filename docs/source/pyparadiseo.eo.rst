@@ -64,6 +64,15 @@ pyparadiseo.eo.replacement module
    :show-inheritance:
    :imported-members:
 
+pyparadiseo.eo.select\_one module
+---------------------------------
+
+.. automodule:: pyparadiseo.eo.select_one
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :imported-members:
+
 pyparadiseo.eo.selector module
 ------------------------------
 

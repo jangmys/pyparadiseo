@@ -5,8 +5,9 @@ from pyparadiseo import Solution
 from pyparadiseo import eo
 from pyparadiseo.eo import continuator
 from pyparadiseo import evaluator
+from pyparadiseo import initializer
 
-from pyparadiseo.initializer import Init
+# from pyparadiseo.initializer import Init
 from pyparadiseo import Pop
 
 
@@ -19,7 +20,7 @@ class test_eocontinue(unittest.TestCase):
     def setUp(self):
         config.set_solution_type('gen')
 
-        self.init = Init(lambda : np.random.randint(0,2,10))
+        self.init = initializer.initializer(lambda : np.random.randint(0,2,10))
         self.eval = evaluator.fitness(lambda x: np.sum(x))
 
         self.pop = Pop(10,self.init)
@@ -55,7 +56,7 @@ class test_eocontinue(unittest.TestCase):
 
     def test_eoEvalFuncCounter(self):
         #make counting_eval_function object from FitnessEval
-        myEvalFuncCounter = evaluator.EvalFuncCounter(self.eval,"test-string")
+        myEvalFuncCounter = evaluator.counting(self.eval)
         #make eval_continuator : 100 evaluations
         myEvalContinue = continuator.eval_calls(myEvalFuncCounter,100)
 

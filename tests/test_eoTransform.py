@@ -23,6 +23,6 @@ class test_eoTransform(unittest.TestCase):
         mymut = pyMonOp(mutate)
         mycross = pyQuadOp(xover)
 
-        SGATransform = transform.SGATransform(mycross,0.5,mymut,0.5)
+        SGATransform = transform.SGA(mycross,0.5,mymut,0.5)
 
         self.assertTrue(callable(SGATransform))
