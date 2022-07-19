@@ -24,16 +24,21 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`search`
 
+tutorials
+
 Tutorials
-=========
-# Problem Definition
-~~~~~~~~~~~~~~~~~~~~
+---------
+Problem Definition
+++++++++++++++++++
 
-## Maximization/Minimization
+Maximization/Minimization
++++++++++++++++++++++++++
 
-## Number of Objectives
+Number of Objectives
+++++++++++++++++++++
 
-## `Solution` class
+`Solution` class
+++++++++++++++++
 A Solution consists of an `encoding`, a fitness and (for multi-objective) a diversity and objectiveVector
 - encoding : a python object
 - fitness : must be convertible to double
@@ -45,7 +50,7 @@ takes solution as argument and initializes encoding.
 
 can be
 - for standard solution type
-    - init = pp.initializer.BinaryInit(100)
+```init = pp.initializer.BinaryInit(100)```
 
 - custom : pass a python callable that returns a (random) solution-encoding
     - ''
@@ -53,10 +58,11 @@ can be
 
 
 
-## Fitness evaluation
+Fitness evaluation
+++++++++++++++++++
 
-## Objective evaluator
-
+Objective evaluator
++++++++++++++++++++
 
 
 

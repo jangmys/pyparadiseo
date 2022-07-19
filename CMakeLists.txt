@@ -29,6 +29,7 @@ set(CMAKE_CXX_FLAGS "-Wall -Wno-maybe-uninitialized -O2 -fPIC -DBOOST_NO_AUTO_PT
 
 set(commonSources
     src/cpp/utils/converters.cpp
+    src/cpp/utils/valueParam.cpp
     src/cpp/common/random_numbers.cpp
     src/cpp/common/init.cpp
     src/cpp/common/eval.cpp
