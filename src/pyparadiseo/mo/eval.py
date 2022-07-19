@@ -36,9 +36,17 @@ def neighbor_eval(f_eval,stype=None):
     return class_(f_eval)
 
 
-def neighbor_full_eval(f_eval,stype=None):
+def neighbor_full_eval(f_eval,backable=False,stype=None):
     """
-    backable : bool (True if Neighbor has moveBack defined)
+    Parameters
+    ==========
+    f_eval : evaluation function
+    backable : bool (True if Neighbor has moveBack defined), default: False
+
+    returns
+    =======
+    moFullEvalByCopy (default) - __call__(sol,neighbor) evaluates neighbor by making a tmp copy of solution, move it, evaluate and set fitness of neighbor
+    moFullEvalByModif (backable=True) - __call__(sol,neighbor) moves solution, evaluates it an moves it back : requires moveBack to be defined in PyNeighbor
     """
     if stype is None:
         stype = config._SOLUTION_TYPE

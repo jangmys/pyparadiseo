@@ -3,12 +3,6 @@ MO continuators
 """
 from pyparadiseo import utils,config
 
-from .._core import moIterContinuator as IterContinuator
-from .._core import moFullEvalContinuator as FullEvalContinuator
-from .._core import moTimeContinuator as TimeContinuator
-from .._core import moTrueContinuator as TrueContinuator
-
-
 def always_true(stype=None):
     """
     Iteration-continuator: continues until a number of iterations is reached

@@ -13,6 +13,8 @@ fastGA :
 
 from pyparadiseo import config,utils
 
+from pyparadiseo.eo import breeders,replacement
+
 def simpleGA(selector,crossover,p_cross,mutate,p_mutate,f_eval,continuator,stype=None):
     """
     simple genetic algorithm
@@ -37,24 +39,39 @@ def simpleGA(selector,crossover,p_cross,mutate,p_mutate,f_eval,continuator,stype
     return class_(selector,crossover,p_cross,mutate,p_mutate,f_eval,continuator)
 
 
-def easyEA(continuator,eval,selector,transformer,replacer,stype=None):
+def easyEA(continuator,eval,breed,replace,stype=None):
     """Easy EA
+
+    Parameters
+    ==========
+    continuator : an eoContinue
+    eval : eoEvalFunc or eoPopEval
+    breed : eoBreed or (eoSelect,eoTransform)
+    replace : eoReplacement or (eoMerge,eoReduce)
+
 
     Notes
     -----
     (continue,EvalFunc,Breed,Replace)  #order inverse of SGA? (mandatory left, optional right)
-    (continue,Evalfunc,Breed,Replace,unsigned)
     (continue,PopEval,Breed,Replace)
-    (continue,EvalFunc,Breed,Merge,Reduce)
-    (continue,EvalFunc,Select,Transform,Replace)
-    (continue,EvalFunc,Select,Transform,Merge,Reduce)
+    (continue,EvalFunc,Breed,(Merge,Reduce))
+    (continue,EvalFunc,(Select,Transform),Replace)
+    (continue,EvalFunc,(Select,Transform),(Merge,Reduce))
     """
     if stype is None:
         stype = config._SOLUTION_TYPE
 
     class_ = utils.get_class("eoEasyEA"+config.TYPES[type])
 
-    return class_(continuator,eval,selector,transformer,replacer)
+    ### breed can be (select+transform)
+    if isinstance(breed,tuple):
+        breed = breeders.select_transform(*breed,stype)
+
+    ### replace can be (merge+reduce)
+    if isinstance(replace,tuple):
+        replace = replacement(*replace,stype)
+
+    return class_(continuator,eval,breed,replace)
 
 
 def fastGA(rate_crossover,select_cross,crossover,select_aftercross,

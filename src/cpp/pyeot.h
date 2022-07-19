@@ -21,7 +21,10 @@ namespace np=boost::python::numpy;
 typedef DoubleFitness<FitnessTraits> doubleFitness;
 typedef moeoRealObjectiveVector<moeoObjectiveVectorTraits> realObjVec;
 
+/* solution base class - python equivalent of EO and MOEO
 
+has a fitness, objective vector and diversity (but no encoding), comparison (fitness)
+*/
 class PyEO : public MOEO< realObjVec, doubleFitness, double>
 {
 public:
@@ -44,7 +47,6 @@ public:
 
     PyEO& operator=(const PyEO& p)
     {
-        // setEncoding(p.deepcopy(p.get_encoding()));
         setFitness(p.deepcopy(p.getFitness()));
         setObjectiveVector(p.getObjectiveVector());
         setDiversity(p.deepcopy(p.getDiversity()));
@@ -358,6 +360,8 @@ public:
             bp::object())
         ){}
 
+        ///ctor clashing with previous one!!
+    // VectorSolution(boost::python::object _obj) :
 
     VectorSolution(const VectorSolution& p) : PyEO(p),vec(p.vec),
         encoding(
@@ -374,6 +378,29 @@ public:
     void setEncoding(boost::python::object enc){
         encoding = np::array(enc,np::dtype::get_builtin<T>());
     }
+
+    np::ndarray get_array() const {
+        return encoding;
+    }
+
+    void set_array(boost::python::object enc){
+    // void set_array(np::ndarray enc){
+        auto tmp = np::array(enc,np::dtype::get_builtin<T>());
+
+        int input_size = tmp.shape(0);
+        T* input_ptr = reinterpret_cast<T*>(tmp.get_data());
+
+        for (int i = 0; i < input_size; ++i)
+            vec[i] = *(input_ptr + i);
+
+        encoding = np::from_data(vec.data(),
+            np::dtype::get_builtin<T>(),
+            bp::make_tuple(vec.size()),
+            bp::make_tuple(sizeof(T)),
+            bp::object()
+        );
+    }
+
 
     VectorSolution& operator=(const VectorSolution& p)
     {
@@ -394,22 +421,6 @@ public:
         return *this;
     }
 
-    np::ndarray get_array() const { return encoding; }
-
-    void set_array(np::ndarray enc){
-        int input_size = enc.shape(0);
-        T* input_ptr = reinterpret_cast<T*>(enc.get_data());
-
-        for (int i = 0; i < input_size; ++i)
-            vec[i] = *(input_ptr + i);
-
-        encoding = np::from_data(vec.data(),
-            np::dtype::get_builtin<T>(),
-            bp::make_tuple(vec.size()),
-            bp::make_tuple(sizeof(T)),
-            bp::object()
-        );
-    }
 
 
     //vector stuff

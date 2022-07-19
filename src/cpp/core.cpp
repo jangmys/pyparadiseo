@@ -78,10 +78,15 @@ extern void eo_abstract();
 
 extern void bounds();
 
+//common
+extern void valueParam();
+
 //EO - core
 extern void initialize();
 extern void evaluate();
 extern void random_numbers();
+
+
 
 //EO
 extern void pop();
@@ -274,6 +279,7 @@ BOOST_PYTHON_MODULE(_core)
     // ;
 
     class_<RealSolution,bases<PyEO>>("RealSolution",init<optional<unsigned int>>())
+    // .def(init<boost::python::object>())
     .def(init<const RealSolution&>())
     .add_property("encoding", &RealSolution::get_encoding, &RealSolution::setEncoding)
     .def("resize", &RealSolution::resize)
@@ -337,6 +343,7 @@ BOOST_PYTHON_MODULE(_core)
     initialize();
     evaluate();
     random_numbers();
+    valueParam();
 
     //EO (evolutionary)
     pop();

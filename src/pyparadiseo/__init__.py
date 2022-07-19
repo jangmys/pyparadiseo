@@ -7,15 +7,15 @@ from pyparadiseo import operator
 from pyparadiseo import factory
 
 from pyparadiseo import solution
-from .solution import *
+# from .solution import *
 
 # from .core import *
-from ._core import FitnessTraits
+# from ._core import FitnessTraits
 
 
-from ._core import Solution
+# from ._core import Solution
 
-from ._core import RealSolution
+# from ._core import RealSolution
 # from ._core import BinarySolution
 
 from ._core import Pop
@@ -29,8 +29,8 @@ from ._core import eoPopLoopEval
 
 from ._core import ObjectiveEval
 
-from ._core import ObjectiveVectorTraits
-from ._core import ObjectiveVector
+# from ._core import ObjectiveVectorTraits
+# from ._core import ObjectiveVector
 
 #  EO RNG
 from ._core import eoRng

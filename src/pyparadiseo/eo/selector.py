@@ -23,16 +23,6 @@ eoSelectOne.h
 """
 from pyparadiseo import config,utils
 
-
-
-# from selectors.cpp
-from .._core import eoDetSelect as DetSelect
-from .._core import eoSelectMany as SelectMany
-from .._core import eoSelectNumber as SelectNumber
-from .._core import eoSelectPerc as SelectPerc
-from .._core import eoTruncSelect as TruncSelect
-from .._core import eoTruncatedSelectMany as TruncatedSelectMany
-
 ################################################
 ################################################
 #### SELECT (src_pop,dest_pop)
@@ -40,7 +30,20 @@ from .._core import eoTruncatedSelectMany as TruncatedSelectMany
 ################################################
 def det_select(rate=1.0,interpret_as_rate=True,stype=None):
     """
-    eoDetSelect selects many individuals deterministically
+    eoDetSelect selects many individuals deterministically :
+        selects first rate*source.size() individuals
+
+    eoDetSelect.h
+
+    Parameters
+    ==========
+    rate : int, default=1.0
+    interpret_as_rate : bool, default=True
+    stype : optional
+
+    Returns
+    =======
+    An eoDetSelect selector
     """
     if type is None:
         type = config._SOLUTION_TYPE
@@ -50,7 +53,7 @@ def det_select(rate=1.0,interpret_as_rate=True,stype=None):
     return class_(rate,interpret_as_rate)
 
 
-class _SelectMany():
+def select_many(select_one,rate=1.0,interpret_as_rate=True,stype=None):
     """
     eoSelectMany selects many individuals using eoSelectOne as it's
         mechanism. Therefore eoSelectMany needs an eoSelectOne in its ctor
@@ -60,34 +63,30 @@ class _SelectMany():
 
     Parameters
     ----------
-    select_one
-    Rate
-    interpret_as_rate
+    select_one :
+    Rate :
+    interpret_as_rate :
     """
-    def __new__(cls,select_one,rate=1.0,interpret_as_rate=True,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoSelectMany"+config.TYPES[type])
+    class_ = utils.get_class("eoSelectMany"+config.TYPES[stype])
 
-        return class_(select_one,rate,interpret_as_rate)
+    return class_(select_one,rate,interpret_as_rate)
 
 
-class _SelectNumber():
-    """eoSelectNumber selects many individuals using eoSelectOne as it's mechanism. Therefore eoSelectNumber needs an eoSelectOne in its ctor.
-    It will select a fixed number of individuals and pushes them to the back of the destination population.
+
+def select_number(select_one,nb_to_select=1,stype=None):
+    """select a specified number of Individuals
     """
-    def __new__(cls,select_one,nb_to_select=1,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+    class_ = utils.get_class("eoSelectNumber"+config.TYPES[stype])
 
-        class_ = utils.get_class("eoSelectNumber"+config.TYPES[type])
-
-        return class_(select_one,nb_to_select)
+    return class_(select_one,nb_to_select)
 
 
-
-class _SelectPerc():
+def select_perc(select_one,rate=1.0,stype=None):
     """
     eoSelectPerc selects many individuals using eoSelectOne as it's
     mechanism. Therefore eoSelectPerc needs an eoSelectOne in its ctor
@@ -95,50 +94,43 @@ class _SelectPerc():
     It will select floor(rate*pop.size()) individuals and pushes them to
     the back of the destination population.
     """
-    def __new__(cls,select_one,rate=1.0,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoSelectPerc"+config.TYPES[type])
+    class_ = utils.get_class("eoSelectPerc"+config.TYPES[stype])
 
-        return class_(select_one,rate)
+    return class_(select_one,rate)
 
 
-class _TruncSelect():
+def select_trunc(select_one,how_many,type=None):
     """
-    eoTruncSelect selects individuals after truncating the population
- * using eoSelectOne as it's mechanism.
- * Therefore eoSelectMany needs an eoSelectOne in its ctor
- * It will use an eoHowMnay to determine the number of guys to keep,
+    eoTruncSelect selects individuals after truncating the population using eoSelectOne as it's mechanism.
+    Therefore eoSelectMany needs an eoSelectOne in its ctor
+    It will use an eoHowMnay to determine the number of guys to keep,
     """
-    def __new__(cls,select_one,how_many,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoTruncSelect"+config.TYPES[type])
+    class_ = utils.get_class("eoTruncSelect"+config.TYPES[stype])
 
-        return class_(select_one,how_many)
+    return class_(select_one,how_many)
 
 
-class _TruncatedSelectMany():
+def select_truncated_many(select_one,rate_genitors,rate_fertile, _interpret_as_rateG=True,_interpret_as_rateF=True,type=None):
     """selects many individuals using eoSelectOne as it's
     mechanism. Therefore eoSelectMany needs an eoSelectOne in its ctor
 
-    It will use an eoHowMnay to determine the number of guys to select,
-     and push them to the back of the destination population.
+    It will use an eoHowMnay to determine the number of guys to select, and push them to the back of the destination population.
 
-     And it will only perform selection from the top guys in the population.
+    And it will only perform selection from the top guys in the population.
 
-     It is NOT a special case of eoSelectMany because it needs to SORT
-     the population to discard the worst guys before doing the selection
+    It is NOT a special case of eoSelectMany because it needs to SORT the population to discard the worst guys before doing the selection
 
-     However, the same result can be obtained by embedding an
-     eoTruncatedSelectOne into an eoSelectMany ...
+    However, the same result can be obtained by embedding an eoTruncatedSelectOne into an eoSelectMany ...
     """
-    def __new__(cls,select_one,rate_genitors,rate_fertile, _interpret_as_rateG=True,_interpret_as_rateF=True,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
+    if stype is None:
+        stype = config._SOLUTION_TYPE
 
-        class_ = utils.get_class("eoTruncSelectMany"+config.TYPES[type])
+    class_ = utils.get_class("eoTruncSelectMany"+config.TYPES[stype])
 
-        return class_(select_one,rate_genitors,rate_fertile, _interpret_as_rateG,_interpret_as_rateF)
+    return class_(select_one,rate_genitors,rate_fertile, _interpret_as_rateG,_interpret_as_rateF)

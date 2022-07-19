@@ -103,6 +103,8 @@ void expose_moEvaluators(std::string name){
     ;
 
 
+
+    //base class
     class_<moDoubleIncrEvaluation<NborT>,bases<moNeighborhoodEvaluation<NborT>,moUpdater>>(make_name("moDoubleIncrEvaluation",name).c_str(),
     init<unsigned int>()
     )

@@ -3,8 +3,8 @@ neighbor comparators
 """
 from pyparadiseo import utils,config
 
-from .._core import moNeighborComparator
-from .._core import moSolNeighborComparator
+# from .._core import moNeighborComparator
+# from .._core import moSolNeighborComparator
 
 def neighbor_compare(cmpfun,stype=None):
     """

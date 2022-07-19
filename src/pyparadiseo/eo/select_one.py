@@ -20,12 +20,12 @@ from pyparadiseo import config,utils
 from .._core import eoSelect as Select
 
 # from selectors.cpp
-from .._core import eoDetSelect as DetSelect
-from .._core import eoSelectMany as SelectMany
-from .._core import eoSelectNumber as SelectNumber
-from .._core import eoSelectPerc as SelectPerc
-from .._core import eoTruncSelect as TruncSelect
-from .._core import eoTruncatedSelectMany as TruncatedSelectMany
+# from .._core import eoDetSelect as DetSelect
+# from .._core import eoSelectMany as SelectMany
+# from .._core import eoSelectNumber as SelectNumber
+# from .._core import eoSelectPerc as SelectPerc
+# from .._core import eoTruncSelect as TruncSelect
+# from .._core import eoTruncatedSelectMany as TruncatedSelectMany
 
 
 # from selectOne.cpp
@@ -75,11 +75,11 @@ def truncated(select_one,rate_fertile,interpret_as_rate=True,stype=None):
 
     It will perform selection only from the top guys in the population.
 
-     Parameters
-     ----------
-     select_one
-     rate_fertile
-     interpret_as_rate
+    Parameters
+    ----------
+    select_one
+    rate_fertile
+    interpret_as_rate
     """
     if stype is None:
         stype = config._SOLUTION_TYPE

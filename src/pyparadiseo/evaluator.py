@@ -14,25 +14,37 @@ def fitness(fun=None,counting=False,stype=None):
     ----------
     fun : callable
         function must take a solution encoding as input and return a scalar fitness value
+    counting : bool
+        if True evaluator object counts fitness evaluations
 
     Example
     -------
 
     Notes
     -----
+    see :func:`pyparadiseo.evaluator.counting_fitness`
     """
     if stype is None:
         stype = config._SOLUTION_TYPE
 
     class_ = utils.get_class("FitnessEval"+config.TYPES[stype])
 
+    ret = None
+
     if fun is not None:
-        return class_(fun)
+        ret=class_(fun)
     else: # to use as decorator
-        return class_()
+        ret=class_()
+
+    if counting:
+        print("counting")
+        return  utils.get_class("eoEvalFuncCounter"+config.TYPES[stype])(ret)
+    else:
+        return ret
 
 
-def counting(fun=None,stype=None):
+
+def counting_fitness(fun=None,stype=None):
     """
     make counting fitness function
     """

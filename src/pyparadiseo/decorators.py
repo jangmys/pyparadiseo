@@ -25,8 +25,6 @@ class aDecorator(object):
         print("inside myDecorator.__call__()")
         self.f()
 
-
-
 class myDecorator(object):
     def __init__(self, f):
         print("inside myDecorator.__init__()")
@@ -64,9 +62,10 @@ def fitness(fun=None,stype=None):
 
     Example
     -------
-    @decorators.fitness
+    >>> @decorators.fitness
     def some_function(array):
         return sum(array)
+
     """
     if stype is None:
         stype = config._SOLUTION_TYPE
@@ -97,7 +96,7 @@ def fitnessmethod(fun=None,stype=None):
 
     Example
     -------
-    @decorators.fitness
+    >>> @decorators.fitness
     def some_function(array):
         return sum(array)
     """
