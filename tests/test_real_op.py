@@ -1,6 +1,6 @@
 # import pyparadiseo as pp
 from pyparadiseo import solution
-from pyparadiseo import Solution
+# from pyparadiseo import Solution
 from pyparadiseo import rng
 from pyparadiseo import operator,initializer,bounds
 

@@ -1,10 +1,8 @@
 from pyparadiseo import config
 
-from pyparadiseo import Solution
-
 from pyparadiseo import solution
 from pyparadiseo.mo import neighborhood
-from pyparadiseo.mo.neighborhood import Neighbor
+from pyparadiseo._core import Neighbor
 
 import unittest
 import numpy as np
@@ -91,7 +89,7 @@ class TestNeighbor(unittest.TestCase):
         self.assertEqual(sol.encoding,None)
 
     def test_index(self):
-        sol = Solution()
+        sol = solution.empty()
         nbor = Neighbor()
 
         nbor.index(sol,1)

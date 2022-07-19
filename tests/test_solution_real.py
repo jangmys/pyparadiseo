@@ -55,7 +55,7 @@ class TestSolution(unittest.TestCase):
         self.sol.diversity = 4.2
 
         #copy ctor
-        sol2 = solution.from_object(self.sol)
+        sol2 = solution.solution(self.sol)
         self.assertEqual(sol2.array[0],0.0)
         self.assertEqual(sol2.array[1],1.0)
         self.assertEqual(sol2.fitness,42.0)

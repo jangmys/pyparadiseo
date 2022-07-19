@@ -1,8 +1,12 @@
-from pyparadiseo import Solution
+from pyparadiseo import solution
+
+from pyparadiseo._core import moNeighborhood
+from pyparadiseo._core import moIndexNeighborhood
+
 
 from pyparadiseo import mo
 from pyparadiseo.mo import neighborhood
-from pyparadiseo.mo.neighborhood import Neighbor
+from pyparadiseo._core import Neighbor
 
 import unittest
 import numpy as np
@@ -13,9 +17,9 @@ class TestNeighborhood(unittest.TestCase):
     def tearDown(self):
         pass
     def test_derived(self):
-        class derivedNeighborhood(mo.moNeighborhood):
+        class derivedNeighborhood(moNeighborhood):
             def __init__(self):
-                mo.moNeighborhood.__init__(self)
+                moNeighborhood.__init__(self)
             def hasNeighbor(self,pyeot):
                 return True
             def init(self,pyeot,nbor):
@@ -29,9 +33,9 @@ class TestNeighborhood(unittest.TestCase):
         self.assertEqual(nhood.__class__.__bases__[0].__name__,"moNeighborhood")
 
     def test_derivedIndex(self):
-        class derivedIndexNeighborhood(mo.moIndexNeighborhood):
+        class derivedIndexNeighborhood(moIndexNeighborhood):
             def __init__(self,nhoodSize):
-                mo.moIndexNeighborhood.__init__(self,nhoodSize)
+                moIndexNeighborhood.__init__(self,nhoodSize)
             def hasNeighbor(self,pyeot):
                 return True
             def init(self,pyeot,PyNeighbor):
@@ -45,7 +49,7 @@ class TestNeighborhood(unittest.TestCase):
         self.assertEqual(nhood.neighborhood_size,10)
 
     def test_orderNeighborhood(self):
-        sol = Solution()
+        sol = solution.empty()
         nbor= Neighbor()
 
         nhood = mo.neighborhood.OrderNeighborhood()

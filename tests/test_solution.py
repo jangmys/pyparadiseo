@@ -3,7 +3,7 @@ import pyparadiseo as pp
 from pyparadiseo import config
 
 from pyparadiseo import solution
-from pyparadiseo import Solution
+# from pyparadiseo import Solution
 
 import unittest
 
@@ -15,7 +15,7 @@ class TestSolution(unittest.TestCase):
         self.assertEqual(self.sol.fitness,None)
 
     def test_ctor_noinit(self):
-        sol = solution.from_object([1,2,3.0,'arf'])
+        sol = solution.solution([1,2,3.0,'arf'])
         self.assertEqual(sol.encoding,[1,2,3.0,'arf'])
         self.assertEqual(sol[0],1)
         self.assertEqual(sol[1],2)
@@ -29,7 +29,7 @@ class TestSolution(unittest.TestCase):
         self.sol.diversity = 4.2
 
         #copy ctor
-        sol2 = solution.from_object(self.sol)
+        sol2 = solution.solution(self.sol)
         self.assertEqual(sol2.encoding,[1,2,3,4])
         self.assertEqual(sol2.fitness,42.0)
         self.assertEqual(sol2.objectiveVector[0],1.1)
@@ -102,7 +102,7 @@ class TestSolution(unittest.TestCase):
 
     def test_pickle(self):
         #make a solution
-        sol = solution.from_object([1,2,3,4])
+        sol = solution.solution([1,2,3,4])
         sol.fitness = 42.0
         sol.objectiveVector = [1.1,2.2]
         sol.diversity = 4.2
@@ -137,9 +137,11 @@ class TestSolution(unittest.TestCase):
         sol=solution.empty(stype='real')
         self.assertTrue(isinstance(sol,RealSolution))
 
-        sol=solution.from_object([1,2,3]*3,stype='real')
+        sol=solution.solution([0,1,2]*3,stype='real')
         self.assertTrue(isinstance(sol,RealSolution))
         self.assertEqual(len(sol),9)
+        for i in range(9):
+            self.assertEqual(sol.array[i],i%3)
 
 
 

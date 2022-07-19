@@ -1,7 +1,7 @@
 import pyparadiseo as pp
 
 from pyparadiseo import config
-from pyparadiseo import ObjectiveVectorTraits
+from pyparadiseo._core import ObjectiveVectorTraits
 
 import unittest
 

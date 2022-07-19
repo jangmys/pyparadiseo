@@ -22,45 +22,29 @@ class test_simpleHC_onemax(unittest.TestCase):
         """
         run simple GA on OneMax. expect to find at least 18/20...unlikely to happen by chance and almost sure if it works
         """
-        import pyparadiseo
-        from pyparadiseo import factory
         from pyparadiseo import config
 
+        from pyparadiseo import operator
         from pyparadiseo import evaluator
         from pyparadiseo import population
         from pyparadiseo import initializer
-
-        from pyparadiseo.operator import OnePtBitCrossover,DetBitFlip
 
         config.set_solution_type('bin')
 
         #make pyparadiseo evaluator from python function
         eval = evaluator.fitness(lambda sol: np.count_nonzero(sol))
-        # eval = evaluator.fitness(f_eval)
-        # print(type(eval))
-
         init = initializer.random(size=self.DIM)
-        print(type(init))
-
         # #generate and evaluate population
-        pop = population.from_init(self.POPSIZE, init, stype='bin')
-        print(type(pop))
+        pop = population.from_init(self.POPSIZE, init)
 
-        p_eval=evaluator.pop_eval_from_fitness(eval,stype='bin')
+        p_eval=evaluator.pop_eval_from_fitness(eval)
         p_eval(pop,pop)
-
-        # print(pop)
-
-        print(type(p_eval))
-
-        # p_eval=_PopEval(lambda sol: np.count_nonzero(sol))
-        # print(type(p_eval))
 
         # #assemble simple GA
         sga = algo.simpleGA(
             select_one.det_tournament(4),
-            OnePtBitCrossover(),.1,
-            DetBitFlip(),.7,
+            operator.OnePtBitCrossover(),.1,
+            operator.DetBitFlip(),.7,
             eval,
             continuator.max_generations(self.NGENS)
         )

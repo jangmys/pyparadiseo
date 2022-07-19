@@ -16,9 +16,9 @@ class TestBitOp(unittest.TestCase):
     def test_OneBitFlip(self):
         ind = solution.empty(stype='bin')
         self.bin_init(ind)
-        ind2=solution.from_object(ind,stype='bin')
-        # print(ind)
-        # print(ind2)
+        ind2= solution.solution(ind,stype='bin')
+        # print("one ",ind)
+        # print("two ",ind2)
         bitFlip = operator.OneBitFlip()
 
         # print(ind)

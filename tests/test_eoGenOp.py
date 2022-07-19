@@ -1,4 +1,4 @@
-from pyparadiseo import Solution
+from pyparadiseo import solution
 from pyparadiseo import eo
 from pyparadiseo import initializer
 
@@ -18,10 +18,10 @@ import numpy as np
 class test_genops(unittest.TestCase):
     def setUp(self):
         self.init = initializer.initializer(lambda : np.random.randint(0,2,10))
-        self.ind1 = Solution()
+        self.ind1 = solution.empty()
         self.init(self.ind1)
 
-        self.ind2 = Solution()
+        self.ind2 = solution.empty()
         self.init(self.ind2)
 
     def tearDown(self):

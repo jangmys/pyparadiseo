@@ -1,5 +1,5 @@
-from pyparadiseo import ObjectiveVectorTraits
-from pyparadiseo import ObjectiveVector
+from pyparadiseo._core import ObjectiveVectorTraits
+from pyparadiseo._core import ObjectiveVector
 
 import unittest
 
