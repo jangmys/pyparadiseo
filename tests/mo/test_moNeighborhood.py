@@ -2,7 +2,7 @@ from pyparadiseo import solution
 
 from pyparadiseo._core import moNeighborhood
 from pyparadiseo._core import moIndexNeighborhood
-
+from pyparadiseo._core import moOrderNeighborhood
 
 from pyparadiseo import mo
 from pyparadiseo.mo import neighborhood
@@ -52,11 +52,11 @@ class TestNeighborhood(unittest.TestCase):
         sol = solution.empty()
         nbor= Neighbor()
 
-        nhood = mo.neighborhood.OrderNeighborhood()
+        nhood = moOrderNeighborhood()
         self.assertFalse(nhood.has_neighbor(sol)) #no size given in ctor
         self.assertEqual(nhood.neighborhood_size,0)
 
-        nhood = mo.neighborhood.OrderNeighborhood(42)
+        nhood = moOrderNeighborhood(42)
         self.assertTrue(nhood.has_neighbor(sol)) #size given in ctor
         self.assertEqual(nhood.neighborhood_size,42)
 

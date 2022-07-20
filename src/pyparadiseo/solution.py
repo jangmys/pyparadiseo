@@ -1,14 +1,17 @@
 """
 Solution Types
 --------------
+Provides factory methods to create solution object to be used in PyParadiseo algorithms (EO/MO/MOEO)
 
+Different solution types are provided:
+    * Generic
+    * Binary
+    * Real
+    * Permutation
 """
-
-
 from pyparadiseo import config
 from pyparadiseo import initializer
 from pyparadiseo import bounds
-
 
 from ._core import Solution
 from ._core import RealSolution

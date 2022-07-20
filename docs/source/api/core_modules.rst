@@ -1,42 +1,26 @@
+
+
+
+
 Core modules
 ============
 
-.. automodule:: pyparadiseo.config
-    :members:
-    :undoc-members:
-    :show-inheritance:
+
+.. toctree::
+    :maxdepth: 1
+
+    core/config
+    core/bounds
+    core/solution
+    core/population
+    core/evaluator
+    core/initializer
 
 
-.. automodule:: pyparadiseo.bounds
-    :members: bound_below
-    :undoc-members:
-    :show-inheritance:
 
 
-.. automodule:: pyparadiseo.solution
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 
-.. automodule:: pyparadiseo.population
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-.. automodule:: pyparadiseo.evaluator
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :imported-members:
-
-
-.. automodule:: pyparadiseo.initializer
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :imported-members:
 
 
 
