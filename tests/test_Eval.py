@@ -1,12 +1,8 @@
 #ABC
-from pyparadiseo import eoEvalFunc
+from pyparadiseo._core import eoEvalFunc
 
 from pyparadiseo import config
 from pyparadiseo import solution,population
-
-
-
-from pyparadiseo import Pop
 
 from pyparadiseo import evaluator
 from pyparadiseo import initializer

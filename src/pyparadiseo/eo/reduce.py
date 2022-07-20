@@ -5,10 +5,10 @@
 
     __call__(pop,new_size) --> void
 
- * eoReduce: .reduce the new generation to the specified size
-   At the moment, limited to truncation - with 2 different methods,
-   one that sorts the whole population, and one that repeatidely kills
-   the worst. Ideally, we should be able to choose at run-time!!!
+     * eoReduce: .reduce the new generation to the specified size
+       At the moment, limited to truncation - with 2 different methods,
+       one that sorts the whole population, and one that repeatidely kills
+       the worst. Ideally, we should be able to choose at run-time!!!
 """
 from pyparadiseo import config,utils
 

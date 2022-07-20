@@ -1,5 +1,5 @@
-pyparadiseo.moeo package
-========================
+Multi-Objective EO (MOEO)
+=========================
 
 .. automodule:: pyparadiseo.moeo
    :members:
@@ -7,10 +7,8 @@ pyparadiseo.moeo package
    :show-inheritance:
    :imported-members:
 
-Submodules
-----------
 
-pyparadiseo.moeo.algo module
+MOEO Algo
 ----------------------------
 
 .. automodule:: pyparadiseo.moeo.algo
@@ -19,7 +17,7 @@ pyparadiseo.moeo.algo module
    :show-inheritance:
    :imported-members:
 
-pyparadiseo.moeo.diversity\_assignment module
+MOEO Diversity Assignment
 ---------------------------------------------
 
 .. automodule:: pyparadiseo.moeo.diversity_assignment
@@ -28,7 +26,7 @@ pyparadiseo.moeo.diversity\_assignment module
    :show-inheritance:
    :imported-members:
 
-pyparadiseo.moeo.fitness\_assignment module
+MOEO Fitness Assignement
 -------------------------------------------
 
 .. automodule:: pyparadiseo.moeo.fitness_assignment
@@ -37,7 +35,7 @@ pyparadiseo.moeo.fitness\_assignment module
    :show-inheritance:
    :imported-members:
 
-pyparadiseo.moeo.replacement module
+MOEO Replacement
 -----------------------------------
 
 .. automodule:: pyparadiseo.moeo.replacement

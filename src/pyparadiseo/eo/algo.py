@@ -9,10 +9,7 @@ easyEA :
 fastGA :
 """
 
-
-
 from pyparadiseo import config,utils
-
 from pyparadiseo.eo import breeders,replacement
 
 def simpleGA(selector,crossover,p_cross,mutate,p_mutate,f_eval,continuator,stype=None):

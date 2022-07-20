@@ -1,21 +1,12 @@
 """
 Continuators : Stopping criteria
 ================================
-/** @defgroup Continuators Stopping criteria
- *
- * A stopping criterion is called a "continue". This is a functor that is called at each generation end
- * and that return true if one should stop the search.
- *
- *  @ingroup Utilities
- */
+Continuators Stopping criteria
 
-/** Termination condition for the genetic algorithm
- * Takes the population as input, returns true for continue,
- * false for termination
- *
- * @ingroup Continuators
- * @ingroup Core
- */
+A stopping criterion is called a "continue". This is a functor that is called at each generation end and that return true if one should stop the search.
+
+Termination condition for the genetic algorithm
+Takes the population as input, returns true for continue, false for termination
 
 base : eoContinue.h
 
@@ -23,7 +14,6 @@ eoGenContinue.h
 eoCombinedContinue.h
 eoSecondsElapsedContinue.h
 eoEvalContinue.h
-...
  """
 
 from pyparadiseo import config,utils

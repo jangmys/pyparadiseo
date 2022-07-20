@@ -1,5 +1,9 @@
 """
+Initializer
+-----------
+
 Initializer : Generate Solutions
+
 
 PyParadisEO algorithms use initializers to generate new solutions
 """

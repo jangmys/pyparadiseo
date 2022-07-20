@@ -5,7 +5,7 @@ The eo.selector module contains selection operators.
 
 base :
 eoSelect.h
-    __call__(src_pop,dest_pop) --> void
+``__call__(src_pop,dest_pop) -> void``
 
 eoSelect selects a number of individuals from the first argument and
 puts it in the second. To emphasize that it should not try to enlarge

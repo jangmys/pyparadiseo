@@ -5,13 +5,13 @@
 
     __call__(old_pop,new_pop) --> None
 
- * Merges the old population (first argument), with the new generation
- *
- * Its signature is exactly
- * that of the selection base eoSelect, but its purpose is to merge the
- * two populations into one (the second argument).
- * Note that the algorithms assume that the second argument denotes the
- * next generation.
+     * Merges the old population (first argument), with the new generation
+     *
+     * Its signature is exactly
+     * that of the selection base eoSelect, but its purpose is to merge the
+     * two populations into one (the second argument).
+     * Note that the algorithms assume that the second argument denotes the
+     * next generation.
  """
 from pyparadiseo import config,utils
 

@@ -1,4 +1,7 @@
 """
+Evaluators
+----------
+
 evaluate solutions
 
 evaluators assign fitness or objective values to solutions

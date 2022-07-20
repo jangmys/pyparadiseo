@@ -27,10 +27,10 @@ def generational(stype=None):
 
 def weak_elitist(replacement,stype=None):
     """a wrapper for other replacement procedures.
-Copies in the new pop the best individual from the old pop,
-AFTER normal replacement, if the best of the new pop is worse than the best
-of the old pop. Removes the worse individual from the new pop.
-This could be changed by adding a selector there...
+    Copies in the new pop the best individual from the old pop,
+    AFTER normal replacement, if the best of the new pop is worse than the best
+    of the old pop. Removes the worse individual from the new pop.
+    This could be changed by adding a selector there...
 
     Parameters
     ----------
@@ -101,10 +101,9 @@ def ssga_worse(stype=None):
 def ssga_stoch_tournament(rate,stype=None):
     """SSGA stochastic tournament replacement. Is an eoReduceMerge.
 
-    It much cleaner to insert directly the offspring in the parent population,
-but it is NOT equivalent in case of more than 1 offspring as already
-replaced could be removed , which is not possible in the eoReduceMerge
-So what the heck !
+    It much cleaner to insert directly the offspring in the parent population, but it is NOT equivalent in case of more than 1 offspring as already replaced could be removed , which is not possible in the eoReduceMerge
+
+    So what the heck !
     """
     if stype is None:
         stype = config._SOLUTION_TYPE

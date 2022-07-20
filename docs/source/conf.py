@@ -74,6 +74,10 @@ exclude_patterns = []
 source_suffix = '.rst'
 master_doc = 'index'
 
+# -- Napoleon settings ------------------------
+napoleon_numpy_docstring = True
+napoleon_use_ivar = True
+napoleon_use_param = True
 
 # -- Options for HTML output -------------------------------------------------
 

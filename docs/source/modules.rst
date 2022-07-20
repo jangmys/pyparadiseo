@@ -1,7 +1,12 @@
-pyparadiseo
-===========
+API reference
+=============
 
 .. toctree::
-   :maxdepth: 4
+    :maxdepth: 4
 
-   pyparadiseo
+    api/core_modules
+    api/operators
+    pyparadiseo.eo
+    pyparadiseo.mo
+    pyparadiseo.moeo
+    pyparadiseo

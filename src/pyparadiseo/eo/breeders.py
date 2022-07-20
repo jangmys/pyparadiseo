@@ -12,7 +12,7 @@ transform function.
 @see eoSelect, eoTransform, eoSelectTransform
 
 base : eoBreed.h
-__call__(parent_pop,offspring_pop) --> None
+``__call__(parent_pop,offspring_pop) -> None``
 
 eoGeneralBreeder.h
 eoOneToOneBreeder.h
@@ -83,19 +83,16 @@ def one_to_one_breeder(gen_op,f_eval,p_replace=1.0,stype=None):
     eoOneToOneBreeder.h
 
     transforms a population using
-    - an operator that MODIFIES only one parent from the populator
-    *     (though it can use any number aside) and thus generates ONE offspring)
-    *   - a local replacement between the parent and its offspring
-    *
-    /** Ctor:
+    - an operator that MODIFIES only one parent from the populator (though it can use any number aside) and thus generates ONE offspring)
+    - a local replacement between the parent and its offspring
+
+    Ctor:
     * @param _op       a general operator (must MODIFY only ONE parent)
     * @param _eval     an eoEvalFunc to evaluate the offspring
     * @param _pReplace probability that the best of parent/offspring wins [1]
     * @param _howMany  eoHowMany offpsring to generate [100%]
-    */
-    *
-    * Typically, Differential Evolution (Storn and Price 94) and Deb et al's
-    *   G3 can be built on this
+
+    Typically, Differential Evolution (Storn and Price 94) and Deb `et al`'s G3 can be built on this
     """
     if stype is None:
         stype = config._SOLUTION_TYPE

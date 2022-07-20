@@ -1,3 +1,11 @@
+"""
+Config
+------
+
+set global pyparadseo parameters
+"""
+
+
 from ._core import FitnessTraits
 from ._core import ObjectiveVectorTraits
 

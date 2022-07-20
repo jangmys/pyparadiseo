@@ -1,3 +1,10 @@
+"""
+Solution Types
+--------------
+
+"""
+
+
 from pyparadiseo import config
 from pyparadiseo import initializer
 from pyparadiseo import bounds

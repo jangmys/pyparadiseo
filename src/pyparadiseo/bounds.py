@@ -1,3 +1,13 @@
+"""
+Domain bounds
+-------------
+
+bounds
+
+eoBounds.h
+
+domain bounds
+"""
 #ABC
 from ._core import RealBounds as RealBoundsBase
 
@@ -26,6 +36,13 @@ from ._core import RealVectorBounds #a vector of bounds
 def bound_below(lb):
     """
     half-open bounds [a,inf[ (1D)
+
+    *Test*
+
+    * Stuff
+    * more
+
+    ``code``
     """
     return RealBoundBelow(lb)
 

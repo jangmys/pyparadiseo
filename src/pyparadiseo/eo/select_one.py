@@ -55,12 +55,11 @@ def det_tournament(t_size=2,stype=None):
 
 
 def stoch_tournament(t_rate=1.0,stype=None):
-    """eoStochTournamentSelect: a selection method that selects ONE individual by
- binary stochastic tournament
+    """eoStochTournamentSelect: a selection method that selects ONE individual by binary stochastic tournament
 
-     Parameters
-     ----------
-     t_rate [0.5,1.0]
+    Parameters
+    ----------
+    t_rate : real,[0.5,1.0]
     """
     if stype is None:
         stype = config._SOLUTION_TYPE

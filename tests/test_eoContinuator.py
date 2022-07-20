@@ -8,7 +8,7 @@ from pyparadiseo import evaluator
 from pyparadiseo import initializer
 
 # from pyparadiseo.initializer import Init
-from pyparadiseo import Pop
+from pyparadiseo import population
 
 
 import unittest
@@ -23,7 +23,7 @@ class test_eocontinue(unittest.TestCase):
         self.init = initializer.initializer(lambda : np.random.randint(0,2,10))
         self.eval_raw = lambda x: np.sum(x)
         self.eval = evaluator.fitness(self.eval_raw)
-        self.pop = Pop(10,self.init)
+        self.pop = population.from_init(10,self.init)
 
         self.ind1 = solution.empty()
         self.init(self.ind1)

@@ -3,7 +3,7 @@ from pyparadiseo import initializer
 from pyparadiseo import solution
 
 #ABC
-from pyparadiseo import eoInit
+from pyparadiseo._core import eoInit
 
 import inspect
 import unittest
