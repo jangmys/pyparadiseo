@@ -17,34 +17,46 @@ pip install pyparadiseo
 
 ## Getting Started
 
+[See this for tutorials and complete reference](https://paradiseo.gitlabpages.inria.fr/pyparadiseo/)
+
 Example of running EO's simple GA (SGA) for the One-Max test problem
 
 ```python
-# problem dependent
+
 from pyparadiseo import Pop
 from pyparadiseo.evaluator import FitnessEval,PopLoopEval
-# encoding dependent
-from pyparadiseo.initializer import BinaryInit
-from pyparadiseo.operator import OnePtBitCrossover,DetBitFlip
-# independent
-from pyparadiseo.eo import algo,selector,continuator
+
+from pyparadiseo import evaluator
+from pyparadiseo import operator
+from pyparadiseo import population
+from pyparadiseo import initializer
+
+from pyparadiseo.eo import algo,select_one,continuator
 
 import numpy as np
 
 if __name__ == "__main__":
+    #set solution type globally
+    config.set_solution_type('bin')
+
     #make pyparadiseo evaluator from python function
-    eval = FitnessEval(lambda sol: np.count_nonzero(sol))
+    eval = evaluator.fitness(lambda sol: np.count_nonzero(sol))
+
     #generate and evaluate population
-    pop = Pop(25, BinaryInit(20))
-    PopLoopEval(eval)(pop,pop)
+    init = initializer.random(size=20)
+    pop = population.from_init(25, init)
+    pop_eval=evaluator.pop_eval_from_fitness(eval)
+    pop_eval(pop,pop)
+
     #assemble simple GA
-    sga = algo.SGA(
-        selector.DetTournamentSelect(),
-        OnePtBitCrossover(),.2,
-        DetBitFlip(),.6,
+    sga = algo.simpleGA(
+        select_one.det_tournament(4),
+        operator.OnePtBitCrossover(),.1,
+        operator.DetBitFlip(),.7,
         eval,
-        continuator.GenContinue(100)
+        continuator.max_generations(self.NGENS)
     )
+
     #run algo on pop and print best individual
     sga(pop)
     print(pop.best())

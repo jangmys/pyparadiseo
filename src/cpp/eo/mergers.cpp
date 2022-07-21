@@ -28,12 +28,39 @@ using namespace boost::python;
 #define DEF2(x, i1) class_<x<PyEOT>, bases<eoMerge<PyEOT > > >(#x, init<i1>() ).def("__call__", &eoMerge<PyEOT>::operator())
 #define DEF3(x, i1, i2) class_<x<PyEOT>, bases<eoMerge<PyEOT > > >(#x, init<i1, i2 >() ).def("__call__", &eoMerge<PyEOT>::operator())
 
+template<typename SolutionType>
+void expose_mergers(std::string name)
+{
+    class_<eoElitism<SolutionType>, bases<eoMerge<SolutionType> > >(
+        make_name("eoElitism",name).c_str(),
+        init<double>()
+    )
+    .def( init<double, bool>() )
+    .def("__call__", &eoMerge<SolutionType>::operator())
+    ;
+
+    class_<eoNoElitism<SolutionType>, bases<eoMerge<SolutionType> > >(
+        make_name("eoNoElitism",name).c_str()
+    )
+    .def("__call__", &eoMerge<SolutionType>::operator())
+    ;
+
+    class_<eoPlus<SolutionType>, bases<eoMerge<SolutionType> > >(
+        make_name("eoPlus",name).c_str()
+    )
+    .def("__call__", &eoMerge<SolutionType>::operator())
+    ;
+}
+
+
+
 void mergers()
 {
-    def_abstract_functor<eoMerge<PyEOT> >("eoMerge");
+    expose_mergers<PyEOT>("");
+    expose_mergers<BinarySolution>("Bin");
 
-    DEF2(eoElitism, double)
-        .def( init<double, bool>() );
-    DEF(eoNoElitism);
-    DEF(eoPlus);
+    // DEF2(eoElitism, double)
+    //     .def( init<double, bool>() );
+    // DEF(eoNoElitism);
+    // DEF(eoPlus);
 }

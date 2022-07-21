@@ -22,74 +22,79 @@
 #include <neighborhood/moNeighborhood.h>
 #include <neighborhood/moDummyNeighborhood.h>
 
+#include <utils/def_abstract_functor.h>
+
 using namespace boost::python;
 
-struct moNeighborhoodExplorerWrap : moNeighborhoodExplorer<PyNeighbor>, wrapper<moNeighborhoodExplorer<PyNeighbor>>
+template<typename SolutionType>
+struct moNeighborhoodExplorerWrap : moNeighborhoodExplorer<PyNeighbor<SolutionType>>, wrapper<moNeighborhoodExplorer<PyNeighbor<SolutionType>>>
 {
 public:
+    typedef PyNeighbor<SolutionType> NborT;
+
     moNeighborhoodExplorerWrap(
-    ) : moNeighborhoodExplorer<PyNeighbor>()
+    ) : moNeighborhoodExplorer<NborT>()
     {}
 
     moNeighborhoodExplorerWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        moEval<PyNeighbor>& _eval,
+        moNeighborhood<NborT>& _nhood,
+        moEval<NborT>& _eval,
         boost::python::object obj
-    ) : moNeighborhoodExplorer<PyNeighbor>(_nhood,_eval)
+    ) : moNeighborhoodExplorer<NborT>(_nhood,_eval)
     {
-        selectedNeighbor.setMove(obj);
-        currentNeighbor.setMove(obj);
+        this->selectedNeighbor.setMove(obj);
+        this->currentNeighbor.setMove(obj);
     }
 
     // pure virtual / no default
-    void initParam(PyEOT& _solution)
+    void initParam(SolutionType& _solution)
     {
         this->get_override("initParam")(_solution);
     }
 
-    void updateParam(PyEOT& _solution)
+    void updateParam(SolutionType& _solution)
     {
         this->get_override("updateParam")(_solution);
     }
 
-    bool isContinue(PyEOT& _solution)
+    bool isContinue(SolutionType& _solution)
     {
         return this->get_override("isContinue")(_solution);
     }
 
-    bool accept(PyEOT& _solution)
+    bool accept(SolutionType& _solution)
     {
         return this->get_override("accept")(_solution);
     }
 
-    void terminate(PyEOT& _solution)
+    void terminate(SolutionType& _solution)
     {
         this->get_override("terminate")(_solution);
     }
 
-    void operator()(PyEOT& _sol)
+    void operator()(SolutionType& _sol)
     {
         this->get_override("operator()")(_sol);
     }
 
     // w/ default
-    void move(PyEOT& _solution)
+    void move(SolutionType& _solution)
     {
         if (override f = this->get_override("move"))
         {
             this->get_override("move")(_solution);
             return;
         }
-        moNeighborhoodExplorer<PyNeighbor>::move(_solution);
+        moNeighborhoodExplorer<NborT>::move(_solution);
     }
-    void default_move(PyEOT& _solution)
+    void default_move(SolutionType& _solution)
     {
-        this->moNeighborhoodExplorer<PyNeighbor>::move(_solution);
+        this->moNeighborhoodExplorer<NborT>::move(_solution);
     }
 
     //???
     bool callMoveApplied(){
-        return moveApplied();
+        return this->moveApplied();
     }
 };
 
@@ -110,151 +115,153 @@ public:
 //
 // }
 
-
-void moExplorers()
+template<typename SolutionType>
+void expose_moExplorers(std::string name)
 {
-    class_<moNeighborhoodExplorerWrap,boost::noncopyable>("moNeighborhoodExplorer",
+    typedef PyNeighbor<SolutionType> NborT;
+
+    class_<moNeighborhoodExplorerWrap<SolutionType>,boost::noncopyable>(make_name("moNeighborhoodExplorer",name).c_str(),
         init<>())
     .def(init<
-        moNeighborhood<PyNeighbor>&,
-        moEval<PyNeighbor>&,
+        moNeighborhood<NborT>&,
+        moEval<NborT>&,
         boost::python::object
     >())
-    .def("initParam", pure_virtual(&moNeighborhoodExplorerWrap::initParam))
-    .def("updateParam", pure_virtual(&moNeighborhoodExplorerWrap::updateParam))
-    .def("isContinue", pure_virtual(&moNeighborhoodExplorerWrap::isContinue))
-    .def("accept", pure_virtual(&moNeighborhoodExplorerWrap::accept))
-    .def("terminate", pure_virtual(&moNeighborhoodExplorerWrap::terminate))
-    .def("__call__",pure_virtual(&moNeighborhoodExplorerWrap::operator()))
-    .def("move",&moNeighborhoodExplorer<PyNeighbor>::move,&moNeighborhoodExplorerWrap::default_move)
-    .def("moveApplied",&moNeighborhoodExplorerWrap::callMoveApplied)
+    .def("initParam", pure_virtual(&moNeighborhoodExplorerWrap<SolutionType>::initParam))
+    .def("updateParam", pure_virtual(&moNeighborhoodExplorerWrap<SolutionType>::updateParam))
+    .def("isContinue", pure_virtual(&moNeighborhoodExplorerWrap<SolutionType>::isContinue))
+    .def("accept", pure_virtual(&moNeighborhoodExplorerWrap<SolutionType>::accept))
+    .def("terminate", pure_virtual(&moNeighborhoodExplorerWrap<SolutionType>::terminate))
+    .def("__call__",pure_virtual(&moNeighborhoodExplorerWrap<SolutionType>::operator()))
+    .def("move",&moNeighborhoodExplorer<NborT>::move,&moNeighborhoodExplorerWrap<SolutionType>::default_move)
+    .def("moveApplied",&moNeighborhoodExplorerWrap<SolutionType>::callMoveApplied)
     ;
 
 
     //HillClimbers
-    class_<moSimpleHCexplorer<PyNeighbor>,bases<moNeighborhoodExplorer<PyNeighbor>>>
-    ("moSimpleHCexplorer",init<
-        moNeighborhood<PyNeighbor>&,
-        moEval<PyNeighbor>&,
-        moNeighborComparator<PyNeighbor>&,
-        moSolNeighborComparator<PyNeighbor>&
+    class_<moSimpleHCexplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>>
+    (make_name("moSimpleHCexplorer",name).c_str(),init<
+        moNeighborhood<NborT>&,
+        moEval<NborT>&,
+        moNeighborComparator<NborT>&,
+        moSolNeighborComparator<NborT>&
     >())
-    .def("initParam",&moSimpleHCexplorer<PyNeighbor>::initParam)
-    .def("updateParam",&moSimpleHCexplorer<PyNeighbor>::updateParam)
-    .def("isContinue",&moSimpleHCexplorer<PyNeighbor>::isContinue)
-    .def("accept",&moSimpleHCexplorer<PyNeighbor>::accept)
-    .def("terminate",&moSimpleHCexplorer<PyNeighbor>::terminate)
-    .def("__call__",&moSimpleHCexplorer<PyNeighbor>::operator())
+    .def("initParam",&moSimpleHCexplorer<NborT>::initParam)
+    .def("updateParam",&moSimpleHCexplorer<NborT>::updateParam)
+    .def("isContinue",&moSimpleHCexplorer<NborT>::isContinue)
+    .def("accept",&moSimpleHCexplorer<NborT>::accept)
+    .def("terminate",&moSimpleHCexplorer<NborT>::terminate)
+    .def("__call__",&moSimpleHCexplorer<NborT>::operator())
     ;
 
-    class_<moFirstImprHCexplorer<PyNeighbor>,bases<moNeighborhoodExplorer<PyNeighbor>>>
-    ("moFirstImprHCexplorer",init<
-        moNeighborhood<PyNeighbor>&,
-        moEval<PyNeighbor>&,
-        moNeighborComparator<PyNeighbor>&,
-        moSolNeighborComparator<PyNeighbor>&
+    class_<moFirstImprHCexplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>>
+    (make_name("moFirstImprHCexplorer",name).c_str(),init<
+        moNeighborhood<NborT>&,
+        moEval<NborT>&,
+        moNeighborComparator<NborT>&,
+        moSolNeighborComparator<NborT>&
     >())
-    .def("initParam",&moSimpleHCexplorer<PyNeighbor>::initParam)
-    .def("updateParam",&moSimpleHCexplorer<PyNeighbor>::updateParam)
-    .def("isContinue",&moSimpleHCexplorer<PyNeighbor>::isContinue)
-    .def("accept",&moSimpleHCexplorer<PyNeighbor>::accept)
-    .def("terminate",&moSimpleHCexplorer<PyNeighbor>::terminate)
-    .def("__call__",&moSimpleHCexplorer<PyNeighbor>::operator())
+    .def("initParam",&moSimpleHCexplorer<NborT>::initParam)
+    .def("updateParam",&moSimpleHCexplorer<NborT>::updateParam)
+    .def("isContinue",&moSimpleHCexplorer<NborT>::isContinue)
+    .def("accept",&moSimpleHCexplorer<NborT>::accept)
+    .def("terminate",&moSimpleHCexplorer<NborT>::terminate)
+    .def("__call__",&moSimpleHCexplorer<NborT>::operator())
     ;
 
 
-    class_<moRandomBestHCexplorer<PyNeighbor>,bases<moNeighborhoodExplorer<PyNeighbor>>>
-    ("moRandomBestHCexplorer",init<
-        moNeighborhood<PyNeighbor>&,
-        moEval<PyNeighbor>&,
-        moNeighborComparator<PyNeighbor>&,
-        moSolNeighborComparator<PyNeighbor>&
+    class_<moRandomBestHCexplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>>
+    (make_name("moRandomBestHCexplorer",name).c_str(),init<
+        moNeighborhood<NborT>&,
+        moEval<NborT>&,
+        moNeighborComparator<NborT>&,
+        moSolNeighborComparator<NborT>&
     >())
-    .def("initParam",&moRandomBestHCexplorer<PyNeighbor>::initParam)
-    .def("updateParam",&moRandomBestHCexplorer<PyNeighbor>::updateParam)
-    .def("isContinue",&moRandomBestHCexplorer<PyNeighbor>::isContinue)
-    .def("accept",&moRandomBestHCexplorer<PyNeighbor>::accept)
-    .def("terminate",&moRandomBestHCexplorer<PyNeighbor>::terminate)
-    .def("__call__",&moRandomBestHCexplorer<PyNeighbor>::operator())
+    .def("initParam",&moRandomBestHCexplorer<NborT>::initParam)
+    .def("updateParam",&moRandomBestHCexplorer<NborT>::updateParam)
+    .def("isContinue",&moRandomBestHCexplorer<NborT>::isContinue)
+    .def("accept",&moRandomBestHCexplorer<NborT>::accept)
+    .def("terminate",&moRandomBestHCexplorer<NborT>::terminate)
+    .def("__call__",&moRandomBestHCexplorer<NborT>::operator())
     ;
 
-    class_<moNeutralHCexplorer<PyNeighbor>,bases<moRandomBestHCexplorer<PyNeighbor>>>
-    ("moNeutralHCexplorer",init<
-        moNeighborhood<PyNeighbor>&,
-        moEval<PyNeighbor>&,
-        moNeighborComparator<PyNeighbor>&,
-        moSolNeighborComparator<PyNeighbor>&,
+    class_<moNeutralHCexplorer<NborT>,bases<moRandomBestHCexplorer<NborT>>>
+    (make_name("moNeutralHCexplorer",name).c_str(),init<
+        moNeighborhood<NborT>&,
+        moEval<NborT>&,
+        moNeighborComparator<NborT>&,
+        moSolNeighborComparator<NborT>&,
         unsigned
     >())
-    .def("initParam",&moNeutralHCexplorer<PyNeighbor>::initParam)
-    .def("updateParam",&moNeutralHCexplorer<PyNeighbor>::updateParam)
-    .def("isContinue",&moNeutralHCexplorer<PyNeighbor>::isContinue)
-    .def("accept",&moNeutralHCexplorer<PyNeighbor>::accept)
-    // .def("terminate",&moNeutralHCexplorer<PyNeighbor>::terminate)
-    // .def("__call__",&moNeutralHCexplorer<PyNeighbor>::operator())
+    .def("initParam",&moNeutralHCexplorer<NborT>::initParam)
+    .def("updateParam",&moNeutralHCexplorer<NborT>::updateParam)
+    .def("isContinue",&moNeutralHCexplorer<NborT>::isContinue)
+    .def("accept",&moNeutralHCexplorer<NborT>::accept)
+    // .def("terminate",&moNeutralHCexplorer<NborT>::terminate)
+    // .def("__call__",&moNeutralHCexplorer<NborT>::operator())
     ;
 
 
 
     //Random
-    class_<moRandomSearchExplorer<PyNeighbor>,bases<moNeighborhoodExplorer<PyNeighbor>>,boost::noncopyable>
-    ("moRandomSearchExplorer",init<
-        eoInit<PyEOT>&,
-        eoEvalFunc<PyEOT>&,
+    class_<moRandomSearchExplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>,boost::noncopyable>
+    (make_name("moRandomSearchExplorer",name).c_str(),init<
+        eoInit<SolutionType>&,
+        eoEvalFunc<SolutionType>&,
         unsigned
     >())
-    .def("initParam",&moRandomSearchExplorer<PyNeighbor>::initParam)
-    .def("updateParam",&moRandomSearchExplorer<PyNeighbor>::updateParam)
-    .def("terminate",&moRandomSearchExplorer<PyNeighbor>::terminate)
-    .def("__call__",&moRandomSearchExplorer<PyNeighbor>::operator())
-    .def("isContinue",&moRandomSearchExplorer<PyNeighbor>::isContinue)
-    .def("accept",&moRandomSearchExplorer<PyNeighbor>::accept)
+    .def("initParam",&moRandomSearchExplorer<NborT>::initParam)
+    .def("updateParam",&moRandomSearchExplorer<NborT>::updateParam)
+    .def("terminate",&moRandomSearchExplorer<NborT>::terminate)
+    .def("__call__",&moRandomSearchExplorer<NborT>::operator())
+    .def("isContinue",&moRandomSearchExplorer<NborT>::isContinue)
+    .def("accept",&moRandomSearchExplorer<NborT>::accept)
     ;
 
-    class_<moRandomWalkExplorer<PyNeighbor>,bases<moNeighborhoodExplorer<PyNeighbor>>,boost::noncopyable>
-    ("moRandomWalkExplorer",init<
-        moNeighborhood<PyNeighbor>&,
-        moEval<PyNeighbor>&
+    class_<moRandomWalkExplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>,boost::noncopyable>
+    (make_name("moRandomWalkExplorer",name).c_str(),init<
+        moNeighborhood<NborT>&,
+        moEval<NborT>&
     >())
-    .def("initParam",&moRandomWalkExplorer<PyNeighbor>::initParam)
-    .def("updateParam",&moRandomWalkExplorer<PyNeighbor>::updateParam)
-    .def("terminate",&moRandomWalkExplorer<PyNeighbor>::terminate)
-    .def("__call__",&moRandomWalkExplorer<PyNeighbor>::operator())
-    .def("isContinue",&moRandomWalkExplorer<PyNeighbor>::isContinue)
-    .def("accept",&moRandomWalkExplorer<PyNeighbor>::accept)
+    .def("initParam",&moRandomWalkExplorer<NborT>::initParam)
+    .def("updateParam",&moRandomWalkExplorer<NborT>::updateParam)
+    .def("terminate",&moRandomWalkExplorer<NborT>::terminate)
+    .def("__call__",&moRandomWalkExplorer<NborT>::operator())
+    .def("isContinue",&moRandomWalkExplorer<NborT>::isContinue)
+    .def("accept",&moRandomWalkExplorer<NborT>::accept)
     ;
 
-    class_<moRandomNeutralWalkExplorer<PyNeighbor>,bases<moNeighborhoodExplorer<PyNeighbor>>,boost::noncopyable>
-    ("moRandomNeutralWalkExplorer",init<
-        moNeighborhood<PyNeighbor>&,
-        moEval<PyNeighbor>&,
-        moSolNeighborComparator<PyNeighbor>&,
+    class_<moRandomNeutralWalkExplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>,boost::noncopyable>
+    (make_name("moRandomNeutralWalkExplorer",name).c_str(),init<
+        moNeighborhood<NborT>&,
+        moEval<NborT>&,
+        moSolNeighborComparator<NborT>&,
         unsigned
     >())
-    .def("initParam",&moRandomNeutralWalkExplorer<PyNeighbor>::initParam)
-    .def("updateParam",&moRandomNeutralWalkExplorer<PyNeighbor>::updateParam)
-    .def("terminate",&moRandomNeutralWalkExplorer<PyNeighbor>::terminate)
-    .def("__call__",&moRandomNeutralWalkExplorer<PyNeighbor>::operator())
-    .def("isContinue",&moRandomNeutralWalkExplorer<PyNeighbor>::isContinue)
-    .def("accept",&moRandomNeutralWalkExplorer<PyNeighbor>::accept)
+    .def("initParam",&moRandomNeutralWalkExplorer<NborT>::initParam)
+    .def("updateParam",&moRandomNeutralWalkExplorer<NborT>::updateParam)
+    .def("terminate",&moRandomNeutralWalkExplorer<NborT>::terminate)
+    .def("__call__",&moRandomNeutralWalkExplorer<NborT>::operator())
+    .def("isContinue",&moRandomNeutralWalkExplorer<NborT>::isContinue)
+    .def("accept",&moRandomNeutralWalkExplorer<NborT>::accept)
     ;
 
 
 
-    class_<moMetropolisHastingExplorer<PyNeighbor>,bases<moNeighborhoodExplorer<PyNeighbor>>,boost::noncopyable>
-    ("moMetropolisHastingExplorer",init<
-        moNeighborhood<PyNeighbor>&,
-        moEval<PyNeighbor>&,
-        moNeighborComparator<PyNeighbor>&,
-        moSolNeighborComparator<PyNeighbor>&,
+    class_<moMetropolisHastingExplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>,boost::noncopyable>
+    (make_name("moMetropolisHastingExplorer",name).c_str(),init<
+        moNeighborhood<NborT>&,
+        moEval<NborT>&,
+        moNeighborComparator<NborT>&,
+        moSolNeighborComparator<NborT>&,
         unsigned int
     >())
-    .def("initParam",&moMetropolisHastingExplorer<PyNeighbor>::initParam)
-    .def("updateParam",&moMetropolisHastingExplorer<PyNeighbor>::updateParam)
-    .def("terminate",&moMetropolisHastingExplorer<PyNeighbor>::terminate)
-    .def("__call__",&moMetropolisHastingExplorer<PyNeighbor>::operator())
-    .def("isContinue",&moMetropolisHastingExplorer<PyNeighbor>::isContinue)
-    .def("accept",&moMetropolisHastingExplorer<PyNeighbor>::accept)
+    .def("initParam",&moMetropolisHastingExplorer<NborT>::initParam)
+    .def("updateParam",&moMetropolisHastingExplorer<NborT>::updateParam)
+    .def("terminate",&moMetropolisHastingExplorer<NborT>::terminate)
+    .def("__call__",&moMetropolisHastingExplorer<NborT>::operator())
+    .def("isContinue",&moMetropolisHastingExplorer<NborT>::isContinue)
+    .def("accept",&moMetropolisHastingExplorer<NborT>::accept)
     ;
 
 
@@ -262,61 +269,70 @@ void moExplorers()
 
 
 
-    class_<moSAexplorer<PyNeighbor>,bases<moNeighborhoodExplorer<PyNeighbor>>,boost::noncopyable>
-    ("moSAexplorer",init<
-    moNeighborhood<PyNeighbor>&,
-    moEval<PyNeighbor>&,
-    moSolNeighborComparator<PyNeighbor>&,
-    moCoolingSchedule<PyEOT>&
+    class_<moSAexplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>,boost::noncopyable>
+    (make_name("moSAexplorer",name).c_str(),init<
+    moNeighborhood<NborT>&,
+    moEval<NborT>&,
+    moSolNeighborComparator<NborT>&,
+    moCoolingSchedule<SolutionType>&
     >())
-    .def("initParam",&moSAexplorer<PyNeighbor>::initParam)
-    .def("updateParam",&moSAexplorer<PyNeighbor>::updateParam)
-    .def("terminate",&moSAexplorer<PyNeighbor>::terminate)
-    .def("__call__",&moSAexplorer<PyNeighbor>::operator())
-    .def("isContinue",&moSAexplorer<PyNeighbor>::isContinue)
-    .def("accept",&moSAexplorer<PyNeighbor>::accept)
-    .def("getTemperature",&moSAexplorer<PyNeighbor>::getTemperature)
+    .def("initParam",&moSAexplorer<NborT>::initParam)
+    .def("updateParam",&moSAexplorer<NborT>::updateParam)
+    .def("terminate",&moSAexplorer<NborT>::terminate)
+    .def("__call__",&moSAexplorer<NborT>::operator())
+    .def("isContinue",&moSAexplorer<NborT>::isContinue)
+    .def("accept",&moSAexplorer<NborT>::accept)
+    .def("getTemperature",&moSAexplorer<NborT>::getTemperature)
     ;
 
-    class_<moTSexplorer<PyNeighbor>,bases<moNeighborhoodExplorer<PyNeighbor>>,boost::noncopyable>
-    ("moTSexplorer",init<
-        moNeighborhood<PyNeighbor>&,
-        moEval<PyNeighbor>&,
-        moNeighborComparator<PyNeighbor>&,
-        moSolNeighborComparator<PyNeighbor>&,
-        moTabuList<PyNeighbor>&,
-        moIntensification<PyNeighbor>&,
-        moDiversification<PyNeighbor>&,
-        moAspiration<PyNeighbor>&
+    class_<moTSexplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>,boost::noncopyable>
+    (make_name("moTSexplorer",name).c_str(),init<
+        moNeighborhood<NborT>&,
+        moEval<NborT>&,
+        moNeighborComparator<NborT>&,
+        moSolNeighborComparator<NborT>&,
+        moTabuList<NborT>&,
+        moIntensification<NborT>&,
+        moDiversification<NborT>&,
+        moAspiration<NborT>&
     >())
     ;
 
-    class_<moILSexplorer<PyNeighbor,PyNeighbor>,bases<moNeighborhoodExplorer<PyNeighbor>>,boost::noncopyable>
-    ("moILSexplorer",init<
-        moLocalSearch<PyNeighbor>&,
-        moPerturbation<PyNeighbor>&,
-        moAcceptanceCriterion<PyNeighbor>&
+    class_<moILSexplorer<NborT,NborT>,bases<moNeighborhoodExplorer<NborT>>,boost::noncopyable>
+    (make_name("moILSexplorer",name).c_str(),init<
+        moLocalSearch<NborT>&,
+        moPerturbation<NborT>&,
+        moAcceptanceCriterion<NborT>&
     >())
-    .def("initParam",&moILSexplorer<PyNeighbor,PyNeighbor>::initParam)
-    .def("updateParam",&moILSexplorer<PyNeighbor,PyNeighbor>::updateParam)
-    .def("terminate",&moILSexplorer<PyNeighbor,PyNeighbor>::terminate)
-    .def("__call__",&moILSexplorer<PyNeighbor,PyNeighbor>::operator())
-    .def("isContinue",&moILSexplorer<PyNeighbor,PyNeighbor>::isContinue)
-    .def("accept",&moILSexplorer<PyNeighbor,PyNeighbor>::accept)
-    .def("move",&moILSexplorer<PyNeighbor,PyNeighbor>::move)
+    .def("initParam",&moILSexplorer<NborT,NborT>::initParam)
+    .def("updateParam",&moILSexplorer<NborT,NborT>::updateParam)
+    .def("terminate",&moILSexplorer<NborT,NborT>::terminate)
+    .def("__call__",&moILSexplorer<NborT,NborT>::operator())
+    .def("isContinue",&moILSexplorer<NborT,NborT>::isContinue)
+    .def("accept",&moILSexplorer<NborT,NborT>::accept)
+    .def("move",&moILSexplorer<NborT,NborT>::move)
     ;
 
-    class_<moVNSexplorer<PyNeighbor>,bases<moNeighborhoodExplorer<PyNeighbor>>,boost::noncopyable>
-    ("moVNSexplorer",init<
-        moVariableNeighborhoodSelection<PyEOT>&,
-        moAcceptanceCriterion<PyNeighbor>&
+    class_<moVNSexplorer<NborT>,bases<moNeighborhoodExplorer<NborT>>,boost::noncopyable>
+    (make_name("moVNSexplorer",name).c_str(),init<
+        moVariableNeighborhoodSelection<SolutionType>&,
+        moAcceptanceCriterion<NborT>&
     >())
-    .def("initParam",&moVNSexplorer<PyNeighbor>::initParam)
-    .def("updateParam",&moVNSexplorer<PyNeighbor>::updateParam)
-    .def("terminate",&moVNSexplorer<PyNeighbor>::terminate)
-    .def("__call__",&moVNSexplorer<PyNeighbor>::operator())
-    .def("isContinue",&moVNSexplorer<PyNeighbor>::isContinue)
-    .def("accept",&moVNSexplorer<PyNeighbor>::accept)
-    .def("move",&moVNSexplorer<PyNeighbor>::move)
+    .def("initParam",&moVNSexplorer<NborT>::initParam)
+    .def("updateParam",&moVNSexplorer<NborT>::updateParam)
+    .def("terminate",&moVNSexplorer<NborT>::terminate)
+    .def("__call__",&moVNSexplorer<NborT>::operator())
+    .def("isContinue",&moVNSexplorer<NborT>::isContinue)
+    .def("accept",&moVNSexplorer<NborT>::accept)
+    .def("move",&moVNSexplorer<NborT>::move)
     ;
+}
+
+
+
+void moExplorers()
+{
+    expose_moExplorers<PyEOT>("");
+    expose_moExplorers<BinarySolution>("Bin");
+    expose_moExplorers<RealSolution>("Real");
 }

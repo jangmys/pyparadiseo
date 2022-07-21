@@ -51,7 +51,7 @@ public:
 
   /// Ctor for enabling the save/load the no. of generations counted
   eoSteadyFitContinue( unsigned long _minGens, unsigned long _steadyGen,
-                 unsigned long& _currentGen)
+                 unsigned long _currentGen)
     : eoCountContinue<EOT>( _currentGen ), repMinGenerations( _minGens ), repSteadyGenerations( _steadyGen),
       steadyState(_currentGen>_minGens)
     {};

@@ -9,16 +9,16 @@
 
 using namespace boost::python;
 
+
 //could unify these by passing objecitve_traits ...
 // 1 --> set fitness
 // >1 -> set objectives
-
-
-struct pyeoFitnessEval : eoEvalFunc<PyEOT> {
-    pyeoFitnessEval() : eoEvalFunc<PyEOT>(){ };
+template<class SolutionType>
+struct pyeoFitnessEval : eoEvalFunc<SolutionType> {
+    pyeoFitnessEval() : eoEvalFunc<SolutionType>(){ };
 
     pyeoFitnessEval(boost::python::object _op) :
-        eoEvalFunc<PyEOT>(),
+        eoEvalFunc<SolutionType>(),
         eval_op(_op)
     { };
 
@@ -26,33 +26,52 @@ struct pyeoFitnessEval : eoEvalFunc<PyEOT> {
     setEvalFunc(boost::python::object obj)
     {
         std::cout << "Setting fitness eval\n"<<std::endl;
-        eval_op = obj;
+        eo_eval_op = obj;
     }
 
     void
-    operator () (PyEOT& _eo)
+    operator () (SolutionType& _eo)
     {
         if (eval_op.ptr() != Py_None) {
             _eo.setFitness(
-                boost::python::call<boost::python::object>(eval_op.ptr(),_eo.encoding)
+                // boost::python::call<boost::python::object>(eval_op.ptr(),_eo.encoding)
+                eval_op(_eo.encoding)
             );
-            // _eo.invalidate();
-        } else {
+            // _eo.setFitness(
+            //     boost::python::call<boost::python::object>(eval_op.ptr(),_eo.encoding)
+            // );
+        }
+        else if(eo_eval_op.ptr() != Py_None){
+            eo_eval_op(boost::ref(_eo));
+        }
+        else {
             std::cout << "no function defined : do nothing";
         }
     }
 
+    std::string className() const
+    {
+        return "pyeoFitnessEval"; // never saw the use of className anyway
+    }
+
 private:
     boost::python::object eval_op;
+    boost::python::object eo_eval_op;
 };
 
 
 
-struct pyeoObjectiveEval : eoEvalFunc<PyEOT> {
-    pyeoObjectiveEval() : eoEvalFunc<PyEOT>(){ };
+
+
+
+
+
+template<class SolutionType>
+struct pyeoObjectiveEval : eoEvalFunc<SolutionType> {
+    pyeoObjectiveEval() : eoEvalFunc<SolutionType>(){ };
 
     pyeoObjectiveEval(boost::python::object _op) :
-        eoEvalFunc<PyEOT>(),
+        eoEvalFunc<SolutionType>(),
         eval_op(_op)
     { };
 
@@ -64,7 +83,7 @@ struct pyeoObjectiveEval : eoEvalFunc<PyEOT> {
     }
 
     void
-    operator () (PyEOT& _eo)
+    operator () (SolutionType& _eo)
     {
         if (eval_op.ptr() != Py_None) {
             //std::cout << "*** oeval" << std::endl;
@@ -81,39 +100,46 @@ private:
     boost::python::object eval_op;
 };
 
-void
-evaluate()
+template<class SolutionType>
+void export_eval(std::string postfix)
 {
-    def_abstract_functor<eoEvalFunc<PyEOT> >("eoEvalFunc");
-
-    class_<pyeoFitnessEval, bases<eoEvalFunc<PyEOT>>>
-        ("FitnessEval", init<>())
-    .def(init<boost::python::object>()
-    [WC1]
+    class_<pyeoFitnessEval<SolutionType>, bases<eoEvalFunc<SolutionType>>>
+    (
+        make_name("FitnessEval",postfix).c_str(),
+        init<>()
     )
-    .def("set_eval_func", &pyeoFitnessEval::setEvalFunc)
-    .def("__call__", &pyeoFitnessEval::operator ())
-    ;
-
-    class_<pyeoObjectiveEval, bases<eoEvalFunc<PyEOT> >, boost::noncopyable>
-        ("ObjectiveEval", init<>())
-    .def(init<boost::python::object>()
-    [WC1]
-    )
-    .def("set_eval_func", &pyeoObjectiveEval::setEvalFunc)
-    .def("__call__", &pyeoObjectiveEval::operator ())
+    .def(init<boost::python::object>()[WC1])
+    .def("set_eval_func", &pyeoFitnessEval<SolutionType>::setEvalFunc)
+    .def("__call__", &pyeoFitnessEval<SolutionType>::operator ())
+    // .def("__name__", &pyeoFitnessEval<SolutionType>::className)
     ;
 
     //===========================================================
-
-    def_abstract_functor<eoPopEvalFunc<PyEOT> >("eoPopEvalFunc");
-
-    class_<eoPopLoopEval<PyEOT>, bases<eoPopEvalFunc<PyEOT> > >
+    class_<pyeoObjectiveEval<SolutionType>, bases<eoEvalFunc<SolutionType>>>
     (
-        "eoPopLoopEval",
-        init<
-            eoEvalFunc<PyEOT>&
-        >()[WC1]
+        make_name("ObjectiveEval",postfix).c_str(),
+        init<>()
     )
-    .def("__call__", &eoPopLoopEval<PyEOT>::operator ());
+    .def(init<boost::python::object>()[WC1])
+    .def("set_eval_func", &pyeoObjectiveEval<SolutionType>::setEvalFunc)
+    .def("__call__", &pyeoObjectiveEval<SolutionType>::operator ())
+    ;
+
+    //===========================================================
+    class_<eoPopLoopEval<SolutionType>, bases<eoPopEvalFunc<SolutionType>>>
+    (
+        make_name("eoPopLoopEval",postfix).c_str(),
+        init<eoEvalFunc<SolutionType>&>()[WC1]
+    )
+    .def("__call__", &eoPopLoopEval<SolutionType>::operator ())
+    ;
+}
+
+void
+evaluate()
+{
+    export_eval<PyEOT>("");
+    export_eval<BinarySolution>("Bin");
+    export_eval<IntSolution>("Perm");
+    export_eval<RealSolution>("Real");
 }

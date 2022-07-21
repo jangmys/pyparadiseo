@@ -1,6 +1,6 @@
-from pyparadiseo import Solution
+from pyparadiseo import solution
 from pyparadiseo import eo
-from pyparadiseo.initializer import Init
+from pyparadiseo import initializer
 
 from pyparadiseo.operator import pyMonOp
 from pyparadiseo.operator import pyBinOp
@@ -17,11 +17,11 @@ import numpy as np
 
 class test_genops(unittest.TestCase):
     def setUp(self):
-        self.init = Init(lambda : np.random.randint(0,2,10))
-        self.ind1 = Solution()
+        self.init = initializer.initializer(lambda : np.random.randint(0,2,10))
+        self.ind1 = solution.empty()
         self.init(self.ind1)
 
-        self.ind2 = Solution()
+        self.ind2 = solution.empty()
         self.init(self.ind2)
 
     def tearDown(self):

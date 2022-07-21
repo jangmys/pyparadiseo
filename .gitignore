@@ -7,6 +7,7 @@ __pycache__/
 dist
 
 MANIFEST
+TODO
 
 artifacts
 build/
@@ -17,6 +18,10 @@ doc/build/
 doc/source/pyparadiseo*.rst
 doc/source/installation.rst
 doc/source/modules.rst
+
+docs/doxygen
+docs/README
+
 
 # C extensions
 *.so
@@ -30,3 +35,4 @@ problemData
 
 #local only
 local_build-install.sh
+notes.md

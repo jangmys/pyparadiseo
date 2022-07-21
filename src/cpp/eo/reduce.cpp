@@ -21,43 +21,59 @@
 #include <pyeot.h>
 #include <eoReduce.h>
 
+#include <utils/def_abstract_functor.h>
 
 using namespace boost::python;
 
-// unfortunately have to define it specially
-class eoReduceWrapper : public eoReduce<PyEOT>
+template<typename SolutionType>
+void expose_reduce(std::string name)
 {
-public:
-    PyObject* self;
-    eoReduceWrapper(PyObject* s) : self(s) {}
-    void operator()(eoPop<PyEOT>& pop, unsigned i)
-    {
-	boost::python::call_method<void>(self, "__call__", pop, i );
-    }
-};
+    class_<eoTruncate<SolutionType>, bases<eoReduce<SolutionType> > >(
+        make_name("eoTruncate",name).c_str(),
+        init<>()
+    )
+	.def("__call__", &eoReduce<SolutionType>::operator())
+	;
+
+    class_<eoRandomReduce<SolutionType>, bases<eoReduce<SolutionType> > >(
+        make_name("eoRandomReduce",name).c_str()
+    )
+	.def("__call__", &eoReduce<SolutionType>::operator())
+	;
+
+    class_<eoEPReduce<SolutionType>, bases<eoReduce<SolutionType> > >(
+        make_name("eoEPReduce",name).c_str(),
+        init<unsigned>()
+    )
+	.def("__call__", &eoReduce<SolutionType>::operator())
+	;
+
+    class_<eoLinearTruncate<SolutionType>, bases<eoReduce<SolutionType> > >(
+        make_name("eoLinearTruncate",name).c_str()
+    )
+	.def("__call__", &eoReduce<SolutionType>::operator())
+	;
+
+    class_<eoDetTournamentTruncate<SolutionType>, bases<eoReduce<SolutionType> > >(
+        make_name("eoDetTournamentTruncate",name).c_str(),
+        init<unsigned>()
+    )
+	.def("__call__", &eoReduce<SolutionType>::operator())
+	;
+
+    class_<eoStochTournamentTruncate<SolutionType>, bases<eoReduce<SolutionType> > >(
+        make_name("eoStochTournamentTruncate",name).c_str(),
+        init<double>()
+    )
+    .def("__call__", &eoReduce<SolutionType>::operator())
+	;
+}
+
+
 
 void reduce()
 {
-    // ref trick in def_abstract_functor does not work for unsigned int :-(
-    class_<eoReduce<PyEOT>, eoReduceWrapper, boost::noncopyable>("eoReduce", init<>())
-	.def("__call__", &eoReduceWrapper::operator());
-
-    class_<eoTruncate<PyEOT>, bases<eoReduce<PyEOT> > >("eoTruncate", init<>() )
-	.def("__call__", &eoReduce<PyEOT>::operator())
-	;
-    class_<eoRandomReduce<PyEOT>, bases<eoReduce<PyEOT> > >("eoRandomReduce")
-	.def("__call__", &eoReduce<PyEOT>::operator())
-	;
-    class_<eoEPReduce<PyEOT>, bases<eoReduce<PyEOT> > >("eoEPReduce", init<unsigned>())
-	.def("__call__", &eoReduce<PyEOT>::operator())
-	;
-    class_<eoLinearTruncate<PyEOT>, bases<eoReduce<PyEOT> > >("eoLinearTruncate")
-	.def("__call__", &eoReduce<PyEOT>::operator())
-	;
-    class_<eoDetTournamentTruncate<PyEOT>, bases<eoReduce<PyEOT> > >("eoDetTournamentTruncate", init<unsigned>())
-	.def("__call__", &eoReduce<PyEOT>::operator())
-	;
-    class_<eoStochTournamentTruncate<PyEOT>, bases<eoReduce<PyEOT> > >("eoStochTournamentTruncate", init<double>())
-	.def("__call__", &eoReduce<PyEOT>::operator())
-	;
+    expose_reduce<PyEOT>("");
+    expose_reduce<BinarySolution>("Bin");
+    expose_reduce<RealSolution>("Real");
 }

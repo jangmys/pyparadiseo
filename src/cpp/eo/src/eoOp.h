@@ -83,7 +83,8 @@ Here is an example with several replacement operators:
   working on std::vector<T> are what you need.
 
 */
-template<class EOType>
+
+// template<class EOType> ///unused
 class eoOp
 {
 public:
@@ -117,12 +118,12 @@ When defining your own, make sure that you return a boolean value
 indicating that you have changed the content.
 */
 template <class EOType>
-class eoMonOp: public eoOp<EOType>, public eoUF<EOType&, bool>
+class eoMonOp: public eoOp, public eoUF<EOType&, bool>
 {
 public:
   /// Ctor
   eoMonOp()
-    : eoOp<EOType>( eoOp<EOType>::unary ) {};
+    : eoOp( eoOp::unary ) {};
   virtual std::string className() const {return "eoMonOp";};
 };
 
@@ -133,12 +134,12 @@ When defining your own, make sure that you return a boolean value
 indicating that you have changed the content.
  */
 template<class EOType>
-class eoBinOp: public eoOp<EOType>, public eoBF<EOType&, const EOType&, bool>
+class eoBinOp: public eoOp, public eoBF<EOType&, const EOType&, bool>
 {
 public:
   /// Ctor
   eoBinOp()
-      :eoOp<EOType>( eoOp<EOType>::binary ) {};
+      :eoOp( eoOp::binary ) {};
   virtual std::string className() const {return "eoBinOp";};
 };
 
@@ -148,11 +149,11 @@ When defining your own, make sure that you return a boolean value
 indicating that you have changed the content.
 */
 template<class EOType>
-class eoQuadOp: public eoOp<EOType>, public eoBF<EOType&, EOType&, bool> {
+class eoQuadOp: public eoOp, public eoBF<EOType&, EOType&, bool> {
 public:
   /// Ctor
   eoQuadOp()
-    :eoOp<EOType>( eoOp<EOType>::quadratic ) {};
+    :eoOp( eoOp::quadratic ) {};
   virtual std::string className() const {return "eoQuadOp";};
 };
 

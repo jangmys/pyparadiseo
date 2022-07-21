@@ -1,8 +1,10 @@
 import pyparadiseo
 
-from pyparadiseo import Pop
-from pyparadiseo.initializer import Init
+from pyparadiseo import population
+from pyparadiseo import initializer
 from pyparadiseo.eo import selector
+
+from pyparadiseo.eo import select_one
 
 import numpy as np
 import unittest
@@ -11,42 +13,38 @@ import inspect
 #TODO : for now, just testing imports and base class name ...
 class test_eoSelector(unittest.TestCase):
     def setUp(self):
-        self.init = Init(lambda : np.random.randint(0,2,10))
-        self.pop = Pop(10,self.init)
+        self.init = initializer.initializer(lambda : np.random.randint(0,2,10))
+        self.pop = population.from_init(10,self.init)
         for i in range(len(self.pop)):
             self.pop[i].fitness = i
 
-    def test_bases(self):
-        for name, obj in inspect.getmembers(selector):
-            if inspect.isclass(obj):
-                self.assertIn(obj.__bases__[0].__name__, {"eoSelect","eoSelectOne","instance"})
     def test_ctor(self):
-        #abstract : should not be able to construct this
-        sel = selector.SelectOne()
+        #abstract : should not be able to construct this?!
+        sel = select_one.SelectOne()
         self.assertTrue(callable(sel))
 
-        sel = selector.DetTournamentSelect()
+        sel = select_one.det_tournament()
         self.assertTrue(callable(sel))
 
-        sel = selector.DetTournamentSelect(42)
+        sel = select_one.det_tournament(42)
         self.assertTrue(callable(sel))
 
-        sel = selector.TruncatedSelectOne(sel,0.7)
+        sel = select_one.truncated(sel,0.7)
         self.assertTrue(callable(sel))
 
-        sel = selector.RandomSelect()
+        sel = select_one.random()
         self.assertTrue(callable(sel))
 
-        sel = selector.NoSelect()
+        sel = select_one.round_robin()
         self.assertTrue(callable(sel))
 
-        sel = selector.SequentialSelect()
+        sel = select_one.sequential()
         self.assertTrue(callable(sel))
 
-        sel = selector.SequentialSelect(True)
+        sel = select_one.sequential(True)
         self.assertTrue(callable(sel))
 
-        sel = selector.EliteSequentialSelect()
+        sel = select_one.elite_sequential()
         self.assertTrue(callable(sel))
 
     def do_test(self,selector):
@@ -67,15 +65,15 @@ class test_eoSelector(unittest.TestCase):
         return selection, nTries
 
     def test_DetTournament(self):
-        sel = selector.DetTournamentSelect()
+        sel = select_one.det_tournament()
         self.do_test(sel)
-        sel = selector.DetTournamentSelect(1)
+        sel = select_one.det_tournament(1)
         self.do_test(sel)
-        sel = selector.DetTournamentSelect(2)
+        sel = select_one.det_tournament(2)
         self.do_test(sel)
-        sel = selector.DetTournamentSelect(3)
+        sel = select_one.det_tournament(3)
         self.do_test(sel)
-        sel = selector.DetTournamentSelect(10)
+        sel = select_one.det_tournament(10)
         self.do_test(sel)
 
 

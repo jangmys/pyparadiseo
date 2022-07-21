@@ -41,7 +41,7 @@
  * Index Neighbor
  */
 template<class EOT, class Fitness = typename EOT::Fitness>
-class moIndexNeighbor: virtual public moNeighbor<EOT, Fitness> {
+class moIndexNeighbor: public moNeighbor<EOT, Fitness> {
 public:
 
 	using moNeighbor<EOT, Fitness>::fitness;
@@ -66,7 +66,6 @@ public:
 	 * Assignment operator
 	 * @param _source the source neighbor
 	 */
-
 	moIndexNeighbor<EOT, Fitness> & operator=(const moIndexNeighbor<EOT,
 			Fitness> & _source) {
 		moNeighbor<EOT, Fitness>::operator=(_source);
@@ -91,7 +90,7 @@ public:
 	}
 
 	/**
-	 * Setter : 
+	 * Setter :
 	 * Only set the index which not depends on the current solution
 	 *
 	 * @param _key index of the IndexNeighbor
@@ -99,19 +98,19 @@ public:
   	void index(unsigned int _key) {
 	  key = _key;
 	}
-  
-  
+
+
 	/**
-	 * Setter 
+	 * Setter
 	 * The "parameters" of the neighbor is a function of key and the current solution
 	 * for example, for variable length solution
 	 *
 	 * @param _solution solution from which the neighborhood is visited
 	 * @param _key index of the IndexNeighbor
 	 */
-         virtual void index(EOT & _solution, unsigned int _key) {
-           key = _key;
-         }
+     virtual void index(EOT & _solution, unsigned int _key) {
+       key = _key;
+     }
 
 	/**
 	 * @param _neighbor a neighbor

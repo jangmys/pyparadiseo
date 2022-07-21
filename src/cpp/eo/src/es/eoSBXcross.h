@@ -45,7 +45,7 @@ template<class EOT> class eoSBXCrossover: public eoQuadOp<EOT>
    *
    *
    */
-    eoSBXCrossover(const double& _eta = 1.0) :
+    eoSBXCrossover(const double _eta = 1.0) :
     bounds(eoDummyVectorNoBounds), eta(_eta), range(1) {}
 
 

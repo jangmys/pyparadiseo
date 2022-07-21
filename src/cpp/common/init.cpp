@@ -12,6 +12,8 @@
 #include <utils/eoRndGenerators.h>
 
 #include <pyeot.h>
+#include <pypot.h>
+
 #include <utils/def_abstract_functor.h>
 
 #include <random>
@@ -20,11 +22,12 @@ namespace p=boost::python;
 namespace np=boost::python::numpy;
 
 
-struct pyeoInit : eoInit<PyEOT> {
-    pyeoInit() : eoInit<PyEOT>(){ };
+template<typename SolutionType>
+struct pyeoInit : eoInit<SolutionType> {
+    pyeoInit() : eoInit<SolutionType>(){ };
 
     pyeoInit(p::object _op) :
-        eoInit<PyEOT>(),
+        eoInit<SolutionType>(),
         init_op(_op)
     {
     };
@@ -37,7 +40,7 @@ struct pyeoInit : eoInit<PyEOT> {
     }
 
     void
-    operator () (PyEOT& _eo)
+    operator () (SolutionType& _eo)
     {
         if (init_op.ptr() != Py_None) {
             // std::cout << "*** init" << std::endl;
@@ -53,11 +56,11 @@ private:
 };
 
 template<typename T>
-struct FixedLengthInit : eoInit<PyEOT> {
-    FixedLengthInit(unsigned _dim) : eoInit<PyEOT>(),_dimension(_dim),_gen(eoUniformGenerator<T>()){ };
+struct FixedSizeInit : eoInit<FixedSizeSolution<T>> {
+    FixedSizeInit(unsigned _dim) : eoInit<FixedSizeSolution<T>>(),_dimension(_dim),_gen(eoUniformGenerator<T>()){ };
 
     void
-    operator () (PyEOT& _eo)
+    operator () (FixedSizeSolution<T>& _eo)
     {
         _eo.encoding = np::zeros(p::make_tuple(_dimension),np::dtype::get_builtin<T>());
 
@@ -72,59 +75,59 @@ private:
     eoUniformGenerator<T> _gen;
 };
 
-//TODO : merge with unbounded (FIxedLength)
-class pyRealInitBounded : public eoInit<PyEOT>{
-public:
-    /** Ctor - from eoRealVectorBounds */
-    pyRealInitBounded(eoRealVectorBounds & _bounds):bounds(_bounds)
+
+struct BinarySolInit : eoInit<BinarySolution> {
+    BinarySolInit(unsigned _dim) : eoInit<BinarySolution>(),_dimension(_dim),_gen(eoUniformGenerator<bool>()){ };
+
+    void
+    operator () (BinarySolution& _eo)
     {
-        if (!bounds.isBounded())
-            throw eoException("Needs bounded bounds to initialize a std::vector<double>");
-    }
+        _eo.resize(_dimension);
 
-    /** simply passes the argument to the uniform method of the bounds */
-    virtual void operator()(PyEOT& _eo)
-    {
-        _eo.encoding = np::zeros(p::make_tuple(bounds.size()),np::dtype::get_builtin<double>());
+        _eo.encoding = np::from_data(_eo.data(), np::dtype::get_builtin<int>(),
+            p::make_tuple(_eo.size()),p::make_tuple(sizeof(int)),
+            p::object()
+        );
 
-        // get ndarray from object
-        np::ndarray arr = np::from_object(_eo.encoding, np::dtype::get_builtin<double>());
-
-        for(unsigned i=0;i<arr.shape(0);i++)
-        {
-            arr[i] = bounds.uniform(i);
+        for(unsigned i=0;i<_dimension;i++){
+            _eo[i] = (int)_gen();
         }
-
         _eo.invalidate();
     }
+
 private:
-    eoRealVectorBounds & bounds;
+    unsigned _dimension;
+    eoUniformGenerator<bool> _gen;
 };
 
 
-class pyInitPermutation : public eoInit<PyEOT>{
-public:
-    pyInitPermutation(unsigned _chromSize, unsigned _startFrom = 0) : chromSize(_chromSize), startFrom(_startFrom){}
+//see eoInit.h
+struct PermutationInit : eoInit<IntSolution> {
 
-    virtual void operator()(PyEOT& _eo)
+    PermutationInit(unsigned _chromSize, unsigned _startFrom = 0) : chromSize(_chromSize), startFrom(_startFrom){}
+
+    virtual void operator()(IntSolution& _eo)
     {
-        _eo.encoding = np::zeros(p::make_tuple(chromSize),np::dtype::get_builtin<int>());
+        _eo.resize(chromSize);
 
-        np::ndarray arr = np::from_object(_eo.encoding, np::dtype::get_builtin<int>());
-
-        int* ptr = reinterpret_cast<int*>(arr.get_data());
-        std::vector<int> vec(ptr, ptr + arr.shape(0));
-
-        for(unsigned i=0;i<arr.shape(0);i++)
-        {
-            vec[i] = startFrom + i;
+        for(unsigned i=0;i<chromSize;i++){
+            _eo[i]=i;
         }
+
+        //the numpy array
+        _eo.encoding = np::from_data(_eo.data(), np::dtype::get_builtin<int>(),
+            p::make_tuple(_eo.size()),p::make_tuple(sizeof(int)),
+            p::object()
+        );
 
         std::random_device rd;
         std::mt19937 g(rd());
 
-        std::shuffle(vec.begin(),vec.end(), g);
-        std::copy(vec.begin(), vec.end(), ptr);
+        std::shuffle(_eo.begin(),_eo.end(), g);
+
+
+
+        // std::copy(vec.begin(), vec.end(), ptr);
 
         _eo.invalidate();
     }
@@ -135,6 +138,36 @@ private:
     UF_random_generator<unsigned int> gen;
 };
 
+
+//TODO : merge with unbounded (FIxedLength)
+template<class T>
+class pyRealInitBounded : public eoInit<T>{
+public:
+    /** Ctor - from eoRealVectorBounds */
+    pyRealInitBounded(eoRealVectorBounds & _bounds):bounds(_bounds)
+    {
+        if (!bounds.isBounded())
+            throw eoException("Needs bounded bounds to initialize a std::vector<double>");
+    }
+
+    /** simply passes the argument to the uniform method of the bounds */
+    virtual void operator()(T& _eo)
+    {
+        _eo.resize(bounds.size());
+
+        _eo.encoding = np::from_data(_eo.data(), np::dtype::get_builtin<double>(),
+            p::make_tuple(_eo.size()),p::make_tuple(sizeof(double)),
+            p::object()
+        );
+
+        for(unsigned i=0;i<_eo.size();i++)
+        {
+            _eo[i] = bounds.uniform(i);
+        }
+    }
+private:
+    eoRealVectorBounds & bounds;
+};
 
 // void operator_wrap(eoRealVectorBounds& b, PyEOT& _eo)
 // {
@@ -148,6 +181,34 @@ private:
 //     b.uniform(ind1);
 // }
 
+template<class T>
+void export_realInitBounded(std::string name){
+    using namespace boost::python;
+
+    class_<pyeoInit<T>, bases<eoInit<T> >, boost::noncopyable>
+        (make_name("pyeoInit",name).c_str(), init<>())
+    .def(init<boost::python::object>())
+    .def("set_generator", &pyeoInit<T>::setGenerator)
+    .def("__call__", &pyeoInit<T>::operator())
+    ;
+
+    // class_<pyRealInitBounded<T>, bases<eoInit<T>>>
+    //     (make_name("RealBoundedInit",name).c_str(),
+    //     init<eoRealVectorBounds&>()
+    //     [
+    //     with_custodian_and_ward<1,2>()
+    //     ]
+    // )
+    // .def("__call__", &pyRealInitBounded<T>::operator ())
+    // ;
+
+    // class_<pyInitPermutation<T>, bases<eoInit<T>>, boost::noncopyable> (make_name("PermutationInit",name).c_str(), init<unsigned,optional<unsigned>>())
+    // .def("__call__", &pyInitPermutation<T>::operator ())
+    // ;
+
+
+}
+
 
 
 void
@@ -156,25 +217,41 @@ initialize()
     using namespace boost::python;
 
     // eoUF : PyMOEO ---> void
-    def_abstract_functor<eoInit<PyEOT> >("eoInit","docstring");
+    // def_abstract_functor<eoInit<PyEOT> >("eoInit","docstring");
 
-    class_<pyeoInit, bases<eoInit<PyEOT> >, boost::noncopyable>
-        ("pyeoInit", init<>())
-    .def(init<boost::python::object>())
-    .def("set_generator", &pyeoInit::setGenerator)
-    .def("__call__", &pyeoInit::operator())
-    ;
+    // class_<pyeoInit, bases<eoInit<PyEOT> >, boost::noncopyable>
+    //     ("pyeoInit", init<>())
+    // .def(init<boost::python::object>())
+    // .def("set_generator", &pyeoInit::setGenerator)
+    // .def("__call__", &pyeoInit::operator())
+    // ;
 
-    class_<FixedLengthInit<bool>, bases<eoInit<PyEOT>>>
+    // class_<FixedSizeInit<bool>, bases<eoInit<FixedSizeSolution<bool>>>>
+    //     ("BinaryInit", init<unsigned>())
+    // .def("__call__", &FixedSizeInit<bool>::operator ())
+    // ;
+
+    class_<BinarySolInit, bases<eoInit<BinarySolution>>>
         ("BinaryInit", init<unsigned>())
-    .def("__call__", &FixedLengthInit<bool>::operator ())
+    .def("__call__", &BinarySolInit::operator ())
     ;
 
-    class_<pyRealInitBounded, bases<eoInit<PyEOT>>, boost::noncopyable> ("RealBoundedInit", init<eoRealVectorBounds&>()[WC1])
-    .def("__call__", &pyRealInitBounded::operator ())
+    class_<PermutationInit, bases<eoInit<IntSolution>>>
+        ("PermutationInit", init<unsigned,optional<unsigned>>())
+    .def("__call__", &PermutationInit::operator ())
     ;
 
-    class_<pyInitPermutation, bases<eoInit<PyEOT>>, boost::noncopyable> ("PermutationInit", init<unsigned,optional<unsigned>>())
-    .def("__call__", &pyInitPermutation::operator ())
+
+    export_realInitBounded<PyEOT>("");
+
+
+    class_<pyRealInitBounded<RealSolution>, bases<eoInit<RealSolution>>>
+        (make_name("RealBoundedInit","Real").c_str(),
+        init<eoRealVectorBounds&>()
+        [
+        with_custodian_and_ward<1,2>()
+        ]
+    )
+    .def("__call__", &pyRealInitBounded<RealSolution>::operator ())
     ;
 }

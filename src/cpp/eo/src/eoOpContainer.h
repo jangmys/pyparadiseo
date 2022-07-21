@@ -62,7 +62,7 @@ class eoOpContainer : public eoGenOp<EOT>
 
   (sidenote, it's much less hairy since I added the wrap_op is used)
   */
-  void add(eoOp<EOT>& _op, double _rate)
+  void add(eoOp& _op, double _rate)
   {
     ops.push_back(&wrap_op<EOT>(_op, store));
     rates.push_back(_rate);

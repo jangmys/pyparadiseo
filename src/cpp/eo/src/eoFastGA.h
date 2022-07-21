@@ -40,7 +40,7 @@ protected:
 
     eoContinue<EOT>& _continuator;
 
-    double _offsprings_size;
+    double _offsprings_size; //JG : should be integer!
 
 public:
 
@@ -113,7 +113,7 @@ public:
 
                     // Select one of the two solutions
                     // which have been crossed.
-                    eoPop<EOT> crossed; 
+                    eoPop<EOT> crossed;
                     crossed.push_back(sol1);
                     crossed.push_back(sol2);
                     //they should be evaluated before we apply aftercross_selector

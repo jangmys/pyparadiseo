@@ -1,5 +1,7 @@
+Examples
+========
 Hello World : simpleGA for OneMax
-=================================
+---------------------------------
 
 The following example shows how to build a simple genetic algorithm (SGA) for the OneMax optimization problem.
 
@@ -32,3 +34,13 @@ The following example shows how to build a simple genetic algorithm (SGA) for th
     sga(pop)
     # and print best individual
     print(pop.best())
+
+
+Hill-Climber
+------------
+
+Multi-objective
+---------------
+
+Hybrid GA+HC
+------------
