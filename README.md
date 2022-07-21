@@ -17,6 +17,8 @@ pip install pyparadiseo
 
 ## Getting Started
 
+[See this for tutorials and complete reference](https://paradiseo.gitlabpages.inria.fr/pyparadiseo/)
+
 Example of running EO's simple GA (SGA) for the One-Max test problem
 
 ```python
