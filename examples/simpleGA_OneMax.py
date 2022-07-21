@@ -2,6 +2,8 @@ import pyparadiseo as pp
 
 from pyparadiseo import eo
 from pyparadiseo.eo import selector,continuator,algo
+from pyparadiseo import initializer,evaluator,operator
+
 
 import copy
 import numpy as np
@@ -28,14 +30,14 @@ def cross(ind1,ind2):
 
 
 if __name__ == "__main__":
-    myinit = pp.Init(lambda : np.random.randint(0,2,16))
-    myeval = pp.FitnessEval(lambda sol: np.sum(sol))
+    myinit = initializer.Init(lambda : np.random.randint(0,2,16))
+    myeval = evaluator.fitness(lambda sol: np.sum(sol))
 
     sga = eo.algo.SGA(
         selector.DetTournamentSelect(),
-        pp.pyQuadOp(cross),0.2,
-        pp.pyMonOp(mut),0.5,
-        pp.FitnessEval(lambda sol: np.sum(sol)),
+        operator.pyQuadOp(cross),0.2,
+        operator.pyMonOp(mut),0.5,
+        evaluator.fitness(lambda sol: np.sum(sol)),
         continuator.GenContinue(100)
     )
 

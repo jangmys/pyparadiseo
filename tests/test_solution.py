@@ -1,16 +1,21 @@
 import pyparadiseo as pp
 
-from pyparadiseo import Solution
+from pyparadiseo import config
+
+from pyparadiseo import solution
+# from pyparadiseo import Solution
 
 import unittest
 
 class TestSolution(unittest.TestCase):
-    def test_ctor(self):
-        sol = Solution()
-        self.assertEqual(sol.fitness,None)
+    def setUp(self):
+        self.sol = solution.empty()
+
+    def test_fitness_none(self):
+        self.assertEqual(self.sol.fitness,None)
 
     def test_ctor_noinit(self):
-        sol = Solution([1,2,3.0,'arf'])
+        sol = solution.solution([1,2,3.0,'arf'])
         self.assertEqual(sol.encoding,[1,2,3.0,'arf'])
         self.assertEqual(sol[0],1)
         self.assertEqual(sol[1],2)
@@ -18,14 +23,13 @@ class TestSolution(unittest.TestCase):
         self.assertEqual(sol[3],'arf')
 
     def test_copy_ctor(self):
-        sol = Solution()
-        sol.encoding = [1,2,3,4]
-        sol.fitness = 42.0
-        sol.objectiveVector = [1.1,2.2]
-        sol.diversity = 4.2
+        self.sol.encoding = [1,2,3,4]
+        self.sol.fitness = 42.0
+        self.sol.objectiveVector = [1.1,2.2]
+        self.sol.diversity = 4.2
 
         #copy ctor
-        sol2 = Solution(sol)
+        sol2 = solution.solution(self.sol)
         self.assertEqual(sol2.encoding,[1,2,3,4])
         self.assertEqual(sol2.fitness,42.0)
         self.assertEqual(sol2.objectiveVector[0],1.1)
@@ -33,10 +37,10 @@ class TestSolution(unittest.TestCase):
         self.assertEqual(sol2.diversity,4.2)
 
         #change sol
-        sol.encoding = [0]
-        sol.fitness = 2.0
-        sol.objectiveVector = [0.1,0.2]
-        sol.diversity = 2.2
+        self.sol.encoding = [0]
+        self.sol.fitness = 2.0
+        self.sol.objectiveVector = [0.1,0.2]
+        self.sol.diversity = 2.2
 
         #check that sol2 hasn't changed
         self.assertEqual(sol2.encoding,[1,2,3,4])
@@ -46,7 +50,7 @@ class TestSolution(unittest.TestCase):
         self.assertEqual(sol2.diversity,4.2)
 
     def test_encoding(self):
-        sol = Solution()
+        sol = solution.empty()
         sol.encoding = [1,2,3.0]
         self.assertEqual(sol.encoding,[1,2,3.0])
         self.assertEqual(sol[0],1)
@@ -56,50 +60,49 @@ class TestSolution(unittest.TestCase):
         self.assertEqual(sol[0],42)
 
     def test_setFitness(self):
-        sol = Solution()
+        sol = solution.empty()
         self.assertEqual(sol.fitness,None)
         sol.fitness = 1.11
-        print(sol)
         self.assertEqual(sol.fitness,1.11)
         sol.fitness = 42
         self.assertEqual(sol.fitness,42)
 
     def test_compare(self):
-        sol1 = Solution()
-        sol2 = Solution()
+        sol1 = solution.empty()
+        sol2 = solution.empty()
         sol1.fitness = 1.0
         sol2.fitness = 2.0
 
-        pp.set_minimize_fitness()
+        pp.config.set_minimize_fitness()
         self.assertTrue(sol1 > sol2)
         self.assertFalse(sol1 < sol2)
 
-        pp.set_maximize_fitness()
+        pp.config.set_maximize_fitness()
         self.assertFalse(sol1 > sol2)
         self.assertTrue(sol1 < sol2)
 
     def test_setDiversity(self):
-        sol = Solution()
+        sol = solution.empty()
         sol.diversity = 1.11
         self.assertEqual(sol.diversity,1.11)
         sol.diversity = 1
         self.assertEqual(sol.diversity,1)
 
     def test_objectiveVector(self):
-        sol = Solution()
+        sol = solution.empty()
         sol.objectiveVector = [1.1,2.2]
         self.assertEqual(sol.objectiveVector[0],1.1)
         self.assertEqual(sol.objectiveVector[1],2.2)
 
     def test_invalidate(self):
-        sol = Solution()
+        sol = solution.empty()
         sol.objectiveVector = [1.1,2.2]
         sol.invalidateObjectiveVector()
         self.assertTrue(sol.invalidObjectiveVector())
 
     def test_pickle(self):
         #make a solution
-        sol = Solution([1,2,3,4])
+        sol = solution.solution([1,2,3,4])
         sol.fitness = 42.0
         sol.objectiveVector = [1.1,2.2]
         sol.diversity = 4.2
@@ -121,6 +124,26 @@ class TestSolution(unittest.TestCase):
         self.assertEqual(sol2.objectiveVector[0],1.1)
         self.assertEqual(sol2.objectiveVector[1],2.2)
         self.assertEqual(sol2.diversity,4.2)
+
+    def test_solution_creation(self):
+        from pyparadiseo._core import Solution,BinarySolution,RealSolution
+
+        sol=solution.empty()
+        self.assertTrue(isinstance(sol,Solution))
+
+        sol=solution.empty(stype='bin')
+        self.assertTrue(isinstance(sol,BinarySolution))
+
+        sol=solution.empty(stype='real')
+        self.assertTrue(isinstance(sol,RealSolution))
+
+        sol=solution.solution([0,1,2]*3,stype='real')
+        self.assertTrue(isinstance(sol,RealSolution))
+        self.assertEqual(len(sol),9)
+        for i in range(9):
+            self.assertEqual(sol.array[i],i%3)
+
+
 
         #deepcopy needs pickling for members ? objectiveVector etc
         # sol3 = deepcopy(sol2)

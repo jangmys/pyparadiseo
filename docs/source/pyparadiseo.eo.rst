@@ -1,5 +1,5 @@
-pyparadiseo.eo package
-======================
+.. Evolving Objects (EO)
+.. ============================
 
 .. automodule:: pyparadiseo.eo
    :members:
@@ -7,11 +7,6 @@ pyparadiseo.eo package
    :show-inheritance:
    :imported-members:
 
-Submodules
-----------
-
-pyparadiseo.eo.algo module
---------------------------
 
 .. automodule:: pyparadiseo.eo.algo
    :members:
@@ -19,17 +14,6 @@ pyparadiseo.eo.algo module
    :show-inheritance:
    :imported-members:
 
-pyparadiseo.eo.breeders module
-------------------------------
-
-.. automodule:: pyparadiseo.eo.breeders
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :imported-members:
-
-pyparadiseo.eo.continuator module
----------------------------------
 
 .. automodule:: pyparadiseo.eo.continuator
    :members:
@@ -37,8 +21,14 @@ pyparadiseo.eo.continuator module
    :show-inheritance:
    :imported-members:
 
-pyparadiseo.eo.merge module
----------------------------
+
+.. .....................................
+.. .....................................
+.. .....................................
+
+
+.. EO Merge
+.. ~~~~~~~~~~~~~~~~~~
 
 .. automodule:: pyparadiseo.eo.merge
    :members:
@@ -46,38 +36,59 @@ pyparadiseo.eo.merge module
    :show-inheritance:
    :imported-members:
 
-pyparadiseo.eo.reduce module
-----------------------------
-
+EO Reduce
+~~~~~~~~~~~~~~~~~~
 .. automodule:: pyparadiseo.eo.reduce
    :members:
    :undoc-members:
    :show-inheritance:
    :imported-members:
 
-pyparadiseo.eo.replacement module
----------------------------------
-
+EO Replace
+~~~~~~~~~~~~~~~~~~
 .. automodule:: pyparadiseo.eo.replacement
    :members:
    :undoc-members:
    :show-inheritance:
    :imported-members:
 
-pyparadiseo.eo.selector module
-------------------------------
 
+.. .....................................
+.. .....................................
+.. .....................................
+.. .....................................
+
+EO Select
+~~~~~~~~~~~~~~~~~~
+.. automodule:: pyparadiseo.eo.select_one
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :imported-members:
+
+
+EO SelectOne
+~~~~~~~~~~~~~~~~~~
 .. automodule:: pyparadiseo.eo.selector
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :imported-members:
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :imported-members:
 
-pyparadiseo.eo.transform module
--------------------------------
 
+EO Transform
+~~~~~~~~~~~~~~~~~~
 .. automodule:: pyparadiseo.eo.transform
    :members:
    :undoc-members:
    :show-inheritance:
    :imported-members:
+
+
+EO Breeder
+~~~~~~~~~~~~~~~~~~
+.. automodule:: pyparadiseo.eo.breeders
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :imported-members:

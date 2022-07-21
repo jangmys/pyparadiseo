@@ -81,6 +81,5 @@ private:
     unsigned int maxIter;
     unsigned int cpt;
     bool verbose;
-
 };
 #endif

@@ -1,0 +1,5 @@
+in docs/
+
+SPHINX_APIDOC_OPTIONS=members,undoc-members,show-inheritance,imported-members sphinx-apidoc -M --ext-autodoc --ext-coverage --force -o source ../src/pyparadiseo
+
+make html

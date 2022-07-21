@@ -302,15 +302,15 @@ bounds()
           with_custodian_and_ward<1, 3>()
       ]
     )
-    .def(init<
-          eoRealBounds&,
-          eoRealBounds&
-      >()
-      [
-          with_custodian_and_ward<1, 2,
-          with_custodian_and_ward<1, 3> >()
-      ]
-    )
+    // .def(init<
+    //       eoRealBounds&,
+    //       eoRealBounds&
+    //   >()
+    //   [
+    //       with_custodian_and_ward<1, 2,
+    //       with_custodian_and_ward<1, 3> >()
+    //   ]
+    // )
     .def(init<
           unsigned,
           double,

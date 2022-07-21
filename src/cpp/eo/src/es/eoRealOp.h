@@ -55,7 +55,7 @@ template<class EOT> class eoUniformMutation: public eoMonOp<EOT>
    * @param _epsilon the range for uniform nutation
    * @param _p_change the probability to change a given coordinate
    */
-  eoUniformMutation(const double& _epsilon, const double& _p_change = 1.0):
+  eoUniformMutation(const double _epsilon, const double _p_change = 1.0):
     homogeneous(true), bounds(eoDummyVectorNoBounds), epsilon(1, _epsilon),
     p_change(1, _p_change) {}
 
@@ -66,14 +66,24 @@ template<class EOT> class eoUniformMutation: public eoMonOp<EOT>
    * @param _p_change the one probability to change all coordinates
    */
   eoUniformMutation(eoRealVectorBounds & _bounds,
-                    const double& _epsilon, const double& _p_change = 1.0):
+                    const double _epsilon, const double _p_change = 1.0):
     homogeneous(false), bounds(_bounds), epsilon(_bounds.size(), _epsilon),
     p_change(_bounds.size(), _p_change)
   {
+      // std::cout<<"============"<<std::endl;
+      // std::cout<<"eps: "<<_epsilon<<"range: "<<bounds.range(0)<<std::endl;
+
     // scale to the range - if any
     for (unsigned i=0; i<bounds.size(); i++)
-      if (bounds.isBounded(i))
-          epsilon[i] *= _epsilon*bounds.range(i);
+        if (bounds.isBounded(i))
+            epsilon[i] *= bounds.range(i);
+            // epsilon[i] *= _epsilon*bounds.range(i); //JG: A BUG?!
+
+    // for(auto &c : epsilon)
+    // {
+    //     std::cout<<c<<" ";
+    // }
+    // std::cout<<"============"<<std::endl;
   }
 
   /**
@@ -113,9 +123,12 @@ template<class EOT> class eoUniformMutation: public eoMonOp<EOT>
           if (_eo.size() != bounds.size())
             throw eoException("Invalid size of indi in eoUniformMutation");
 
+
+
           for (unsigned lieu=0; lieu<_eo.size(); lieu++)
             if (rng.flip(p_change[lieu]))
               {
+                  // std::cout<<_eo[lieu]<<" >> ";
                 // check the bounds
                 double emin = _eo[lieu]-epsilon[lieu];
                 double emax = _eo[lieu]+epsilon[lieu];
@@ -124,6 +137,8 @@ template<class EOT> class eoUniformMutation: public eoMonOp<EOT>
                 if (bounds.isMaxBounded(lieu))
                   emax = std::min(bounds.maximum(lieu), emax);
                 _eo[lieu] = emin + (emax-emin)*rng.uniform();
+                // std::cout<<_eo[lieu]<<" << ";
+
                 hasChanged = true;
               }
         }
@@ -173,7 +188,10 @@ template<class EOT> class eoDetUniformMutation: public eoMonOp<EOT>
     // scale to the range - if any
     for (unsigned i=0; i<bounds.size(); i++)
       if (bounds.isBounded(i))
-          epsilon[i] *= _epsilon*bounds.range(i);
+          epsilon[i] *= bounds.range(i);
+
+            //JG: BUG ?? Why SQUARE _epsilon ???
+          // epsilon[i] *= _epsilon*bounds.range(i);
   }
 
   /**
@@ -190,7 +208,9 @@ template<class EOT> class eoDetUniformMutation: public eoMonOp<EOT>
     // scale to the range - if any
     for (unsigned i=0; i<bounds.size(); i++)
       if (bounds.isBounded(i))
-          epsilon[i] *= _epsilon[i]*bounds.range(i);
+        epsilon[i] *= bounds.range(i);
+
+          // epsilon[i] *= _epsilon[i]*bounds.range(i); //JG: SAME BUG?!
   }
 
   /// The class name.
@@ -263,7 +283,7 @@ template<class EOT> class eoSegmentCrossover: public eoQuadOp<EOT>
    *               0 == contractive application
    *               Must be positive
    */
-  eoSegmentCrossover(const double& _alpha = 0.0) :
+  eoSegmentCrossover(const double _alpha = 0.0) :
     bounds(eoDummyVectorNoBounds), alpha(_alpha), range(1+2*_alpha) {}
 
   /**
@@ -275,60 +295,12 @@ template<class EOT> class eoSegmentCrossover: public eoQuadOp<EOT>
    *               Must be positive
    */
   eoSegmentCrossover(eoRealVectorBounds & _bounds,
-                     const double& _alpha = 0.0) :
+                     const double _alpha = 0.0) :
     bounds(_bounds), alpha(_alpha), range(1+2*_alpha) {}
 
   /// The class name.
   virtual std::string className() const { return "eoSegmentCrossover"; }
 
-
-    void do_crossover(double* v1, double* v2, size_t len)
-    {
-        double alphaMin = -alpha;
-        double alphaMax = 1+alpha;
-        double r1, r2, fact;
-
-        if (alpha == 0.0)            // no check to perform
-        {
-            fact = -alpha + rng.uniform(range); // in [-alpha,1+alpha)
-        }
-        else                         // look for the bounds for fact
-        {
-            for (unsigned i=0; i<len; i++){
-                r1=*(v1+i);
-                r2=*(v2+i);
-                if (r1 != r2) {      // otherwise you'll get NAN's
-                    double rmin = std::min(r1, r2);
-                    double rmax = std::max(r1, r2);
-                    double length = rmax - rmin;
-                    if (bounds.isMinBounded(i))
-                    {
-                        alphaMin = std::max(alphaMin, (bounds.minimum(i)-rmin)/length);
-                        alphaMax = std::min(alphaMax, (rmax-bounds.minimum(i))/length);
-                    }
-                    if (bounds.isMaxBounded(i))
-                    {
-                        alphaMax = std::min(alphaMax, (bounds.maximum(i)-rmin)/length);
-                        alphaMin = std::max(alphaMin, (rmax-bounds.maximum(i))/length);
-                    }
-                }
-            }
-            fact = alphaMin + (alphaMax-alphaMin)*rng.uniform();
-        }
-
-        for(unsigned i=0; i<len; i++){
-            r1=*(v1+i);
-            r2=*(v2+i);
-            *(v1+i) = fact * r1 + (1-fact) * r2;
-            *(v2+i) = (1-fact) * r1 + fact * r2;
-        }
-    }
-
-  //Note: this works only with EOT's having
-  //size() and double& operator[] (eoReal)
-  //
-  //==> modify to work with numpy array!
-  //make the operator work on std::vector<double> ?
   /**
    * segment crossover - modifies both parents
    * @param _eo1 The first parent
@@ -336,46 +308,45 @@ template<class EOT> class eoSegmentCrossover: public eoQuadOp<EOT>
    */
    bool operator()(EOT& _eo1, EOT& _eo2)
    {
-       do_crossover(_eo1.data(),_eo2.data(),_eo1.size());
+       // do_crossover(_eo1.data(),_eo2.data(),_eo1.size());
+      unsigned i;
+      double r1, r2, fact;
+      double alphaMin = -alpha;
+      double alphaMax = 1+alpha;
+      if (alpha == 0.0)            // no check to perform
+        fact = -alpha + rng.uniform(range); // in [-alpha,1+alpha)
+      else                         // look for the bounds for fact
+        {
+          for (i=0; i<_eo1.size(); i++)
+            {
+              r1=_eo1[i];
+              r2=_eo2[i];
+              if (r1 != r2) {      // otherwise you'll get NAN's
+                double rmin = std::min(r1, r2);
+                double rmax = std::max(r1, r2);
+                double length = rmax - rmin;
+                if (bounds.isMinBounded(i))
+                  {
+                    alphaMin = std::max(alphaMin, (bounds.minimum(i)-rmin)/length);
+                    alphaMax = std::min(alphaMax, (rmax-bounds.minimum(i))/length);
+                  }
+                if (bounds.isMaxBounded(i))
+                  {
+                    alphaMax = std::min(alphaMax, (bounds.maximum(i)-rmin)/length);
+                    alphaMin = std::max(alphaMin, (rmax-bounds.maximum(i))/length);
+                  }
+              }
+            }
+          fact = alphaMin + (alphaMax-alphaMin)*rng.uniform();
+        }
 
-      // unsigned i;
-      // double r1, r2, fact;
-      // double alphaMin = -alpha;
-      // double alphaMax = 1+alpha;
-      // if (alpha == 0.0)            // no check to perform
-      //   fact = -alpha + rng.uniform(range); // in [-alpha,1+alpha)
-      // else                         // look for the bounds for fact
-      //   {
-      //     for (i=0; i<_eo1.size(); i++)
-      //       {
-      //         r1=_eo1[i];
-      //         r2=_eo2[i];
-      //         if (r1 != r2) {      // otherwise you'll get NAN's
-      //           double rmin = std::min(r1, r2);
-      //           double rmax = std::max(r1, r2);
-      //           double length = rmax - rmin;
-      //           if (bounds.isMinBounded(i))
-      //             {
-      //               alphaMin = std::max(alphaMin, (bounds.minimum(i)-rmin)/length);
-      //               alphaMax = std::min(alphaMax, (rmax-bounds.minimum(i))/length);
-      //             }
-      //           if (bounds.isMaxBounded(i))
-      //             {
-      //               alphaMax = std::min(alphaMax, (bounds.maximum(i)-rmin)/length);
-      //               alphaMin = std::max(alphaMin, (rmax-bounds.maximum(i))/length);
-      //             }
-      //         }
-      //       }
-      //     fact = alphaMin + (alphaMax-alphaMin)*rng.uniform();
-      //   }
-      //
-      // for (i=0; i<_eo1.size(); i++)
-      //   {
-      //     r1=_eo1[i];
-      //     r2=_eo2[i];
-      //     _eo1[i] = fact * r1 + (1-fact) * r2;
-      //     _eo2[i] = (1-fact) * r1 + fact * r2;
-      //   }
+      for (i=0; i<_eo1.size(); i++)
+        {
+          r1=_eo1[i];
+          r2=_eo2[i];
+          _eo1[i] = fact * r1 + (1-fact) * r2;
+          _eo2[i] = (1-fact) * r1 + fact * r2;
+        }
       return true;         // shoudl test if fact was 0 or 1 :-)))
     }
 
@@ -406,7 +377,7 @@ template<class EOT> class eoHypercubeCrossover: public eoQuadOp<EOT>
    *               0 == contractive application
    *               Must be positive
    */
-  eoHypercubeCrossover(const double& _alpha = 0.0):
+  eoHypercubeCrossover(const double _alpha = 0.0):
     bounds(eoDummyVectorNoBounds), alpha(_alpha), range(1+2*_alpha)
   {
     if (_alpha < 0)
@@ -422,7 +393,7 @@ template<class EOT> class eoHypercubeCrossover: public eoQuadOp<EOT>
    *               Must be positive
    */
   eoHypercubeCrossover(eoRealVectorBounds & _bounds,
-                        const double& _alpha = 0.0):
+                        const double _alpha = 0.0):
     bounds(_bounds), alpha(_alpha), range(1+2*_alpha)
   {
     if (_alpha < 0)
@@ -523,7 +494,7 @@ template<class EOT> class eoRealUXover: public eoQuadOp<EOT>
    * (Default) Constructor.
    * @param _preference bias in the choice (usually, no bias == 0.5)
    */
-  eoRealUXover(const float& _preference = 0.5): preference(_preference)
+  eoRealUXover(const float _preference = 0.5): preference(_preference)
     {
       if ( (_preference <= 0.0) || (_preference >= 1.0) )
         std::runtime_error("UxOver --> invalid preference");

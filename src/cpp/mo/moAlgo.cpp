@@ -32,535 +32,534 @@
 
 using namespace boost::python;
 
-
-
-struct moLocalSearchWrap : moLocalSearch<PyNeighbor>,wrapper<moLocalSearch<PyNeighbor>>
+template<typename SolutionType>
+struct moLocalSearchWrap : moLocalSearch<PyNeighbor<SolutionType>>,wrapper<moLocalSearch<PyNeighbor<SolutionType>>>
 {
+    typedef PyNeighbor<SolutionType> NborT;
+
     moLocalSearchWrap(
-        moNeighborhoodExplorer<PyNeighbor>& _nhexpl,
-        moContinuator<PyNeighbor>& _cont,
-        eoEvalFunc<PyEOT>& _eval
-    ) : moLocalSearch<PyNeighbor>(_nhexpl,_cont,_eval){};
+        moNeighborhoodExplorer<NborT>& _nhexpl,
+        moContinuator<NborT>& _cont,
+        eoEvalFunc<SolutionType>& _eval
+    ) : moLocalSearch<NborT>(_nhexpl,_cont,_eval){};
 
     //virtual operator() has a default implementation
-    bool operator()(PyEOT& _sol)
+    bool operator()(SolutionType& _sol)
     {
         if(override f = this->get_override("operator()"))
         {
             return this->get_override("operator()")(_sol);
         }
-        return moLocalSearch<PyNeighbor>::operator()(_sol);
+        return moLocalSearch<NborT>::operator()(_sol);
     }
-    bool default_op(PyEOT& _sol){
-        return this->moLocalSearch<PyNeighbor>::operator()(_sol);
-    }
-
-    void setMove(boost::python::object _obj)
-    {
-        searchExplorer.getSelectedNeighbor().setMove(_obj);
-        searchExplorer.getCurrentNeighbor().setMove(_obj);
-    }
-    void setMoveBack(boost::python::object _obj)
-    {
-        searchExplorer.getSelectedNeighbor().setMoveBack(_obj);
-        searchExplorer.getCurrentNeighbor().setMoveBack(_obj);
+    bool default_op(SolutionType& _sol){
+        return this->moLocalSearch<NborT>::operator()(_sol);
     }
 };
 
-//
-struct moSimpleHCWrap : moSimpleHC<PyNeighbor>,wrapper<moSimpleHC<PyNeighbor>>
+template<typename X,typename S>
+PyNeighbor<S>& getCurrentNeighbor(const X& _ls)
 {
-    //just the C++ equivalent... (need to set a move after calling ctor)
-    moSimpleHCWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        eoEvalFunc<PyEOT>& _eval,
-        moEval<PyNeighbor>& _nborEval
-    ) : moSimpleHC<PyNeighbor>(_nhood,_eval,_nborEval)
-    {
-    }
+    return _ls.getNeighborhoodExplorer().getCurrentNeighbor();
+}
 
-    moSimpleHCWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        eoEvalFunc<PyEOT>& _eval,
-        moEval<PyNeighbor>& _nborEval,
-        moContinuator<PyNeighbor>& _cont
-    ) : moSimpleHC<PyNeighbor>(_nhood,_eval,_nborEval,_cont)
-    {
-    }
-
-    moSimpleHCWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        eoEvalFunc<PyEOT>& _eval,
-        moEval<PyNeighbor>& _nborEval,
-        moContinuator<PyNeighbor>& _cont,
-        moNeighborComparator<PyNeighbor>& _compN,
-        moSolNeighborComparator<PyNeighbor>& _compSN
-    ) : moSimpleHC<PyNeighbor>(_nhood,_eval,_nborEval,_cont, _compN, _compSN)
-    {
-    }
-
-    // //with a move
-    // moSimpleHCWrap(
-    //     moNeighborhood<PyNeighbor>& _nhood,
-    //     eoEvalFunc<PyEOT>& _eval,
-    //     moEval<PyNeighbor>& _nborEval,
-    //     boost::python::object _move
-    // ) : moSimpleHC<PyNeighbor>(_nhood,_eval,_nborEval)
-    // {
-    //     setMove(_move);
-    // }
-    //
-    // moSimpleHCWrap(
-    //     moNeighborhood<PyNeighbor>& _nhood,
-    //     eoEvalFunc<PyEOT>& _eval,
-    //     moEval<PyNeighbor>& _nborEval,
-    //     moContinuator<PyNeighbor>& _cont,
-    //     boost::python::object _move
-    // ) : moSimpleHC<PyNeighbor>(_nhood,_eval,_nborEval,_cont)
-    // {
-    //     setMove(_move);
-    //     // explorer.getSelectedNeighbor().setMove(_move);
-    //     // explorer.getCurrentNeighbor().setMove(_move);
-    // }
-
-    void setMove(boost::python::object _obj)
-    {
-        explorer.getSelectedNeighbor().setMove(_obj);
-        explorer.getCurrentNeighbor().setMove(_obj);
-    }
-    void setMoveBack(boost::python::object _obj)
-    {
-        explorer.getSelectedNeighbor().setMoveBack(_obj);
-        explorer.getCurrentNeighbor().setMoveBack(_obj);
-    }
-};
-
-
-struct moFirstImprHCWrap : moFirstImprHC<PyNeighbor>,wrapper<moFirstImprHC<PyNeighbor>>
+template<typename X,typename S>
+PyNeighbor<S>& getSelectedNeighbor(const X& _ls)
 {
-    //just the C++ equivalent... (need to set a move after calling ctor)
-    moFirstImprHCWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        eoEvalFunc<PyEOT>& _eval,
-        moEval<PyNeighbor>& _nborEval
-    ) : moFirstImprHC<PyNeighbor>(_nhood,_eval,_nborEval)
-    {
-    }
-
-    moFirstImprHCWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        eoEvalFunc<PyEOT>& _eval,
-        moEval<PyNeighbor>& _nborEval,
-        moContinuator<PyNeighbor>& _cont
-    ) : moFirstImprHC<PyNeighbor>(_nhood,_eval,_nborEval,_cont)
-    {
-    }
-
-    moFirstImprHCWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        eoEvalFunc<PyEOT>& _eval,
-        moEval<PyNeighbor>& _nborEval,
-        moContinuator<PyNeighbor>& _cont,
-        moNeighborComparator<PyNeighbor>& _compN,
-        moSolNeighborComparator<PyNeighbor>& _compSN
-    ) : moFirstImprHC<PyNeighbor>(_nhood,_eval,_nborEval,_cont,_compN,_compSN)
-    {
-    }
-
-    //with a move (Python object)
-    moFirstImprHCWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        eoEvalFunc<PyEOT>& _eval,
-        moEval<PyNeighbor>& _nborEval,
-        boost::python::object _move
-    ) : moFirstImprHC<PyNeighbor>(_nhood,_eval,_nborEval)
-    {
-        setMove(_move);
-    }
-
-    moFirstImprHCWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        eoEvalFunc<PyEOT>& _eval,
-        moEval<PyNeighbor>& _nborEval,
-        moContinuator<PyNeighbor>& _cont,
-        boost::python::object _move
-    ) : moFirstImprHC<PyNeighbor>(_nhood,_eval,_nborEval,_cont)
-    {
-        setMove(_move);
-    }
-
-    void setMove(boost::python::object _obj)
-    {
-        explorer.getSelectedNeighbor().setMove(_obj);
-        explorer.getCurrentNeighbor().setMove(_obj);
-    }
-    void setMoveBack(boost::python::object _obj)
-    {
-        explorer.getSelectedNeighbor().setMoveBack(_obj);
-        explorer.getCurrentNeighbor().setMoveBack(_obj);
-    }
-};
-
-
-struct moRandomBestHCWrap : moRandomBestHC<PyNeighbor>,wrapper<moRandomBestHC<PyNeighbor>>
-{
-    //just the C++ equivalent... (need to set a move after calling ctor)
-    moRandomBestHCWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        eoEvalFunc<PyEOT>& _eval,
-        moEval<PyNeighbor>& _nborEval
-    ) : moRandomBestHC<PyNeighbor>(_nhood,_eval,_nborEval)
-    {
-    }
-    moRandomBestHCWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        eoEvalFunc<PyEOT>& _eval,
-        moEval<PyNeighbor>& _nborEval,
-        moContinuator<PyNeighbor>& _cont
-    ) : moRandomBestHC<PyNeighbor>(_nhood,_eval,_nborEval,_cont)
-    {
-    }
-    moRandomBestHCWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        eoEvalFunc<PyEOT>& _eval,
-        moEval<PyNeighbor>& _nborEval,
-        moContinuator<PyNeighbor>& _cont,
-        moNeighborComparator<PyNeighbor>& _compN,
-        moSolNeighborComparator<PyNeighbor>& _compSN
-    ) : moRandomBestHC<PyNeighbor>(_nhood,_eval,_nborEval,_cont,_compN,_compSN)
-    {
-    }
-    //with a move (Python object)
-    moRandomBestHCWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        eoEvalFunc<PyEOT>& _eval,
-        moEval<PyNeighbor>& _nborEval,
-        boost::python::object _move
-    ) : moRandomBestHC<PyNeighbor>(_nhood,_eval,_nborEval)
-    {
-        setMove(_move);
-    }
-    moRandomBestHCWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        eoEvalFunc<PyEOT>& _eval,
-        moEval<PyNeighbor>& _nborEval,
-        moContinuator<PyNeighbor>& _cont,
-        boost::python::object _move
-    ) : moRandomBestHC<PyNeighbor>(_nhood,_eval,_nborEval,_cont)
-    {
-        setMove(_move);
-    }
-    void setMove(boost::python::object _obj)
-    {
-        explorer.getSelectedNeighbor().setMove(_obj);
-        explorer.getCurrentNeighbor().setMove(_obj);
-    }
-    void setMoveBack(boost::python::object _obj)
-    {
-        explorer.getSelectedNeighbor().setMoveBack(_obj);
-        explorer.getCurrentNeighbor().setMoveBack(_obj);
-    }
-};
-
-struct moNeutralHCWrap : moNeutralHC<PyNeighbor>,wrapper<moNeutralHC<PyNeighbor>>
-{
-    //just the C++ equivalent... (need to set a move after calling ctor)
-    moNeutralHCWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        eoEvalFunc<PyEOT>& _eval,
-        moEval<PyNeighbor>& _nborEval,
-        unsigned int _nbStep
-    ) : moNeutralHC<PyNeighbor>(_nhood,_eval,_nborEval,_nbStep)
-    {
-    }
-    moNeutralHCWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        eoEvalFunc<PyEOT>& _eval,
-        moEval<PyNeighbor>& _nborEval,
-        unsigned int _nbStep,
-        moContinuator<PyNeighbor>& _cont
-    ) : moNeutralHC<PyNeighbor>(_nhood,_eval,_nborEval,_nbStep,_cont)
-    {
-    }
-    moNeutralHCWrap(
-        moNeighborhood<PyNeighbor>& _nhood,
-        eoEvalFunc<PyEOT>& _eval,
-        moEval<PyNeighbor>& _nborEval,
-        unsigned int _nbStep,
-        moContinuator<PyNeighbor>& _cont,
-        moNeighborComparator<PyNeighbor>& _compN,
-        moSolNeighborComparator<PyNeighbor>& _compSN
-    ) : moNeutralHC<PyNeighbor>(_nhood,_eval,_nborEval,_nbStep,_cont,_compN,_compSN)
-    {
-    }
-    void setMove(boost::python::object _obj)
-    {
-        explorer.getSelectedNeighbor().setMove(_obj);
-        explorer.getCurrentNeighbor().setMove(_obj);
-    }
-    void setMoveBack(boost::python::object _obj)
-    {
-        explorer.getSelectedNeighbor().setMoveBack(_obj);
-        explorer.getCurrentNeighbor().setMoveBack(_obj);
-    }
-};
-
-
-#define DEF(X,Y) class_<X, bases<moLocalSearch<PyNeighbor>>,    boost::noncopyable>(#Y,init<moNeighborhood<PyNeighbor>&,eoEvalFunc<PyEOT>&,moEval<PyNeighbor>&>()[WC3])\
-        .def(init<moNeighborhood<PyNeighbor>&,eoEvalFunc<PyEOT>&,moEval<PyNeighbor>&,moContinuator<PyNeighbor>&>()[WC4])\
-        .def(init<moNeighborhood<PyNeighbor>&,eoEvalFunc<PyEOT>&,moEval<PyNeighbor>&,moContinuator<PyNeighbor>&,moNeighborComparator<PyNeighbor>&,moSolNeighborComparator<PyNeighbor>&>()[WC6])\
-        .def("setMove",&X::setMove)\
-        .def("setMoveBack",&X::setMoveBack)
-
+    return _ls.getNeighborhoodExplorer().getSelectedNeighbor();
+}
 
 template<typename X>
-void setMove(X& _ls, boost::python::object _obj)
+void setMove(const X& _ls, boost::python::object _obj)
 {
     _ls.getNeighborhoodExplorer().getSelectedNeighbor().setMove(_obj);
     _ls.getNeighborhoodExplorer().getCurrentNeighbor().setMove(_obj);
 }
 
-// template void setMove<moRandomWalk<PyNeighbor>>();
-
-
-void moAlgos()
+template<typename X>
+void setMoveBack(const X& _ls, boost::python::object _obj)
 {
-    class_<moLocalSearchWrap,boost::noncopyable>
-    ("moLocalSearch",
+    _ls.getNeighborhoodExplorer().getSelectedNeighbor().setMoveBack(_obj);
+    _ls.getNeighborhoodExplorer().getCurrentNeighbor().setMoveBack(_obj);
+}
+
+
+template<typename SolutionType>
+void expose_moAlgos(std::string name)
+{
+    typedef PyNeighbor<SolutionType> NborT;
+
+    class_<moLocalSearchWrap<SolutionType>,bases<eoMonOp<SolutionType>>,boost::noncopyable>
+    (make_name("moLocalSearch",name).c_str(),
         init<
-            moNeighborhoodExplorer<PyNeighbor>&,
-            moContinuator<PyNeighbor>&,
-            eoEvalFunc<PyEOT>&
+            moNeighborhoodExplorer<NborT>&,
+            moContinuator<NborT>&,
+            eoEvalFunc<SolutionType>&
         >()
         [WC3]
     )
-    .def("__call__",&moLocalSearch<PyNeighbor>::operator(),&moLocalSearchWrap::default_op)
-    .def("getNeighborhoodExplorer",&moLocalSearch<PyNeighbor>::getNeighborhoodExplorer,return_internal_reference<>())
-    .def("setMove",&moLocalSearchWrap::setMove)
-    .def("setMoveBack",&moLocalSearchWrap::setMoveBack)
+    .def("__call__",&moLocalSearch<NborT>::operator(),&moLocalSearchWrap<SolutionType>::default_op)
+    .def("getNeighborhoodExplorer",&moLocalSearch<NborT>::getNeighborhoodExplorer,return_internal_reference<>())
+    .def("set_move",setMove<moLocalSearchWrap<SolutionType>>)
+    .def("set_move_back",setMoveBack<moLocalSearchWrap<SolutionType>>)
+    .def("get_current_neighbor",getCurrentNeighbor<moLocalSearchWrap<SolutionType>,SolutionType>,return_internal_reference<>())
+    .def("get_selected_neighbor",getSelectedNeighbor<moLocalSearchWrap<SolutionType>,SolutionType>,return_internal_reference<>())
+    // .def("set_move",&moLocalSearchWrap<SolutionType>::setMove)
+    // .def("set_move_back",&moLocalSearchWrap<SolutionType>::setMoveBack)
     ;
 
-    DEF(moSimpleHCWrap,moSimpleHC);
-    DEF(moFirstImprHCWrap,moFirstImprHC);
-    DEF(moRandomBestHCWrap,moRandomBestHC);
 
-    class_<moNeutralHCWrap, bases<moLocalSearch<PyNeighbor>>, boost::noncopyable>
-    ("moNeutralHC",
+    class_<moSimpleHC<NborT>, bases<moLocalSearch<NborT>>>
+    (make_name("moSimpleHC",name).c_str(),
         init<
-            moNeighborhood<PyNeighbor>&,
-            eoEvalFunc<PyEOT>&,
-            moEval<PyNeighbor>&,
+            moNeighborhood<NborT>&,
+            eoEvalFunc<SolutionType>&,
+            moEval<NborT>&
+        >()[WC3]
+    )
+    .def(
+        init<
+            moNeighborhood<NborT>&,
+            eoEvalFunc<SolutionType>&,
+            moEval<NborT>&,
+            moContinuator<NborT>&
+        >()[WC4]
+    )
+    .def(
+        init<
+            moNeighborhood<NborT>&,
+            eoEvalFunc<SolutionType>&,
+            moEval<NborT>&,
+            moContinuator<NborT>&,
+            moNeighborComparator<NborT>&,
+            moSolNeighborComparator<NborT>&
+        >()[WC6]
+    )
+    .def("set_move",setMove<moSimpleHC<NborT>>)
+    .def("set_move_back",setMoveBack<moSimpleHC<NborT>>)
+    .def("get_current_neighbor",getCurrentNeighbor<moSimpleHC<NborT>,SolutionType>,return_internal_reference<>())
+    .def("get_selected_neighbor",getSelectedNeighbor<moSimpleHC<NborT>,SolutionType>,return_internal_reference<>())
+    ;
+
+
+
+    class_<moFirstImprHC<NborT>, bases<moLocalSearch<NborT>>>
+    (make_name("moFirstImprHC",name).c_str(),
+        init<
+            moNeighborhood<NborT>&,
+            eoEvalFunc<SolutionType>&,
+            moEval<NborT>&
+        >()[WC3]
+    )
+    .def(
+        init<
+            moNeighborhood<NborT>&,
+            eoEvalFunc<SolutionType>&,
+            moEval<NborT>&,
+            moContinuator<NborT>&
+        >()[WC4]
+    )
+    .def(
+        init<
+            moNeighborhood<NborT>&,
+            eoEvalFunc<SolutionType>&,
+            moEval<NborT>&,
+            moContinuator<NborT>&,
+            moNeighborComparator<NborT>&,
+            moSolNeighborComparator<NborT>&
+        >()[WC6]
+    )
+    .def("set_move",setMove<moFirstImprHC<NborT>>)
+    .def("set_move_back",setMoveBack<moFirstImprHC<NborT>>)
+    ;
+
+
+    class_<moRandomBestHC<NborT>, bases<moLocalSearch<NborT>>>
+    (make_name("moRandomBestHC",name).c_str(),
+        init<
+            moNeighborhood<NborT>&,
+            eoEvalFunc<SolutionType>&,
+            moEval<NborT>&
+        >()[WC3]
+    )
+    .def(
+        init<
+            moNeighborhood<NborT>&,
+            eoEvalFunc<SolutionType>&,
+            moEval<NborT>&,
+            moContinuator<NborT>&
+        >()[WC4]
+    )
+    .def(
+        init<
+            moNeighborhood<NborT>&,
+            eoEvalFunc<SolutionType>&,
+            moEval<NborT>&,
+            moContinuator<NborT>&,
+            moNeighborComparator<NborT>&,
+            moSolNeighborComparator<NborT>&
+        >()[WC6]
+    )
+    .def("set_move",setMove<moRandomBestHC<NborT>>)
+    .def("set_move_back",setMoveBack<moRandomBestHC<NborT>>)
+    ;
+
+
+
+    class_<moNeutralHC<NborT>, bases<moLocalSearch<NborT>>, boost::noncopyable>
+    (make_name("moNeutralHC",name).c_str(),
+        init<
+            moNeighborhood<NborT>&,
+            eoEvalFunc<SolutionType>&,
+            moEval<NborT>&,
             unsigned int
+        >()[WC3]
+    )
+    .def(
+        init<
+            moNeighborhood<NborT>&,
+            eoEvalFunc<SolutionType>&,
+            moEval<NborT>&,
+            unsigned int,
+            moContinuator<NborT>&
         >()
-        [WC3]
+        [
+            with_custodian_and_ward<1,2,
+            with_custodian_and_ward<1,3,
+            with_custodian_and_ward<1,4,
+            with_custodian_and_ward<1,6>>>>()
+        ]
     )
-    .def(init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
-        unsigned int,
-        moContinuator<PyNeighbor>&
-    >())
-    .def(init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
-        unsigned int,
-        moContinuator<PyNeighbor>&,
-        moNeighborComparator<PyNeighbor>&,
-        moSolNeighborComparator<PyNeighbor>&
+    .def(
+        init<
+            moNeighborhood<NborT>&,
+            eoEvalFunc<SolutionType>&,
+            moEval<NborT>&,
+            unsigned int,
+            moContinuator<NborT>&,
+            moNeighborComparator<NborT>&,
+            moSolNeighborComparator<NborT>&
+        >()
+        [
+            with_custodian_and_ward<1,2,
+            with_custodian_and_ward<1,3,
+            with_custodian_and_ward<1,4,
+            with_custodian_and_ward<1,6,
+            with_custodian_and_ward<1,7,
+            with_custodian_and_ward<1,8>>>>>>()
+        ]
+    )
+    .def("set_move",setMove<moNeutralHC<NborT>>)
+    .def("set_move_back",setMoveBack<moNeutralHC<NborT>>)
+    ;
+
+
+    //Random : What for ???
+    class_<moRandomSearch<NborT>,bases<moLocalSearch<NborT>>,boost::noncopyable>
+    (make_name("moRandomSearch",name).c_str(),
+        init<
+            eoInit<SolutionType>&,
+            eoEvalFunc<SolutionType>&,
+            unsigned
+        >()
+        [
+            with_custodian_and_ward<1,2,
+            with_custodian_and_ward<1,3>>()
+        ]
+    )
+    .def(
+        init<
+            eoInit<SolutionType>&,
+            eoEvalFunc<SolutionType>&,
+            unsigned,
+            moContinuator<NborT>&
+        >()
+        [
+            with_custodian_and_ward<1,2,
+            with_custodian_and_ward<1,3,
+            with_custodian_and_ward<1,5>>>()
+        ]
+    )
+    ;
+
+    class_<moRandomWalk<NborT>,bases<moLocalSearch<NborT>>,boost::noncopyable>
+    (make_name("moRandomWalk",name).c_str(),
+        init<
+            moNeighborhood<NborT>&,
+            eoEvalFunc<SolutionType>&,
+            moEval<NborT>&,
+            unsigned
+        >()
+        [
+            with_custodian_and_ward<1,2,
+            with_custodian_and_ward<1,3,
+            with_custodian_and_ward<1,4>>>()
+        ]
+    )
+    .def(
+        init<
+            moNeighborhood<NborT>&,
+            eoEvalFunc<SolutionType>&,
+            moEval<NborT>&,
+            moContinuator<NborT>&
+        >()
+        [
+            with_custodian_and_ward<1,2,
+            with_custodian_and_ward<1,3,
+            with_custodian_and_ward<1,4,
+            with_custodian_and_ward<1,5>>>>()
+        ]
+    )
+    .def("set_move",setMove<moRandomWalk<NborT>>)
+    ;
+
+
+    class_<moRandomNeutralWalk<NborT>,bases<moLocalSearch<NborT>>,boost::noncopyable>
+    (make_name("moRandomNeutralWalk",name).c_str(),init<
+        moNeighborhood<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        moEval<NborT>&,
+        unsigned
     >()
+    [
+        with_custodian_and_ward<1,2,
+        with_custodian_and_ward<1,3,
+        with_custodian_and_ward<1,4>>>()
+    ]
     )
-    .def("setMove",&moNeutralHCWrap::setMove)
-    ;
-
-    //Random
-    class_<moRandomSearch<PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
-    ("moRandomSearch",init<
-        eoInit<PyEOT>&,
-        eoEvalFunc<PyEOT>&,
-        unsigned
-    >())
     .def(init<
-        eoInit<PyEOT>&,
-        eoEvalFunc<PyEOT>&,
+        moNeighborhood<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        moEval<NborT>&,
         unsigned,
-        moContinuator<PyNeighbor>&
-    >())
-    ;
-
-    class_<moRandomWalk<PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
-    ("moRandomWalk",init<
-    moNeighborhood<PyNeighbor>&,
-    eoEvalFunc<PyEOT>&,
-    moEval<PyNeighbor>&,
-    unsigned
-    >())
+        moContinuator<NborT>&
+    >()
+    [
+        with_custodian_and_ward<1,2,
+        with_custodian_and_ward<1,3,
+        with_custodian_and_ward<1,4,
+        with_custodian_and_ward<1,6
+        >>>>()
+    ]
+    )
     .def(init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
-        moContinuator<PyNeighbor>&
-    >())
-    .def("setMove",setMove<moRandomWalk<PyNeighbor>>)
-    ;
-
-    class_<moRandomNeutralWalk<PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
-    ("moRandomNeutralWalk",init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
-        unsigned
-    >())
-    .def(init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
+        moNeighborhood<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        moEval<NborT>&,
         unsigned,
-        moContinuator<PyNeighbor>&
-    >())
-    .def(init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
-        unsigned,
-        moContinuator<PyNeighbor>&,
-        moSolNeighborComparator<PyNeighbor>&
-    >())
-    .def("setMove",setMove<moRandomNeutralWalk<PyNeighbor>>)
+        moContinuator<NborT>&,
+        moSolNeighborComparator<NborT>&
+    >()
+    [
+        with_custodian_and_ward<1,2,
+        with_custodian_and_ward<1,3,
+        with_custodian_and_ward<1,4,
+        with_custodian_and_ward<1,6,
+        with_custodian_and_ward<1,7
+        >>>>>()
+    ]
+    )
+    .def("set_move",setMove<moRandomNeutralWalk<NborT>>)
     ;
 
 
-
-    class_<moMetropolisHasting<PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
-    ("moMetropolisHasting",init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
+    class_<moMetropolisHasting<NborT>,bases<moLocalSearch<NborT>>,boost::noncopyable>
+    (make_name("moMetropolisHasting",name).c_str(),init<
+        moNeighborhood<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        moEval<NborT>&,
         unsigned int
-    >())
+    >()
+    [
+        with_custodian_and_ward<1,2,
+        with_custodian_and_ward<1,3,
+        with_custodian_and_ward<1,4>>>()
+    ]
+    )
     .def(init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
+        moNeighborhood<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        moEval<NborT>&,
         unsigned int,
-        moContinuator<PyNeighbor>&
-    >())
+        moContinuator<NborT>&
+    >()
+    [
+        with_custodian_and_ward<1,2,
+        with_custodian_and_ward<1,3,
+        with_custodian_and_ward<1,4,
+        with_custodian_and_ward<1,6
+        >>>>()
+    ]
+    )
     .def(init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
+        moNeighborhood<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        moEval<NborT>&,
         unsigned,
-        moContinuator<PyNeighbor>&,
-        moNeighborComparator<PyNeighbor>&,
-        moSolNeighborComparator<PyNeighbor>&
-    >())
-    .def("setMove",setMove<moMetropolisHasting<PyNeighbor>>)
+        moContinuator<NborT>&,
+        moNeighborComparator<NborT>&,
+        moSolNeighborComparator<NborT>&
+    >()
+    [
+        with_custodian_and_ward<1,2,
+        with_custodian_and_ward<1,3,
+        with_custodian_and_ward<1,4,
+        with_custodian_and_ward<1,6,
+        with_custodian_and_ward<1,7,
+        with_custodian_and_ward<1,8
+        >>>>>>()
+    ]
+    )
+    .def("set_move",setMove<moMetropolisHasting<NborT>>)
     ;
 
-    class_<moSA<PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
-    ("moSA",init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,optional<
+
+    class_<moSA<NborT>,bases<moLocalSearch<NborT>>,boost::noncopyable>
+    (make_name("moSA",name).c_str(),init<
+        moNeighborhood<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        moEval<NborT>&,optional<
         double,
         double,
         unsigned,
         double>
-    >())
+    >()
+    [
+        with_custodian_and_ward<1,2,
+        with_custodian_and_ward<1,3,
+        with_custodian_and_ward<1,4
+        >>>()
+    ]
+    )
     .def(init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
-        moCoolingSchedule<PyEOT>&
-    >())
+        moNeighborhood<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        moEval<NborT>&,
+        moCoolingSchedule<SolutionType>&
+    >()
+    [
+        with_custodian_and_ward<1,2,
+        with_custodian_and_ward<1,3,
+        with_custodian_and_ward<1,4,
+        with_custodian_and_ward<1,5
+        >>>>()
+    ]
+    )
     .def(init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
-        moCoolingSchedule<PyEOT>&,
-        moContinuator<PyNeighbor>&
-    >())
+        moNeighborhood<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        moEval<NborT>&,
+        moCoolingSchedule<SolutionType>&,
+        moContinuator<NborT>&
+    >()
+    [
+        with_custodian_and_ward<1,2,
+        with_custodian_and_ward<1,3,
+        with_custodian_and_ward<1,4,
+        with_custodian_and_ward<1,5,
+        with_custodian_and_ward<1,6
+        >>>>>()
+    ]
+    )
     .def(init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
-        moCoolingSchedule<PyEOT>&,
-        moSolNeighborComparator<PyNeighbor>&,
-        moContinuator<PyNeighbor>&
-    >())
-    .def("setMove",setMove<moSA<PyNeighbor>>)
+        moNeighborhood<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        moEval<NborT>&,
+        moCoolingSchedule<SolutionType>&,
+        moSolNeighborComparator<NborT>&,
+        moContinuator<NborT>&
+    >()
+    [
+        with_custodian_and_ward<1,2,
+        with_custodian_and_ward<1,3,
+        with_custodian_and_ward<1,4,
+        with_custodian_and_ward<1,5,
+        with_custodian_and_ward<1,6,
+        with_custodian_and_ward<1,7
+        >>>>>>()
+    ]
+    )
+    .def("set_move",setMove<moSA<NborT>>)
     ;
 
 
-    class_<moTS<PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
-    ("moTS",init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
+    class_<moTS<NborT>,bases<moLocalSearch<NborT>>,boost::noncopyable>
+    (make_name("moTS",name).c_str(),init<
+        moNeighborhood<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        moEval<NborT>&,
         unsigned int,
         unsigned int
     >())
     .def(init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
+        moNeighborhood<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        moEval<NborT>&,
         unsigned int,
-        moTabuList<PyNeighbor>&
+        moTabuList<NborT>&
     >())
     .def(init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
-        moContinuator<PyNeighbor>&,
-        moTabuList<PyNeighbor>&,
-        moAspiration<PyNeighbor>&
+        moNeighborhood<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        moEval<NborT>&,
+        moContinuator<NborT>&,
+        moTabuList<NborT>&,
+        moAspiration<NborT>&
     >())
     .def(init<
-        moNeighborhood<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moEval<PyNeighbor>&,
-        moNeighborComparator<PyNeighbor>&,
-        moSolNeighborComparator<PyNeighbor>&,
-        moContinuator<PyNeighbor>&,
-        moTabuList<PyNeighbor>&,
-        moIntensification<PyNeighbor>&,
-        moDiversification<PyNeighbor>&,
-        moAspiration<PyNeighbor>&
+        moNeighborhood<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        moEval<NborT>&,
+        moNeighborComparator<NborT>&,
+        moSolNeighborComparator<NborT>&,
+        moContinuator<NborT>&,
+        moTabuList<NborT>&,
+        moIntensification<NborT>&,
+        moDiversification<NborT>&,
+        moAspiration<NborT>&
     >())
-    .def("setMove",setMove<moTS<PyNeighbor>>)
+    .def("set_move",setMove<moTS<NborT>>)
     ;
 
 
-    class_<moILS<PyNeighbor,PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
-    ("moILS",init<
-        moLocalSearch<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        eoMonOp<PyEOT>&,
+    class_<moILS<NborT,NborT>,bases<moLocalSearch<NborT>>,boost::noncopyable>
+    (make_name("moILS",name).c_str(),init<
+        moLocalSearch<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        eoMonOp<SolutionType>&,
         unsigned int
     >())
     .def(init<
-        moLocalSearch<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        eoMonOp<PyEOT>&,
-        moContinuator<PyNeighbor>&
+        moLocalSearch<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        eoMonOp<SolutionType>&,
+        moContinuator<NborT>&
     >())
     .def(init<
-        moLocalSearch<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moContinuator<PyNeighbor>&,
-        moPerturbation<PyNeighbor>&,
-        moAcceptanceCriterion<PyNeighbor>&
+        moLocalSearch<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        moContinuator<NborT>&,
+        moPerturbation<NborT>&,
+        moAcceptanceCriterion<NborT>&
     >())
     ;
 
 
-    class_<moVNS<PyNeighbor>,bases<moLocalSearch<PyNeighbor>>,boost::noncopyable>
-    ("moVNS",init<
-        moVariableNeighborhoodSelection<PyEOT>&,
-        moAcceptanceCriterion<PyNeighbor>&,
-        eoEvalFunc<PyEOT>&,
-        moContinuator<PyNeighbor>&
+    class_<moVNS<NborT>,bases<moLocalSearch<NborT>>,boost::noncopyable>
+    (make_name("moVNS",name).c_str(),init<
+        moVariableNeighborhoodSelection<SolutionType>&,
+        moAcceptanceCriterion<NborT>&,
+        eoEvalFunc<SolutionType>&,
+        moContinuator<NborT>&
     >())
     ;
+}
+
+
+void moAlgos()
+{
+    expose_moAlgos<PyEOT>("");
+    expose_moAlgos<BinarySolution>("Bin");
+    expose_moAlgos<RealSolution>("Real");
+    expose_moAlgos<IntSolution>("Perm");
 }

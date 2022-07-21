@@ -9,25 +9,22 @@
 
 using namespace boost::python;
 
-
+template<typename SolutionType>
 void
-transform()
+export_transform(std::string name)
 {
-    // eoUF : eoPop<PyMOEO> ---> void
-    def_abstract_functor<eoTransform<PyEOT> >("eoTransform");
-
-    class_<eoSGATransform<PyEOT>, bases<eoTransform<PyEOT> > >
-        ("eoSGATransform",
+    class_<eoSGATransform<SolutionType>, bases<eoTransform<SolutionType>>>(
+        make_name("eoSGATransform",name).c_str(),
         "Simple GA Transform\n\n"
         "Transforms a population by successive application of crossover\n"
         "and mutation operators\n",
         init<
-            eoQuadOp<PyEOT>&,
+            eoQuadOp<SolutionType>&,
             double,
-            eoMonOp<PyEOT>&,
+            eoMonOp<SolutionType>&,
             double
         >((arg("self"),arg("_cross"),arg("_cProba"),arg("_mutate"),arg("_mProba")),
-        "Start the Foo.\n\n"
+        "Construct from a mutation and a crossover.\n\n"
         ":param _cross: a crossover\n"
         ":type _cross: eoQuadOp\n"
         ":param _cProba: crossover probabilty\n"
@@ -38,20 +35,15 @@ transform()
         ":type _mProba: float\n"
         )
         )
-        .def("__call__", &eoSGATransform<PyEOT>::operator (),
+        .def("__call__", &eoSGATransform<SolutionType>::operator (),
         (arg("_pop")),
         "applies _mutate and _cross operators on _pop"
         )
         ;
-    //
-    // def_abstract_functor<eoPopEvalFunc<PyMOEO> >("eoPopEvalFunc");
-    //
-    // class_<eoPopLoopEval<PyMOEO>, bases<eoPopEvalFunc<PyMOEO> > >
-    // (
-    //     "eoPopLoopEval",
-    //     init<
-    //         eoEvalFunc<PyMOEO>&
-    //     >()
-    // )
-    // .def("__call__", &eoPopLoopEval<PyMOEO>::operator ());
+}
+
+void transform(){
+    export_transform<PyEOT>("");
+    export_transform<BinarySolution>("Bin");
+    export_transform<RealSolution>("Real");
 }

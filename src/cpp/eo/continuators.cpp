@@ -32,58 +32,75 @@
 
 using namespace boost::python;
 
-#define DEF3(x, i1, i2) class_<x<PyEOT>, bases<eoContinue<PyEOT > > >(#x, init<i1, i2 >() ).def("__call__", &eoContinue<PyEOT>::operator())
+// #define DEF3(x, i1, i2) class_<x<PyEOT>, bases<eoContinue<PyEOT > > >(#x, init<i1, i2 >() ).def("__call__", &eoContinue<PyEOT>::operator())
 
 void add_checkpoint();
 
-void continuators()
+template<typename SolutionType>
+void expose_continuators(std::string name)
 {
     /* Continuators */
-    def_abstract_functor<eoContinue<PyEOT> >("eoContinue");
+    // def_abstract_functor<eoContinue<PyEOT> >("eoContinue");
 
     /* Counters, wrappers etc */
-    class_<eoEvalFuncCounter<PyEOT>, bases<eoEvalFunc<PyEOT> > >
-        ("eoEvalFuncCounter",
-         init< eoEvalFunc<PyEOT>&, optional<std::string>>()
+
+    // EVAL FUNC !!
+    class_<eoEvalFuncCounter<SolutionType>, bases<eoEvalFunc<SolutionType> > >
+        (make_name("eoEvalFuncCounter",name).c_str(),
+         init< eoEvalFunc<SolutionType>&, optional<std::string>>()
          [
           with_custodian_and_ward<1, 2>()
          ]
         )
-        .def("__call__", &eoEvalFuncCounter<PyEOT>::operator())
+        .def("__call__", &eoEvalFuncCounter<SolutionType>::operator())
         ;
 
-    class_<eoGenContinue<PyEOT>, bases<eoContinue<PyEOT> >, boost::noncopyable >
-        ("eoGenContinue", init<unsigned long>() )
-        .def("__call__", &eoGenContinue<PyEOT>::operator())
+    // CONTINUATORS
+    class_<eoGenContinue<SolutionType>, bases<eoContinue<SolutionType> > >//, boost::noncopyable >
+        (make_name("eoGenContinue",name).c_str(), init<unsigned long>() )
+        .def("__call__", &eoGenContinue<SolutionType>::operator())
+        // .def("totalGenerations",&eoGenContinue<SolutionType>::totalGenerations)
         ;
 
-    class_<eoCombinedContinue<PyEOT>, bases<eoContinue<PyEOT> > >
-        ("eoCombinedContinue", init<eoContinue<PyEOT>&>()[WC1])
-        .def( init<eoContinue<PyEOT>&, eoContinue<PyEOT>& >()[WC2] )
-        .def("add", &eoCombinedContinue<PyEOT>::add, WC1)
-        .def("__call__", &eoCombinedContinue<PyEOT>::operator())
+    class_<eoCombinedContinue<SolutionType>, bases<eoContinue<SolutionType> > >
+        (make_name("eoCombinedContinue",name).c_str(), init<eoContinue<SolutionType>&>()[WC1])
+        .def( init<eoContinue<SolutionType>&, eoContinue<SolutionType>& >()[WC2] )
+        .def("add", &eoCombinedContinue<SolutionType>::add, WC1)
+        .def("__call__", &eoCombinedContinue<SolutionType>::operator())
         ;
 
-    class_<eoEvalContinue<PyEOT>, bases<eoContinue<PyEOT> > >
-        ("eoEvalContinue",
-         init<eoEvalFuncCounter<PyEOT>&, unsigned long>()[WC1]
+    class_<eoEvalContinue<SolutionType>, bases<eoContinue<SolutionType> > >
+        (make_name("eoEvalContinue",name).c_str(),
+         init<eoEvalFuncCounter<SolutionType>&, unsigned long>()[WC1]
          )
-        .def("__call__", &eoEvalContinue<PyEOT>::operator())
+        .def("__call__", &eoEvalContinue<SolutionType>::operator())
         ;
 
-    class_<eoSecondsElapsedContinue<PyEOT>,bases<eoContinue<PyEOT>>>
-        ("eoSecondsElapsedContinue",init<int>())
-        .def("__call__", &eoSecondsElapsedContinue<PyEOT>::operator())
+    class_<eoSecondsElapsedContinue<SolutionType>,bases<eoContinue<SolutionType>>>
+        (make_name("eoSecondsElapsedContinue",name).c_str(),init<int>())
+        .def("__call__", &eoSecondsElapsedContinue<SolutionType>::operator())
         ;
 
     // JG : python object as fitness type? extraction done inside eoFitContinue? if r/o ... relying on [] operator...
-    // DEF2(eoFitContinue, object); // object is the fitness type
-    //
-    DEF3(eoSteadyFitContinue, unsigned long, unsigned long);
+    class_<eoFitContinue<SolutionType>, bases<eoContinue<SolutionType > > >
+    (make_name("eoFitContinue",name).c_str(), init<doubleFitness>())
+    .def("__call__", &eoFitContinue<SolutionType>::operator())
+    ;
 
-    //
-    add_checkpoint();
+    class_<eoSteadyFitContinue<SolutionType>, bases<eoContinue<SolutionType > > >
+    (make_name("eoSteadyFitContinue",name).c_str(), init<unsigned long,unsigned long, optional<unsigned long>>())
+    .def("__call__", &eoSteadyFitContinue<SolutionType>::operator())
+    ;
 }
+
+void continuators()
+{
+    expose_continuators<PyEOT>("");
+    expose_continuators<BinarySolution>("Bin");
+    expose_continuators<RealSolution>("Real");
+    expose_continuators<IntSolution>("Perm");
+}
+
 
 void addContinue(eoCheckPoint<PyEOT>& c, eoContinue<PyEOT>& cc) { c.add(cc); }
 void addMonitor(eoCheckPoint<PyEOT>& c, eoMonitor& m) { c.add(m);}

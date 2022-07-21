@@ -34,8 +34,8 @@ stages:
 build-job:
     stage: build
     tags:
-    - ci.inria.fr
-    - small
+        - ci.inria.fr
+        - small
     script:
         - python3 setup.py sdist bdist_wheel -G"Unix Makefiles"
         - auditwheel repair dist/*.whl
@@ -55,8 +55,8 @@ build-job:
 test-job1:
     stage: test
     tags:
-    - ci.inria.fr
-    - small
+        - ci.inria.fr
+        - small
     needs:
         - build-job
     script:
@@ -96,8 +96,8 @@ pages:
 pypi:
     stage: deploy
     tags:
-    - ci.inria.fr
-    - small
+        - ci.inria.fr
+        - small
     needs:
         - test-job1
     script:

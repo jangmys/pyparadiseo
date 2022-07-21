@@ -1,12 +1,14 @@
-from pyparadiseo import Solution
+from pyparadiseo import config
+
+from pyparadiseo import solution
 
 from pyparadiseo import eo
 from pyparadiseo.eo import continuator
 from pyparadiseo import evaluator
+from pyparadiseo import initializer
 
-from pyparadiseo.initializer import Init
-from pyparadiseo.evaluator import FitnessEval
-from pyparadiseo import Pop
+# from pyparadiseo.initializer import Init
+from pyparadiseo import population
 
 
 import unittest
@@ -16,15 +18,17 @@ import numpy as np
 
 class test_eocontinue(unittest.TestCase):
     def setUp(self):
-        self.init = Init(lambda : np.random.randint(0,2,10))
-        self.eval = FitnessEval(lambda x: np.sum(x))
+        config.set_solution_type('gen')
 
-        self.pop = Pop(10,self.init)
+        self.init = initializer.initializer(lambda : np.random.randint(0,2,10))
+        self.eval_raw = lambda x: np.sum(x)
+        self.eval = evaluator.fitness(self.eval_raw)
+        self.pop = population.from_init(10,self.init)
 
-        self.ind1 = Solution()
+        self.ind1 = solution.empty()
         self.init(self.ind1)
 
-        self.ind2 = Solution()
+        self.ind2 = solution.empty()
         self.init(self.ind2)
 
     def tearDown(self):
@@ -33,13 +37,15 @@ class test_eocontinue(unittest.TestCase):
     def test_bases(self):
         for name, obj in inspect.getmembers(continuator):
             if inspect.isclass(obj):
+                if name[0] == '_':
+                    continue
                 if name == "EvalFuncCounter":
                     self.assertEqual(obj.__bases__[0].__name__,"eoEvalFunc")
                 elif name != "Continue":
                     self.assertEqual(obj.__bases__[0].__name__,"eoContinue")
 
     def test_eoGenContinue(self):
-        myGenContinue = continuator.GenContinue(42)
+        myGenContinue = continuator.max_generations(42)
 
         c=0
         while True:
@@ -50,9 +56,9 @@ class test_eocontinue(unittest.TestCase):
 
     def test_eoEvalFuncCounter(self):
         #make counting_eval_function object from FitnessEval
-        myEvalFuncCounter = evaluator.EvalFuncCounter(self.eval,"test-string")
+        myEvalFuncCounter = evaluator.counting_fitness(self.eval)
         #make eval_continuator : 100 evaluations
-        myEvalContinue = continuator.EvalContinue(myEvalFuncCounter,100)
+        myEvalContinue = continuator.eval_calls(myEvalFuncCounter,100)
 
         c=0
         # stop after 100 evaluations
@@ -62,6 +68,22 @@ class test_eocontinue(unittest.TestCase):
             myEvalFuncCounter(self.ind1)
             c = c + 1
         self.assertEqual(c,100)
+
+
+        #make counting_eval_function object from FitnessEval
+        myEvalFuncCounter = evaluator.fitness(self.eval_raw,True)
+        #make eval_continuator : 100 evaluations
+        myEvalContinue = continuator.eval_calls(myEvalFuncCounter,100)
+
+        c=0
+        # stop after 100 evaluations
+        while myEvalContinue(self.pop):
+            #if we don't invalidate, eval won't re-evaluate
+            self.ind1.invalidate()
+            myEvalFuncCounter(self.ind1)
+            c = c + 1
+        self.assertEqual(c,100)
+
 
 
 

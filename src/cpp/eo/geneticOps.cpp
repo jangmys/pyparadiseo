@@ -30,7 +30,8 @@
 
 using namespace boost::python;
 
-class GenOpWrapper : public eoGenOp<PyEOT>
+template<typename SolutionType>
+class GenOpWrapper : public eoGenOp<SolutionType>
 {
 public:
 
@@ -45,7 +46,7 @@ public:
         return "GenOpDerivative"; // never saw the use of className anyway
     }
 
-    void apply(eoPopulator<PyEOT>& populator )
+    void apply(eoPopulator<SolutionType>& populator )
     {
         boost::python::call_method<void>(self,"apply", boost::ref( populator ) );
     }
@@ -67,32 +68,36 @@ public:
     }
 };
 
-class MonOpWrapper : public eoMonOp<PyEOT>
+
+template<typename SolutionType>
+class MonOpWrapper : public eoMonOp<SolutionType>
 {
 public:
     PyObject* self;
     MonOpWrapper(PyObject* p) : self(p) {}
-    bool operator()(PyEOT& _eo)
+    bool operator()(SolutionType& _eo)
     {
         return boost::python::call_method<bool>(self, "__call__", boost::ref( _eo ));
     }
 };
 
-class BinOpWrapper : public eoBinOp<PyEOT>
+template<typename SolutionType>
+class BinOpWrapper : public eoBinOp<SolutionType>
 {
 public:
     PyObject* self;
     BinOpWrapper(PyObject* p) : self(p) {}
-    bool operator()(PyEOT& _eo, const PyEOT& _eo2)
+    bool operator()(SolutionType& _eo, const SolutionType& _eo2)
     { return boost::python::call_method<bool>(self, "__call__", boost::ref( _eo ), boost::ref(_eo2)); }
 };
 
-class QuadOpWrapper : public eoQuadOp<PyEOT>
+template<typename SolutionType>
+class QuadOpWrapper : public eoQuadOp<SolutionType>
 {
 public:
     PyObject* self;
     QuadOpWrapper(PyObject* p) : self(p) {}
-    bool operator()(PyEOT& _eo, PyEOT& _eo2)
+    bool operator()(SolutionType& _eo, SolutionType& _eo2)
     { return boost::python::call_method<bool>(self, "__call__", boost::ref( _eo ), boost::ref(_eo2)); }
 };
 
@@ -120,7 +125,8 @@ public:
         if (mon_op.ptr() != Py_None) {
             _eo.invalidate();
             // std::cout << "*** mut" << std::endl;
-            return boost::python::call<bool>(mon_op.ptr(),_eo.encoding);
+            // return boost::python::call<bool>(mon_op.ptr(),_eo.encoding);
+            return mon_op(_eo.encoding);
         } else  {
             std::cout << "no MonOp defined : do nothing";
             return false;
@@ -154,7 +160,9 @@ public:
     {
         if (bin_op.ptr() != Py_None) {
             _eo.invalidate();
-            return boost::python::call<bool>(bin_op.ptr(),_eo.encoding,_eo2.encoding);
+            bin_op(_eo.encoding,_eo2.encoding);
+            return true;
+            // return boost::python::call<bool>(bin_op.ptr(),_eo.encoding,_eo2.encoding);
         } else  {
             std::cout << "no BinOp defined : do nothing";
             return false;
@@ -179,7 +187,6 @@ public:
     void
     setOp(boost::python::object obj)
     {
-        // std::cout << "Setting generator\n";
         quad_op = obj;
     }
 
@@ -190,7 +197,9 @@ public:
             _eo.invalidate();
             _eo2.invalidate();
             // std::cout << "*** mut" << std::endl;
-            return boost::python::call<bool>(quad_op.ptr(),_eo.encoding,_eo2.encoding);
+            quad_op(_eo.encoding,_eo2.encoding);
+            return true; //let's assume the quad_op modifies the eo's ;-)
+            // return boost::python::call<bool>(quad_op.ptr(),_eo.encoding,_eo2.encoding);
         } else  {
             std::cout << "no QuadOp defined : do nothing";
             return false;
@@ -201,12 +210,26 @@ private:
     boost::python::object quad_op;
 };
 
+template<typename SolutionType>
+void expose_gen_ops(std::string name)
+{
+    class_<eoMonOp<SolutionType>, MonOpWrapper<SolutionType>, bases<eoOp>, boost::noncopyable>(make_name("eoMonOp",name).c_str(), init<>())
+        .def("__call__", &MonOpWrapper<SolutionType>::operator(), "an example docstring");
 
+    class_<eoBinOp<SolutionType>, BinOpWrapper<SolutionType>, bases<eoOp>, boost::noncopyable>(make_name("eoBinOp",name).c_str(), init<>())
+        .def("__call__", &BinOpWrapper<SolutionType>::operator());
 
+    class_<eoQuadOp<SolutionType>, QuadOpWrapper<SolutionType>, bases<eoOp>, boost::noncopyable>(make_name("eoQuadOp",name).c_str(), init<>())
+        .def("__call__", &QuadOpWrapper<SolutionType>::operator());
 
+    class_<eoGenOp<SolutionType>, GenOpWrapper<SolutionType>, bases<eoOp>, boost::noncopyable>(make_name("eoGenOp",name).c_str(), init<>())
+        .def("max_production", &GenOpWrapper<SolutionType>::max_production)
+        .def("className", &GenOpWrapper<SolutionType>::className)
+        .def("apply", &GenOpWrapper<SolutionType>::apply)
+        .def("__call__", &eoGenOp<SolutionType>::operator())
+    ;
 
-
-
+}
 
 void geneticOps()
 {
@@ -234,22 +257,38 @@ void geneticOps()
         .def("select", &eoSelectivePopulator<PyEOT>::select, return_internal_reference<>() )
         ;
 
-    enum_<eoOp<PyEOT>::OpType>("OpType")
-        .value("unary", eoOp<PyEOT>::unary)
-        .value("binary", eoOp<PyEOT>::binary)
-        .value("quadratic", eoOp<PyEOT>::quadratic)
-        .value("general", eoOp<PyEOT>::general)
+
+    // enum_<eoOp<PyEOT>::OpType>("OpType")
+    //     .value("unary", eoOp<PyEOT>::unary)
+    //     .value("binary", eoOp<PyEOT>::binary)
+    //     .value("quadratic", eoOp<PyEOT>::quadratic)
+    //     .value("general", eoOp<PyEOT>::general)
+    //     ;
+
+    enum_<eoOp::OpType>("OpType")
+        .value("unary", eoOp::unary)
+        .value("binary", eoOp::binary)
+        .value("quadratic", eoOp::quadratic)
+        .value("general", eoOp::general)
         ;
 
-    class_<eoOp<PyEOT> >("eoOp", init<eoOp<PyEOT>::OpType>())
-        .def("getType", &eoOp<PyEOT>::getType);
+    class_<eoOp>("eoOp", init<eoOp::OpType>())
+        .def("getType", &eoOp::getType);
 
-    class_<eoMonOp<PyEOT>, MonOpWrapper, bases<eoOp<PyEOT> >, boost::noncopyable>("eoMonOp", init<>())
-        .def("__call__", &MonOpWrapper::operator(), "an example docstring");
-    class_<eoBinOp<PyEOT>, BinOpWrapper, bases<eoOp<PyEOT> >, boost::noncopyable>("eoBinOp", init<>())
-        .def("__call__", &BinOpWrapper::operator());
-    class_<eoQuadOp<PyEOT>, QuadOpWrapper, bases<eoOp<PyEOT> >, boost::noncopyable>("eoQuadOp", init<>())
-        .def("__call__", &QuadOpWrapper::operator());
+    expose_gen_ops<PyEOT>("");
+    expose_gen_ops<BinarySolution>("Bin");
+    expose_gen_ops<RealSolution>("Real");
+    expose_gen_ops<IntSolution>("Perm");
+
+    // class_<eoOp<PyEOT> >("eoOp", init<eoOp<PyEOT>::OpType>())
+    //     .def("getType", &eoOp<PyEOT>::getType);
+
+    // class_<eoMonOp<PyEOT>, MonOpWrapper<PyEOT>, bases<eoOp>, boost::noncopyable>("eoMonOp", init<>())
+    //     .def("__call__", &MonOpWrapper<PyEOT>::operator(), "an example docstring");
+    // class_<eoBinOp<PyEOT>, BinOpWrapper<PyEOT>, bases<eoOp>, boost::noncopyable>("eoBinOp", init<>())
+    //     .def("__call__", &BinOpWrapper<PyEOT>::operator());
+    // class_<eoQuadOp<PyEOT>, QuadOpWrapper<PyEOT>, bases<eoOp>, boost::noncopyable>("eoQuadOp", init<>())
+    //     .def("__call__", &QuadOpWrapper<PyEOT>::operator());
 
 
     class_<PyMonOp,bases<eoMonOp<PyEOT>>,boost::noncopyable>
@@ -273,12 +312,12 @@ void geneticOps()
         .def("__call__", &PyQuadOp::operator ())
     ;
 
-    class_<eoGenOp<PyEOT>, GenOpWrapper, bases<eoOp<PyEOT> >, boost::noncopyable>("eoGenOp", init<>())
-        .def("max_production", &GenOpWrapper::max_production)
-        .def("className", &GenOpWrapper::className)
-        .def("apply", &GenOpWrapper::apply)
-        .def("__call__", &eoGenOp<PyEOT>::operator())
-        ;
+    // class_<eoGenOp<PyEOT>, GenOpWrapper, bases<eoOp>, boost::noncopyable>("eoGenOp", init<>())
+    //     .def("max_production", &GenOpWrapper::max_production)
+    //     .def("className", &GenOpWrapper::className)
+    //     .def("apply", &GenOpWrapper::apply)
+    //     .def("__call__", &eoGenOp<PyEOT>::operator())
+    //     ;
 
 
 

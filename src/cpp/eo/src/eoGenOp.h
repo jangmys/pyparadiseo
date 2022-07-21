@@ -57,11 +57,11 @@ AND that the apply function is responsible for invalidating
 the object if necessary
  */
 template <class EOT>
-class eoGenOp : public eoOp<EOT>, public eoUF<eoPopulator<EOT> &, void>
+class eoGenOp : public eoOp, public eoUF<eoPopulator<EOT> &, void>
 {
   public :
   /// Ctor that honors its superclass
-  eoGenOp(): eoOp<EOT>( eoOp<EOT>::general ) {}
+  eoGenOp(): eoOp( eoOp::general ) {}
 
   /** Max production is used to reserve space for all elements that are used by the operator,
       not setting it properly can result in a crash
@@ -210,14 +210,14 @@ class eoQuadGenOp : public eoGenOp<EOT>
     @see eoOpContainer
     */
     template <class EOT>
-    eoGenOp<EOT>& wrap_op(eoOp<EOT>& _op, eoFunctorStore& _store)
+    eoGenOp<EOT>& wrap_op(eoOp& _op, eoFunctorStore& _store)
     {
       switch(_op.getType())
       {
-        case eoOp<EOT>::unary     : return _store.storeFunctor(new eoMonGenOp<EOT>(static_cast<eoMonOp<EOT>&>(_op)));
-        case eoOp<EOT>::binary    : return _store.storeFunctor(new eoBinGenOp<EOT>(static_cast<eoBinOp<EOT>&>(_op)));
-        case eoOp<EOT>::quadratic : return _store.storeFunctor(new eoQuadGenOp<EOT>(static_cast<eoQuadOp<EOT>&>(_op)));
-        case eoOp<EOT>::general   : return static_cast<eoGenOp<EOT>&>(_op);
+        case eoOp::unary     : return _store.storeFunctor(new eoMonGenOp<EOT>(static_cast<eoMonOp<EOT>&>(_op)));
+        case eoOp::binary    : return _store.storeFunctor(new eoBinGenOp<EOT>(static_cast<eoBinOp<EOT>&>(_op)));
+        case eoOp::quadratic : return _store.storeFunctor(new eoQuadGenOp<EOT>(static_cast<eoQuadOp<EOT>&>(_op)));
+        case eoOp::general   : return static_cast<eoGenOp<EOT>&>(_op);
       }
 
       assert(false);

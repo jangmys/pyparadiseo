@@ -8,9 +8,13 @@
 #include <utils/index_error.h>
 #include <utils/eoLogger.h>
 
-// #include "fitness.h"
+#include "abstract.h"
+
+#include <es/eoReal.h>
+#include <core/moeoVector.h>
 
 #include <pyeot.h>
+#include <pypot.h>
 
 namespace bp=boost::python;
 
@@ -35,7 +39,7 @@ struct PyEOT_pickle_suite : bp::pickle_suite
                 p.invalidObjectiveVector()?bp::object():bp::object(p.objectiveVector()),
                 p.invalidFitness()?bp::object():bp::object(p.fitness().get()),
                 p.invalidDiversity()?bp::object():bp::object(p.diversity()),
-                p.getEncoding());
+                p.get_encoding());
     }
 
     static void setstate(bp::object _eot, bp::tuple state)
@@ -66,12 +70,23 @@ struct PyEOT_pickle_suite : bp::pickle_suite
 
 extern void registerConverters();
 
+extern void eo_abstract();
+
+// extern template void export_abstract<PyEOT>(std::string s);
+// extern template void export_abstract<RealSolution>(std::string s);
+// extern template void export_abstract<BinarySolution>(std::string s);
+
 extern void bounds();
+
+//common
+extern void valueParam();
 
 //EO - core
 extern void initialize();
 extern void evaluate();
 extern void random_numbers();
+
+
 
 //EO
 extern void pop();
@@ -90,6 +105,8 @@ extern void eoAlgos();
 
 extern void algos();
 extern void continuators();
+extern void add_checkpoint();
+
 extern void reduce();
 
 extern void real_op();
@@ -103,6 +120,13 @@ extern void moExplorers();
 extern void moContinuators();
 extern void moAlgos();
 extern void moComparators();
+
+//MOEO
+extern void moeo_abstract();
+extern void moeo_algos();
+
+
+extern void eoParticleSwarm();
 
 
 BOOST_PYTHON_MODULE(_core)
@@ -120,12 +144,20 @@ BOOST_PYTHON_MODULE(_core)
     Py_Initialize(); //needed to call Python code from c++
     numpy::initialize();
 
+    implicitly_convertible<double, object>();
+    implicitly_convertible<int, object>();
+    implicitly_convertible<unsigned int, object>();
+    implicitly_convertible<bool, object>();
+
+    // implicitly_convertible<std::complex<double>, std::any>();
+
     registerConverters();//numpy scalar converter!!!
     iterable_converter()
         .from_python<std::vector<bool> >()
         .from_python<std::vector<float> >()
         .from_python<std::vector<double> >()
         .from_python<std::vector<int> >()
+        .from_python<std::vector<unsigned int> >()
     ;
 
     // from MOEO, but in Pyparadiseo the basic solution type PyEOT has an objective vector too
@@ -146,6 +178,8 @@ BOOST_PYTHON_MODULE(_core)
     class_<FitnessTraits,boost::noncopyable>("FitnessTraits",bp::no_init)
         .def("set_minimizing",&FitnessTraits::set_minimizing)
             .staticmethod("set_minimizing")
+        .def("is_minimizing",&FitnessTraits::is_minimizing)
+            .staticmethod("is_minimizing")
     ;
 
     class_<DoubleFitness<FitnessTraits>>("Fitness",init<optional<double>>())
@@ -157,6 +191,20 @@ BOOST_PYTHON_MODULE(_core)
     class_< std::vector<double> >("DoubleVec")
         .def(bp::vector_indexing_suite<std::vector<double> >())
         ;
+    class_< std::vector<bool> >("BoolVec")
+        .def(bp::vector_indexing_suite<std::vector<bool> >())
+        ;
+    class_< std::vector<int> >("IntVec")
+        .def(bp::vector_indexing_suite<std::vector<int> >())
+        ;
+    class_< std::vector<std::vector<int>> >("IntVec2")
+        .def(bp::vector_indexing_suite<std::vector<std::vector<int>> >())
+        ;
+
+    class_< std::vector<unsigned int> >("UIntVec")
+        .def(bp::vector_indexing_suite<std::vector<unsigned int> >())
+        ;
+
 
     //only doubles ... need to expose this to use it as a base class for moeoRealObjectiveVector
     //(all member functions will be in moeoRealObjectiveVector)
@@ -186,18 +234,26 @@ BOOST_PYTHON_MODULE(_core)
         .def( "__str__",to_py_str<moeoRealObjectiveVector<moeoObjectiveVectorTraits>>)
         ;
 
-    void (PyEOT::*fx2)(boost::python::object) = &PyEOT::setObjectiveVector;
 
-    class_<PyEOT>("Solution",init<optional<object>>())
+    void (PyEO::*fx2)(boost::python::object) = &PyEO::setObjectiveVector;
+
+    class_<PyEO>("_PyEO",init<>())
+    .def(init<const PyEO&>())
+    .add_property("fitness", &PyEO::getFitness, &PyEO::setFitness)
+    .add_property("objectiveVector", &PyEO::getObjectiveVector, fx2)
+    .add_property("diversity", &PyEO::getDiversity, &PyEO::setDiversity)
+    .def("invalidateObjectiveVector",&PyEO::invalidateObjectiveVector)
+    .def("invalidObjectiveVector",&PyEO::invalidObjectiveVector)
+    .def("invalidate", &PyEO::invalidate)
+    .def("invalid", &PyEO::invalid)
+    .def("__lt__", &PyEO::operator<)
+    .def("__repr__", &PyEO::repr)
+    .def("__str__", &PyEO::to_string)
+    ;
+
+    class_<PyEOT,bases<PyEO>>("Solution",init<optional<object>>())
         .def(init<const PyEOT&>())
-        .add_property("encoding", &PyEOT::getEncoding, &PyEOT::setEncoding)
-        .add_property("fitness", &PyEOT::getFitness, &PyEOT::setFitness)
-        .add_property("objectiveVector", &PyEOT::getObjectiveVector, fx2)
-        .add_property("diversity", &PyEOT::getDiversity, &PyEOT::setDiversity)
-        .def("invalidateObjectiveVector",&PyEOT::invalidateObjectiveVector)
-        .def("invalidObjectiveVector",&PyEOT::invalidObjectiveVector)
-        .def("invalidate", &PyEOT::invalidate)
-        .def("invalid", &PyEOT::invalid)
+        .add_property("encoding", &PyEOT::get_encoding, &PyEOT::setEncoding)
         .def("__getitem__", &PyEOT::get_item)
         .def("__setitem__", &PyEOT::set_item)
         .def("__str__", &PyEOT::to_string)
@@ -209,10 +265,85 @@ BOOST_PYTHON_MODULE(_core)
         .def_pickle(PyEOT_pickle_suite())
     ;
 
+    //=======================================
+    // VectorSolution
+    //=======================================
+
+    // class_<VectorSolution<double>,bases<PyEO,std::vector<double>>>("RealSolution",init<optional<unsigned int>>())
+    // .def(vector_indexing_suite<std::vector<double>>())
+    // .def(init<const VectorSolution<double>&>())
+    // .def("resize", vec_resize<double>)
+    // .def("__repr__", &VectorSolution<double>::repr)
+    // .def("__str__", &VectorSolution<double>::to_string)
+    // .add_property("array",&VectorSolution<double>::get_array,&VectorSolution<double>::set_array)
+    // ;
+
+    class_<RealSolution,bases<PyEO>>("RealSolution",init<optional<unsigned int>>())
+    // .def(init<boost::python::object>())
+    .def(init<const RealSolution&>())
+    .add_property("encoding", &RealSolution::get_encoding, &RealSolution::setEncoding)
+    .def("resize", &RealSolution::resize)
+    .def("__len__", &RealSolution::size)
+    .def("__repr__", &RealSolution::repr)
+    .def("__str__", &RealSolution::to_string)
+    .def_readwrite("carray",&RealSolution::vec)
+    .add_property("array",&RealSolution::get_array,&RealSolution::set_array)
+    ;
+
+
+    class_<BinarySolution,bases<PyEO>>("BinarySolution",init<optional<unsigned int>>())
+    .def(init<const BinarySolution&>())
+    .add_property("encoding", &BinarySolution::get_encoding, &BinarySolution::setEncoding)
+    .def("resize", &BinarySolution::resize)
+    .def("__len__", &BinarySolution::size)
+    .def("__repr__", &BinarySolution::repr)
+    .def("__str__", &BinarySolution::to_string)
+    .def_readwrite("carray",&BinarySolution::vec)
+    .add_property("array",&BinarySolution::get_array,&BinarySolution::set_array)
+    ;
+
+    class_<IntSolution,bases<PyEO>>("IntSolution",init<optional<unsigned int>>())
+    .def(init<const IntSolution&>())
+    .def("resize", &IntSolution::resize)
+    .def("__len__", &IntSolution::size)
+    .def("__repr__", &IntSolution::repr)
+    .def("__str__", &IntSolution::to_string)
+    .def_readwrite("carray",&IntSolution::vec)
+    .add_property("array",&IntSolution::get_array,&IntSolution::set_array)
+    ;
+
+    // .def(vector_indexing_suite<std::vector<bool>>())
+    // .def(init<const VectorSolution<bool>&>())
+    // .def("resize", vec_resize<bool>)
+    // .def("__repr__", &VectorSolution<bool>::repr)
+    // .def("__str__", &VectorSolution<bool>::to_string)
+    // .add_property("array",&VectorSolution<bool>::get_array,&VectorSolution<bool>::set_array)
+    // // .def_readwrite("array", &VectorSolution<double>::encoding);
+    // ;
+
+
+    //maybe inheriting from vector is better than using ndarray encodings...
+    //(at least for reuse of c++ operators it should be....)
+    // class_<eoVector<double,double>,bases<std::vector<double>>>("eoVector",init<unsigned,double>())
+    // .def(vector_indexing_suite<std::vector<double>>())
+    // ;
+    //
+    // class_<moeoVector<realObjVec,double>,bases<std::vector<double>>>("moeoVector",init<unsigned,double>())
+    // .def(vector_indexing_suite<std::vector<double>>())
+    // ;
+
+
+
+    //Operators
+    // =====================
+
+    eo_abstract();
+
     //common
     initialize();
     evaluate();
     random_numbers();
+    valueParam();
 
     //EO (evolutionary)
     pop();
@@ -230,23 +361,31 @@ BOOST_PYTHON_MODULE(_core)
     breeders();
     eoAlgos();
     continuators();
+    add_checkpoint();
+
     // algos();
     // reduce();
     bounds();
     real_op();
     bit_op();
 
-
     //MO (localsearch)
     mo();
+    moContinuators(); //BEFORE Evaluators! (moUpdater)
     moEvaluators();
     moNeighborhoods();
     moExplorers();
-    moContinuators();
     moAlgos();
     moComparators();
 
+    //PSO
+    eoParticleSwarm();
+
     //MOEO
+    moeo_abstract();
+    moeo_algos();
+
+
     // fitnessAssign();
     // diversityAssign();
     // moeoreplacement();

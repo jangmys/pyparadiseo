@@ -4,75 +4,80 @@
 
 #include <boost/python.hpp>
 
-// BOOST_PYTHON_MODULE(_mo)
-//building different modules on the C++ level is difficult (possible?) because of
-//cross-dependencies : building ONE big library, split into python modules via
-//__init__ / import ....
-void mo()
+
+void bitflip_move(PyNeighbor<BinarySolution>& n, BinarySolution& s)
+{
+    std::cout<<"make bitflip move "<<n.index()<<std::endl;
+
+    s[n.index()] = !s[n.index()];
+    s.invalidate();
+}
+
+void choose_ext_move(PyNeighbor<BinarySolution>& n, std::string choice)
+{
+    if(choice == "bitflip_move"){
+        n.set_external_move(bitflip_move);
+    }
+}
+
+
+
+
+template<typename SolutionType>
+void expose_nbor(std::string name)
 {
     using namespace boost::python;
 
     //disambiguate getter/setter
-    unsigned int (PyNeighbor::*getIndex)(void) const = &moIndexNeighbor<PyEOT>::index;
-    void (PyNeighbor::*setIndex)(unsigned int) = &moIndexNeighbor<PyEOT>::index;
-    void (PyNeighbor::*setIndexWithSol)(PyEOT&,unsigned int) = &moIndexNeighbor<PyEOT>::index;
+    unsigned int (PyNeighbor<SolutionType>::*_getIndex)(void) const = &PyNeighbor<SolutionType>::index;
+    void (PyNeighbor<SolutionType>::*_setIndex)(unsigned int) = &PyNeighbor<SolutionType>::index;
+    void (PyNeighbor<SolutionType>::*_setIndexWithSol)(SolutionType&,unsigned int) = &PyNeighbor<SolutionType>::index;
 
-    class_<PyNeighbor,boost::noncopyable>("Neighbor",init<>())
-    .def(init<
-        PyNeighbor&
-    >()
-    [WC1]
-    )
-    .def(init<
-        boost::python::object
-    >())
-    .def(init<
-        boost::python::object,
-        boost::python::object
-    >())
-    .add_property("fitness",&PyNeighbor::getFitness,&PyNeighbor::setFitness)
-    .def("setMove", &PyNeighbor::setMove)
-    .def("setMoveBack", &PyNeighbor::setMoveBack)
-    .def("move", &PyNeighbor::move)
-    .def("moveBack", &PyNeighbor::moveBack)
-    .def("equals", &PyNeighbor::equals, &PyNeighbor::default_equals)
-    .def("index",setIndexWithSol)
-    .def("index",getIndex)
-    .def("index",setIndex)
-    .def("__lt__",&PyNeighbor::operator<)
-    .def("__str__",&PyNeighbor::to_string)
-    .def("reassign", &moIndexNeighbor<PyEOT>::operator=,return_internal_reference<>())
-    ;
 
-    // moEvaluators();
+    //could make move(back) static (to allow definition before instantiation (neighbor is only instantiated in "Explorer")
+    //to set move and index_table, algo needs to be constructed first.
+    //(TODO)
+    auto obj = class_<PyNeighbor<SolutionType>,bases<SolutionType>>(
+        make_name("Neighbor",name).c_str(),
+        init<>())
+        .def("setMove", &PyNeighbor<SolutionType>::setMove)
+        // .staticmethod("setMove")
+        .def("setMoveBack", &PyNeighbor<SolutionType>::setMoveBack)
+        // .staticmethod("setMoveBack")
+        .def("move", &PyNeighbor<SolutionType>::move)
+        .def("moveBack", &PyNeighbor<SolutionType>::moveBack)
+        .def("equals", &PyNeighbor<SolutionType>::equals)
+        .def("index",_setIndexWithSol)
+        .def("index",_getIndex)
+        .def("index",_setIndex)
+        .def("reassign", &PyNeighbor<SolutionType>::operator=,return_internal_reference<>())
+        .def("set_index_table", &PyNeighbor<SolutionType>::set_index_table)
+        .staticmethod("set_index_table")
+        .def("get_indices",&PyNeighbor<SolutionType>::get_indices,return_internal_reference<>())
+        // .def("choose_external_move", choose_ext_move)
+        // .def("set_external_move", &PyNeighbor<SolutionType>::set_external_move)
+        // .def("get_external_move", &PyNeighbor<SolutionType>::get_external_move)
+        ;
+
+    if(name == "Bin"){
+        obj.def("choose_external_move",choose_ext_move);
+    }
 }
 
+void mo()
+{
+    using namespace boost::python;
 
-// #include "def_abstract_functor.h"
-//
-// #include <neighborhood/moNeighbor.h>
-// #include <neighborhood/moIndexNeighbor.h>
-// #include <neighborhood/moDummyNeighbor.h>
-//
-// #include <neighborhood/moNeighborhood.h>
-// #include <neighborhood/moDummyNeighborhood.h>
-//
-// #include <explorer/moNeighborhoodExplorer.h>
-// #include <algo/moLocalSearch.h>
-//
-// #include <eoOp.h>
-//
-// using namespace boost::python;
-//
-//
-// void mo()
-// {
-//     // def_abstract_functor<moEval<PyNeighbor> >("moEval");
-//
-//
-//     //dummy
-//     // class_<moDummyNeighbor<PyMOEO>,bases<PyNeighbor>>
-//     // ("moDummyNeighbor",init<>())
-//     // .def("move",&moDummyNeighbor<PyMOEO,PyMOEO::Fitness>::move)
-//     // ;
-// }
+    expose_nbor<PyEOT>("");
+    expose_nbor<BinarySolution>("Bin");
+    expose_nbor<RealSolution>("Real");
+    expose_nbor<IntSolution>("Perm");
+
+    class_<BinNeighbor,bases<PyNeighbor<BinarySolution>>>(
+        "BinNeighbor",
+        init<>()
+    )
+    .def("move", &BinNeighbor::move)
+    .def("move_back", &BinNeighbor::moveBack)
+    ;
+}

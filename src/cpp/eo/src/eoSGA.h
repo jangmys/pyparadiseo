@@ -1,28 +1,29 @@
 // -*- mode: c++; c-indent-level: 4; c++-member-init-indent: 8; comment-column: 35; -*-
 
-//-----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 // eoSGA.h
 // (c) GeNeura Team, 2000 - EEAAX 1999 - Maarten Keijzer 2000
+
 /*
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-    Contact: todos@geneura.ugr.es, http://geneura.ugr.es
-             Marc.Schoenauer@polytechnique.fr
-             mak@dhi.dk
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contact: todos@geneura.ugr.es, http://geneura.ugr.es
+ *           Marc.Schoenauer@polytechnique.fr
+ *           mak@dhi.dk
  */
-//-----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 
 #ifndef _eoSGA_h
 #define _eoSGA_h
@@ -49,74 +50,94 @@
 template <class EOT>
 class eoSGA : public eoAlgo<EOT>
 {
-public :
+public:
 
-  // added this second ctor as I didn't like the ordering of the parameters
-  // in the one above. Any objection :-) MS
-  eoSGA(
+    // added this second ctor as I didn't like the ordering of the parameters
+    // in the one above. Any objection :-) MS
+    eoSGA(
         eoSelectOne<EOT>& _select,
         eoQuadOp<EOT>& _cross, float _crate,
         eoMonOp<EOT>& _mutate, float _mrate,
         eoEvalFunc<EOT>& _eval,
         eoContinue<EOT>& _cont)
-    : cont(_cont),
-          mutate(_mutate),
-          mutationRate(_mrate),
-          cross(_cross),
-          crossoverRate(_crate),
-          select(_select),
-          eval(_eval) {}
+        : cont(_cont),
+        mutate(_mutate),
+        mutationRate(_mrate),
+        cross(_cross),
+        crossoverRate(_crate),
+        select(_select),
+        eval(_eval){ }
 
-  void operator()(eoPop<EOT>& _pop)
-  {
-    eoPop<EOT> offspring;
+    void
+    operator () (eoPop<EOT>& _pop)
+    {
+        eoPop<EOT> offspring;
 
-    do
-      {
-        select(_pop, offspring);
+        do {
+            select(_pop, offspring);
 
-        unsigned i;
+            // std::cout<<"POP:\n";
+            // std::cout<<_pop<<std::endl;
+            // std::cout<<"OFFSPRING:\n";
+            // std::cout<<offspring<<std::endl;
 
-        for (i=0; i<_pop.size()/2; i++)
-          {
-            if ( rng.flip(crossoverRate) )
-            {
+            unsigned i;
+
+            for (i = 0; i < _pop.size() / 2; i++) {
+                if (rng.flip(crossoverRate) ) {
                     // this crossover generates 2 offspring from two parents
-                    if (cross(offspring[2*i], offspring[2*i+1]))
-        {
-          offspring[2*i].invalidate();
-          offspring[2*i+1].invalidate();
-        }
-      }
-          }
-
-        for (i=0; i < offspring.size(); i++)
-          {
-            if (rng.flip(mutationRate) )
-            {
-                     if (mutate(offspring[i]))
-          offspring[i].invalidate();
+                    if (cross(offspring[2 * i], offspring[2 * i + 1])) {
+                        offspring[2 * i].invalidate();
+                        offspring[2 * i + 1].invalidate();
+                    }
+                }
             }
-          }
 
-        _pop.swap(offspring);
-        apply<EOT>(eval, _pop);
+            // std::cout<<"AFTER XOVER:\n";
+            // std::cout<<offspring<<std::endl;
 
-      } while (cont(_pop));
-  }
+            for (i = 0; i < offspring.size(); i++) {
+                if (rng.flip(mutationRate) ) {
+                    if (mutate(offspring[i]))
+                        offspring[i].invalidate();
+                }
+            }
 
-private :
+            // std::cout<<"AFTER MUTATE:\n";
+            // std::cout<<offspring<<std::endl;
+            //
+            // std::cout<<"AFTER MUTATE POP:\n";
+            // std::cout<<_pop<<std::endl;
 
-  eoContinue<EOT>& cont;
-  /// eoInvalidateMonOp invalidates the embedded operator
-  eoInvalidateMonOp<EOT> mutate;
-  float mutationRate;
-  // eoInvalidateQuadOp invalidates the embedded operator
-  eoInvalidateQuadOp<EOT> cross;
-  float crossoverRate;
 
-  eoSelectPerc<EOT> select;
-  eoEvalFunc<EOT>& eval;
+            _pop.swap(offspring);
+
+            // std::cout<<"SWAP:\n";
+            // std::cout<<offspring<<std::endl;
+            //
+            // std::cout<<"SWAPPPOP:\n";
+            // std::cout<<_pop<<std::endl;
+
+
+            apply<EOT>(eval, _pop);
+
+            // std::cout<<"EVAL POP:\n";
+            // std::cout<<_pop<<std::endl;
+        } while (cont(_pop));
+    } // ()
+
+private:
+
+    eoContinue<EOT>& cont;
+    /// eoInvalidateMonOp invalidates the embedded operator
+    eoInvalidateMonOp<EOT> mutate;
+    float mutationRate;
+    // eoInvalidateQuadOp invalidates the embedded operator
+    eoInvalidateQuadOp<EOT> cross;
+    float crossoverRate;
+
+    eoSelectPerc<EOT> select;
+    eoEvalFunc<EOT>& eval;
 };
 
-#endif
+#endif // ifndef _eoSGA_h

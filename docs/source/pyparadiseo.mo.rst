@@ -1,4 +1,4 @@
-pyparadiseo.mo package
+Moving Objects (MO)
 ======================
 
 .. automodule:: pyparadiseo.mo
@@ -7,10 +7,9 @@ pyparadiseo.mo package
    :show-inheritance:
    :imported-members:
 
-Submodules
-----------
 
-pyparadiseo.mo.algo module
+
+MO Algo
 --------------------------
 
 .. automodule:: pyparadiseo.mo.algo
@@ -19,7 +18,18 @@ pyparadiseo.mo.algo module
    :show-inheritance:
    :imported-members:
 
-pyparadiseo.mo.comparator module
+
+MO Eval
+--------------------------
+
+.. automodule:: pyparadiseo.mo.eval
+  :members:
+  :undoc-members:
+  :show-inheritance:
+  :imported-members:
+
+
+MO Comparator
 --------------------------------
 
 .. automodule:: pyparadiseo.mo.comparator
@@ -28,7 +38,7 @@ pyparadiseo.mo.comparator module
    :show-inheritance:
    :imported-members:
 
-pyparadiseo.mo.continuator module
+MO Continuator
 ---------------------------------
 
 .. automodule:: pyparadiseo.mo.continuator
@@ -37,16 +47,7 @@ pyparadiseo.mo.continuator module
    :show-inheritance:
    :imported-members:
 
-pyparadiseo.mo.eval module
---------------------------
-
-.. automodule:: pyparadiseo.mo.eval
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :imported-members:
-
-pyparadiseo.mo.explorer module
+MO Explorer
 ------------------------------
 
 .. automodule:: pyparadiseo.mo.explorer
@@ -55,7 +56,7 @@ pyparadiseo.mo.explorer module
    :show-inheritance:
    :imported-members:
 
-pyparadiseo.mo.neighborhood module
+MO Neighborhood
 ----------------------------------
 
 .. automodule:: pyparadiseo.mo.neighborhood

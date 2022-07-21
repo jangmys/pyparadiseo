@@ -29,6 +29,7 @@ set(CMAKE_CXX_FLAGS "-Wall -Wno-maybe-uninitialized -O2 -fPIC -DBOOST_NO_AUTO_PT
 
 set(commonSources
     src/cpp/utils/converters.cpp
+    src/cpp/utils/valueParam.cpp
     src/cpp/common/random_numbers.cpp
     src/cpp/common/init.cpp
     src/cpp/common/eval.cpp
@@ -44,7 +45,13 @@ set(moSources
     src/cpp/mo/moComparator.cpp
 )
 
+set(moeoSources
+    src/cpp/moeo/moeoAbstract.cpp
+    src/cpp/moeo/moeoAlgos.cpp
+)
+
 set(eoSources
+    src/cpp/eo/abstract.cpp
     src/cpp/eo/pop.cpp
     src/cpp/eo/geneticOps.cpp
     src/cpp/eo/mergers.cpp
@@ -59,6 +66,7 @@ set(eoSources
     src/cpp/eo/bounds.cpp
     src/cpp/eo/real_op.cpp
     src/cpp/eo/bit_op.cpp
+    src/cpp/eo/eoPSO.cpp
 )
 
 set(EO_SRC_DIR "src/cpp/eo/src" CACHE INTERNAL "ParadisEO-EO source directory" FORCE)
@@ -70,13 +78,20 @@ set(eoDep
     ${EO_SRC_DIR}/utils/eoRealBounds.cpp
 )
 
-add_library(_core SHARED src/cpp/core.cpp ${commonSources} ${eoSources} ${moSources} ${eoDep})
+add_library(_core SHARED src/cpp/core.cpp ${commonSources} ${eoSources} ${moSources} ${moeoSources} ${eoDep})
 
+#COMMON
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/)
+#EO
+include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/operators)
+include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/src)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/src/es)
+include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/src/pso)
+#MO
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/mo/)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/mo/src)
+#MOEO
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/moeo/src)
 
 set_target_properties(_core PROPERTIES PREFIX "")

@@ -1,11 +1,14 @@
 #include <boost/python.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
+
 #include <pyeot.h>
 
 #include <eoPop.h>
 
 namespace bp=boost::python;
 
-std::string pop_to_string(eoPop<PyEOT>& pop)
+template<class SolutionType>
+std::string pop_to_string(eoPop<SolutionType>& pop)
 {
     std::string result;
 
@@ -16,19 +19,18 @@ std::string pop_to_string(eoPop<PyEOT>& pop)
     return result;
 }
 
-int pop_size(eoPop<PyEOT>& pop) {
+template<class SolutionType>
+int pop_size(eoPop<SolutionType>& pop) {
     return pop.size();
 }
 
-// void pop_sort(eoPop<PyEOT>& pop) {
-//     pop.sort();
-// }
-
-void pop_shuffle(eoPop<PyEOT>& pop){
+template<class SolutionType>
+void pop_shuffle(eoPop<SolutionType>& pop){
     pop.shuffle();
 }
 
-PyEOT& pop_getitem(eoPop<PyEOT>& pop, bp::object key)
+template<class SolutionType>
+SolutionType& pop_getitem(eoPop<SolutionType>& pop, bp::object key)
 {
     bp::extract<int> x(key);
     if (!x.check())
@@ -42,14 +44,14 @@ PyEOT& pop_getitem(eoPop<PyEOT>& pop, bp::object key)
     return pop[i];
 }
 
-void pop_setitem(eoPop<PyEOT>& pop, bp::object key, PyEOT& value)
+template<class SolutionType>
+void pop_setitem(eoPop<SolutionType>& pop, bp::object key, SolutionType& value)
 {
     bp::extract<int> x(key);
     if (!x.check())
-        throw index_error("Slicing not allowed");
+        throw index_error("Population index not convertible to int");
 
     int i = x();
-
     if (static_cast<unsigned>(i) >= pop.size()){
         throw index_error("Index out of bounds");
     }
@@ -57,11 +59,13 @@ void pop_setitem(eoPop<PyEOT>& pop, bp::object key, PyEOT& value)
     pop[i] = value;
 }
 
-void pop_push_back(eoPop<PyEOT>& pop, PyEOT& p){
+template<class SolutionType>
+void pop_push_back(eoPop<SolutionType>& pop, SolutionType& p){
     pop.push_back(p);
 }
 
-void pop_resize(eoPop<PyEOT>& pop, unsigned i) {
+template<class SolutionType>
+void pop_resize(eoPop<SolutionType>& pop, unsigned i) {
     pop.resize(i);
 }
 
@@ -70,29 +74,41 @@ void pop_resize(eoPop<PyEOT>& pop, unsigned i) {
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(pop_sort_overload, sort, 0, 1)
 
-void pop()
+template<class SolutionType>
+void expose_pop(std::string name)
 {
     using namespace boost::python;
 
-    class_<eoPop<PyEOT>>("Pop", init<>() )
-    .def( init< unsigned, eoInit<PyEOT>& >()[with_custodian_and_ward<1,3>()] )
-    //     // .enable_pickling()
-    .def("append", &eoPop<PyEOT>::append, "2 parameters : (new popsize,eoInit)")
-    // .def("__str__", to_string<eoPop<PyEOT> >)
-    // .def("__str__", pop_to_string)
-    .def("__str__", pop_to_string)
-    .def("__len__", pop_size)
-    .def("sort", static_cast<void (eoPop<PyEOT>::*)(void)>(&eoPop<PyEOT>::sort))
-    .def("sort", static_cast<void (eoPop<PyEOT>::*)(std::vector<const PyEOT*>&) const >(&eoPop<PyEOT>::sort))
-    .def("shuffle", pop_shuffle)
-    .def("__getitem__", pop_getitem, return_internal_reference<>() )
-    .def("__setitem__", pop_setitem)
-    .def("best", &eoPop<PyEOT>::best_element, return_internal_reference<>() )
-    .def("worst", &eoPop<PyEOT>::worse_element, return_internal_reference<>() )
+    class_<std::vector<SolutionType>>((name+"SolutionVector").c_str())
+    .def(vector_indexing_suite<std::vector<SolutionType>>())
+    ;
 
-    .def("push_back", pop_push_back)
-    .def("resize",    pop_resize)
-    .def("swap", &eoPop<PyEOT>::swap)
+    class_<eoPop<SolutionType>,bases<std::vector<SolutionType>>>((name+"Pop").c_str(), init<>() )
+    .def( init< unsigned, eoInit<SolutionType>& >()[with_custodian_and_ward<1,3>()] )
+    //     // .enable_pickling()
+    .def("append", &eoPop<SolutionType>::append, "2 parameters : (new popsize,eoInit)")
+    .def("__str__", pop_to_string<SolutionType>)
+    .def("__len__", pop_size<SolutionType>)
+    .def("sort", static_cast<void (eoPop<SolutionType>::*)(void)>(&eoPop<SolutionType>::sort))
+    .def("sort", static_cast<void (eoPop<SolutionType>::*)(std::vector<const SolutionType*>&) const >(&eoPop<SolutionType>::sort))
+    .def("shuffle", pop_shuffle<SolutionType>)
+    .def("__getitem__", pop_getitem<SolutionType>, return_internal_reference<>() )
+    .def("__setitem__", pop_setitem<SolutionType>)
+    .def("best", &eoPop<SolutionType>::best_element, return_internal_reference<>() )
+    .def("worst", &eoPop<SolutionType>::worse_element, return_internal_reference<>() )
+    .def("push_back", pop_push_back<SolutionType>)
+    .def("resize",    pop_resize<SolutionType>)
+    .def("swap", &eoPop<SolutionType>::swap)
     // .def_pickle(pyPop_pickle_suite())
     ;
+}
+
+
+
+void pop()
+{
+    expose_pop<PyEOT>("");
+    expose_pop<RealSolution>("Real");
+    expose_pop<BinarySolution>("Binary");
+
 }
