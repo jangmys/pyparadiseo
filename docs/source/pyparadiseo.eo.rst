@@ -1,5 +1,5 @@
-Evolving Objects (EO)
-============================
+.. Evolving Objects (EO)
+.. ============================
 
 .. automodule:: pyparadiseo.eo
    :members:
@@ -27,8 +27,8 @@ Evolving Objects (EO)
 .. .....................................
 
 
-EO Merge
----------------------------
+.. EO Merge
+.. ~~~~~~~~~~~~~~~~~~
 
 .. automodule:: pyparadiseo.eo.merge
    :members:
@@ -37,8 +37,7 @@ EO Merge
    :imported-members:
 
 EO Reduce
-----------------------------
-
+~~~~~~~~~~~~~~~~~~
 .. automodule:: pyparadiseo.eo.reduce
    :members:
    :undoc-members:
@@ -46,8 +45,7 @@ EO Reduce
    :imported-members:
 
 EO Replace
----------------------------------
-
+~~~~~~~~~~~~~~~~~~
 .. automodule:: pyparadiseo.eo.replacement
    :members:
    :undoc-members:
@@ -61,7 +59,7 @@ EO Replace
 .. .....................................
 
 EO Select
-------------------------------
+~~~~~~~~~~~~~~~~~~
 .. automodule:: pyparadiseo.eo.select_one
     :members:
     :undoc-members:
@@ -70,7 +68,7 @@ EO Select
 
 
 EO SelectOne
----------------------------------
+~~~~~~~~~~~~~~~~~~
 .. automodule:: pyparadiseo.eo.selector
     :members:
     :undoc-members:
@@ -79,8 +77,7 @@ EO SelectOne
 
 
 EO Transform
--------------------------------
-
+~~~~~~~~~~~~~~~~~~
 .. automodule:: pyparadiseo.eo.transform
    :members:
    :undoc-members:
@@ -89,8 +86,7 @@ EO Transform
 
 
 EO Breeder
-------------------------------
-
+~~~~~~~~~~~~~~~~~~
 .. automodule:: pyparadiseo.eo.breeders
     :members:
     :undoc-members:

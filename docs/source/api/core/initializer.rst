@@ -1,3 +1,6 @@
+Initializer (:mod:`pyparadiseo.initializer`)
+==============================================
+
 .. automodule:: pyparadiseo.initializer
    :members:
    :undoc-members:

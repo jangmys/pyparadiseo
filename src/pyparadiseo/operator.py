@@ -35,6 +35,7 @@ from ._core import BitGxOver
 # real ops (defined on RealSolution)
 from ._core import UniformMutation
 from ._core import DetUniformMutation
+
 from ._core import SegmentCrossover
 from ._core import HypercubeCrossover
 from ._core import SBXCrossover

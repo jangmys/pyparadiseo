@@ -1,4 +1,7 @@
+Bounds (:mod:`pyparadiseo.bounds`)
+==============================================
+
 .. automodule:: pyparadiseo.bounds
-    :members: 
+    :members:
     :undoc-members:
     :show-inheritance:

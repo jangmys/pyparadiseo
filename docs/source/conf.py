@@ -12,6 +12,8 @@
 #
 import os
 import sys
+import pydata_sphinx_theme
+
 sys.path.insert(0, os.path.abspath('.'))
 # sys.path.insert(0, os.path.abspath('../'))
 # sys.path.insert(0, os.path.abspath('../../src/pyparadiseo'))
@@ -28,7 +30,7 @@ sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.6/cmake-instal
 # -- Project information -----------------------------------------------------
 
 project = 'pyparadiseo'
-copyright = '2022, Jan Gmys'
+copyright = '2022, Inria, BONUS Team'
 author = 'Jan Gmys'
 
 # The full version, including alpha/beta/rc tags
@@ -44,7 +46,10 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.coverage',
     'sphinx.ext.autosummary',
-    'sphinx.ext.napoleon'
+    'sphinx.ext.napoleon',
+    "sphinx.ext.viewcode",
+    # "numpydoc",
+    # "sphinx_design"
 ]
 
 autosummary_generate = True  # Turn on sphinx.ext.autosummary
@@ -79,35 +84,69 @@ napoleon_numpy_docstring = True
 napoleon_use_ivar = True
 napoleon_use_param = True
 
+# add_module_names = False
+
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinx_rtd_theme'
+html_theme = "pydata_sphinx_theme"
+# html_theme = 'sphinx_rtd_theme'
 #html_theme = 'sphinxdoc'
 
-
-# html_theme_options = {
-#     'analytics_id': 'G-XXXXXXXXXX',  #  Provided by Google in your dashboard
-#     'analytics_anonymize_ip': False,
-#     'logo_only': False,
-#     'display_version': True,
-#     'prev_next_buttons_location': 'bottom',
-#     'style_external_links': False,
-#     'vcs_pageview_mode': '',
-#     'style_nav_header_background': 'white',
-#     # Toc options
-#     'collapse_navigation': True,
-#     'sticky_navigation': True,
-#     'navigation_depth': 4,
-#     'includehidden': True,
-#     'titles_only': False
-# }
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+html_logo="_static/paradiseo_logo_200px_dark.png"
+html_favicon = "_static/paradiseo_logo_200px_dark.png"
+# html_favicon = "_static/eo_logo_fronde.svg"
+
+# gives : WARNING: unsupported theme option 'logo' given
+# html_theme_options = {
+#     "logo": {
+#         "image_light": "paradiseo_logo_200px.png",
+#         "image_dark": "paradiseo_logo_200px_dark.png",
+#     }
+# }
+
+html_theme_options = {
+    # ...
+    # Note we have omitted `theme-switcher` below
+    "navbar_end": ["navbar-icon-links"],
+    "gitlab_url": "https://gitlab.inria.fr/paradiseo/pyparadiseo",
+    "icon_links": [
+            {
+                "name": "PyPI",
+                "url": "https://pypi.org/project/pyparadiseo",
+                "icon": "fas fa-box",
+                # "icon" : "_static/pypi_logo_small.svg",
+                # "type" : "local"
+                # "icon" : "https://pypi.org/static/images/logo-small.95de8436.svg",
+                # "type" : "url"
+            },
+            {
+                "name": "PyData",
+                "url": "https://pydata.org",
+                "icon": "_static/pypi_logo_small.png",
+                "type": "local",
+                "attributes": {"target": "_blank"},
+            },
+        ],
+    # "show_nav_level": 2
+    # "pygment_light_style": "tango",
+   # ]
+
+
+}
+
+html_context = {
+   # ...
+   "default_mode": "light"
+}
+
 
 
 # def setup(app):
