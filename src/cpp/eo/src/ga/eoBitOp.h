@@ -338,7 +338,7 @@ template<class Chrom> class eoUBitXover: public eoQuadOp<Chrom>
 {
  public:
   /// (Default) Constructor.
-  eoUBitXover(const double& _preference = 0.5): preference(_preference)
+  eoUBitXover(const double _preference = 0.5): preference(_preference)
     {
       if ( (_preference <= 0.0) || (_preference >= 1.0) )
         std::runtime_error("UxOver --> invalid preference");

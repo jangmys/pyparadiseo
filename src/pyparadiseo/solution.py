@@ -1,7 +1,7 @@
 """
 Solution Types
 --------------
-Provides factory methods to create solution object to be used in PyParadiseo algorithms (EO/MO/MOEO)
+Provides factory methods to create solution objects to be used in PyParadiseo algorithms (EO/MO/MOEO)
 
 Different solution types are provided:
     * Generic
@@ -28,19 +28,50 @@ SOLUTIONS={
 
 def solution(obj,stype=None):
     """
-    create a solution from an object
+    Create an initialized solution
+
+    For `stype` ='gen', the solution encoding is set to the `obj`.
+    For 'bin','rand' or 'perm' `obj` is converted to a ``numpy.array``.
 
     Parameters
     ==========
-    obj : python object
+    obj : object
         solution encoding
-    stype : str (optional)
-        solution type ('gen','bin','real','perm')
+    stype : {'gen','bin','real','perm'}, optional
+        solution type
+
+    Returns
+    =======
+    Solution
+        solution object of type `stype`, initialized with `obj`
 
     Notes
     =====
-    - if stype is bin/real/perm obj must be convertible to numpy ndarray
-    - if obj is already a pyparadiseo solution, a copy is returned
+    - if `stype` is 'bin'/'real'/'perm' `obj` must be ``array_like``
+    - if `obj` is already a pyparadiseo solution, a copy is returned
+
+    Example
+    =======
+    >>> from pyparadiseo import solution
+
+    Make a generic solution (stype='gen' is default)
+
+    >>> solution.solution([1,'A',[1.0,2.0]])
+    Solution((,,),[1, 'A', [1.0, 2.0]])
+
+    Make binary solution from list:
+
+    >>> solution.solution([1,0]*3,stype='bin')
+    Solution((,,),1 0 1 0 1 0 )
+
+    Make real solution from tuple:
+
+    >>> solution.solution((0,1)*3,stype='real')
+    Solution((,,),0.0 1.0 0.0 1.0 0.0 1.0 )
+
+    See also
+    ========
+    :func:`pyparadiseo.solution.empty`
     """
     if stype is None:
         stype=config._SOLUTION_TYPE
@@ -55,14 +86,46 @@ def solution(obj,stype=None):
     if stype=='gen':
         return klass(obj)
     else:
-        ret=klass(len(obj)) #zeros
-        ret.array = obj
+        try:
+            #zeros
+            ret=klass(len(obj))
+        except TypeError:
+            print("For stype='",stype,"' solution encoding must have a length. Consider using generic solution type.")
+            raise
+
+        try:
+            ret.array = obj
+        except ValueError:
+            print("For stype=",stype,"solution encoding ",obj," must be convertible to numpy array. Returning zeros.")
         return ret
 
 
 def empty(stype=None):
     """
-    create an empty solution. encoding is None
+    Create an empty solution.
+
+    For `stype` ='gen', encoding is set to ``None``.
+    For array-like solutions, encoding is set to an array of length zero.
+
+    Parameters
+    ==========
+    stype : {'gen','bin','real','perm'}, optional
+        solution type
+
+    Returns
+    =======
+    Solution
+        solution object of type `stype`, empty-initialized
+
+    Example
+    =======
+    >>> from pyparadiseo import solution
+
+    >>> solution.empty()
+    Solution((,,),None)
+
+    >>> solution.empty('bin')
+    Solution((,,),)
     """
     if stype is None:
         stype=config._SOLUTION_TYPE
@@ -72,16 +135,23 @@ def empty(stype=None):
 
 def zeros(size=0,stype=None):
     """
-    create a fixed size solution ('bin' or 'real')
+    Create a fixed size array-like solution filled with zeros.
 
     Parameters
     ==========
-    size : int
-        fixed size solution length
+    size : int, default=0
+        fixed-size solution length
+    stype : {'gen','bin','real','perm'}, optional
+        solution type
+
+    Returns
+    =======
+    Solution
+        solution object of type `stype`, zero-initialized
 
     Notes
-    -----
-    if type is 'gen', encoding is set to a list of None's
+    =====
+    if `stype` is 'gen', encoding is set to a list of ``None``'s
     """
     if stype is None:
         stype=config._SOLUTION_TYPE
@@ -96,20 +166,28 @@ def zeros(size=0,stype=None):
 
 def random(size=0,stype=None,**kwargs):
     """
-    create and intialize fixed size solution ('bin' or 'real')
+    Create and intialize fixed size solution ('bin' or 'real')
 
     Parameters
     ==========
-    size : int, default : 0
+    size : int, default=0
         length of random solution
-    stype : str
+    stype : {'gen','bin','real','perm'}, optional
         solution type
-    bounds : eoBounds
-        bounds for 'real' solution
+
+    Other Parameters
+    ================
+    bounds : :obj:`eoBounds`
+        keyword argument `bounds` for 'real' solution
+
+    Returns
+    =======
+    Solution
+        solution object of type `stype`, random-initialized
 
     Notes
-    -----
-    if type is 'gen', encoding is set to None
+    =====
+    if `stype` is 'gen', encoding is set to ``None``
     """
     sol = empty(stype)
 
@@ -125,7 +203,14 @@ def random(size=0,stype=None,**kwargs):
 
 def from_init(initializer,stype=None) :
     """
-    create solution from initializer
+    Create solution from initializer
+
+    Parameters
+    ==========
+    initializer : eoInit
+        initializer
+    stype : {'gen','bin','real','perm'}, optional
+        solution type
     """
     from pyparadiseo import _core
 

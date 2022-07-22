@@ -102,25 +102,31 @@ public:
 };
 
 
-class PyMonOp : public eoMonOp<PyEOT>
+
+template<typename SolutionType>
+class PyMonOp : public eoMonOp<SolutionType>
 {
 public:
-    PyMonOp() : eoMonOp<PyEOT>(){};
+    PyMonOp() : eoMonOp<SolutionType>(){};
 
     PyMonOp(boost::python::object _op) :
-        eoMonOp<PyEOT>(),
+        eoMonOp<SolutionType>(),
         mon_op(_op)
     { };
 
+    boost::python::object get_op() const {
+        return mon_op;
+    }
+
     void
-    setOp(boost::python::object obj)
+    set_op(boost::python::object obj)
     {
         // std::cout << "Setting generator\n";
         mon_op = obj;
     }
 
     bool
-    operator () (PyEOT& _eo)
+    operator () (SolutionType& _eo)
     {
         if (mon_op.ptr() != Py_None) {
             _eo.invalidate();
@@ -138,25 +144,29 @@ private:
 };
 
 
-class PyBinOp : public eoBinOp<PyEOT>
+template<typename SolutionType>
+class PyBinOp : public eoBinOp<SolutionType>
 {
 public:
-    PyBinOp() : eoBinOp<PyEOT>(){};
+    PyBinOp() : eoBinOp<SolutionType>(){};
 
     PyBinOp(boost::python::object _op) :
-        eoBinOp<PyEOT>(),
+        eoBinOp<SolutionType>(),
         bin_op(_op)
     { };
 
+    boost::python::object get_op() const {
+        return bin_op;
+    }
+
     void
-    setOp(boost::python::object obj)
+    set_op(boost::python::object obj)
     {
-        // std::cout << "Setting generator\n";
         bin_op = obj;
     }
 
     bool
-    operator () (PyEOT& _eo, const PyEOT& _eo2)
+    operator () (SolutionType& _eo, const SolutionType& _eo2)
     {
         if (bin_op.ptr() != Py_None) {
             _eo.invalidate();
@@ -173,25 +183,29 @@ private:
     boost::python::object bin_op;
 };
 
-
-class PyQuadOp : public eoQuadOp<PyEOT>
+template<typename SolutionType>
+class PyQuadOp : public eoQuadOp<SolutionType>
 {
 public:
-    PyQuadOp() : eoQuadOp<PyEOT>(){};
+    PyQuadOp() : eoQuadOp<SolutionType>(){};
 
     PyQuadOp(boost::python::object _op) :
-        eoQuadOp<PyEOT>(),
+        eoQuadOp<SolutionType>(),
         quad_op(_op)
     { };
 
+    boost::python::object get_op() const {
+        return quad_op;
+    }
+
     void
-    setOp(boost::python::object obj)
+    set_op(boost::python::object obj)
     {
         quad_op = obj;
     }
 
     bool
-    operator () (PyEOT& _eo, PyEOT& _eo2)
+    operator () (SolutionType& _eo, SolutionType& _eo2)
     {
         if (quad_op.ptr() != Py_None) {
             _eo.invalidate();
@@ -213,8 +227,10 @@ private:
 template<typename SolutionType>
 void expose_gen_ops(std::string name)
 {
+    //base classes
     class_<eoMonOp<SolutionType>, MonOpWrapper<SolutionType>, bases<eoOp>, boost::noncopyable>(make_name("eoMonOp",name).c_str(), init<>())
-        .def("__call__", &MonOpWrapper<SolutionType>::operator(), "an example docstring");
+        .def("__call__", &MonOpWrapper<SolutionType>::operator(), "an example docstring")
+        ;
 
     class_<eoBinOp<SolutionType>, BinOpWrapper<SolutionType>, bases<eoOp>, boost::noncopyable>(make_name("eoBinOp",name).c_str(), init<>())
         .def("__call__", &BinOpWrapper<SolutionType>::operator());
@@ -229,6 +245,24 @@ void expose_gen_ops(std::string name)
         .def("__call__", &eoGenOp<SolutionType>::operator())
     ;
 
+    //wrappers with python callback
+    class_<PyMonOp<SolutionType>,bases<eoMonOp<SolutionType>>>
+        (make_name("pyMonOp",name).c_str(),init<optional<boost::python::object>>())
+        .def("__call__", &PyMonOp<SolutionType>::operator ())
+        .add_property("op", &PyMonOp<SolutionType>::get_op, &PyMonOp<SolutionType>::set_op)
+    ;
+
+    class_<PyBinOp<SolutionType>,bases<eoBinOp<SolutionType>>>
+        (make_name("pyBinOp",name).c_str(),init<optional<boost::python::object>>())
+        .def("__call__", &PyBinOp<SolutionType>::operator ())
+        .add_property("op", &PyBinOp<SolutionType>::get_op, &PyBinOp<SolutionType>::set_op)
+    ;
+
+    class_<PyQuadOp<SolutionType>,bases<eoQuadOp<SolutionType>>>
+        (make_name("pyQuadOp",name).c_str(),init<optional<boost::python::object>>())
+        .def("__call__", &PyQuadOp<SolutionType>::operator ())
+        .add_property("op", &PyQuadOp<SolutionType>::get_op, &PyQuadOp<SolutionType>::set_op)
+    ;
 }
 
 void geneticOps()
@@ -291,26 +325,26 @@ void geneticOps()
     //     .def("__call__", &QuadOpWrapper<PyEOT>::operator());
 
 
-    class_<PyMonOp,bases<eoMonOp<PyEOT>>,boost::noncopyable>
-        ("pyMonOp",init<>())
-        .def(init<boost::python::object>())
-        .def("setOp", &PyMonOp::setOp)
-        .def("__call__", &PyMonOp::operator ())
-    ;
+    // class_<PyMonOp<PyEOT>,bases<eoMonOp<PyEOT>>>
+    //     ("pyMonOp",init<optional<boost::python::object>>())
+    //     // .def(init<>())
+    //     .def("__call__", &PyMonOp<PyEOT>::operator ())
+    //     .add_property("op", &PyMonOp<PyEOT>::get_op, &PyMonOp<PyEOT>::set_op)
+    // ;
 
-    class_<PyBinOp,bases<eoBinOp<PyEOT>>,boost::noncopyable>
-        ("pyBinOp",init<>())
-        .def(init<boost::python::object>())
-        .def("setOp", &PyBinOp::setOp)
-        .def("__call__", &PyBinOp::operator ())
-    ;
+    // class_<PyBinOp,bases<eoBinOp<PyEOT>>,boost::noncopyable>
+    //     ("pyBinOp",init<>())
+    //     .def(init<boost::python::object>())
+    //     .def("setOp", &PyBinOp::setOp)
+    //     .def("__call__", &PyBinOp::operator ())
+    // ;
 
-    class_<PyQuadOp,bases<eoQuadOp<PyEOT>>,boost::noncopyable>
-        ("pyQuadOp",init<>())
-        .def(init<boost::python::object>())
-        .def("setOp", &PyQuadOp::setOp)
-        .def("__call__", &PyQuadOp::operator ())
-    ;
+    // class_<PyQuadOp,bases<eoQuadOp<PyEOT>>,boost::noncopyable>
+    //     ("pyQuadOp",init<>())
+    //     .def(init<boost::python::object>())
+    //     .def("setOp", &PyQuadOp::setOp)
+    //     .def("__call__", &PyQuadOp::operator ())
+    // ;
 
     // class_<eoGenOp<PyEOT>, GenOpWrapper, bases<eoOp>, boost::noncopyable>("eoGenOp", init<>())
     //     .def("max_production", &GenOpWrapper::max_production)

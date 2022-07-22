@@ -10,8 +10,8 @@ Core modules
     :maxdepth: 1
 
     core/config
-    core/bounds
     core/solution
+    core/bounds
     core/population
     core/evaluator
     core/initializer

@@ -1,7 +1,12 @@
 Bounds (:mod:`pyparadiseo.bounds`)
 ==============================================
 
-.. automodule:: pyparadiseo.bounds
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. currentmodule:: pyparadiseo.bounds
+
+.. autosummary::
+    :toctree: generated/
+
+    bound_box
+    bound_interval
+    bound_below
+    bound_above

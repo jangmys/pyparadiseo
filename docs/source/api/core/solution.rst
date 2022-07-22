@@ -8,12 +8,6 @@ Solution (:mod:`pyparadiseo.solution`)
 
     solution
     empty
-    random
     zeros
+    random
     from_init
-
-
-.. .. automodule:: pyparadiseo.solution
-..     :members:
-..     :undoc-members:
-..     :show-inheritance:

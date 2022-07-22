@@ -37,6 +37,7 @@ def set_minimize_fitness():
     FitnessTraits.set_minimizing(True)
 
 def is_minimizing():
+    """check if pyparadiseo is minimizing"""
     return FitnessTraits.is_minimizing()
 
 def setup_objectives(nObj,bObj):

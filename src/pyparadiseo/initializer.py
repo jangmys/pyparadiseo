@@ -1,11 +1,15 @@
 """
-Initializer
------------
+PyParadisEO initializers generate new solutions.
 
-Initializer : Generate Solutions
+More precisely, they
+1. take an existing solution
+2. set the solution encoding
+3. reset fitness and objective values
+
+The :func:`random` initializer 
 
 
-PyParadisEO algorithms use initializers to generate new solutions
+Any function-like object that takes
 """
 from pyparadiseo import config,utils
 

@@ -10,6 +10,7 @@ from pyparadiseo.operator import MonOp
 from pyparadiseo.operator import BinOp
 from pyparadiseo.operator import QuadOp
 
+from pyparadiseo import operator
 
 import unittest
 import numpy as np
@@ -24,6 +25,8 @@ class test_genops(unittest.TestCase):
         self.ind2 = solution.empty()
         self.init(self.ind2)
 
+        self.bin_ind = solution.random(10,'bin')
+
     def tearDown(self):
         pass
     def test_pyMonOp(self):
@@ -34,11 +37,36 @@ class test_genops(unittest.TestCase):
                 ind1[i]=0
             return True
 
-        mymut = pyMonOp(foo)
+        mymut = operator.make_mutation(foo)
 
+        #apply to gen-sol
         self.assertTrue(mymut(self.ind1))
         self.assertTrue(np.all(self.ind1.encoding == 0))
         self.assertEqual(str(mymut.getType()),'unary')
+        #apply to bin-sol
+# self.assertTrue(mymut(self.bin_ind))
+
+        class bitflip():
+            def __init__(self,data):
+                self.data = data
+                self.counter = 0
+            def __call__(self,bits):
+                print("hello "+self.data," mutation ",self.counter)
+                self.counter += 1
+                for i in range(len(bits)):
+                    bits[i]=0
+                return True
+
+        mymut = operator.make_mutation(bitflip("bouh"))
+
+        self.assertTrue(mymut(self.ind1))
+        self.assertTrue(mymut(self.ind1))
+        self.assertTrue(mymut(self.ind1))
+
+        print(mymut.op.counter)
+
+        self.assertTrue(np.all(self.ind1.encoding == 0))
+
 
     def test_deriveMonOp(self):
         class myMonOp(MonOp):
