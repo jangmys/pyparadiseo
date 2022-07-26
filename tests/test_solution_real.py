@@ -51,7 +51,7 @@ class TestSolution(unittest.TestCase):
         # self.sol.encoding = np.zeros(4)
         self.sol.array[1] = 1.0
         self.sol.fitness = 42.0
-        self.sol.objectiveVector = [1.1,2.2]
+        self.sol.objectives = [1.1,2.2]
         self.sol.diversity = 4.2
 
         #copy ctor
@@ -59,22 +59,22 @@ class TestSolution(unittest.TestCase):
         self.assertEqual(sol2.array[0],0.0)
         self.assertEqual(sol2.array[1],1.0)
         self.assertEqual(sol2.fitness,42.0)
-        self.assertEqual(sol2.objectiveVector[0],1.1)
-        self.assertEqual(sol2.objectiveVector[1],2.2)
+        self.assertEqual(sol2.objectives[0],1.1)
+        self.assertEqual(sol2.objectives[1],2.2)
         self.assertEqual(sol2.diversity,4.2)
 
         #change sol
         self.sol.array[0] = 1.0
         self.sol.fitness = 2.0
-        self.sol.objectiveVector = [0.1,0.2]
+        self.sol.objectives = [0.1,0.2]
         self.sol.diversity = 2.2
 
         #check that sol2 hasn't changed
         self.assertEqual(sol2.array[0],0.0)
         self.assertEqual(sol2.array[1],1.0)
         self.assertEqual(sol2.fitness,42.0)
-        self.assertEqual(sol2.objectiveVector[0],1.1)
-        self.assertEqual(sol2.objectiveVector[1],2.2)
+        self.assertEqual(sol2.objectives[0],1.1)
+        self.assertEqual(sol2.objectives[1],2.2)
         self.assertEqual(sol2.diversity,4.2)
 
     # def test_encoding(self):

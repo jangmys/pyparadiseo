@@ -137,7 +137,8 @@ BOOST_PYTHON_MODULE(_core)
 
     docstring_options docopt;
     docopt.enable_all();
-    docopt.disable_cpp_signatures();
+    docopt.disable_cpp_signatures(); // keep user and py signatures
+    // docopt.disable_py_signatures();
 
     register_exception_translator<index_error>(&translate_index_error);
 
@@ -239,9 +240,9 @@ BOOST_PYTHON_MODULE(_core)
 
     class_<PyEO>("_PyEO",init<>())
     .def(init<const PyEO&>())
-    .add_property("fitness", &PyEO::getFitness, &PyEO::setFitness)
-    .add_property("objectiveVector", &PyEO::getObjectiveVector, fx2)
-    .add_property("diversity", &PyEO::getDiversity, &PyEO::setDiversity)
+    .add_property("fitness", &PyEO::getFitness, &PyEO::setFitness,"real")
+    .add_property("diversity", &PyEO::getDiversity, &PyEO::setDiversity,"real (for MOEO)")
+    .add_property("objectives", &PyEO::getObjectiveVector, fx2, "vector of reals (for MOEO)")
     .def("invalidateObjectiveVector",&PyEO::invalidateObjectiveVector)
     .def("invalidObjectiveVector",&PyEO::invalidObjectiveVector)
     .def("invalidate", &PyEO::invalidate)
@@ -253,7 +254,7 @@ BOOST_PYTHON_MODULE(_core)
 
     class_<PyEOT,bases<PyEO>>("Solution",init<optional<object>>())
         .def(init<const PyEOT&>())
-        .add_property("encoding", &PyEOT::get_encoding, &PyEOT::setEncoding)
+        .add_property("encoding", &PyEOT::get_encoding, &PyEOT::setEncoding,"object, solution encoding")
         .def("__getitem__", &PyEOT::get_item)
         .def("__setitem__", &PyEOT::set_item)
         .def("__str__", &PyEOT::to_string)
