@@ -5,64 +5,14 @@
 
 .. warning:: documentation is work in progress
 
-Welcome to pyparadiseo's documentation!
+=======================================
+PyParadiseo documentation
 =======================================
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Contents:
+   :maxdepth: 2
 
-   installation
+   Install <installation>
    get_started
-   tutorials
-   modules
-
-
-
-.. tutorials
-..
-.. Tutorials
-.. ---------
-.. Problem Definition
-.. ++++++++++++++++++
-..
-.. Maximization/Minimization
-.. +++++++++++++++++++++++++
-..
-.. Number of Objectives
-.. ++++++++++++++++++++
-..
-.. `Solution` class
-.. ++++++++++++++++
-.. A Solution consists of an `encoding`, a fitness and (for multi-objective) a diversity and objectiveVector
-.. - encoding : a python object
-.. - fitness : must be convertible to double
-..
-.. ## Search space definition
-.. Most pyparadiseo algorithms use `initializer` callable objects.
-..
-.. takes solution as argument and initializes encoding.
-..
-.. can be
-.. - for standard solution type
-.. ```init = pp.initializer.BinaryInit(100)```
-..
-.. - custom : pass a python callable that returns a (random) solution-encoding
-..     - ''
-..
-..
-..
-..
-.. Fitness evaluation
-.. ++++++++++++++++++
-..
-.. Objective evaluator
-.. +++++++++++++++++++
-..
-..
-..
-.. # Simple Genetic Algorithm
-.. ~~~~~~~~~~~~~~~~~~~~~~~~~~
-..
-.. # Local Search
-.. ~~~~~~~~~~~~~~
+   Tutorials <tutorials>
+   Reference <reference/index>

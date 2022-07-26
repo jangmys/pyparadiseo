@@ -8,6 +8,8 @@ Different solution types are provided:
     * Binary
     * Real
     * Permutation
+
+
 """
 from pyparadiseo import config
 from pyparadiseo import initializer
@@ -24,6 +26,41 @@ SOLUTIONS={
     'real': RealSolution,
     'perm': IntSolution
 }
+
+def add_solution_doc(sol):
+    sol.__doc__ ="""
+    Generic ``pyparadiseo`` Solution
+
+    Attributes
+    ==========
+    fitness : float
+    diversity : float
+    objectives : :class:`objectiveVector`
+    encoding : object
+        solution encoding can be any python object
+
+    See Also
+    ========
+    :ref:`solution_creation`
+
+    Examples
+    --------
+    .. code-block:: python
+
+        >>> pass
+    """
+
+    sol.invalid.__doc__="""True if fitness is invalid"""
+    sol.invalidate.__doc__="""invalidate fitness"""
+
+
+# for sol in SOLUTIONS.values():
+add_solution_doc(Solution)
+add_solution_doc(RealSolution)
+
+
+
+
 
 
 def solution(obj,stype=None):

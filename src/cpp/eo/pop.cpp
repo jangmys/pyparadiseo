@@ -79,23 +79,34 @@ void expose_pop(std::string name)
 {
     using namespace boost::python;
 
-    class_<std::vector<SolutionType>>((name+"SolutionVector").c_str())
+    class_<std::vector<SolutionType>>(("_SolutionVector"+name).c_str())
     .def(vector_indexing_suite<std::vector<SolutionType>>())
     ;
 
-    class_<eoPop<SolutionType>,bases<std::vector<SolutionType>>>((name+"Pop").c_str(), init<>() )
+    class_<eoPop<SolutionType>,bases<std::vector<SolutionType>>>
+    ((name+"Pop").c_str(),
+    "A vector of Solutions.",
+    init<>() )
     .def( init< unsigned, eoInit<SolutionType>& >()[with_custodian_and_ward<1,3>()] )
     //     // .enable_pickling()
-    .def("append", &eoPop<SolutionType>::append, "2 parameters : (new popsize,eoInit)")
+    .def("append", &eoPop<SolutionType>::append,
+        "Append initialized individuals at the end of Pop"
+        "\n\n"
+        "new pop_size should larger than current pop_size"
+    )
     .def("__str__", pop_to_string<SolutionType>)
-    .def("__len__", pop_size<SolutionType>)
+    // .def("__len__", pop_size<SolutionType>)
     .def("sort", static_cast<void (eoPop<SolutionType>::*)(void)>(&eoPop<SolutionType>::sort))
     .def("sort", static_cast<void (eoPop<SolutionType>::*)(std::vector<const SolutionType*>&) const >(&eoPop<SolutionType>::sort))
     .def("shuffle", pop_shuffle<SolutionType>)
     .def("__getitem__", pop_getitem<SolutionType>, return_internal_reference<>() )
     .def("__setitem__", pop_setitem<SolutionType>)
-    .def("best", &eoPop<SolutionType>::best_element, return_internal_reference<>() )
-    .def("worst", &eoPop<SolutionType>::worse_element, return_internal_reference<>() )
+    .def("best", &eoPop<SolutionType>::best_element, return_internal_reference<>(),
+        "Return best individual"
+    )
+    .def("worst", &eoPop<SolutionType>::worse_element, return_internal_reference<>(),
+        "Return worst individual"
+    )
     .def("push_back", pop_push_back<SolutionType>)
     .def("resize",    pop_resize<SolutionType>)
     .def("swap", &eoPop<SolutionType>::swap)
@@ -110,5 +121,5 @@ void pop()
     expose_pop<PyEOT>("");
     expose_pop<RealSolution>("Real");
     expose_pop<BinarySolution>("Binary");
-
+    expose_pop<IntSolution>("Int");
 }

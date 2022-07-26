@@ -5,6 +5,11 @@ Population
 
 from pyparadiseo import config,utils
 
+from ._core import Pop
+from ._core import BinaryPop
+from ._core import RealPop
+from ._core import IntPop
+
 ### add Pop documentation!
 # append
 # __str__
