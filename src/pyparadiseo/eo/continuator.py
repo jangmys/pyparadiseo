@@ -1,7 +1,5 @@
 """
 Continuators : Stopping criteria
-================================
-Continuators Stopping criteria
 
 A stopping criterion is called a "continue". This is a functor that is called at each generation end and that return true if one should stop the search.
 

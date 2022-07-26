@@ -1,6 +1,4 @@
 """
-Breeding
-========
 Breeding: combination of selecting and transforming a population
 
 Breeding is thought of as a combination of selecting and transforming a

@@ -1,3 +1,8 @@
+"""
+PyParadisEO
+"""
+
+
 from pyparadiseo import eo, mo, moeo
 
 from pyparadiseo import bounds

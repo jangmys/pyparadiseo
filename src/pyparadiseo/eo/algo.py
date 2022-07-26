@@ -1,6 +1,5 @@
 """
 EO Algorithms
-^^^^^^^^^^^^^
 
 simpleGA :
 

@@ -1,6 +1,5 @@
 """
 Select-One
-==========
 
 Test docstring for eo.selector module
 
