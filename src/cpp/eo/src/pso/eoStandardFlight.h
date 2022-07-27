@@ -68,7 +68,7 @@ public:
      * @param _min - The lower bound to use for all the positions
      * @param _max - The upper bound to use for all the positions
      */
-    eoStandardFlight (const unsigned _dim,const double & _min,const double & _max ):bnds (*(new eoRealVectorBounds(_dim,_min,_max))){}
+    eoStandardFlight (const unsigned _dim,const double  _min,const double  _max ):bnds (*(new eoRealVectorBounds(_dim,_min,_max))){}
 
 
     /**

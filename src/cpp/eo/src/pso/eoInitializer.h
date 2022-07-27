@@ -33,6 +33,8 @@
 #include "eoParticleBestInit.h"
 #include "eoTopology.h"
 
+#include <eoPopEvalFunc.h>
+
 /**
  @addtogroup Initializators
  @{

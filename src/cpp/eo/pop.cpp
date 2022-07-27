@@ -2,6 +2,7 @@
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
 #include <pyeot.h>
+#include <pypot.h>
 
 #include <eoPop.h>
 
@@ -118,8 +119,11 @@ void expose_pop(std::string name)
 
 void pop()
 {
+    //EO/MOEO solutions
     expose_pop<PyEOT>("");
     expose_pop<RealSolution>("Real");
     expose_pop<BinarySolution>("Binary");
     expose_pop<IntSolution>("Int");
+    //Particles
+    expose_pop<RealParticle>("RealParticle");
 }

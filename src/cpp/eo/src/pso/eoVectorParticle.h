@@ -26,6 +26,7 @@
 #define _EOVECTORPARTICLE_H
 
 #include "PO.h"
+#include "utils/eoLogger.h"
 
 
 /**

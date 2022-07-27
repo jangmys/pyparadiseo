@@ -255,13 +255,13 @@ BOOST_PYTHON_MODULE(_core)
     class_<PyEOT,bases<PyEO>>("Solution",init<optional<object>>())
         .def(init<const PyEOT&>())
         .add_property("encoding", &PyEOT::get_encoding, &PyEOT::setEncoding,"object, solution encoding")
-        .def("__getitem__", &PyEOT::get_item)
-        .def("__setitem__", &PyEOT::set_item)
+        .def("__getitem__", &PyEOT::get_item, "forward __getitem__ to encoding.\n\n fail if encoding object doesn't provide indexing capabilities")
+        .def("__setitem__", &PyEOT::set_item, "see __getitem__")
+        .def("__len__", &PyEOT::get_len, "forward __len__ to encoding")
         .def("__str__", &PyEOT::to_string)
         .def("__repr__", &PyEOT::repr)
         .def("__lt__", &PyEOT::operator<)
         .def("__gt__", &PyEOT::operator>)
-        .def("__len__", &PyEOT::get_len)
         .def("__eq__", &PyEOT::operator==)
         .def_pickle(PyEOT_pickle_suite())
     ;
@@ -311,6 +311,11 @@ BOOST_PYTHON_MODULE(_core)
     .def("__str__", &IntSolution::to_string)
     .def_readwrite("carray",&IntSolution::vec)
     .add_property("array",&IntSolution::get_array,&IntSolution::set_array)
+    ;
+
+
+    class_<VectorParticle<double>,bases<RealSolution>>("RealParticle",init<optional<unsigned,double,double,double>>())
+    .def_readwrite("best_fitness",&VectorParticle<double>::bestFitness)
     ;
 
     // .def(vector_indexing_suite<std::vector<bool>>())

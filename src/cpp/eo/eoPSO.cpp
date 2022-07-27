@@ -13,15 +13,26 @@
 
 #include <pypot.h>
 
+#include <eoVelocity.h>
+#include <eoStandardVelocity.h>
+
 #include <eoFlight.h>
 #include <eoStandardFlight.h>
 
+
 #include <eoPSO.h>
+#include <eoEasyPSO.h>
+
+#include <eoTopology.h>
+#include <eoLinearTopology.h>
+
 #include <eoSyncEasyPSO.h>
 
 #include <utils/def_abstract_functor.h>
 
 using namespace boost::python;
+
+
 
 
 // struct eoPSOWrap : eoPSO<PyPOT>,wrapper<eoPSO<PyPOT>>
@@ -32,13 +43,57 @@ using namespace boost::python;
 //         this->get_override("operator()")(_pop);
 //     }
 // };
+typedef VectorParticle<double> POT;
 
-struct eoFlightWrap : eoFlight<PyEOT>,wrapper<eoFlight<PyEOT>>
+struct eoFlightWrap : eoFlight<POT>,wrapper<eoFlight<POT>>
 {
 public:
-    void operator()(PyEOT& _part)
+    void operator()(POT& _part)
     {
         this->get_override("operator()")(_part);
+    }
+};
+
+struct eoVelocityWrap : eoVelocity<POT>,wrapper<eoVelocity<POT>>
+{
+public:
+    void operator()(POT& _p,unsigned _i)
+    {
+        this->get_override("operator()")(_p,_i);
+    }
+
+    eoTopology<POT>& getTopology()
+    {
+        return this->get_override("getTopology")();
+    }
+};
+
+
+struct eoTopologyWrap : eoTopology<POT>,wrapper<eoTopology<POT>>
+{
+    void setup(const eoPop<POT>& _pop)
+    {
+        this->get_override("setup")(_pop);
+    }
+
+    void updateNeighborhood(POT& p, unsigned i)
+    {
+        this->get_override("updateNeighborhood")(p,i);
+    }
+
+    // void updateNeighborhood(eoPop<POT>& _pop)
+    // {
+    //     this->get_override("updateNeighborhood")(_pop);
+    // }
+
+    POT& best(unsigned i)
+    {
+        return this->get_override("best")(i);
+    }
+
+    POT& globalBest()
+    {
+        return this->get_override("globalBest")();
     }
 };
 
@@ -51,43 +106,132 @@ public:
 // }
 
 void eoParticleSwarm(){
-    // class_<RealSolution<PyEOT>,bases<PyEOT>>("RealSolution",init<unsigned int>());
-    //
-    // class_<BinarySolution,bases<PyEOT>>("BinarySolution",init<unsigned int>());
-    //
-    // def("testSolution", testModifSolution);
-
-    // class_<eoVectorParticle<double,double,double>>("VectorParticle",init<optional<unsigned,double,double,double>>())
-    // ;
-    //
-    // class_<eoRealParticle<doubleFitness>,bases< eoVectorParticle<double,double,double>
-    //     > >("RealParticle",init<optional<unsigned,double,double,double>>())
-    // ;
-
+    //ABC
     class_< eoFlightWrap,boost::noncopyable >
     ("eoFlight",init<>())
     .def("__call__", pure_virtual(&eoFlightWrap::operator()))
     ;
-    //
-    //
-    //
-    // def_abstract_functor<eoPSO<PyPOT>>("eoPSO","Abstract base class. Unary functor : Population -> void");
 
+    class_< eoVelocityWrap,boost::noncopyable >
+    ("eoVelocity",init<>())
+    .def("__call__", pure_virtual(&eoVelocityWrap::operator()))
+    .def("getTopology", pure_virtual(&eoVelocityWrap::getTopology),return_internal_reference<>())
+    // .def("updateNeighborhood")
+    ;
 
-    // class_<eoSyncEasyPSO<PyPOT>,bases<eoPSO<PyPOT>>>
-    // ("eoSyncEasyPSO",init<
-    //     eoInitializerBase<PyPOT> &,
-    //     eoContinue < PyPOT > &,
-    //     eoEvalFunc < PyPOT > &,
-    //     eoVelocity < PyPOT > &,
-    //     eoFlight < PyPOT > &
-    // >())
+    class_< eoTopologyWrap,boost::noncopyable >
+    ("eoTopology",init<>())
+    .def("setup", pure_virtual(&eoTopologyWrap::setup))
+    .def("updateNeighborhood", pure_virtual(&eoTopologyWrap::updateNeighborhood))
+    // .def("updateNeighborhood", &eoTopologyWrap::updateNeighborhood))
+    .def("best", pure_virtual(&eoTopologyWrap::best),return_internal_reference<>())
+    .def("globalBest", pure_virtual(&eoTopologyWrap::globalBest),return_internal_reference<>())
+    ;
+
+    //virtual
+    // class_<eoInitializer<POT>>("eoInitializer",
+    //     init<
+    //         eoPopEvalFunc<POT>&,
+    //         eoVelocityInit<POT>&,
+    //         eoParticleBestInit<POT>&,
+    //         eoTopology<POT>&,
+    //         eoPop<POT>&
+    //     >()
+    //     [
+    //         with_custodian_and_ward<1,2,
+    //         with_custodian_and_ward<1,3,
+    //         with_custodian_and_ward<1,4,
+    //         with_custodian_and_ward<1,5,
+    //         with_custodian_and_ward<1,6
+    //         >>>>>()
+    //     ]
+    // )
     // ;
-    //
-    //
 
 
-    // class_<eoStandardFlight<PyPOT>,bases<eoFlight<PyPOT>>>
-    // ("eoStandardFlight",init<>())
-    // ;
+
+    //===============================
+    // CONCRETE CLASSES
+    //===============================
+    class_<eoStandardFlight<POT>,bases<eoFlightWrap>>("eoStandardFlight",init<>())
+    .def(init<eoRealVectorBounds&>()[WC1])
+    .def(init<const unsigned,const double,const double>())
+    .def("__call__",&eoStandardFlight<POT>::operator())
+    ;
+
+    class_<eoStandardVelocity<POT>,bases<eoVelocityWrap>>("eoStandardVelocity",
+    init<
+        eoTopology<POT>&,
+        const double,
+        const double,
+        const double,
+        eoRealVectorBounds&,
+        optional<eoRng&>
+    >()
+    [
+        with_custodian_and_ward<1,2,
+        with_custodian_and_ward<1,6,
+        with_custodian_and_ward<1,7
+        >>>()
+    ]
+    )
+    .def(
+        init<
+            eoTopology<POT>&,
+            const double,
+            const double,
+            const double,
+            optional<eoRng&>
+        >()
+        [
+            with_custodian_and_ward<1,2,
+            with_custodian_and_ward<1,6
+            >>()
+        ]
+    )
+    .def("__call__",&eoStandardVelocity<POT>::operator())
+    .def("updateNeighborhood",&eoStandardVelocity<POT>::updateNeighborhood)
+    .def("getTopology",&eoStandardVelocity<POT>::getTopology,return_internal_reference<>())
+    ;
+
+
+    class_<eoLinearTopology<POT>,bases<eoTopologyWrap>>("eoLinearTopology",init<unsigned>())
+    .def("setup",&eoLinearTopology<POT>::setup)
+    .def("updateNeighborhood",&eoLinearTopology<POT>::updateNeighborhood)
+    .def("best",&eoLinearTopology<POT>::best,return_internal_reference<>())
+    .def("globalBest",&eoLinearTopology<POT>::globalBest,return_internal_reference<>())
+    ;
+
+
+    class_<eoEasyPSO<POT>>("eoEasyPSO",
+        init<
+            eoContinue<POT>&,
+            eoEvalFunc<POT>&,
+            eoVelocity<POT>&
+        >()
+        [
+            with_custodian_and_ward<1,2,
+            with_custodian_and_ward<1,3,
+            with_custodian_and_ward<1,4
+            >>>()
+        ]
+    )
+    // .def(
+    //     init<
+    //     eoInitializerBase<POT>&,
+    //     eoContinue<POT>&,
+    //     eoEvalFunc<POT>&,
+    //     eoVelocity<POT>&,
+    //     eoFlight<POT>&
+    //     >()
+    //     [
+    //     with_custodian_and_ward<1,2,
+    //     with_custodian_and_ward<1,3,
+    //     with_custodian_and_ward<1,4,
+    //     with_custodian_and_ward<1,5,
+    //     with_custodian_and_ward<1,6
+    //     >>>>>()
+    //     ]
+    // )
+    ;
 }

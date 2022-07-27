@@ -160,8 +160,6 @@ public:
         return invalidFitness();
     }
 
-
-
     //I/O
     std::string to_string() const
     {
@@ -225,6 +223,9 @@ public:
     }
 };
 
+/*
+solution with generic encoding (bp::object)
+*/
 class PyEOT : public PyEO
 {
 public:
@@ -252,11 +253,15 @@ public:
 
     //ENCODING
     //==========================================
+    //maybe I should make that private?
     //solution encoding is a python object --> a property of pyEOT
     boost::python::object encoding;
 
     boost::python::object get_encoding() const { return encoding; }
     void setEncoding(boost::python::object enc){ encoding = enc; }
+
+
+    //depend on type of object passed...
 
     //should check if the object is sliceable, indexable etc...
     boost::python::object get_item(int key) const
@@ -314,36 +319,9 @@ public:
     // {
     //     _os << to_string() << ' ';
     // }
+
 };
 
-
-template<typename T>
-class FixedSizeSolution : public PyEOT
-{
-public:
-    FixedSizeSolution() : PyEOT(),_size(0)
-    {}
-
-    FixedSizeSolution(unsigned int _size) : PyEOT(np::zeros(bp::make_tuple(_size),np::dtype::get_builtin<T>())),_size(_size)
-    {}
-
-    size_t size() const{
-        return len(encoding);
-        // what if encoding is set directly?
-        // return _size;
-    }
-
-    T& operator[](int i){
-        np::ndarray arr = np::from_object(encoding,np::dtype::get_builtin<T>());
-
-        T* ptr = reinterpret_cast<T*>(arr.get_data());
-
-        return ptr[i];
-    }
-
-private:
-    size_t _size;
-};
 
 template<typename T>
 class VectorSolution : public PyEO

@@ -25,27 +25,37 @@ namespace np=boost::python::numpy;
 // typedef moeoRealObjectiveVector<moeoObjectiveVectorTraits> realObjVec;
 
 
-class PyPOT : public PyEO
-{
-public:
-    doubleFitness bestFitness;
-
-
-
-
-};
-
-
 template<typename PositionType>
-class VectorParticle : public PyPOT
+class VectorParticle : public VectorSolution<PositionType>
 {
 public:
+    typedef double ParticleVelocityType;
+
+    VectorParticle(unsigned size = 0, double position = 0.0, double velocity = 0.0, double best_position = 0.0) : VectorSolution<double>(size),
+            bestPositions(size,best_position),
+            velocities(size,velocity),
+            bestFitness(0.0)
+    {};
+
+    //needed on C++ (although bestFitness is not made private...)
+    double best(){
+        return bestFitness;
+    }
+
+    void best(const double& _best)
+    {
+        bestFitness = _best;
+    }
 
 
+    // std::vector<PositionType> _position;
+    std::vector<PositionType> bestPositions;
+    std::vector<PositionType> velocities;
 
-    std::vector<PositionType> _position;
-    std::vector<PositionType> _best_positions;
-    std::vector<PositionType> _velocities;
+    doubleFitness bestFitness;
 };
+
+typedef VectorParticle<double> RealParticle;
+typedef VectorParticle<int> IntParticle;
 
 #endif

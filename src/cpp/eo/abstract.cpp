@@ -19,6 +19,7 @@
 
 #include <utils/def_abstract_functor.h>
 #include <pyeot.h>
+#include <pypot.h>
 
 // unfortunately have to define it specially -- why??? i'll just leave it like that (JG)
 template<typename SolutionType>
@@ -77,6 +78,8 @@ void eo_abstract()
     export_abstract<BinarySolution>("Bin");
     export_abstract<IntSolution>("Int");
     export_abstract<RealSolution>("Real");
+
+    export_abstract<RealParticle>("RealParticle");
 }
 
 

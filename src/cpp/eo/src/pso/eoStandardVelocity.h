@@ -64,9 +64,9 @@ public:
     * @param _gen - The eo random generator, default=rng
     */
     eoStandardVelocity (eoTopology < POT > & _topology,
-                                        const VelocityType & _w,
-                        const VelocityType & _c1,
-                        const VelocityType & _c2,
+                        const VelocityType  _w,
+                        const VelocityType  _c1,
+                        const VelocityType  _c2,
                         eoRealVectorBounds & _bounds,
                         eoRealBoundModifier & _bndsModifier,
                         eoRng & _gen = rng):
@@ -111,9 +111,9 @@ public:
        * @param _gen - The eo random generator, default=rng
        */
     eoStandardVelocity (eoTopology < POT > & _topology,
-                        const VelocityType & _w,
-                        const VelocityType & _c1,
-                        const VelocityType & _c2,
+                        const VelocityType  _w,
+                        const VelocityType  _c1,
+                        const VelocityType  _c2,
                         eoRng & _gen = rng):
             topology(_topology),
             omega (_w),

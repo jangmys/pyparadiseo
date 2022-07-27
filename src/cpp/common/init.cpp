@@ -55,26 +55,6 @@ private:
     boost::python::object init_op;
 };
 
-template<typename T>
-struct FixedSizeInit : eoInit<FixedSizeSolution<T>> {
-    FixedSizeInit(unsigned _dim) : eoInit<FixedSizeSolution<T>>(),_dimension(_dim),_gen(eoUniformGenerator<T>()){ };
-
-    void
-    operator () (FixedSizeSolution<T>& _eo)
-    {
-        _eo.encoding = np::zeros(p::make_tuple(_dimension),np::dtype::get_builtin<T>());
-
-        for(unsigned i=0;i<_dimension;i++){
-            _eo.encoding[i] = _gen();
-        }
-        _eo.invalidate();
-    }
-
-private:
-    unsigned _dimension;
-    eoUniformGenerator<T> _gen;
-};
-
 
 struct BinarySolInit : eoInit<BinarySolution> {
     BinarySolInit(unsigned _dim) : eoInit<BinarySolution>(),_dimension(_dim),_gen(eoUniformGenerator<bool>()){ };
@@ -253,5 +233,15 @@ initialize()
         ]
     )
     .def("__call__", &pyRealInitBounded<RealSolution>::operator ())
+    ;
+
+    class_<pyRealInitBounded<RealParticle>, bases<eoInit<RealParticle>>>
+        (make_name("RealBoundedInit","Particle").c_str(),
+        init<eoRealVectorBounds&>()
+        [
+        with_custodian_and_ward<1,2>()
+        ]
+    )
+    .def("__call__", &pyRealInitBounded<RealParticle>::operator ())
     ;
 }
