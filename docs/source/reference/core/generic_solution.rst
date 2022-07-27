@@ -4,14 +4,13 @@ Solution
 .. currentmodule:: pyparadiseo.solution
 
 .. autoclass:: Solution
-    :noindex:
-    :show-inheritance: True
-    :exclude-members: invalid,invalidObjectiveVector,invalidateObjectiveVector
+    :members:
 
-    .. method:: invalid()
 
-        True ifffff fitness is invalid
+.. .. method:: invalid()
 
-    .. method:: invalidateObjectiveVector()
-
-        Documenting invalidateObjectiveVector and override signature
+..     True ifffff fitness is invalid
+    ..
+    .. .. method:: invalidateObjectiveVector()
+    ..
+    ..     Documenting invalidateObjectiveVector and override signature

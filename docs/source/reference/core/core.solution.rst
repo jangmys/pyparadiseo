@@ -31,8 +31,6 @@ Solution objects
 Solution creation routines
 ----------------------------
 
-.. rubric:: Solution creation
-
 .. autosummary::
     :toctree: _autosummary
 

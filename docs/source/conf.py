@@ -177,14 +177,15 @@ napoleon_numpy_docstring = True
 napoleon_use_ivar = True
 napoleon_use_param = True
 
-# numpydoc_show_class_members=False
 
-# add_module_names = False
+numpydoc_show_class_members=False
+add_module_names = False
 
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
+# html_theme = "sphinx_book_theme"
 html_theme = "pydata_sphinx_theme"
 # html_theme = "furo"
 # html_theme = 'sphinx_rtd_theme'

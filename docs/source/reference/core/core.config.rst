@@ -1,7 +1,7 @@
-Global (:mod:`pyparadiseo`)
+Config (:mod:`pyparadiseo.config`)
 ==============================================
 
-.. currentmodule:: pyparadiseo
+.. currentmodule:: pyparadiseo.config
 
 
 Set global pyparadiseo variables.
@@ -16,11 +16,11 @@ Set global pyparadiseo variables.
 .. autosummary::
     :toctree: _autosummary
 
-    config.set_solution_type
-    config.set_maximize_fitness
-    config.set_minimize_fitness
-    config.is_minimizing
-    config.setup_objectives
+    set_solution_type
+    set_maximize_fitness
+    set_minimize_fitness
+    is_minimizing
+    setup_objectives
 
 
 .. .. automodule:: pyparadiseo.config
