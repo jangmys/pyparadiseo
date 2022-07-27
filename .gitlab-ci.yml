@@ -63,8 +63,6 @@ test-job1:
         - python3 -m pip install wheelhouse/*.manylinux2014_x86_64.whl
         - python3 -c "import pyparadiseo"
         - python3 -m pytest tests
-        - cd docs
-        - make html
     artifacts:
         paths:
             - wheelhouse/
@@ -78,6 +76,9 @@ pages:
     needs:
         - test-job1
     script:
+        - cd docs
+        - make html
+        - cd ..
         - mkdir .public
         - ls
         - ls docs
@@ -88,8 +89,7 @@ pages:
     artifacts:
         paths:
             - public
-    only:
-        - master
+    when: manual
 
 
 
