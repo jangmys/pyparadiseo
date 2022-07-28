@@ -97,12 +97,13 @@ struct NumpyScalarConverter
 void registerConverters()
 {
     // NumpyScalarConverter<signed char>();
-    // NumpyScalarConverter<short>();
+    NumpyScalarConverter<bool>();
+    NumpyScalarConverter<short>();
     NumpyScalarConverter<int>();
     NumpyScalarConverter<long>();
     NumpyScalarConverter<long long>();
     // NumpyScalarConverter<unsigned char>();
-    // NumpyScalarConverter<unsigned short>();
+    NumpyScalarConverter<unsigned short>();
     NumpyScalarConverter<unsigned int>();
     NumpyScalarConverter<unsigned long>();
     NumpyScalarConverter<unsigned long long>();

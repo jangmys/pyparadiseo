@@ -44,6 +44,39 @@ class test_init(unittest.TestCase):
         for i in range(4):
             self.assertEqual(self.sol[i],i+1)
 
+        def bin_init():
+            return np.array([0,1]*5)
+
+        init = initializer.initializer(lambda : np.array([0,1]*5),stype='bin')
+
+        # init = initializer.initializer(bin_init,stype='bin')
+        init(self.bin_sol)
+        self.assertEqual(self.bin_sol.encoding[0],0)
+        self.assertEqual(self.bin_sol.encoding[1],1)
+
+
+
+        import random
+        def real_init():
+            return [1.0]+[random.random() for _ in range(8)]+[2.0]
+
+        init = initializer.initializer(real_init,stype='real')
+        init(self.real_sol)
+        # print(self.real_sol)
+        self.assertEqual(self.real_sol.encoding[0],1.0)
+        self.assertEqual(self.real_sol.encoding[9],2.0)
+
+    def test_as_decorator(self):
+        import numpy as np
+
+        @initializer.initializer
+        def foo():
+            return np.random.random(8)
+
+        foo(self.sol)
+        self.assertEqual(len(self.sol),8)
+
+
     def test_init_with_callable_class(self):
         # callable class
         class testProblem(object):

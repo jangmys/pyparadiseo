@@ -25,5 +25,29 @@ class TestBinary(unittest.TestCase):
         for i in self.sol.carray:
             self.assertTrue(isinstance(i, np.int))
 
+    def test_setter(self):
+        init = initializer.random(10,stype='bin')
+        init(self.sol)
+
+        self.sol.carray = np.random.randint(0,2,10)
+        print([i for i in self.sol.carray])
+        print(self.sol.array)
+
+        self.sol.array = np.random.randint(0,2,10)#,dtype=np.uintc)
+        print([i for i in self.sol.carray])
+        print(self.sol.array)
+
+        self.sol.encoding = np.random.randint(0,2,10)
+        print([i for i in self.sol.carray])
+        print(self.sol.array)
+
+        self.sol.encoding = [0,1,0,1]
+        print([i for i in self.sol.carray])
+        print(self.sol.array)
+
+        self.sol.encoding[0] = 1
+        print([i for i in self.sol.carray])
+        print(self.sol.array)
+
 if __name__ == '__main__':
     unittest.main()

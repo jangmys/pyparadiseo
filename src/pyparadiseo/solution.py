@@ -58,10 +58,11 @@ def add_solution_doc(sol):
 add_solution_doc(Solution)
 add_solution_doc(RealSolution)
 
-
-
-
-
+#############################################
+#############################################
+#############################################
+#############################################
+#############################################
 
 def solution(obj,stype=None):
     """
@@ -131,7 +132,8 @@ def solution(obj,stype=None):
             raise
 
         try:
-            ret.array = obj
+            ret.encoding = obj
+            # ret.array = obj
         except ValueError:
             print("For stype=",stype,"solution encoding ",obj," must be convertible to numpy array. Returning zeros.")
         return ret
