@@ -44,10 +44,10 @@ struct pyeoInit : eoInit<SolutionType> {
     {
         if (init_op.ptr() != Py_None) {
             // std::cout << "*** init" << std::endl;
-            _eo.setEncoding(p::call<p::object>(init_op.ptr()));
+            _eo.set_encoding(p::call<p::object>(init_op.ptr()));
             _eo.invalidate();
         } else   {
-            std::cout << "no move defined : do nothing";
+            std::cout << "no callable init defined : do nothing";
         }
     }
 
@@ -165,7 +165,7 @@ template<class T>
 void export_realInitBounded(std::string name){
     using namespace boost::python;
 
-    class_<pyeoInit<T>, bases<eoInit<T> >, boost::noncopyable>
+    class_<pyeoInit<T>, bases<eoInit<T>>>
         (make_name("pyeoInit",name).c_str(), init<>())
     .def(init<boost::python::object>())
     .def("set_generator", &pyeoInit<T>::setGenerator)
@@ -223,6 +223,8 @@ initialize()
 
 
     export_realInitBounded<PyEOT>("");
+    export_realInitBounded<BinarySolution>("Bin");
+    export_realInitBounded<RealSolution>("Real");
 
 
     class_<pyRealInitBounded<RealSolution>, bases<eoInit<RealSolution>>>

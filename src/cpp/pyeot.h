@@ -241,13 +241,13 @@ public:
 
     PyEOT(const PyEOT& p) : PyEO(p)
     {
-        setEncoding(p.deepcopy(p.get_encoding()));
+        set_encoding(p.deepcopy(p.get_encoding()));
     }
 
     PyEOT& operator=(const PyEOT& p)
     {
         PyEO::operator=(p);
-        setEncoding(p.deepcopy(p.get_encoding()));
+        set_encoding(p.deepcopy(p.get_encoding()));
         return *this;
     }
 
@@ -258,7 +258,7 @@ public:
     boost::python::object encoding;
 
     boost::python::object get_encoding() const { return encoding; }
-    void setEncoding(boost::python::object enc){ encoding = enc; }
+    void set_encoding(boost::python::object enc){ encoding = enc; }
 
 
     //depend on type of object passed...
@@ -353,9 +353,29 @@ public:
     np::ndarray get_encoding() const {
         return encoding;
     }
-    void setEncoding(boost::python::object enc){
-        encoding = np::array(enc,np::dtype::get_builtin<T>());
+    void set_encoding(boost::python::object enc){
+        auto l=boost::python::len(enc);
+        if(l != (long)vec.size())
+        {
+            //resize and re-base ndarray
+            vec.resize(l);
+
+            encoding=np::from_data(vec.data(),
+                np::dtype::get_builtin<T>(),
+                bp::make_tuple(vec.size()),
+                bp::make_tuple(sizeof(T)),
+                bp::object()
+            );
+        }
+
+        // std::cout<<l<<" "<<encoding.shape(0)<<std::endl;
+        for(unsigned i=0;i<boost::python::len(enc);i++)
+        {
+            encoding[i] = enc[i];//,np::dtype::get_builtin<T>());
+        }
     }
+
+
 
     np::ndarray get_array() const {
         return encoding;
@@ -363,7 +383,8 @@ public:
 
     void set_array(boost::python::object enc){
     // void set_array(np::ndarray enc){
-        auto tmp = np::array(enc,np::dtype::get_builtin<T>());
+        auto tmp = np::array(enc);
+        // auto tmp = np::array(enc,np::dtype::get_builtin<T>());
 
         int input_size = tmp.shape(0);
         T* input_ptr = reinterpret_cast<T*>(tmp.get_data());
@@ -508,6 +529,7 @@ public:
 typedef VectorSolution<int> IntSolution;
 //for some reason the compiler doesn't accept <bool>
 typedef VectorSolution<unsigned int> BinarySolution;
+// typedef IntSolution BinarySolution;
 typedef VectorSolution<double> RealSolution;
 
 

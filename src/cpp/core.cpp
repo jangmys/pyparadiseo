@@ -59,9 +59,9 @@ struct PyEOT_pickle_suite : bp::pickle_suite
 
         if(bp::object(state[3]).ptr() != Py_None)
         {
-            p.setEncoding(state[3]);
+            p.set_encoding(state[3]);
         }else{
-            p.setEncoding(bp::object())
+            p.set_encoding(bp::object())
             ;
         }
     }
@@ -205,7 +205,9 @@ BOOST_PYTHON_MODULE(_core)
     class_< std::vector<unsigned int> >("UIntVec")
         .def(bp::vector_indexing_suite<std::vector<unsigned int> >())
         ;
-
+    class_< std::vector<long int> >("LongIntVec")
+        .def(bp::vector_indexing_suite<std::vector<long int> >())
+        ;
 
     //only doubles ... need to expose this to use it as a base class for moeoRealObjectiveVector
     //(all member functions will be in moeoRealObjectiveVector)
@@ -254,7 +256,7 @@ BOOST_PYTHON_MODULE(_core)
 
     class_<PyEOT,bases<PyEO>>("Solution",init<optional<object>>())
         .def(init<const PyEOT&>())
-        .add_property("encoding", &PyEOT::get_encoding, &PyEOT::setEncoding,"object, solution encoding")
+        .add_property("encoding", &PyEOT::get_encoding, &PyEOT::set_encoding,"object, solution encoding")
         .def("__getitem__", &PyEOT::get_item, "forward __getitem__ to encoding.\n\n fail if encoding object doesn't provide indexing capabilities")
         .def("__setitem__", &PyEOT::set_item, "see __getitem__")
         .def("__len__", &PyEOT::get_len, "forward __len__ to encoding")
@@ -282,25 +284,26 @@ BOOST_PYTHON_MODULE(_core)
     class_<RealSolution,bases<PyEO>>("RealSolution",init<optional<unsigned int>>())
     // .def(init<boost::python::object>())
     .def(init<const RealSolution&>())
-    .add_property("encoding", &RealSolution::get_encoding, &RealSolution::setEncoding)
+    .add_property("encoding", &RealSolution::get_encoding, &RealSolution::set_encoding)
     .def("resize", &RealSolution::resize)
     .def("__len__", &RealSolution::size)
     .def("__repr__", &RealSolution::repr)
     .def("__str__", &RealSolution::to_string)
     .def_readwrite("carray",&RealSolution::vec)
-    .add_property("array",&RealSolution::get_array,&RealSolution::set_array)
+    .add_property("array",&RealSolution::get_encoding,&RealSolution::set_encoding)
     ;
 
 
     class_<BinarySolution,bases<PyEO>>("BinarySolution",init<optional<unsigned int>>())
     .def(init<const BinarySolution&>())
-    .add_property("encoding", &BinarySolution::get_encoding, &BinarySolution::setEncoding)
+    .add_property("encoding", &BinarySolution::get_encoding, &BinarySolution::set_encoding)
     .def("resize", &BinarySolution::resize)
     .def("__len__", &BinarySolution::size)
     .def("__repr__", &BinarySolution::repr)
     .def("__str__", &BinarySolution::to_string)
     .def_readwrite("carray",&BinarySolution::vec)
-    .add_property("array",&BinarySolution::get_array,&BinarySolution::set_array)
+    .add_property("array",&BinarySolution::get_encoding,&BinarySolution::set_encoding)
+    // .add_property("array",&BinarySolution::get_array,&BinarySolution::set_array)
     ;
 
     class_<IntSolution,bases<PyEO>>("IntSolution",init<optional<unsigned int>>())
