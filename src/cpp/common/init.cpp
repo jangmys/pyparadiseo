@@ -21,7 +21,10 @@
 namespace p=boost::python;
 namespace np=boost::python::numpy;
 
+/*
+An eoInit that holds a (callable) Python object.
 
+*/
 template<typename SolutionType>
 struct pyeoInit : eoInit<SolutionType> {
     pyeoInit() : eoInit<SolutionType>(){ };

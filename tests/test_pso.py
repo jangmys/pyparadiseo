@@ -85,7 +85,7 @@ class TestPSO(unittest.TestCase):
 
         bnds = bounds.bound_box(VEC_SIZE,-1.5,1.5)
 
-        velo = _core.eoStandardVelocity(topo)
+        velo = _core.eoStandardVelocity(topo,1,1.6,2,bnds)
 
         pass
 
