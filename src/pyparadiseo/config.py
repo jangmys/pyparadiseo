@@ -13,7 +13,9 @@ TYPES={
     'gen' : '',
     'bin' : 'Bin',
     'real' : 'Real',
-    'perm' : 'Perm'
+    'perm' : 'Perm',
+    'real-pso' : 'RealPart',
+    'int-pso' : 'IntPart'
 }
 
 _SOLUTION_TYPE = 'gen'

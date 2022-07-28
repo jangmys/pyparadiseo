@@ -28,6 +28,8 @@
 #include <utils/eoStat.h>
 
 #include <pyeot.h>
+#include <pypot.h>
+
 #include <utils/def_abstract_functor.h>
 
 using namespace boost::python;
@@ -99,6 +101,7 @@ void continuators()
     expose_continuators<BinarySolution>("Bin");
     expose_continuators<RealSolution>("Real");
     expose_continuators<IntSolution>("Perm");
+    expose_continuators<RealParticle>("RealPart");
 }
 
 

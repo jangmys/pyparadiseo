@@ -6,6 +6,7 @@
 
 #include <utils/def_abstract_functor.h>
 #include <pyeot.h>
+#include <pypot.h>
 
 using namespace boost::python;
 
@@ -142,4 +143,5 @@ evaluate()
     export_eval<BinarySolution>("Bin");
     export_eval<IntSolution>("Perm");
     export_eval<RealSolution>("Real");
+    export_eval<RealParticle>("RealPart");
 }

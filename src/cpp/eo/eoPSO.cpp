@@ -71,6 +71,9 @@ public:
 
 struct eoTopologyWrap : eoTopology<POT>,wrapper<eoTopology<POT>>
 {
+    eoTopologyWrap() : eoTopology<POT>(){}
+
+
     void setup(const eoPop<POT>& _pop)
     {
         this->get_override("setup")(_pop);
@@ -153,26 +156,24 @@ void eoParticleSwarm(){
     //===============================
     // CONCRETE CLASSES
     //===============================
-    class_<eoStandardFlight<POT>,bases<eoFlightWrap>>("eoStandardFlight",init<>())
+    class_<eoStandardFlight<POT>,bases<eoFlight<POT>>>("eoStandardFlight",init<>())
     .def(init<eoRealVectorBounds&>()[WC1])
     .def(init<const unsigned,const double,const double>())
     .def("__call__",&eoStandardFlight<POT>::operator())
     ;
 
-    class_<eoStandardVelocity<POT>,bases<eoVelocityWrap>>("eoStandardVelocity",
+    class_<eoStandardVelocity<POT>,bases<eoVelocity<POT>>>("eoStandardVelocity",
     init<
         eoTopology<POT>&,
         const double,
         const double,
         const double,
-        eoRealVectorBounds&,
-        optional<eoRng&>
+        eoRealVectorBounds&
     >()
     [
         with_custodian_and_ward<1,2,
-        with_custodian_and_ward<1,6,
-        with_custodian_and_ward<1,7
-        >>>()
+        with_custodian_and_ward<1,6
+        >>()
     ]
     )
     .def(
@@ -181,12 +182,22 @@ void eoParticleSwarm(){
             const double,
             const double,
             const double,
-            optional<eoRng&>
+            eoRng&
         >()
         [
             with_custodian_and_ward<1,2,
             with_custodian_and_ward<1,6
             >>()
+        ]
+    )
+    .def(
+        init<
+            eoTopology<POT>&,
+            optional<eoRng&>
+        >()
+        [
+            with_custodian_and_ward<1,2
+            >()
         ]
     )
     .def("__call__",&eoStandardVelocity<POT>::operator())
@@ -195,7 +206,7 @@ void eoParticleSwarm(){
     ;
 
 
-    class_<eoLinearTopology<POT>,bases<eoTopologyWrap>>("eoLinearTopology",init<unsigned>())
+    class_<eoLinearTopology<POT>,bases<eoTopology<POT>>>("eoLinearTopology",init<unsigned>())
     .def("setup",&eoLinearTopology<POT>::setup)
     .def("updateNeighborhood",&eoLinearTopology<POT>::updateNeighborhood)
     .def("best",&eoLinearTopology<POT>::best,return_internal_reference<>())
