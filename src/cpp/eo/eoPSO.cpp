@@ -190,16 +190,6 @@ void eoParticleSwarm(){
             >>()
         ]
     )
-    .def(
-        init<
-            eoTopology<POT>&,
-            optional<eoRng&>
-        >()
-        [
-            with_custodian_and_ward<1,2
-            >()
-        ]
-    )
     .def("__call__",&eoStandardVelocity<POT>::operator())
     .def("updateNeighborhood",&eoStandardVelocity<POT>::updateNeighborhood)
     .def("getTopology",&eoStandardVelocity<POT>::getTopology,return_internal_reference<>())
