@@ -140,17 +140,27 @@ public:
                 // loop over all the particles for the current iteration
                 for (unsigned idx = 0; idx < _pop.size (); idx++)
                 {
+                    std::cout<<"particle "<<idx<<std::endl;
+
                     // perform velocity evaluation
                     velocity (_pop[idx],idx);
+
+                    std::cout<<"velo "<<idx<<std::endl;
 
                     // apply the flight
                     flight (_pop[idx]);
 
+                    std::cout<<"fly "<<idx<<std::endl;
+
                     // evaluate the position
                     eval (_pop[idx]);
 
+                    std::cout<<"eval "<<idx<<std::endl;
+
                     // update the topology (particle and local/global best(s))
                     velocity.updateNeighborhood(_pop[idx],idx);
+
+                    std::cout<<"velo update "<<idx<<std::endl;
                 }
 
             }

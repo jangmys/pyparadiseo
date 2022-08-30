@@ -319,6 +319,8 @@ BOOST_PYTHON_MODULE(_core)
 
     class_<VectorParticle<double>,bases<RealSolution>>("RealParticle",init<optional<unsigned,double,double,double>>())
     .def_readwrite("best_fitness",&VectorParticle<double>::bestFitness)
+    .def("__repr__",&VectorParticle<double>::repr)
+    .def("__str__",&VectorParticle<double>::to_string)
     ;
 
     // .def(vector_indexing_suite<std::vector<bool>>())

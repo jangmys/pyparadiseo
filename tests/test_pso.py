@@ -19,6 +19,10 @@ import copy
 
 
 class TestPSO(unittest.TestCase):
+    def setUp(self):
+        self.particle = _core.RealParticle(10)
+        # print("this")
+
     #not really testing anything...just that the calls don't fail
     def test_particle(self):
         particle = _core.RealParticle()
@@ -85,9 +89,16 @@ class TestPSO(unittest.TestCase):
 
         bnds = bounds.bound_box(VEC_SIZE,-1.5,1.5)
 
-        velo = _core.eoStandardVelocity(topo)
+        velo = _core.eoStandardVelocity(topo,1.0,1.0,1.0,bnds)
 
-        pass
+        config.set_solution_type('real-pso')
+        init = initializer.random(VEC_SIZE,bounds=bounds.bound_box(VEC_SIZE,-3,3))
+        pop = swarm.from_init(POP_SIZE,init)
+
+        # print(pop[0])
+        #
+        # velo(pop[0],0)
+        config.set_solution_type('gen')
 
     def test_algo(self):
         config.set_solution_type('real-pso')
@@ -96,20 +107,28 @@ class TestPSO(unittest.TestCase):
         POP_SIZE = 20
         NEIGHBORHOOD_SIZE = 5
 
-        pop = swarm.empty()
         eval = evaluator.fitness(lambda x : np.linalg.norm(x,2))
-        # init = initializer.random(VEC_SIZE,bounds=bounds.bound_box(VEC_SIZE,-3,3))
-        # bnds = bounds.bound_box(VEC_SIZE,-1.5,1.5)
-        #
-        # topo = _core.eoLinearTopology(NEIGHBORHOOD_SIZE)
-        #
-        # velo = _core.eoStandardVelocity(topo,1,1.6,2,bnds)
-        # flight = _core.eoStandardFlight()
-        #
-        # cont = continuator.max_generations(50)
+        bnds = bounds.bound_box(VEC_SIZE,-1.5,1.5)
 
-        # alg = _core.eoEasyPSO(cont,eval,velo)
+        init = initializer.random(VEC_SIZE,bounds=bounds.bound_box(VEC_SIZE,-3,3))
+        pop = swarm.from_init(POP_SIZE,init)
 
+        # print("POP\t\t",pop)
+        # pop = swarm.empty()
+
+        topo = _core.eoLinearTopology(NEIGHBORHOOD_SIZE)
+        velo = _core.eoStandardVelocity(topo,1,1.6,2,bnds)
+
+        # # flight = _core.eoStandardFlight()
+        # #
+        cont = continuator.max_generations(50)
+        #
+        alg = _core.eoEasyPSO(cont,eval,velo)
+        #
+        # alg(pop)
+        #
+        # print(pop)
+        #
         config.set_solution_type('gen')
 
 

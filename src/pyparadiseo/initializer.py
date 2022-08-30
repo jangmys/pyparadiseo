@@ -48,6 +48,13 @@ def random(size=0,stype=None,**kwargs):
         else:
             return class_(size)
 
+    if stype == 'real-pso':
+        class_ = utils.get_class("RealBoundedInitParticle")
+        if "bounds" in kwargs.keys():
+            return class_(kwargs["bounds"])
+        else:
+            raise TypeError("need bounds for type 'real'")
+
 
 #### it's a "decorator"
 def initializer(init_fun,stype=None):

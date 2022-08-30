@@ -47,6 +47,51 @@ public:
         bestFitness = _best;
     }
 
+    std::string repr() const
+    {
+        std::string s;
+
+        s += "Particle(";
+        s += VectorSolution<PositionType>::repr();
+        s += ",";
+        for(unsigned i=0;i<velocities.size();i++){
+            s += boost::python::extract<const char*>(boost::python::str(velocities[i]));
+            s += " ";
+        }
+        // s += boost::python::extract<const char*>(boost::python::str(encoding));
+        s += ")";
+
+        return s;
+    }
+
+    std::string to_string() const
+    {
+        std::string result;
+
+        result += VectorSolution<PositionType>::to_string();
+        result += "\t";
+
+        result += "\n";
+        result += "Best fitness: ";
+        result += boost::python::extract<const char*>bestFitness;
+        result += "\n";
+        result += "Velocities: ";
+        for(unsigned i=0;i<velocities.size();i++){
+            result += boost::python::extract<const char*>(boost::python::str(velocities[i]));
+            result += " ";
+        }
+
+        result += "\n";
+        result += "BestPosition: ";
+        result += "\n";
+        for(unsigned i=0;i<bestPositions.size();i++){
+            result += boost::python::extract<const char*>(boost::python::str(bestPositions[i]));
+            result += " ";
+        }
+
+        return result;
+    }
+
 
     // std::vector<PositionType> _position;
     std::vector<PositionType> bestPositions;

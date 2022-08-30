@@ -193,11 +193,12 @@ void eoParticleSwarm(){
     .def(
         init<
             eoTopology<POT>&,
-            optional<eoRng&>
+            const double,
+            const double,
+            const double
         >()
         [
-            with_custodian_and_ward<1,2
-            >()
+            with_custodian_and_ward<1,2>()
         ]
     )
     .def("__call__",&eoStandardVelocity<POT>::operator())
@@ -227,6 +228,7 @@ void eoParticleSwarm(){
             >>>()
         ]
     )
+    .def("__call__",&eoEasyPSO<POT>::operator())
     // .def(
     //     init<
     //     eoInitializerBase<POT>&,

@@ -3,6 +3,7 @@
 #include <eoTransform.h>
 #include <eoSGATransform.h>
 #include <eoPopEvalFunc.h>
+// #include <eoEvalFuncPtr.h>
 
 #include <utils/def_abstract_functor.h>
 #include <pyeot.h>
@@ -136,6 +137,9 @@ void export_eval(std::string postfix)
     ;
 }
 
+
+// typedef doubleFitness (*real_eval_func)(const RealSolution&);
+
 void
 evaluate()
 {
@@ -144,4 +148,12 @@ evaluate()
     export_eval<IntSolution>("Perm");
     export_eval<RealSolution>("Real");
     export_eval<RealParticle>("RealPart");
+    //
+    // class_<eoEvalFuncPtr<RealSolution>, bases<eoEvalFunc<RealSolution>>>
+    // (
+    //     "FitnessEvalPtrReal",
+    //     init<real_eval_func>()
+    // )
+    // .def("__call__", &eoEvalFuncPtr<RealSolution>::operator ())
+    // ;
 }

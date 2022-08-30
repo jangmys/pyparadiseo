@@ -18,7 +18,27 @@ def empty(stype=None):
     -------
     A swarm (eoPop)
     """
-    if stype is None:
-        stype=config._SOLUTION_TYPE
+    # if stype is None:
+    #     stype=config._SOLUTION_TYPE
 
     return RealParticlePop()
+
+
+def from_init(pop_size,f_init,stype=None):
+    """
+    create a population of pop_size solutions initialized by initializer
+
+    Parameters
+    ----------
+    pop_size : int
+        Population size
+    f_init : eoInit
+        An Initializer
+    type : str
+        Solution type
+
+    Returns
+    --------
+    A swarm (eoPop)
+    """
+    return RealParticlePop(pop_size,f_init)
