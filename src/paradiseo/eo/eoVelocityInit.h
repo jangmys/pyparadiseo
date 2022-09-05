@@ -81,14 +81,16 @@ public:
 
     eoVelocityInitFixedLength (unsigned _combien,
                                eoRndGenerator < VelocityType >
-                               &_generator):combien (_combien),
+                               &_generator): combien (_combien),
             generator (_generator)
     {
     }
 
     virtual void operator  () (POT & chrom)
     {
-        chrom.resize (combien);
+        // chrom.resize (combien); //BUG? Why resize chrom?
+        chrom.velocities.resize (combien); //BUG? Why resize chrom?
+
         std::generate (chrom.velocities.begin (), chrom.velocities.end (),
                        generator);
     }

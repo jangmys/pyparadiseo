@@ -28,7 +28,7 @@
 #include <utils/eoStat.h>
 
 #include <pyeot.h>
-#include <pypot.h>
+#include <pso/pypot.h>
 
 #include <utils/def_abstract_functor.h>
 

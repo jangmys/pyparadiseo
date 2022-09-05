@@ -9,7 +9,8 @@
 #include <boost/python.hpp>
 #include <pyeot.h>
 
-#include <pypot.h>
+#include <pso/pypot.h>
+
 #include <eoFlight.h>
 #include <eoPSO.h>
 #include <eoSyncEasyPSO.h>

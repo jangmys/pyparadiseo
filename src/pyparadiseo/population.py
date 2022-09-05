@@ -80,7 +80,7 @@ def from_init(pop_size,f_init,stype=None):
 
     if f_init.__class__.__name__=='BinaryInit':
         class_ = utils.get_class("BinaryPop")
-    if f_init.__class__.__name__=='RealBoundedInitReal':
+    if f_init.__class__.__name__=='RealBoundedInit':
         class_ = utils.get_class("RealPop")
 
     if class_ is None:

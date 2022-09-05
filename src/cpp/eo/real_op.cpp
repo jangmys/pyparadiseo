@@ -7,9 +7,9 @@
 #include "operators/hypercube_crossover.h"
 #include "operators/SBX_crossover.h"
 
-#include <eoRealOp.h>
+#include <es/eoRealOp.h>
 #include <pyeot.h>
-#include <pypot.h>
+#include <pso/pypot.h>
 
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>

@@ -2,7 +2,7 @@
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
 #include <pyeot.h>
-#include <pypot.h>
+#include <pso/pypot.h>
 
 #include <eoPop.h>
 

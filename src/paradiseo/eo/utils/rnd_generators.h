@@ -31,8 +31,8 @@
 #ifndef eoRND_GENERATORS_H
 #define eoRND_GENERATORS_H
 
-#include "../eoExceptions.h"
 #include "eoRNG.h"
+#include <eoExceptions.h>
 #include <stdexcept>
 
 /** @addtogroup Random

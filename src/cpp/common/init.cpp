@@ -3,7 +3,7 @@
 
 #include <eoEvalFunc.h>
 #include <eoInit.h>
-#include <eoRealInitBounded.h>
+#include <es/eoRealInitBounded.h>
 #include <utils/eoRealVectorBounds.h>
 
 #include <eoTransform.h>
@@ -12,7 +12,7 @@
 #include <utils/eoRndGenerators.h>
 
 #include <pyeot.h>
-#include <pypot.h>
+#include <pso/pypot.h>
 
 #include <utils/def_abstract_functor.h>
 
@@ -21,41 +21,35 @@
 namespace p=boost::python;
 namespace np=boost::python::numpy;
 
+/*
+Use a Python callable to initialize SolutionType object
 
+Python callable must have 0 input parameter and return Solution encoding (any Python object)
+*/
 template<typename SolutionType>
-struct pyeoInit : eoInit<SolutionType> {
-    pyeoInit() : eoInit<SolutionType>(){ };
-
+class pyeoInit : public eoInit<SolutionType> {
+public:
     pyeoInit(p::object _op) :
         eoInit<SolutionType>(),
         init_op(_op)
-    {
-    };
-
-    void
-    setGenerator(p::object obj)
-    {
-        std::cout << "Setting generator\n";
-        init_op = obj;
-    }
+    {    };
 
     void
     operator () (SolutionType& _eo)
     {
-        if (init_op.ptr() != Py_None) {
-            // std::cout << "*** init" << std::endl;
-            _eo.set_encoding(p::call<p::object>(init_op.ptr()));
-            _eo.invalidate();
-        } else   {
-            std::cout << "no callable init defined : do nothing";
-        }
+        _eo.set_encoding(p::call<p::object>(init_op.ptr()));
+        _eo.invalidate();
     }
 
 private:
     boost::python::object init_op;
 };
 
+/*
+Initializer for BinarySolution
 
+Set encoding to random 0/1
+*/
 struct BinarySolInit : eoInit<BinarySolution> {
     BinarySolInit(unsigned _dim) : eoInit<BinarySolution>(),_dimension(_dim),_gen(eoUniformGenerator<bool>()){ };
 
@@ -80,8 +74,11 @@ private:
     eoUniformGenerator<bool> _gen;
 };
 
+/*
+Permutation Initializer
 
-//see eoInit.h
+Set encoding to random permutation
+*/
 struct PermutationInit : eoInit<IntSolution> {
 
     PermutationInit(unsigned _chromSize, unsigned _startFrom = 0) : chromSize(_chromSize), startFrom(_startFrom){}
@@ -106,9 +103,6 @@ struct PermutationInit : eoInit<IntSolution> {
         std::shuffle(_eo.begin(),_eo.end(), g);
 
 
-
-        // std::copy(vec.begin(), vec.end(), ptr);
-
         _eo.invalidate();
     }
 
@@ -121,10 +115,10 @@ private:
 
 //TODO : merge with unbounded (FIxedLength)
 template<class T>
-class pyRealInitBounded : public eoInit<T>{
+class RealInitBounded : public eoInit<T>{
 public:
     /** Ctor - from eoRealVectorBounds */
-    pyRealInitBounded(eoRealVectorBounds & _bounds):bounds(_bounds)
+    RealInitBounded(eoRealVectorBounds & _bounds):bounds(_bounds)
     {
         if (!bounds.isBounded())
             throw eoException("Needs bounded bounds to initialize a std::vector<double>");
@@ -162,31 +156,13 @@ private:
 // }
 
 template<class T>
-void export_realInitBounded(std::string name){
+void export_pyinit(std::string name){
     using namespace boost::python;
 
     class_<pyeoInit<T>, bases<eoInit<T>>>
-        (make_name("pyeoInit",name).c_str(), init<>())
-    .def(init<boost::python::object>())
-    .def("set_generator", &pyeoInit<T>::setGenerator)
+        (make_name("pyeoInit",name).c_str(), init<boost::python::object>())
     .def("__call__", &pyeoInit<T>::operator())
     ;
-
-    // class_<pyRealInitBounded<T>, bases<eoInit<T>>>
-    //     (make_name("RealBoundedInit",name).c_str(),
-    //     init<eoRealVectorBounds&>()
-    //     [
-    //     with_custodian_and_ward<1,2>()
-    //     ]
-    // )
-    // .def("__call__", &pyRealInitBounded<T>::operator ())
-    // ;
-
-    // class_<pyInitPermutation<T>, bases<eoInit<T>>, boost::noncopyable> (make_name("PermutationInit",name).c_str(), init<unsigned,optional<unsigned>>())
-    // .def("__call__", &pyInitPermutation<T>::operator ())
-    // ;
-
-
 }
 
 
@@ -196,54 +172,37 @@ initialize()
 {
     using namespace boost::python;
 
-    // eoUF : PyMOEO ---> void
-    // def_abstract_functor<eoInit<PyEOT> >("eoInit","docstring");
-
-    // class_<pyeoInit, bases<eoInit<PyEOT> >, boost::noncopyable>
-    //     ("pyeoInit", init<>())
-    // .def(init<boost::python::object>())
-    // .def("set_generator", &pyeoInit::setGenerator)
-    // .def("__call__", &pyeoInit::operator())
-    // ;
-
-    // class_<FixedSizeInit<bool>, bases<eoInit<FixedSizeSolution<bool>>>>
-    //     ("BinaryInit", init<unsigned>())
-    // .def("__call__", &FixedSizeInit<bool>::operator ())
-    // ;
+    export_pyinit<PyEOT>("");
+    export_pyinit<BinarySolution>("Bin");
+    export_pyinit<RealSolution>("Real");
 
     class_<BinarySolInit, bases<eoInit<BinarySolution>>>
-        ("BinaryInit", init<unsigned>())
+    ("BinaryInit", init<unsigned>())
     .def("__call__", &BinarySolInit::operator ())
     ;
 
     class_<PermutationInit, bases<eoInit<IntSolution>>>
-        ("PermutationInit", init<unsigned,optional<unsigned>>())
+    ("PermutationInit", init<unsigned,optional<unsigned>>())
     .def("__call__", &PermutationInit::operator ())
     ;
 
-
-    export_realInitBounded<PyEOT>("");
-    export_realInitBounded<BinarySolution>("Bin");
-    export_realInitBounded<RealSolution>("Real");
-
-
-    class_<pyRealInitBounded<RealSolution>, bases<eoInit<RealSolution>>>
-        (make_name("RealBoundedInit","Real").c_str(),
+    class_<RealInitBounded<RealSolution>, bases<eoInit<RealSolution>>>
+        ("RealBoundedInit",
         init<eoRealVectorBounds&>()
         [
         with_custodian_and_ward<1,2>()
         ]
     )
-    .def("__call__", &pyRealInitBounded<RealSolution>::operator ())
+    .def("__call__", &RealInitBounded<RealSolution>::operator ())
     ;
 
-    class_<pyRealInitBounded<RealParticle>, bases<eoInit<RealParticle>>>
-        (make_name("RealBoundedInit","Particle").c_str(),
+    class_<RealInitBounded<RealParticle>, bases<eoInit<RealParticle>>>
+        ("RealBoundedParticleInit",
         init<eoRealVectorBounds&>()
         [
         with_custodian_and_ward<1,2>()
         ]
     )
-    .def("__call__", &pyRealInitBounded<RealParticle>::operator ())
+    .def("__call__", &RealInitBounded<RealParticle>::operator ())
     ;
 }

@@ -19,7 +19,7 @@
 
 #include <utils/def_abstract_functor.h>
 #include <pyeot.h>
-#include <pypot.h>
+#include <pso/pypot.h>
 
 // unfortunately have to define it specially -- why??? i'll just leave it like that (JG)
 template<typename SolutionType>

@@ -67,9 +67,12 @@ public:
 
     void operator  () (POT & _po1)
     {
-        //Set the bestPositions
-                _po1.bestPositions = _po1 ;
+        _po1.bestPositions.resize(_po1.size());
 
+        //Set the bestPositions
+        for(unsigned i=0;i<_po1.size();i++){
+            _po1.bestPositions[i] = _po1[i] ;
+        }
 
         // set the fitness
         _po1.best(_po1.fitness());

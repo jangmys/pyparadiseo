@@ -31,7 +31,7 @@
 #include "utils/eoRNG.h"
 #include "eoPop.h"
 #include "utils/eoRealVectorBounds.h"
-#include "eoRealBoundModifier.h"
+#include "es/eoRealBoundModifier.h"
 #include "eoTopology.h"
 //-----------------------------------------------------------------------------
 
@@ -100,12 +100,7 @@ public:
             c2 (_c2),
             bounds(_bounds),
             bndsModifier(dummyModifier),
-            gen(_gen){
-                std::cout<<"standard velocity ctor\n";
-                std::cout<<omega<<"\n";
-                std::cout<<c1<<"\n";
-                std::cout<<c2<<"\n";
-            }
+            gen(_gen){}
 
 
     /** Constructor: Neither bounds nor bound updater required <-> free velocity
@@ -150,19 +145,10 @@ public:
         // need to resize the bounds even if there are dummy because of "isBounded" call
         bounds.adjust_size(_po.size());
 
-        std::cout<<"hello velocity\t"<<_po.size()<<std::endl;
-
         // assign the new velocities
         for (unsigned j = 0; j < _po.size (); j++)
         {
-            std::cout<<"omega\t"<<omega<<std::endl;
-            std::cout<<"v\t"<<_po.velocities[j]<<std::endl;
-            std::cout<<"best\t"<<_po.bestPositions[j]<<std::endl;
-            std::cout<<"[]\t"<<_po[j]<<std::endl;
-
             newVelocity= omega *  _po.velocities[j] + r1 * (_po.bestPositions[j] - _po[j]) +  r2 * (topology.best (_indice)[j] - _po[j]);
-
-            std::cout<<"new velo\t"<<j<<"\t"<<newVelocity<<std::endl;
 
             /* check bounds */
             if (bounds.isMinBounded(j))

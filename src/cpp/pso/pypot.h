@@ -68,26 +68,40 @@ public:
     {
         std::string result;
 
-        result += VectorSolution<PositionType>::to_string();
-        result += "\t";
+        result += "-------------- Particle\n";
 
+        result += "Fitness:\t";
+        if(!this->invalidFitness())
+            result += boost::python::extract<const char*>( boost::python::str(this->fitness().get()));
+        else result += std::string("[]");
         result += "\n";
-        result += "Best fitness: ";
-        result += boost::python::extract<const char*>bestFitness;
+
+        result += "Position:\t";
+        for(unsigned i=0;i<this->size();i++){
+            result += boost::python::extract<const char*>(boost::python::str(this->operator[](i)));
+            result += " ";
+        }
+
+        // result += VectorSolution<PositionType>::to_string();
+        // result += "\t";
         result += "\n";
-        result += "Velocities: ";
+        result += "Velocities:\t";
         for(unsigned i=0;i<velocities.size();i++){
             result += boost::python::extract<const char*>(boost::python::str(velocities[i]));
             result += " ";
         }
 
+
         result += "\n";
-        result += "BestPosition: ";
-        result += "\n";
+        result += "BestPosition:\t";
         for(unsigned i=0;i<bestPositions.size();i++){
             result += boost::python::extract<const char*>(boost::python::str(bestPositions[i]));
             result += " ";
         }
+
+        result += "\n";
+        result += "Best fitness:\t";
+        result += boost::python::extract<const char*>(boost::python::str(bestFitness.get()));
 
         return result;
     }

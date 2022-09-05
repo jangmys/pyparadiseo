@@ -40,7 +40,7 @@
 #include <iostream>
 #include <string>
 
-#include "../eoVector.h"
+#include <eoVector.h>
 
 /** @defgroup bitstring Bit strings
 
@@ -60,12 +60,12 @@ Example of a complete test program that use various bitstrings operators:
 Based on STL's std::vector<bool> specialization.
 */
 
-template <class FitT, class ScalarT = bool> 
+template <class FitT, class ScalarT = bool>
 
 class eoBit: public eoVector<FitT, ScalarT>
 {
 public:
-    using ScalarType = ScalarT; 
+    using ScalarType = ScalarT;
 
     using eoVector< FitT, ScalarType >::begin;
     using eoVector< FitT, ScalarType >::end;

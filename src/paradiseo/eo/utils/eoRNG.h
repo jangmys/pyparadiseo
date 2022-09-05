@@ -51,8 +51,8 @@ typedef unsigned long uint32_t;
 #include <cmath>
 #include <vector>
 // Relative includes
-#include "../eoPersistent.h"
-#include "../eoObject.h"
+#include <eoPersistent.h>
+#include <eoObject.h>
 
 
 /** Random Number Generator

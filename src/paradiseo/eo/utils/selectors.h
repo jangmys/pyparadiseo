@@ -41,8 +41,9 @@
 #include <stdexcept>
 
 #include "eoRNG.h"
-#include "../eoScalarFitness.h"
-#include "../eoPop.h"
+#include <eoScalarFitness.h>
+#include <eoPop.h>
+
 /**
 @addtogroup Selectors
 @{

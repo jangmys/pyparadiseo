@@ -7,7 +7,7 @@
 
 #include <utils/def_abstract_functor.h>
 #include <pyeot.h>
-#include <pypot.h>
+#include <pso/pypot.h>
 
 using namespace boost::python;
 
@@ -140,6 +140,25 @@ void export_eval(std::string postfix)
 
 // typedef doubleFitness (*real_eval_func)(const RealSolution&);
 
+
+
+// // class sphere : public pyeoFitnessEval<RealSolution>
+// template<class EOT>
+// class sphere : public eoEvalFunc<EOT>
+// {
+// public:
+//     void operator() (EOT& _sol) {
+//         double sum = 0.0f;
+//         for (unsigned int i = 0; i < _sol.size(); i++)
+//             sum += _sol[i] * _sol[i];
+//         _sol.fitness(sqrt(sum));
+//     }
+// };
+
+
+
+
+
 void
 evaluate()
 {
@@ -148,12 +167,12 @@ evaluate()
     export_eval<IntSolution>("Perm");
     export_eval<RealSolution>("Real");
     export_eval<RealParticle>("RealPart");
-    //
-    // class_<eoEvalFuncPtr<RealSolution>, bases<eoEvalFunc<RealSolution>>>
+
+    // class_<sphere<RealSolution>, bases<eoEvalFunc<RealSolution>>>
     // (
-    //     "FitnessEvalPtrReal",
-    //     init<real_eval_func>()
+    //     "sphere",
+    //     init<>()
     // )
-    // .def("__call__", &eoEvalFuncPtr<RealSolution>::operator ())
+    // .def("__call__", &sphere<RealSolution>::operator ())
     // ;
 }

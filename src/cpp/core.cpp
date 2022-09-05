@@ -13,8 +13,10 @@
 #include <es/eoReal.h>
 #include <core/moeoVector.h>
 
+#include <apply.h>
+
 #include <pyeot.h>
-#include <pypot.h>
+#include <pso/pypot.h>
 
 namespace bp=boost::python;
 
@@ -127,6 +129,9 @@ extern void moeo_algos();
 
 
 extern void eoParticleSwarm();
+
+
+
 
 
 BOOST_PYTHON_MODULE(_core)
@@ -395,6 +400,11 @@ BOOST_PYTHON_MODULE(_core)
     //MOEO
     moeo_abstract();
     moeo_algos();
+
+
+    // def("apply",&apply<PyEOT>);
+    // def("apply",&apply<RealSolution>);
+    // def("apply",&apply<RealParticle>);
 
 
     // fitnessAssign();

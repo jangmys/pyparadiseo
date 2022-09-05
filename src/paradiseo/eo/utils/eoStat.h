@@ -35,9 +35,10 @@ Contact: http://eodev.sourceforge.net
 #include <iostream>
 #include <numeric> // accumulate
 
-#include "../eoFunctor.h"
+#include <eoFunctor.h>
+#include <eoPop.h>
+
 #include "eoParam.h"
-#include "../eoPop.h"
 #include "eoMonitor.h"
 //#include "eoCheckPoint.h"
 #include "eoLogger.h"

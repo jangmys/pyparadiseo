@@ -71,7 +71,8 @@ public:
     //! @param _topology the topology to use
     //! @param _pop Population
     eoInitializer(
-        eoUF<POT&, void>& _proc,
+        eoEvalFunc<POT>& _proc,
+        // eoUF<POT&, void>& _proc,
         eoVelocityInit < POT > &_initVelo,
         eoParticleBestInit <POT> &_initBest,
         eoTopology <POT> &_topology,
@@ -103,10 +104,11 @@ public:
     }
 
 
-
+    //JG: instead of holding a reference to pop, operator should be eoUF<eoPop&,void> (being consistent with paradiseo's operator-approach...)
     virtual void operator() ()
     {
         eoPop<POT> empty_pop;
+
         ::apply(proc, pop);
         procPara(empty_pop, pop);
         ::apply < POT > (initVelo, pop);
@@ -121,7 +123,8 @@ private :
         @param initVelo Initialization of the velocity
         @param initBest Initialization of the best
     */
-    eoUF<POT&, void>& proc;
+    eoEvalFunc<POT>& proc;
+    // eoUF<POT&, void>& proc;
     eoVelocityInit < POT > & initVelo;
     eoPopEvalFunc <POT>& procPara;
     eoParticleBestInit <POT> & initBest;
@@ -135,7 +138,7 @@ class eoDummyEval : public eoPopEvalFunc<POT>
         {}
     }
     dummyEval;
-class eoDummy : public eoUF<POT&, void>
+class eoDummy : public eoEvalFunc<POT> //eoUF<POT&, void>
     {
     public:
         void operator()(POT &)

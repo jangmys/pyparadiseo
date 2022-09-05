@@ -29,9 +29,9 @@ Authors:
 #include <sstream>
 #include <string>
 
-#include "../eoObject.h"
-#include "../eoPersistent.h"
-#include "../eoExceptions.h"
+#include <eoObject.h>
+#include <eoPersistent.h>
+#include <eoExceptions.h>
 #include "eoParam.h"
 
 /** Parameter saving and loading
@@ -229,7 +229,7 @@ public:
         eoValueParam<ValueType>* vparam = dynamic_cast< eoValueParam<ValueType>* >(param);
 
         if( vparam == NULL ) {
-            // if the dynamic cast has failed, chances are that ValueType 
+            // if the dynamic cast has failed, chances are that ValueType
             // is not the same than the one used at declaration.
             throw eoWrongParamTypeException( _name );
         } else {

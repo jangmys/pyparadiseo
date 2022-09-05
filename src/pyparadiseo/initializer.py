@@ -35,7 +35,7 @@ def random(size=0,stype=None,**kwargs):
         return class_(size)
 
     if stype == 'real':
-        class_ = utils.get_class("RealBoundedInitReal")
+        class_ = utils.get_class("RealBoundedInit")
         if "bounds" in kwargs.keys():
             return class_(kwargs["bounds"])
         else:
@@ -49,7 +49,7 @@ def random(size=0,stype=None,**kwargs):
             return class_(size)
 
     if stype == 'real-pso':
-        class_ = utils.get_class("RealBoundedInitParticle")
+        class_ = utils.get_class("RealBoundedParticleInit")
         if "bounds" in kwargs.keys():
             return class_(kwargs["bounds"])
         else:

@@ -19,6 +19,7 @@
 */
 
 #include <utils/eoRNG.h>
+#include <utils/eoRndGenerators.h>
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
 
@@ -103,6 +104,22 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(unif_zeroM, eoRng::uniform, 0, 1)
 double (eoRng::*normal1)(double) = &eoRng::normal;
 double (eoRng::*normal2)(double,double) = &eoRng::normal;
 
+
+
+//exposing eoRndGenerator and derived
+template<typename T>
+struct eoRndGeneratorWrap : eoRndGenerator<T>,wrapper<eoRndGenerator<T>>
+{
+    T operator()(void)
+    {
+        return this->get_override("operator()")();
+    }
+};
+
+
+
+
+
 void random_numbers()
 {
     class_<eoRng, boost::noncopyable>("eoRng", init<uint32_t>())
@@ -126,4 +143,37 @@ void random_numbers()
         ;
 
     def("rng", get_rng, return_value_policy<reference_existing_object>());
+
+
+
+
+
+    class_< eoRndGeneratorWrap<double>,boost::noncopyable >
+    ("_eoRndGeneratorBaseDouble", init<>())
+    .def("__call__",pure_virtual(&eoRndGenerator<double>::operator()))
+    ;
+
+    class_<eoUniformGenerator<double>, bases<eoRndGenerator<double>> >
+    ("RealUniformGenerator",init<double>())
+    .def(init<double,double>())
+    .def(init<double,double,eoRng&>()
+        [with_custodian_and_ward<1,4>()]
+    )
+    .def("__call__",&eoUniformGenerator<double>::operator())
+    ;
+
+    class_< eoRndGeneratorWrap<int>,boost::noncopyable >
+    ("_eoRndGeneratorBaseInt", init<>())
+    .def("__call__",pure_virtual(&eoRndGenerator<int>::operator()))
+    ;
+
+    class_<eoUniformGenerator<int>, boost::noncopyable>
+    ("IntUniformGenerator",init<int>())
+    .def(init<int,int>())
+    .def(init<int,int,eoRng&>()
+        [with_custodian_and_ward<1,4>()]
+    )
+    .def("__call__",&eoUniformGenerator<int>::operator())
+    ;
+
 }

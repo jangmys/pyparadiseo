@@ -33,7 +33,7 @@
 #include <vector>
 #include <assert.h>
 
-#include "../eoFunctorStore.h"
+#include <eoFunctorStore.h>
 
 class eoObject;
 class eoPersistent;
@@ -176,7 +176,7 @@ private :
      * s=start, e=end
      * o=open, c=close
      *
-     * { "my_state": 
+     * { "my_state":
      *     {
      *         "section_pop":"…",
      *         "section_rng":"…"
@@ -185,9 +185,9 @@ private :
      *
      *                           // JSON         LATEX (default)
      */
-    std::string _tag_state_so;   // { "          
-    std::string _tag_state_name; // my_state     
-    std::string _tag_state_sc;   // ":           
+    std::string _tag_state_so;   // { "
+    std::string _tag_state_name; // my_state
+    std::string _tag_state_sc;   // ":
 
     std::string _tag_section_so; // { "          \\section{
     std::string _tag_section_sc; // ":           }\n
@@ -201,7 +201,7 @@ private :
 
     std::string _tag_state_e;   // }
     /** \@} */
- 
+
     void removeComment( std::string& str, std::string comment);
 
     bool is_section(const std::string& str, std::string& name);

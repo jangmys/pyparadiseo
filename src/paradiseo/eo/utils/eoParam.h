@@ -23,7 +23,6 @@
   mkeijzer@dhi.dk
 */
 //-----------------------------------------------------------------------------
-
 #ifndef eoParam_h
 #define eoParam_h
 
@@ -33,8 +32,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "../eoScalarFitness.h"
-#include "../eoExceptions.h"
+#include <eoScalarFitness.h>
+#include <eoExceptions.h>
 
 /** @defgroup Parameters Parameters management
  *
@@ -233,13 +232,13 @@ public :
 
     /**
      set the precision of the output
-     
+
      @param _numOfDigits the precision of the output
      */
     void setPrecision(unsigned _numOfDigits) {
         numOfDigits = _numOfDigits;
     }
-    
+
 protected:
 
     ValueType repValue;

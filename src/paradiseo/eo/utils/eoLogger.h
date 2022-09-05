@@ -92,8 +92,8 @@ Caner Candan <caner.candan@thalesgroup.com>
 #include <string>
 #include <iosfwd>
 
-#include "../eoObject.h"
-#include "eoParser.h"
+#include <eoObject.h>
+#include "./eoParser.h"
 
 namespace eo
 {

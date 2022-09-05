@@ -66,10 +66,10 @@ set(eoSources
     src/cpp/eo/bounds.cpp
     src/cpp/eo/real_op.cpp
     src/cpp/eo/bit_op.cpp
-    src/cpp/eo/eoPSO.cpp
+    src/cpp/pso/eoPSO.cpp
 )
 
-set(EO_SRC_DIR "src/cpp/eo/src" CACHE INTERNAL "ParadisEO-EO source directory" FORCE)
+set(EO_SRC_DIR "src/paradiseo/eo" CACHE INTERNAL "ParadisEO-EO source directory" FORCE)
 
 #inheriting from this somewhere...do we really need these?...
 set(eoDep
@@ -80,23 +80,31 @@ set(eoDep
 
 add_library(_core SHARED src/cpp/core.cpp ${commonSources} ${eoSources} ${moSources} ${moeoSources} ${eoDep})
 
+add_library(_mod SHARED src/cpp/mod.cpp)
+
+#PARADISEO sources
+include_directories(${PROJECT_SOURCE_DIR}/src/paradiseo/eo/)
+include_directories(${PROJECT_SOURCE_DIR}/src/paradiseo/mo/)
+include_directories(${PROJECT_SOURCE_DIR}/src/paradiseo/moeo/)
+
+#BOOST PYTHON sources
 #COMMON
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/)
-#EO
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/operators)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/src)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/src/es)
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/eo/src/pso)
-#MO
 include_directories(${PROJECT_SOURCE_DIR}/src/cpp/mo/)
-include_directories(${PROJECT_SOURCE_DIR}/src/cpp/mo/src)
-#MOEO
-include_directories(${PROJECT_SOURCE_DIR}/src/cpp/moeo/src)
+
 
 set_target_properties(_core PROPERTIES PREFIX "")
-
+set_target_properties(_mod PROPERTIES PREFIX "")
 
 target_link_libraries(_core Python3::Module ${Boost_LIBRARIES} Python3::NumPy)
 
+target_link_libraries(_mod Python3::Module ${Boost_LIBRARIES} Python3::NumPy)
+
 install(TARGETS _core LIBRARY DESTINATION ./ COMPONENT libraries)
+
+install(TARGETS _mod LIBRARY DESTINATION ./ COMPONENT libraries)

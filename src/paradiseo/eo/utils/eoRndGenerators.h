@@ -31,9 +31,9 @@
 #include <stdexcept>
 #include <cassert>
 
-#include "../eoExceptions.h"
+#include <eoExceptions.h>
+#include <eoFunctor.h>
 #include "eoRNG.h"
-#include "../eoFunctor.h"
 
 /** @defgroup Random Random number generation
  *

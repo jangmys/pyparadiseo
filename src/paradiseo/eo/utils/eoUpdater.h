@@ -28,7 +28,7 @@
 #define _eoUpdater_h
 
 #include <string>
-#include "../eoFunctor.h"
+#include <eoFunctor.h>
 #include "eoState.h"
 #include "eoParam.h"
 
