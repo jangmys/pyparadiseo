@@ -52,7 +52,7 @@ To be used in SSGA-like replacements (e.g. see eoSSGAWorseReplacement)
     if stype is None:
         stype = config._SOLUTION_TYPE
 
-    class_ = utils.get_class("eoLinearReduce"+config.TYPES[stype])
+    class_ = utils.get_class("eoLinearTruncate"+config.TYPES[stype])
     return class_()
 
 

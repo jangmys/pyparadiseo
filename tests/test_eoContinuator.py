@@ -44,6 +44,64 @@ class test_eocontinue(unittest.TestCase):
                 elif name != "Continue":
                     self.assertEqual(obj.__bases__[0].__name__,"eoContinue")
 
+    def test_inherit(self):
+        from pyparadiseo._core import eoContinue
+
+        class myCont(eoContinue):
+            def __init__(self):
+                eoContinue.__init__(self)
+            def __call__(self,pop):
+                return True
+
+        truecont = myCont()
+        # print(inspect.getmro(type(truecont)))
+
+
+    def test_decorator(self):
+        @continuator.continuator(stype='real')
+        class max_gens():
+            def __init__(self,_num):
+                self.lastGen = _num
+                self.currentGen = 0
+            def __call__(self,pop):
+                self.currentGen = self.currentGen + 1
+                if self.currentGen == self.lastGen:
+                    return False
+                else:
+                    return True
+
+        cont = max_gens(19)
+
+        from pyparadiseo._core import eoContinue,eoContinueReal,eoContinueBin
+        self.assertTrue(isinstance(cont,eoContinueReal))
+
+        c=0
+        while True:
+            c = c + 1
+            if not cont(self.pop):
+                break
+        self.assertEqual(c,19)
+        self.assertEqual(cont.currentGen,19)
+
+        class max_gens():
+            def __init__(self,_num):
+                self.lastGen = _num
+                self.currentGen = 0
+            def __call__(self,pop):
+                self.currentGen = self.currentGen + 1
+                if self.currentGen == self.lastGen:
+                    return False
+                else:
+                    return True
+
+        cont = continuator.continuator(max_gens,'real')(10)
+        self.assertTrue(isinstance(cont,eoContinueReal))
+        cont = continuator.continuator(max_gens,'gen')(11)
+        self.assertTrue(isinstance(cont,eoContinue))
+        cont = continuator.continuator(max_gens,'bin')(12)
+        self.assertTrue(isinstance(cont,eoContinueBin))
+
+
     def test_eoGenContinue(self):
         myGenContinue = continuator.max_generations(42)
 

@@ -105,7 +105,7 @@ def fitnessmethod(fun=None,stype=None):
 
     class_ = utils.get_class("FitnessEval"+config.TYPES[stype])
 
-    print(class_)
+    # print(class_)
 
     def methodwrapper(self,method):
         print('self is ',self)

@@ -15,6 +15,28 @@ from pyparadiseo import config,utils
 from .._core import eoReduceMerge as ReduceMerge
 from .._core import eoMGGReplacement as MGGReplacement
 
+
+def replacement(klass_or_stype=None,stype=None):
+    """
+    class decorator
+    """
+    if klass_or_stype is not None and stype is None :
+        stype = config._SOLUTION_TYPE
+
+    base_ = utils.get_class("eoReplacement"+config.TYPES[stype])
+
+    def wrap(kls):
+        class derived(kls,base_):
+            pass
+
+        return derived
+
+    if klass_or_stype is None:
+        return wrap
+    else:
+        return wrap(klass_or_stype)
+
+
 def generational(stype=None):
     """generational replacement
 
@@ -59,7 +81,10 @@ def merge_reduce(merge,reduce,stype=None):
 
 
 def plus(stype=None):
-    """ES type of replacement strategy: first add parents to population, then truncate"""
+    """ES type of replacement strategy: first add parents to population, then SORT and truncate
+
+        resulting popululation is sorted
+    """
     if stype is None:
         stype = config._SOLUTION_TYPE
 
@@ -68,7 +93,14 @@ def plus(stype=None):
 
 
 def comma(stype=None):
-    """ES type of replacement strategy: ignore parents, truncate offspring"""
+    """ES type of replacement strategy: ignore parents, truncate offspring
+
+    offspring must be larger than parent pop (or same size)
+
+    if same size : generational
+
+    if offspring larger, sort+truncate
+    """
     if stype is None:
         stype = config._SOLUTION_TYPE
 

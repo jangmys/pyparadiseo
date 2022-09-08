@@ -67,6 +67,7 @@ public:
   void setup(const eoPop<EOT>& _source)
   {
     unsigned fertile = howManyFertile(_source.size());
+
     if (fertile == _source.size())  // noting to do, all are fertile
       {
         actualPop = _source;

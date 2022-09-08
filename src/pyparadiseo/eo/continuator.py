@@ -4,6 +4,7 @@ Continuators : Stopping criteria
 A stopping criterion is called a "continue". This is a functor that is called at each generation end and that return true if one should stop the search.
 
 Termination condition for the genetic algorithm
+
 Takes the population as input, returns true for continue, false for termination
 
 base : eoContinue.h
@@ -15,6 +16,65 @@ eoEvalContinue.h
  """
 
 from pyparadiseo import config,utils
+
+def continuator(klass_or_stype=None,stype=None):
+    """
+    class decorator
+
+    make pyparadiseo continuator from python callable class
+
+    callable must take population as input and return boolean (True for continue, False for termination)
+
+    Note
+    ====
+    see https://github.com/numba/numba/blob/main/numba/experimental/jitclass/decorators.py
+    """
+    if klass_or_stype is not None and stype is None :
+        stype = config._SOLUTION_TYPE
+
+    base_ = utils.get_class("eoContinue"+config.TYPES[stype])
+
+    def wrap(kls):
+        class derived(kls,base_):
+            pass
+
+        return derived
+
+    if klass_or_stype is None:
+        return wrap
+    else:
+        return wrap(klass_or_stype)
+
+# class decorate(object):
+#     def __init__(self, arg):
+#         self.arg = arg
+#     def __call__(self, cls):
+#         class Wrapped(cls):
+#             classattr = self.arg
+#             def new_method(self, value):
+#                 return value * 2
+#         return Wrapped
+
+
+
+def from_class(_callable_class,stype=None):
+    """
+    make pyparadiseo continuator from python callable
+
+    callable must take population as input and return boolean (True for continue, False for termination)
+    """
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    base_ = utils.get_class("eoContinue"+config.TYPES[stype])
+
+    class derived(_callable_class,base_):
+        pass
+
+    return derived
+
+
+
 
 def max_generations(nb_gens,stype=None):
     """Generational continuator: continues until a number of generations is reached

@@ -32,6 +32,33 @@ from .._core import eoSelectOne as SelectOne
 SelectOne.__doc__="this is the doc of SelectOne"
 
 
+
+def select_one(klass_or_stype=None,stype=None):
+    """
+    class decorator
+    """
+    if klass_or_stype is not None and stype is None :
+        stype = config._SOLUTION_TYPE
+
+    base_ = utils.get_class("eoSelectOne"+config.TYPES[stype])
+
+    def wrap(kls):
+        if not hasattr(kls,"__call__"):
+            print("need (__call__(pop1) -> solution)")
+        if not hasattr(kls,"__init__"):
+            print("need (__init__")
+
+        class derived(kls,base_):
+            pass
+
+        return derived
+
+    if klass_or_stype is None:
+        return wrap
+    else:
+        return wrap(klass_or_stype)
+
+
 ################################################
 ################################################
 #### SELECT_ONE (src_pop) --> indiv
@@ -78,6 +105,10 @@ def truncated(select_one,rate_fertile,interpret_as_rate=True,stype=None):
     select_one
     rate_fertile
     interpret_as_rate
+
+    Note
+    -----
+    need to call .setup(pop) method before selecting!
     """
     if stype is None:
         stype = config._SOLUTION_TYPE

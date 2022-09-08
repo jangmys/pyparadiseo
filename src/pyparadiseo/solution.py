@@ -27,6 +27,7 @@ SOLUTIONS={
     'perm': IntSolution
 }
 
+# Documenting C++ class (object creation is deferred to creation methods)
 def add_solution_doc(sol):
     sol.__doc__ ="""
     Generic ``pyparadiseo`` Solution

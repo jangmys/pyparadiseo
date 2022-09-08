@@ -1,9 +1,11 @@
 """
 EO Algorithms
 
-simpleGA :
+There are three genetic algorithms
 
-easyEA :
+- `simpleGA` following Holland and Goldberg
+
+- `easyEA`
 
 fastGA :
 """
@@ -13,7 +15,7 @@ from pyparadiseo.eo import breeders,replacement
 
 def simpleGA(selector,crossover,p_cross,mutate,p_mutate,f_eval,continuator,stype=None):
     """
-    simple genetic algorithm
+    Simple Genetic Algorithm (SGA)
 
     Parameters
     ----------
@@ -25,6 +27,27 @@ def simpleGA(selector,crossover,p_cross,mutate,p_mutate,f_eval,continuator,stype
     f_eval : EvalFunc
     continuator : eocontinue
     stype : str,optional
+
+    Pseudo-code of SGA
+    -------------------
+    ```python
+    while continuator(pop):
+        select : create offspring from pop
+        crossover : apply crossover to offspring
+        mutate : apply mutation to offspring
+        swap(offspring,pop) : full replacement
+        eval : evaluate pop
+    ```
+
+    The components of SGA are
+
+    *selector* :
+
+    *crossover* :
+
+    *mutate*:
+
+    *continuator* :
     """
     if stype is None:
         stype = config._SOLUTION_TYPE
@@ -38,12 +61,25 @@ def simpleGA(selector,crossover,p_cross,mutate,p_mutate,f_eval,continuator,stype
 def easyEA(continuator,eval,breed,replace,stype=None):
     """Easy EA
 
+    An easy-to-use evolutionary algorithm; you can use any chromosome,
+       and any selection transformation, merging and evaluation
+       algorithms; you can even change in runtime parameters of those
+       sub-algorithms
+
     Parameters
     ==========
     continuator : an eoContinue
     eval : eoEvalFunc or eoPopEval
     breed : eoBreed or (eoSelect,eoTransform)
     replace : eoReplacement or (eoMerge,eoReduce)
+
+    Pseudo-code
+    -------------
+    popEval(pop)
+    while continuator(pop):
+        breed(pop,offspring)   # select and transform
+        popEval(offspring)     # evaluate offspring
+        replace(pop,offspring) # merge and reduce
 
 
     Notes
@@ -53,6 +89,9 @@ def easyEA(continuator,eval,breed,replace,stype=None):
     (continue,EvalFunc,Breed,(Merge,Reduce))
     (continue,EvalFunc,(Select,Transform),Replace)
     (continue,EvalFunc,(Select,Transform),(Merge,Reduce))
+
+    Using `SGATransform` and fullReplacement yields SGA
+
     """
     if stype is None:
         stype = config._SOLUTION_TYPE

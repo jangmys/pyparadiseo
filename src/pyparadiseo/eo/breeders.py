@@ -19,11 +19,38 @@ eoOneToOneBreeder.h
 from pyparadiseo import config,utils
 
 
-def make_breeder(breed_f):
+def breeder(klass_or_stype=None,stype=None):
     """
-    transform python breeder operator to pyparadiseo breeeder (TODO)
+    class decorator
+
+    apply to python class that has
+
+    ```python
+    def __call__(parents,offspring):
+        pass
+    ```
     """
-    pass
+    if klass_or_stype is not None and stype is None :
+        stype = config._SOLUTION_TYPE
+
+    base_ = utils.get_class("eoBreed"+config.TYPES[stype])
+
+    def wrap(kls):
+        if not hasattr(kls,"__call__"):
+            print("need (__call__(pop1,pop2) -> None)")
+        if not hasattr(kls,"__init__"):
+            print("need (__init__")
+
+        class derived(kls,base_):
+            pass
+
+        return derived
+
+    if klass_or_stype is None:
+        return wrap
+    else:
+        return wrap(klass_or_stype)
+
 
 
 def select_transform(select,transform,stype=None):

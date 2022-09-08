@@ -51,15 +51,6 @@ def elitist(rate,interpret_as_rate=True,stype=None):
     return class_(rate,interpret_as_rate)
 
 
-def no_elitist(stype=None):
-    """No Elitism (rate==0)
-    """
-    if stype is None:
-        stype = config._SOLUTION_TYPE
-
-    return utils.get_class("eoNoElitism"+config.TYPES[stype])()
-
-
 def plus(stype=None):
     """
     copies entire population to offspring
@@ -70,3 +61,12 @@ def plus(stype=None):
         stype = config._SOLUTION_TYPE
 
     return utils.get_class("eoPlus"+config.TYPES[stype])()
+
+
+def no_elitist(stype=None):
+    """No Elitism (rate==0)
+    """
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+        return utils.get_class("eoNoElitism"+config.TYPES[stype])()

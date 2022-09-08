@@ -41,6 +41,31 @@
 using namespace boost::python;
 
 template<typename SolutionType>
+struct eoSelectOneWrap : eoSelectOne<SolutionType>,wrapper<eoSelectOne<SolutionType>>
+{
+    eoSelectOneWrap() : eoSelectOne<SolutionType>(){};
+
+    const SolutionType& operator()(const eoPop<SolutionType>& _pop)
+    {
+        return this->get_override("operator()")(_pop);
+    }
+
+    void setup(const eoPop<SolutionType>& _pop)
+    {
+        if(override f = this->get_override("setup"))
+        {
+            f(_pop);
+        }
+        eoSelectOne<SolutionType>::setup(_pop);
+    }
+    void default_setup(const eoPop<SolutionType>& _pop)
+    {
+        this->eoSelectOne<SolutionType>::setup(_pop);
+    }
+};
+
+
+template<typename SolutionType>
 class eoSelectOneWrapper : public eoSelectOne<SolutionType>
 {
 public:
@@ -83,9 +108,18 @@ void add_select(std::string name, Init1 init1, Init2 init2)
 template<typename SolutionType>
 void expose_selectOne(std::string name)
 {
-    class_<eoSelectOne<SolutionType>, eoSelectOneWrapper<SolutionType>, boost::noncopyable>(make_name("eoSelectOne",name).c_str(), init<>())
-    .def("__call__", &eoSelectOneWrapper<SolutionType>::operator(), return_value_policy<copy_const_reference>() ) //return_internal_reference<>() )
-    .def("setup", &eoSelectOne<SolutionType>::setup);
+    class_<eoSelectOneWrap<SolutionType>,boost::noncopyable>
+    (make_name("eoSelectOne",name).c_str(), init<>())
+    .def("__call__",pure_virtual(&eoSelectOneWrap<SolutionType>::operator()),return_internal_reference<>())
+    .def("setup",&eoSelectOne<SolutionType>::setup,&eoSelectOneWrap<SolutionType>::default_setup)
+    ;
+
+
+    // class_<eoSelectOne<SolutionType>, eoSelectOneWrapper<SolutionType>, boost::noncopyable>(make_name("eoSelectOne",name).c_str(), init<>())
+    // .def("__call__", &eoSelectOneWrapper<SolutionType>::operator(),
+    // return_internal_reference<>() )
+    // // return_value_policy<copy_const_reference>() ) //
+    // .def("setup", &eoSelectOne<SolutionType>::setup);
 
 
     class_<eoDetTournamentSelect<SolutionType>, bases<eoSelectOne<SolutionType> > >(make_name("eoDetTournamentSelect",name).c_str(), "Tournament Selection.",
@@ -100,19 +134,63 @@ void expose_selectOne(std::string name)
     .def("setup", &eoDetTournamentSelect<SolutionType>::setup)
     ;
 
-    add_select<eoStochTournamentSelect<SolutionType>,SolutionType>
-    (make_name("eoStochTournamentSelect",name).c_str(), init<>(), init<double>() );
+    class_<eoStochTournamentSelect<SolutionType>,
+        bases<eoSelectOne<SolutionType>>>
+        (
+            make_name("eoStochTournamentSelect",name).c_str(),
+            init<optional<double>>()
+        )
+        .def("__call__",&eoStochTournamentSelect<SolutionType>::operator(), return_value_policy<copy_const_reference>()
+        )
+        .def("setup",&eoStochTournamentSelect<SolutionType>::setup)
+        ;
 
-    add_select<eoTruncatedSelectOne<SolutionType>,SolutionType>
-    (make_name("eoTruncatedSelectOne",name).c_str(),
-        init<eoSelectOne<SolutionType>&, double, optional<bool>>()[WC1],
-        init<eoSelectOne<SolutionType>&, eoHowMany >()[WC1]
-    );
+    class_<eoTruncatedSelectOne<SolutionType>,
+        bases<eoSelectOne<SolutionType>>>
+        (
+            make_name("eoTruncatedSelectOne",name).c_str(),
+            init<eoSelectOne<SolutionType>&,double,optional<bool>>()[WC1]
+        )
+        .def(
+            init<
+                eoSelectOne<SolutionType>&,
+                eoHowMany
+            >()[WC1]
+        )
+        .def("__call__",&eoTruncatedSelectOne<SolutionType>::operator(), return_value_policy<copy_const_reference>()
+        )
+        .def("setup",&eoTruncatedSelectOne<SolutionType>::setup)
+    ;
 
-    add_select<eoProportionalSelect<SolutionType>,SolutionType>(
-        make_name("eoProportionalSelect",name).c_str(),
-        init<eoPop<SolutionType>&>()
-    );
+    // add_select<eoTruncatedSelectOne<SolutionType>,SolutionType>
+    // (
+    //     make_name("eoTruncatedSelectOne",name).c_str(),
+    //     init<eoSelectOne<SolutionType>&, double, optional<bool>>()[WC1],
+    //     init<eoSelectOne<SolutionType>&, eoHowMany >()[WC1]
+    // );
+
+    class_<eoProportionalSelect<SolutionType>,
+        bases<eoSelectOne<SolutionType>>>
+        (
+            make_name("eoProportionalSelect",name).c_str(),
+            init<>()
+        )
+        // .def(
+        //     init<
+        //         eoPop<SolutionType>&
+        //     >()[WC1]
+        // )
+        .def("__call__",&eoProportionalSelect<SolutionType>::operator(), return_value_policy<copy_const_reference>()
+        )
+        .def("setup",&eoProportionalSelect<SolutionType>::setup)
+    ;
+
+
+
+    // add_select<eoProportionalSelect<SolutionType>,SolutionType>(
+    //     make_name("eoProportionalSelect",name).c_str(),
+    //     init<eoPop<SolutionType>&>()
+    // );
 
     add_select<eoRandomSelect<SolutionType>,SolutionType>
     (make_name("eoRandomSelect",name).c_str());

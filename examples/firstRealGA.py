@@ -82,7 +82,6 @@ def realGA_real_sol():
     config.set_solution_type('real')
     config.set_minimize_fitness()
 
-
     #only the internal paradiseo RNG
     pp.rng().reseed(42)
     #seed
@@ -101,42 +100,83 @@ def realGA_real_sol():
     for ind in p:
         myeval(ind)
 
-    # print(p)
-    #
-    # print("#"*20)
-    #
-    # for ind in p:
-    #     f(ind)
-    #
-    # print(p)
-
     select = select_one.det_tournament(3)
 
     xover = operator.SegmentCrossover(0.0)
     mutat = operator.UniformMutation(bounds=mybounds,epsilon=EPSILON,p_change=1.0)
 
-    # print(type(mutat))
+    conti = pp.eo.continuator.max_generations(MAX_GEN)
+    #
+    sga = pp.eo.algo.simpleGA(select,xover,CROSS_RATE,mutat,MUT_RATE,myeval,conti)
 
-    # for ind in p:
-    #     mutat(ind)
-    #     print(ind)
-    # print(">"*10)
+    t1=time.time()
+    sga(p)
+    t=time.time()-t1
 
+    print(p.best().fitness)
+    print("Time: ",t)
+
+
+
+def realGA_pyops():
+    config.set_solution_type('real')
+    config.set_minimize_fitness()
+
+    #only the internal paradiseo RNG
+    pp.rng().reseed(42)
+
+    # myeval = evaluator.fitness(lambda sol: norm2(sol),"real")
+    from pyparadiseo import _mod
+    myeval=_mod.Sphere()
+
+    mybounds = bounds.bound_box(VEC_SIZE,(-1.0)*DOMAIN_BOUND,DOMAIN_BOUND)
+
+    myinit = initializer.random(stype='real',bounds=mybounds)
+
+    p = population.from_init(POP_SIZE,myinit,stype='real')
+
+    for ind in p:
+        myeval(ind)
+
+    from pyparadiseo._core import eoSelectOneReal
+    import copy
+
+    # @select_one.select_one
+    class tournament(eoSelectOneReal):
+        def __init__(self,t_size,rng):
+            eoSelectOneReal.__init__(self)
+            self.t_size = t_size
+            self.rng = rng
+        def __call__(self,pop):
+            r = self.rng.random(len(pop))
+            return pop[r]
+        def setup(self,pop):
+            pass
+
+    select = tournament(3,pp.rng())
+
+    import inspect
+    print(type(select).__mro__)
+
+    print(isinstance(select,eoSelectOneReal))
+
+    # select = select_one.det_tournament(3)
+    # print(type(select).__mro__)
+
+
+    xover = operator.SegmentCrossover(0.0)
+    mutat = operator.UniformMutation(bounds=mybounds,epsilon=EPSILON,p_change=1.0)
 
     conti = pp.eo.continuator.max_generations(MAX_GEN)
     #
     sga = pp.eo.algo.simpleGA(select,xover,CROSS_RATE,mutat,MUT_RATE,myeval,conti)
-    # sga = pp.eo.algo.simpleGA(select,xover,CROSS_RATE,mutat,MUT_RATE,f,conti)
-    #
+
     t1=time.time()
     sga(p)
     t=time.time()-t1
-    #
 
-    # print(p)
     print(p.best().fitness)
     print("Time: ",t)
-
 
 
 # mimic eo/tutorial/Lesson1/FirstRealGA.cpp
@@ -144,9 +184,11 @@ if __name__ == "__main__":
     print("Simple GA\n","="*20)
     print("Minimizing Sphere function with DIM: ",VEC_SIZE)
     print("Domain: [-",DOMAIN_BOUND,',',DOMAIN_BOUND,"]")
-
     print("#Generations: ", MAX_GEN)
 
     realGA_real_sol()
+    print("#"*20)
+
+    realGA_pyops()
     print("#"*20)
     # realGA_generic_sol()

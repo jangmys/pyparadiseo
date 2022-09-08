@@ -50,6 +50,8 @@ template <class EOT>
 class eoProportionalSelect: public eoSelectOne<EOT>
 {
 public:
+    //JG: what is eoPop doing in the ctor?
+
   /// Sanity check
   eoProportionalSelect(const eoPop<EOT>& /*pop*/ = eoPop<EOT>())
   {
