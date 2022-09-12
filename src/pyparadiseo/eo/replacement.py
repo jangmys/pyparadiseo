@@ -16,27 +16,6 @@ from .._core import eoReduceMerge as ReduceMerge
 from .._core import eoMGGReplacement as MGGReplacement
 
 
-def replacement(klass_or_stype=None,stype=None):
-    """
-    class decorator
-    """
-    if klass_or_stype is not None and stype is None :
-        stype = config._SOLUTION_TYPE
-
-    base_ = utils.get_class("eoReplacement"+config.TYPES[stype])
-
-    def wrap(kls):
-        class derived(kls,base_):
-            pass
-
-        return derived
-
-    if klass_or_stype is None:
-        return wrap
-    else:
-        return wrap(klass_or_stype)
-
-
 def generational(stype=None):
     """generational replacement
 

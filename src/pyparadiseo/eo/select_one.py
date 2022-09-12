@@ -33,30 +33,28 @@ SelectOne.__doc__="this is the doc of SelectOne"
 
 
 
-def select_one(klass_or_stype=None,stype=None):
+def select_one(klass_or_fun=None,_setup=None,stype=None):
     """
-    class decorator
+    wrap python callable in paradiseo selectOne operator
     """
     if klass_or_stype is not None and stype is None :
         stype = config._SOLUTION_TYPE
 
     base_ = utils.get_class("eoSelectOne"+config.TYPES[stype])
 
-    def wrap(kls):
-        if not hasattr(kls,"__call__"):
-            print("need (__call__(pop1) -> solution)")
-        if not hasattr(kls,"__init__"):
-            print("need (__init__")
-
-        class derived(kls,base_):
-            pass
-
-        return derived
-
-    if klass_or_stype is None:
-        return wrap
+    op=None
+    setup=None
+    if hasattr(klass_or_fun,'__call__'):
+        op = klass_or_fun.__call__
     else:
-        return wrap(klass_or_stype)
+        op = klass_or_fun
+
+    if hasattr(klass_or_fun,"setup"):
+        setup = klass_or_fun.setup
+    else:
+        setup = _setup
+
+    return base_(op,setup)
 
 
 ################################################

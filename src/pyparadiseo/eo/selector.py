@@ -28,33 +28,6 @@ from pyparadiseo import config,utils
 #### SELECT (src_pop,dest_pop)
 ################################################
 ################################################
-def pop_selector(klass_or_stype=None,stype=None):
-    """
-    class decorator
-    """
-    if klass_or_stype is not None and stype is None :
-        stype = config._SOLUTION_TYPE
-
-    base_ = utils.get_class("eoSelect"+config.TYPES[stype])
-
-
-    def wrap(kls):
-        if not hasattr(kls,"__call__"):
-            print("need (__call__(pop1,pop2) -> None)")
-        if not hasattr(kls,"__init__"):
-            print("need (__init__")
-        
-        class derived(kls,base_):
-            pass
-
-        return derived
-
-    if klass_or_stype is None:
-        return wrap
-    else:
-        return wrap(klass_or_stype)
-
-
 def det_select(rate=1.0,interpret_as_rate=True,stype=None):
     """
     eoDetSelect selects many individuals deterministically :
