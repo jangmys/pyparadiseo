@@ -18,6 +18,8 @@
 #include <pyeot.h>
 #include <pso/pypot.h>
 
+#include <eoPop.h>
+
 namespace bp=boost::python;
 
 // static members, need to be instantiated somewhere
@@ -131,7 +133,50 @@ extern void moeo_algos();
 extern void eoParticleSwarm();
 
 
+//TEST
+struct Bar { int x; };
 
+
+template<typename Bar>
+class Foo {
+public:
+    Foo(boost::python::object _op) : op(_op){}
+
+    Bar const& get_bar() { return b; }
+
+    void print_first(const eoPop<Bar>& pop)
+    {
+        std::cout<<"\nfirst\t"<<pop[0]<<std::endl;
+    }
+
+    Bar const& get_first(const eoPop<Bar>& pop)
+    {
+        std::cout<<"\nget_first";
+
+        return pop[0];
+    }
+
+    Bar const& get_first_fun(const eoPop<Bar>& pop)
+    {
+        std::cout<<" >>> "<<boost::python::extract<const Bar&>(op(pop))<<std::endl;
+
+        b = boost::python::extract<Bar>(op(pop));
+
+
+        // return boost::python::extract<const Bar&>(op(pop));
+        // return op(pop);
+
+        //
+        std::cout<<"\ngot\t"<<b<<std::endl;
+        //
+        return b;
+    }
+
+    private:
+        Bar b;
+
+        boost::python::object op;
+};
 
 
 BOOST_PYTHON_MODULE(_core)
@@ -271,6 +316,20 @@ BOOST_PYTHON_MODULE(_core)
         .def("__gt__", &PyEOT::operator>)
         .def("__eq__", &PyEOT::operator==)
         .def_pickle(PyEOT_pickle_suite())
+    ;
+
+    class_<Bar>("Bar");
+
+    class_<Foo<Bar>>("Foo", init<boost::python::object>())
+        .def("get_bar", &Foo<Bar>::get_bar
+            , return_value_policy<copy_const_reference>())
+       ;
+
+    class_<Foo<PyEOT>>("FooSol", init<boost::python::object>())
+        .def("get_bar", &Foo<PyEOT>::get_bar, return_value_policy<copy_const_reference>())
+        .def("print_first", &Foo<PyEOT>::print_first)
+        .def("get_first", &Foo<PyEOT>::get_first, return_value_policy<copy_const_reference>())
+        .def("get_first_fun", &Foo<PyEOT>::get_first_fun, return_value_policy<copy_const_reference>())
     ;
 
     //=======================================

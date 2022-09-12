@@ -74,6 +74,9 @@ public:
         eoPop<EOT> offspring;
 
         do {
+            // std::cout<<"SELECT:\n";
+            // std::cout<<typeid(select).name()<<"\n";
+
             select(_pop, offspring);
 
             // std::cout<<"POP:\n";
@@ -124,6 +127,9 @@ public:
             // std::cout<<"EVAL POP:\n";
             // std::cout<<_pop<<std::endl;
         } while (cont(_pop));
+
+        std::cout<<"######## DONE ########\n";
+
     } // ()
 
 private:

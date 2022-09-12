@@ -53,20 +53,72 @@ class test_eoSelector(unittest.TestCase):
         rng().reseed(42)
 
 
-    def test_decorator(self):
-        @select_one.select_one
+    def test_pyselect(self):
         class select_x():
             def __init__(self,num):
                 self.num = num
             def __call__(self,pop):
+                print("CALL SELECTOR ",self.num)
                 return pop[self.num]
 
+        # from pyparadiseo._core import Foo,FooSol
+        #
+        # def oprtr(pop):
+        #     print("haaalllloooo")
+        #     print(pop[0])
+        #     return pop[0]
+        #
+        #
+        # # foo = FooSol(oprtr)
+        # foo = FooSol(select_x(0))
+        #
+        # print("PY : the first")
+        # print(self.pop[0])
+        #
+        # print("PY : print_first fun")
+        # foo.print_first(self.pop)
+        #
+        #
+        # # bar = foo.get_bar()
+        # # print(bar)
+        #
+        # print("PY : get_first")
+        # print(foo.get_first(self.pop))
+        #
+        #
+        # print("PY : get_first_fun")
+        # print(foo.get_first_fun(self.pop))
+
+
+        from pyparadiseo._core import pySelectOne
+
+        sel = pySelectOne(select_x(3))
+        print(sel(self.pop))
+        #
         for x in [2,3,5,7,11]:
-            sel = select_x(x)
+            sel = pySelectOne(select_x(x))
             self.assertTrue(isinstance(sel,select_one.SelectOne))
 
-            a=int(sel(self.pop).fitness)
+            ind = sel(self.pop)
+
+            a=int(ind.fitness)
             self.assertEqual(a,x)
+
+
+    # def test_decorator(self):
+    #     @select_one.select_one
+    #     class select_x():
+    #         def __init__(self,num):
+    #             self.num = num
+    #         def __call__(self,pop):
+    #             return pop[self.num]
+    #
+    #     for x in [2,3,5,7,11]:
+    #         sel = select_x(x)
+    #         self.assertTrue(isinstance(sel,select_one.SelectOne))
+    #
+    #         a=int(sel(self.pop).fitness)
+    #         self.assertEqual(a,x)
 
 
     def test_random(self):

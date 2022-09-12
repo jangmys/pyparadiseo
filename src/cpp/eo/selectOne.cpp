@@ -18,6 +18,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#include <boost/python/copy_const_reference.hpp>
+#include <boost/python/return_value_policy.hpp>
+
 #include <eoSelectOne.h>
 #include <eoDetTournamentSelect.h>
 #include <eoRandomSelect.h>
@@ -39,6 +42,49 @@
 #include <utils/def_abstract_functor.h>
 
 using namespace boost::python;
+
+namespace bp = boost::python;
+
+
+template<typename SolutionType>
+class pySelectOne : public eoSelectOne<SolutionType>
+{
+public:
+    pySelectOne() : eoSelectOne<SolutionType>(){};
+
+    pySelectOne(boost::python::object _op) :
+        eoSelectOne<SolutionType>(),
+        select_op(_op)
+    {};
+
+    pySelectOne(boost::python::object _op,boost::python::object _setup) :
+        eoSelectOne<SolutionType>(),
+        select_op(_op),
+        setup_op(_setup)
+    {};
+
+
+    const SolutionType& operator()(const eoPop<SolutionType>& _pop)
+    {
+        m_current = boost::python::call<SolutionType>(select_op.ptr(),_pop);
+        return m_current;
+    }
+
+    void setup(const eoPop<SolutionType>& _pop)
+    {
+        if(setup_op.ptr() != Py_None){
+            setup_op(_pop);
+        }
+    }
+
+private:
+    boost::python::object select_op;
+    boost::python::object setup_op;
+
+    SolutionType m_current;
+};
+
+
 
 template<typename SolutionType>
 struct eoSelectOneWrap : eoSelectOne<SolutionType>,wrapper<eoSelectOne<SolutionType>>
@@ -100,8 +146,8 @@ void add_select(std::string name, Init1 init1, Init2 init2)
 {
     class_<Select, bases<eoSelectOne<SolutionType> > >(name.c_str(), init1)
 	.def( init2 )
-	.def("__call__", &Select::operator(), return_value_policy<copy_const_reference>() )
-	// .def("__call__", &Select::operator(), return_internal_reference<>() )
+	// .def("__call__", &Select::operator(), return_value_policy<copy_const_reference>() )
+	.def("__call__", &Select::operator(), return_internal_reference<>() )
 	.def("setup", &Select::setup);
 }
 
@@ -110,8 +156,22 @@ void expose_selectOne(std::string name)
 {
     class_<eoSelectOneWrap<SolutionType>,boost::noncopyable>
     (make_name("eoSelectOne",name).c_str(), init<>())
-    .def("__call__",pure_virtual(&eoSelectOneWrap<SolutionType>::operator()),return_internal_reference<>())
+    .def("__call__",pure_virtual(&eoSelectOneWrap<SolutionType>::operator()),
+        // return_internal_reference<>()
+        return_value_policy<copy_const_reference>()
+    )
     .def("setup",&eoSelectOne<SolutionType>::setup,&eoSelectOneWrap<SolutionType>::default_setup)
+    ;
+
+    // class_<pySelectOne<SolutionType>,bases<eoSelectOne<SolutionType>>
+    class_<pySelectOne<SolutionType>,bases<eoSelectOne<SolutionType>> >
+    (make_name("pySelectOne",name).c_str(), init<>())
+    .def(init<boost::python::object>()[WC1])
+    .def(init<boost::python::object,boost::python::object>()[WC2])
+    .def("__call__",&pySelectOne<SolutionType>::operator(),
+        return_value_policy<copy_const_reference>()
+    )
+    .def("setup",&pySelectOne<SolutionType>::setup)
     ;
 
 

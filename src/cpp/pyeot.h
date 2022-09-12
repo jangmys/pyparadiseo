@@ -95,7 +95,7 @@ public:
         std::cout<<"can't compare< NoneType\n";
 
         //this is Fitness<FitnessTraits>::operator<(Fitness &lhs, Fitness& rhn)
-        //default is maximization, i.e TRUE iff this < other, reversed for minimization
+        //default is maximization, i.e TRUE iff *this < other, reversed for minimization
         return fitness() < _other.fitness();
     }
 

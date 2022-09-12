@@ -138,27 +138,44 @@ def realGA_pyops():
     for ind in p:
         myeval(ind)
 
-    from pyparadiseo._core import eoSelectOneReal
     import copy
 
     # @select_one.select_one
-    class tournament(eoSelectOneReal):
+    class tournament():
         def __init__(self,t_size,rng):
-            eoSelectOneReal.__init__(self)
+            # eoSelectOneReal.__init__(self)
             self.t_size = t_size
             self.rng = rng
         def __call__(self,pop):
-            r = self.rng.random(len(pop))
-            return pop[r]
+            r1 = self.rng.random(len(pop))
+            for i in range(self.t_size-1):
+                r2 = self.rng.random(len(pop))
+                if pop[r2].fitness < pop[r1].fitness:
+                    # print(pop[r2].fitness,pop[r1].fitness)
+                    r1 = r2
+
+            return pop[r1]
+
         def setup(self,pop):
             pass
 
-    select = tournament(3,pp.rng())
 
-    import inspect
-    print(type(select).__mro__)
+    from pyparadiseo._core import pySelectOneReal
+    from pyparadiseo._core import eoSelectOneReal
+
+    tourn = tournament(3,pp.rng())
+
+    def setup(pop):
+        pass
+
+    select = pySelectOneReal(tourn,setup)
 
     print(isinstance(select,eoSelectOneReal))
+    # print(select(p))
+
+    # tournament(3,pp.rng())
+    #
+    #
 
     # select = select_one.det_tournament(3)
     # print(type(select).__mro__)
@@ -170,6 +187,29 @@ def realGA_pyops():
     conti = pp.eo.continuator.max_generations(MAX_GEN)
     #
     sga = pp.eo.algo.simpleGA(select,xover,CROSS_RATE,mutat,MUT_RATE,myeval,conti)
+
+    # import inspect
+    # print(type(select).__mro__)
+    # print(hasattr(select, "__call__"))
+    #
+    # print(type(xover).__mro__)
+    # print(hasattr(xover, "__call__"))
+    #
+    # print(type(mutat).__mro__)
+    # print(hasattr(mutat, "__call__"))
+    #
+    # print(type(myeval).__mro__)
+    # print(hasattr(myeval, "__call__"))
+    #
+    # print(type(conti).__mro__)
+    # print(hasattr(conti, "__call__"))
+    #
+    # print(type(sga).__mro__)
+    # print(hasattr(sga, "__call__"))
+    #
+    #
+    # print(type(p).__mro__)
+
 
     t1=time.time()
     sga(p)
