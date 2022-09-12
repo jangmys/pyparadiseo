@@ -34,10 +34,32 @@
 
 using namespace boost::python;
 
+template<typename SolutionType>
+class pyReplace : public eoReplacement<SolutionType>
+{
+public:
+    pyReplace(boost::python::object _op) : replace_op(_op){}
+
+    void operator()(eoPop<SolutionType>& pop1, eoPop<SolutionType>& pop2)
+    {
+        boost::python::call<void>(replace_op.ptr(),boost::ref(pop1),boost::ref(pop2));
+    }
+
+private:
+    boost::python::object replace_op;
+};
 
 template<typename SolutionType>
 void expose_replacement(std::string name)
 {
+    class_<pyReplace<SolutionType>,bases<eoReplacement<SolutionType>>>(
+        make_name("pyReplace",name).c_str(),
+        init<boost::python::object>()
+    )
+    .def("__call__", &pyReplace<SolutionType>::operator())
+    ;
+
+
     // eoReplacement.h
     class_<eoGenerationalReplacement<SolutionType>, bases<eoReplacement<SolutionType>>>(
         make_name("eoGenerationalReplacement",name).c_str(),
