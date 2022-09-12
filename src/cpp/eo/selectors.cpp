@@ -33,8 +33,33 @@
 using namespace boost::python;
 
 template<typename SolutionType>
+class pySelect : public eoSelect<SolutionType>
+{
+public:
+    pySelect(boost::python::object _op) :
+        select_op(_op){}
+
+    void operator()(const eoPop<SolutionType>& pop1,eoPop<SolutionType>& pop2)
+    {
+        boost::python::call<void>(select_op.ptr(),boost::ref(pop1),boost::ref(pop2));
+    }
+
+private:
+    boost::python::object select_op;
+};
+
+
+
+template<typename SolutionType>
 void expose_selectors(std::string name)
 {
+    class_<pySelect<SolutionType>,bases<eoSelect<SolutionType>>>(
+        make_name("pySelect",name).c_str(),
+        init<boost::python::object>()[WC1]
+    )
+    .def("__call__",&pySelect<SolutionType>::operator())
+    ;
+
     class_<eoDetSelect<SolutionType>,bases<eoSelect<SolutionType>>>(
         make_name("eoDetSelect",name).c_str(),
     "deterministic select\n\n"
