@@ -1,6 +1,8 @@
 #include <pyeot.h>
 #include <eoOp.h>
+
 #include <ga/eoBitOp.h>
+#include <ga/eoStandardBitMutation.h>
 
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
@@ -430,6 +432,78 @@ bit_op()
     //MUTATION OPERATORS (from /ga/eoBitOp.h)
     // (only works if BinarySolution has a operator[] and size() - e.g. BinarySolution derives from std::vector<T>)
 
+    //choose k from the binomial distribution Bin(n,p) and apply flip_k(x)
+    class_<eoStandardBitMutation<BinarySolution>, bases<eoMonOp<BinarySolution> > >
+        ("StandardBitMutation", init<optional<double>>())
+    .def("__call__", &eoStandardBitMutation<BinarySolution>::operator ())
+    ;
+
+    // Uniform bit mutation with mutation rate p:
+    //   choose k from the uniform distribution U(0,n) and apply flip_k(x).
+    class_<eoUniformBitMutation<BinarySolution>, bases<eoMonOp<BinarySolution> > >
+        ("UniformBitMutation", init<optional<double>>())
+    .def("__call__", &eoUniformBitMutation<BinarySolution>::operator ())
+    ;
+
+
+    // Conditional standard bit mutation with mutation rate p:
+    //  * choose k from the binomial distribution Bin(n,p) until k >0
+    //  * and apply flip_k(x).
+    //  *
+    //  * This is identical to sampling k from the conditional binomial
+    //  * distribution Bin>0(n,p) which re-assigns the probability to sample
+    //  * a 0 proportionally to all values i ∈ [1..n].
+    class_<eoConditionalBitMutation<BinarySolution>, bases<eoMonOp<BinarySolution> > >
+        ("ConditionalBitMutation", init<optional<double>>())
+    .def("__call__", &eoConditionalBitMutation<BinarySolution>::operator ())
+    ;
+
+
+    // Shifted standard bit mutation with mutation rate p:
+    //  * choose k from the binomial distribution Bin(n,p).
+    //  * When k= 0, set k= 1. Apply flip_k(x).
+    //  *
+    //  * This is identical to sampling k from the conditional binomial
+    //  * distribution Bin0→1(n,p) which re-assigns the probability to
+    //  * sample a 0 to sampling k= 1.
+    class_<eoShiftedBitMutation<BinarySolution>, bases<eoMonOp<BinarySolution> > >
+        ("ShiftedBitMutation", init<optional<double>>())
+    .def("__call__", &eoShiftedBitMutation<BinarySolution>::operator ())
+    ;
+
+    // Mutation which size is sample in a gaussian.
+    //  *
+    //  * sample k from the normal distribution N(pn,σ^2)
+    //  * and apply flip_k(x).
+    //  *
+    //  * From:
+    //  * Furong Ye, Carola Doerr, and Thomas Back.
+    //  * Interpolating local and global search by controllingthe variance of standard bit mutation.
+    //  * In 2019 IEEE Congress on Evolutionary Computation(CEC), pages 2292–2299.
+    //  *
+    //  * In contrast to standard bit mutation, this operators allows to scale
+    //  * the variance of the mutation strength independently of the mean.
+    class_<eoNormalBitMutation<BinarySolution>, bases<eoMonOp<BinarySolution> > >
+        ("NormalBitMutation", init<optional<double,double>>())
+    .def("__call__", &eoNormalBitMutation<BinarySolution>::operator ())
+    ;
+
+
+    // Fast mutation which size is sampled from an adaptive power law.
+    //  *
+    //  * From:
+    //  * Benjamin Doerr, Huu Phuoc Le, Régis Makhmara, and Ta Duy Nguyen.
+    //  * Fast genetic algorithms.
+    //  * In Proc. of Genetic and Evolutionary Computation Conference (GECCO’17), pages 777–784.ACM, 2017.
+    class_<eoFastBitMutation<BinarySolution>, bases<eoMonOp<BinarySolution> > >
+        ("FastBitMutation", init<optional<double,double>>())
+    .def("__call__", &eoFastBitMutation<BinarySolution>::operator ())
+    ;
+
+
+
+
+
     //choose one at random and flip
     class_<eoOneBitFlip<BinarySolution>, bases<eoMonOp<BinarySolution> > >
         ("OneBitFlip", init<>())
@@ -480,12 +554,12 @@ bit_op()
     ;
 
     class_<eoUBitXover<BinarySolution>, bases<eoQuadOp<BinarySolution> > >
-        ("UBitCrossover",init<optional<double>>())
+        ("UBitXover",init<optional<double>>())
         .def("__call__",&eoUBitXover<BinarySolution>::operator())
     ;
 
     class_<eoNPtsBitXover<BinarySolution>, bases<eoQuadOp<BinarySolution> > >
-        ("NPtsBitCrossover",init<optional<unsigned>>())
+        ("NPtsBitXover",init<optional<unsigned>>())
         .def("__call__",&eoNPtsBitXover<BinarySolution>::operator())
     ;
 

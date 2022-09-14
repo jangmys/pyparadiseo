@@ -27,6 +27,13 @@ from ._core import eoSGAGenOp as SGAGenOp
 
 
 #binary ops (defined on BinarySolution)
+from ._core import StandardBitMutation
+from ._core import UniformBitMutation
+from ._core import ConditionalBitMutation
+from ._core import ShiftedBitMutation
+from ._core import NormalBitMutation
+from ._core import FastBitMutation
+
 from ._core import OneBitFlip
 from ._core import DetBitFlip
 from ._core import DetSingleBitFlip
@@ -37,8 +44,8 @@ from ._core import BitNext
 from ._core import BitPrevious
 
 from ._core import OnePtBitCrossover
-from ._core import UBitCrossover
-from ._core import NPtsBitCrossover
+from ._core import UBitXover
+from ._core import NPtsBitXover
 from ._core import BitGxOver
 
 # real ops (defined on RealSolution)
@@ -125,6 +132,31 @@ def make_crossover(xover,stype=None):
 ### ==================================================
 ### BINARY
 ### ==================================================
+def standard_bit_mutation(rate=0.5):
+    """
+    Standard bit mutation with mutation rate p:
+        choose k from the binomial distribution Bin(n,p) and apply flip_k(x).
+
+    Returns
+    =======
+    eoMonOp<BinarySolution>
+    """
+    return StandardBitMutation(rate)
+
+
+def uniform_bit_mutation(rate=0.5):
+    """
+    Uniform bit mutation with mutation rate p:
+        choose k from the uniform distribution U(0,n) and apply flip_k(x).
+
+    Returns
+    =======
+    eoMonOp<BinarySolution>
+    """
+    return UniformBitMutation(rate)
+
+
+
 def bit_flip(flip_prob=0.01,normalize=False):
     """
     flip each bit with probability `flip_prob`
