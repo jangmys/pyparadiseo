@@ -46,6 +46,18 @@ def fitness(fun=None,counting=False,stype=None):
         return ret
 
 
+def pop_eval(pop_eval,fit_obj='fitness',stype=None):
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    class_ = utils.get_class("eoPopEvalFunc"+config.TYPES[stype])
+
+    if isinstance(f_eval,utils.get_class("eoEvalFunc"+config.TYPES[stype])):
+        return class_(f_eval)
+    else:
+        return class_(fitness(fun=f_eval,stype=stype))
+
+
 
 def counting_fitness(fun=None,stype=None):
     """

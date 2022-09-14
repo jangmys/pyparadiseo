@@ -125,6 +125,17 @@ class TestSolution(unittest.TestCase):
         self.assertEqual(sol2.objectives[1],2.2)
         self.assertEqual(sol2.diversity,4.2)
 
+        sol3 = deepcopy(sol2)
+        sol2.encoding = [0]
+        sol2.invalidate()
+
+        self.assertEqual(sol3.encoding,[1,2,3,4])
+        self.assertEqual(sol3.fitness,42.0)
+        self.assertEqual(sol3.objectives[0],1.1)
+        self.assertEqual(sol3.objectives[1],2.2)
+        self.assertEqual(sol3.diversity,4.2)
+
+
     def test_solution_creation(self):
         from pyparadiseo._core import Solution,BinarySolution,RealSolution
 
@@ -144,17 +155,6 @@ class TestSolution(unittest.TestCase):
             self.assertEqual(sol.array[i],i%3)
 
 
-
-        #deepcopy needs pickling for members ? objectiveVector etc
-        # sol3 = deepcopy(sol2)
-        # sol2.encoding = [0]
-        # sol2.invalidate()
-        #
-        # self.assertEqual(sol3.encoding,[1,2,3,4])
-        # self.assertEqual(sol3.fitness,42.0)
-        # self.assertEqual(sol3.objectiveVector[0],1.1)
-        # self.assertEqual(sol3.objectiveVector[1],2.2)
-        # self.assertEqual(sol3.diversity,4.2)
 
 if __name__ == '__main__':
     unittest.main()

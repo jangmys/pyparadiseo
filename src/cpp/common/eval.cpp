@@ -62,12 +62,6 @@ private:
 };
 
 
-
-
-
-
-
-
 template<class SolutionType>
 struct pyeoObjectiveEval : eoEvalFunc<SolutionType> {
     pyeoObjectiveEval() : eoEvalFunc<SolutionType>(){ };
@@ -102,6 +96,23 @@ private:
     boost::python::object eval_op;
 };
 
+
+template<class SolutionType>
+class pyPopEval : public eoPopEvalFunc<SolutionType> {
+public:
+    pyPopEval(boost::python::object _op) : pop_eval_op(_op){};
+
+    void operator()(eoPop<SolutionType>& _parents,eoPop<SolutionType>& _offspring) {
+        pop_eval_op(boost::ref(_parents),boost::ref(_offspring));
+    }
+
+private:
+    boost::python::object pop_eval_op;
+};
+
+
+
+
 template<class SolutionType>
 void export_eval(std::string postfix)
 {
@@ -126,6 +137,16 @@ void export_eval(std::string postfix)
     .def("set_eval_func", &pyeoObjectiveEval<SolutionType>::setEvalFunc)
     .def("__call__", &pyeoObjectiveEval<SolutionType>::operator ())
     ;
+
+    //===========================================================
+    class_<pyPopEval<SolutionType>, bases<eoPopEvalFunc<SolutionType>>>
+    (
+        make_name("pyPopEval",postfix).c_str(),
+        init<boost::python::object>()[WC1]
+    )
+    .def("__call__", &pyPopEval<SolutionType>::operator())
+    ;
+
 
     //===========================================================
     class_<eoPopLoopEval<SolutionType>, bases<eoPopEvalFunc<SolutionType>>>

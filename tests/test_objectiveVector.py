@@ -61,6 +61,19 @@ class TestObjVec(unittest.TestCase):
 
         objvec2 = ObjectiveVector(objvec)
         objvec2 = [2,3]
+
+    def test_pickle(self):
+        import pickle
+
+        ovec = ObjectiveVector([1,2,3,4])
+
+        d = pickle.dumps(ovec)
+        ovec2 = pickle.loads(d)
+
+        self.assertEqual(len(ovec2),4)
+        for i in range(1,5):
+            self.assertEqual(ovec2[i-1],i)
+
         # self.assertTrue(objvec.dominates(objvec2))
 
 if __name__ == '__main__':

@@ -21,6 +21,15 @@ class test_eval(unittest.TestCase):
 
         self.sol = solution.solution(np.arange(10))
 
+        self.pop = population.from_init(5,initializer.initializer(lambda : np.zeros(5,dtype=int)))
+
+        for i in range(4):
+            self.pop[i]=solution.solution(np.zeros(5,dtype=int))
+            for j in range(1,2+i):
+                self.pop[i][j]=1
+
+
+
     def test_lambda(self):
         ev = evaluator.fitness(lambda x: np.sum(x))
         self.assertTrue(isinstance(ev,eoEvalFunc))
@@ -61,18 +70,38 @@ class test_eval(unittest.TestCase):
         ev(self.sol)
         self.assertEqual(self.sol.fitness,45)
 
-    def test_popEval(self):
-        p = population.from_init(5,initializer.initializer(lambda : np.zeros(5,dtype=int)))
-
-        for i in range(4):
-            p[i]=solution.solution(np.zeros(5,dtype=int))
-            for j in range(1,2+i):
-                p[i][j]=1
+    def test_popEval_from_fitness(self):
+        # p = population.from_init(5,initializer.initializer(lambda : np.zeros(5,dtype=int)))
+        #
+        # for i in range(4):
+        #     p[i]=solution.solution(np.zeros(5,dtype=int))
+        #     for j in range(1,2+i):
+        #         p[i][j]=1
 
         popeval = evaluator.pop_eval_from_fitness(evaluator.fitness(lambda x: np.sum(x)))
-        popeval(p,p)
+        popeval(self.pop,self.pop)
         for i in range(4):
-            self.assertEqual(p[i].fitness,i+1)
+            self.assertEqual(self.pop[i].fitness,i+1)
+
+
+    def test_pypopeval(self):
+        class popeval():
+            def __init__(self,func):
+                self.func = func
+            def __call__(self,pop1,pop2):
+                for ind in pop2:
+                    ind.fitness = self.func(ind.encoding)
+
+        from pyparadiseo._core import pyPopEval
+
+        f = pyPopEval(popeval(lambda x: np.sum(x)))
+
+        f(self.pop,self.pop)
+
+        for i in range(4):
+            self.assertEqual(self.pop[i].fitness,i+1)
+
+
 
 
 

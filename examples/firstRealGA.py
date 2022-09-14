@@ -26,7 +26,7 @@ CROSS_RATE = 0.8 # Crossover rate
 EPSILON = 0.1 # range for real uniform mutation
 MUT_RATE = 0.5 # mutation rate
 
-DOMAIN_BOUND = 10
+DOMAIN_BOUND = 5
 
 def realGA_generic_sol():
     config.set_solution_type('gen')
@@ -90,18 +90,22 @@ def realGA_real_sol():
     # myeval = evaluator.fitness(lambda sol: norm2(sol),"real")
     from pyparadiseo import _mod
     myeval=_mod.Sphere()
+    #
+    # import ioh
+    # f = ioh.get_problem("Sphere", dimension=VEC_SIZE, instance=1)
+    #
+    # myeval = evaluator.fitness(f)
+
 
     mybounds = bounds.bound_box(VEC_SIZE,(-1.0)*DOMAIN_BOUND,DOMAIN_BOUND)
 
     myinit = initializer.random(stype='real',bounds=mybounds)
-
     p = population.from_init(POP_SIZE,myinit,stype='real')
 
     for ind in p:
         myeval(ind)
 
     select = select_one.det_tournament(3)
-
     xover = operator.SegmentCrossover(0.0)
     mutat = operator.UniformMutation(bounds=mybounds,epsilon=EPSILON,p_change=1.0)
 
@@ -170,46 +174,12 @@ def realGA_pyops():
 
     select = pySelectOneReal(tourn,setup)
 
-    print(isinstance(select,eoSelectOneReal))
-    # print(select(p))
-
-    # tournament(3,pp.rng())
-    #
-    #
-
-    # select = select_one.det_tournament(3)
-    # print(type(select).__mro__)
-
-
     xover = operator.SegmentCrossover(0.0)
     mutat = operator.UniformMutation(bounds=mybounds,epsilon=EPSILON,p_change=1.0)
 
     conti = pp.eo.continuator.max_generations(MAX_GEN)
     #
     sga = pp.eo.algo.simpleGA(select,xover,CROSS_RATE,mutat,MUT_RATE,myeval,conti)
-
-    # import inspect
-    # print(type(select).__mro__)
-    # print(hasattr(select, "__call__"))
-    #
-    # print(type(xover).__mro__)
-    # print(hasattr(xover, "__call__"))
-    #
-    # print(type(mutat).__mro__)
-    # print(hasattr(mutat, "__call__"))
-    #
-    # print(type(myeval).__mro__)
-    # print(hasattr(myeval, "__call__"))
-    #
-    # print(type(conti).__mro__)
-    # print(hasattr(conti, "__call__"))
-    #
-    # print(type(sga).__mro__)
-    # print(hasattr(sga, "__call__"))
-    #
-    #
-    # print(type(p).__mro__)
-
 
     t1=time.time()
     sga(p)
@@ -226,9 +196,11 @@ if __name__ == "__main__":
     print("Domain: [-",DOMAIN_BOUND,',',DOMAIN_BOUND,"]")
     print("#Generations: ", MAX_GEN)
 
+    print("With 'real' solution...")
     realGA_real_sol()
     print("#"*20)
 
+    print("With python operators...")
     realGA_pyops()
     print("#"*20)
     # realGA_generic_sol()

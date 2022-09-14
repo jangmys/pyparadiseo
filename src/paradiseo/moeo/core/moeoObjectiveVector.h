@@ -40,7 +40,7 @@
 
 #include <vector>
 
-//Abstract class ??? ... seems to be no virtual function here 
+//Abstract class ??? ... seems to be no virtual function here
 
 /**
  * Abstract class allowing to represent a solution in the objective space (phenotypic representation).
@@ -63,7 +63,9 @@ class moeoObjectiveVector : public std::vector < ObjectiveVectorType >
      * Ctor
      */
     moeoObjectiveVector(Type _value = Type()) : std::vector < Type > (ObjectiveVectorTraits::nObjectives(), _value)
-    {}
+    {
+        // std::cout<<"calling default ctor\n";
+    }
 
 
     /**

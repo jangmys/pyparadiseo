@@ -20,6 +20,9 @@
 
 #include <eoPop.h>
 
+#include "pickle.h"
+
+
 namespace bp=boost::python;
 
 // static members, need to be instantiated somewhere
@@ -28,48 +31,51 @@ std::vector < bool > moeoObjectiveVectorTraits::bObj;
 
 bool FitnessTraits::_minimizing = false;
 
+
 //TODO: __copy__ OK, error when trying to __deepcopy__
-struct PyEOT_pickle_suite : bp::pickle_suite
-{
-    typedef doubleFitness Fitness;
-    typedef double Diversity;
-    typedef realObjVec ObjectiveVector;
-
-    static bp::tuple getstate(bp::object _eot)
-    {
-        PyEOT const& p = bp::extract<PyEOT const&>(_eot)();
-
-        return bp::make_tuple(
-                p.invalidObjectiveVector()?bp::object():bp::object(p.objectiveVector()),
-                p.invalidFitness()?bp::object():bp::object(p.fitness().get()),
-                p.invalidDiversity()?bp::object():bp::object(p.diversity()),
-                p.get_encoding());
-    }
-
-    static void setstate(bp::object _eot, bp::tuple state)
-    {
-        using namespace boost::python;
-        PyEOT& p = bp::extract<PyEOT&>(_eot);
-
-        //https://stackoverflow.com/questions/22674774/get-single-element-from-a-boostpythonobject-list-for-use-in-python-routine
-        /*
-        The boost::python::object's operator[] returns a boost::python::proxy object. While the proxy class has an implicit conversion to boost::python::object, there are many areas in the API where an explicit conversion is required.
-
-        Explicitly constructing a boost::python::object from the proxy should resolve the conversion exception:
-        */
-        p.setObjectiveVector( bp::object(state[0]) );
-        p.setFitness( bp::object(state[1]) );
-        p.setDiversity( state[2] ); //checks for None
-
-        if(bp::object(state[3]).ptr() != Py_None)
-        {
-            p.set_encoding(state[3]);
-        }else{
-            p.set_encoding(bp::object())
-            ;
-        }
-    }
-};
+// struct PyEOT_pickle_suite : bp::pickle_suite
+// {
+//     typedef doubleFitness Fitness;
+//     typedef double Diversity;
+//     typedef realObjVec ObjectiveVector;
+//
+//     static bp::tuple getstate(const PyEOT& p)
+//     // static bp::tuple getstate(bp::object _eot)
+//     {
+//         // PyEOT const& p = bp::extract<PyEOT const&>(_eot)();
+//
+//         return bp::make_tuple(
+//                 p.invalidObjectiveVector()?bp::object():bp::object(p.objectiveVector()),
+//                 p.invalidFitness()?bp::object():bp::object(p.fitness().get()),
+//                 p.invalidDiversity()?bp::object():bp::object(p.diversity()),
+//                 p.get_encoding());
+//     }
+//
+//     static void setstate(PyEOT& p, bp::tuple state)
+//     // static void setstate(bp::object _eot, bp::tuple state)
+//     {
+//         using namespace boost::python;
+//         // PyEOT& p = bp::extract<PyEOT&>(_eot);
+//
+//         //https://stackoverflow.com/questions/22674774/get-single-element-from-a-boostpythonobject-list-for-use-in-python-routine
+//         /*
+//         The boost::python::object's operator[] returns a boost::python::proxy object. While the proxy class has an implicit conversion to boost::python::object, there are many areas in the API where an explicit conversion is required.
+//
+//         Explicitly constructing a boost::python::object from the proxy should resolve the conversion exception:
+//         */
+//         p.setObjectiveVector( bp::object(state[0]) );
+//         p.setFitness( bp::object(state[1]) );
+//         p.setDiversity( state[2] ); //checks for None
+//
+//         if(bp::object(state[3]).ptr() != Py_None)
+//         {
+//             p.set_encoding(state[3]);
+//         }else{
+//             p.set_encoding(bp::object())
+//             ;
+//         }
+//     }
+// };
 
 
 extern void registerConverters();
@@ -241,23 +247,29 @@ BOOST_PYTHON_MODULE(_core)
     // need this to be able to derive moeoObjectiveVector from std::vector<double>
     class_< std::vector<double> >("DoubleVec")
         .def(bp::vector_indexing_suite<std::vector<double> >())
+        // .def_pickle(PickleSuite<std::vector<double>>())
         ;
     class_< std::vector<bool> >("BoolVec")
         .def(bp::vector_indexing_suite<std::vector<bool> >())
+        // .def_pickle(PickleSuite<std::vector<bool>>())
         ;
     class_< std::vector<int> >("IntVec")
         .def(bp::vector_indexing_suite<std::vector<int> >())
+        // .def_pickle(PickleSuite<std::vector<int>>())
         ;
     class_< std::vector<std::vector<int>> >("IntVec2")
         .def(bp::vector_indexing_suite<std::vector<std::vector<int>> >())
+        // .def_pickle(PickleSuite<std::vector<std::vector<double>>>())
         ;
-
     class_< std::vector<unsigned int> >("UIntVec")
         .def(bp::vector_indexing_suite<std::vector<unsigned int> >())
+        // .def_pickle(PickleSuite<std::vector<unsigned int>>())
         ;
     class_< std::vector<long int> >("LongIntVec")
         .def(bp::vector_indexing_suite<std::vector<long int> >())
+        // .def_pickle(PickleSuite<std::vector<long int>>())
         ;
+
 
     //only doubles ... need to expose this to use it as a base class for moeoRealObjectiveVector
     //(all member functions will be in moeoRealObjectiveVector)
@@ -275,9 +287,11 @@ BOOST_PYTHON_MODULE(_core)
             .staticmethod("maximizing")
         ;
 
+    typedef moeoRealObjectiveVector<moeoObjectiveVectorTraits> ObjectiveVector;
+
     //objectiveVector contains doubles ...
     // TODO : assignment objvec = [2,1]
-    class_< moeoRealObjectiveVector<moeoObjectiveVectorTraits>,
+    class_<ObjectiveVector,
         bases< moeoObjectiveVector<moeoObjectiveVectorTraits,double> >
         >("ObjectiveVector",init<optional<double>>())
         .def( init< std::vector < double > const& >()[with_custodian_and_ward<1,2>()] )
@@ -285,7 +299,11 @@ BOOST_PYTHON_MODULE(_core)
         .def( "__eq__",&moeoRealObjectiveVector<moeoObjectiveVectorTraits>::operator==)
         .def( "__lt__",&moeoRealObjectiveVector<moeoObjectiveVectorTraits>::operator<)
         .def( "__str__",to_py_str<moeoRealObjectiveVector<moeoObjectiveVectorTraits>>)
-        ;
+        .def("__copy__", &generic__copy__<ObjectiveVector>)
+        .def("__deepcopy__", &generic__deepcopy__<ObjectiveVector>)
+        .def_pickle(ObjectiveVector_pickle_suite())
+        // .def_pickle(PickleSuite<std::vector<double>>())
+    ;
 
 
     void (PyEO::*fx2)(boost::python::object) = &PyEO::setObjectiveVector;
@@ -302,11 +320,14 @@ BOOST_PYTHON_MODULE(_core)
     .def("__lt__", &PyEO::operator<)
     .def("__repr__", &PyEO::repr)
     .def("__str__", &PyEO::to_string)
+    .def("__copy__", &generic__copy__<PyEO>)
+    .def("__deepcopy__", &generic__deepcopy__<PyEO>)
     ;
 
     class_<PyEOT,bases<PyEO>>("Solution",init<optional<object>>())
         .def(init<const PyEOT&>())
         .add_property("encoding", &PyEOT::get_encoding, &PyEOT::set_encoding,"object, solution encoding")
+        .def_pickle(PyEOT_pickle_suite<PyEOT>())
         .def("__getitem__", &PyEOT::get_item, "forward __getitem__ to encoding.\n\n fail if encoding object doesn't provide indexing capabilities")
         .def("__setitem__", &PyEOT::set_item, "see __getitem__")
         .def("__len__", &PyEOT::get_len, "forward __len__ to encoding")
@@ -315,22 +336,25 @@ BOOST_PYTHON_MODULE(_core)
         .def("__lt__", &PyEOT::operator<)
         .def("__gt__", &PyEOT::operator>)
         .def("__eq__", &PyEOT::operator==)
-        .def_pickle(PyEOT_pickle_suite())
+        .def("__copy__", &generic__copy__<PyEOT>)
+        .def("__deepcopy__", &generic__deepcopy__<PyEOT>)
+
+        // .enable_pickling()
     ;
 
-    class_<Bar>("Bar");
-
-    class_<Foo<Bar>>("Foo", init<boost::python::object>())
-        .def("get_bar", &Foo<Bar>::get_bar
-            , return_value_policy<copy_const_reference>())
-       ;
-
-    class_<Foo<PyEOT>>("FooSol", init<boost::python::object>())
-        .def("get_bar", &Foo<PyEOT>::get_bar, return_value_policy<copy_const_reference>())
-        .def("print_first", &Foo<PyEOT>::print_first)
-        .def("get_first", &Foo<PyEOT>::get_first, return_value_policy<copy_const_reference>())
-        .def("get_first_fun", &Foo<PyEOT>::get_first_fun, return_value_policy<copy_const_reference>())
-    ;
+    // class_<Bar>("Bar");
+    //
+    // class_<Foo<Bar>>("Foo", init<boost::python::object>())
+    //     .def("get_bar", &Foo<Bar>::get_bar
+    //         , return_value_policy<copy_const_reference>())
+    //    ;
+    //
+    // class_<Foo<PyEOT>>("FooSol", init<boost::python::object>())
+    //     .def("get_bar", &Foo<PyEOT>::get_bar, return_value_policy<copy_const_reference>())
+    //     .def("print_first", &Foo<PyEOT>::print_first)
+    //     .def("get_first", &Foo<PyEOT>::get_first, return_value_policy<copy_const_reference>())
+    //     .def("get_first_fun", &Foo<PyEOT>::get_first_fun, return_value_policy<copy_const_reference>())
+    // ;
 
     //=======================================
     // VectorSolution
@@ -355,6 +379,7 @@ BOOST_PYTHON_MODULE(_core)
     .def("__str__", &RealSolution::to_string)
     .def_readwrite("carray",&RealSolution::vec)
     .add_property("array",&RealSolution::get_encoding,&RealSolution::set_encoding)
+    .def_pickle(PyEOT_pickle_suite<RealSolution>())
     ;
 
 

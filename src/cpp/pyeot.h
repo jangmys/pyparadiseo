@@ -32,6 +32,11 @@ public:
     typedef double Diversity;
     typedef realObjVec ObjectiveVector;
 
+    //ATTRIBUTES (from MOEO)
+    // doubleFitness
+    // objectiveVector
+    // diversity
+
     //for copy ctor
     bp::object copyMod = bp::import("copy");
     bp::object deepcopy = copyMod.attr("deepcopy");
@@ -169,21 +174,21 @@ public:
         result += "Fitness: ";
         if(!invalidFitness())
             result += boost::python::extract<const char*>(boost::python::str(fitness().get()));
-        else result += std::string("[]");
+        else result += std::string("invalid");
         result += "\n";
 
         if(!invalidObjectiveVector()){
-            result += " , ObjVect: ";
+            result += "ObjVect: [";
             for(auto &&v : objectiveVector()){
                 result += std::to_string(v);
                 result += ' ';
             }
-            result += "\n";
+            result += "]\n";
         }
         // result += PyEO::to_string();
 
         if(!invalidDiversity()){
-            result += ", Diversity: ";
+            result += "Diversity: ";
             result += boost::python::extract<const char*>(boost::python::str(diversity()));
             result += "\n";
         }
@@ -294,7 +299,7 @@ public:
         std::string result;
 
         result += PyEO::to_string();
-        result += "\t";
+        result += "Encoding:\t";
 
         result += boost::python::extract<const char*>(boost::python::str(encoding));
 

@@ -127,9 +127,6 @@ public:
             // std::cout<<"EVAL POP:\n";
             // std::cout<<_pop<<std::endl;
         } while (cont(_pop));
-
-        std::cout<<"######## DONE ########\n";
-
     } // ()
 
 private:
