@@ -99,7 +99,7 @@ def realGA_real_sol():
 
     mybounds = bounds.bound_box(VEC_SIZE,(-1.0)*DOMAIN_BOUND,DOMAIN_BOUND)
 
-    myinit = initializer.random(stype='real',bounds=mybounds)
+    myinit = initializer.random(bounds=mybounds,stype='real')
     p = population.from_init(POP_SIZE,myinit,stype='real')
 
     for ind in p:

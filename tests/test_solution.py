@@ -153,7 +153,10 @@ class TestSolution(unittest.TestCase):
         self.assertEqual(len(sol),9)
         for i in range(9):
             self.assertEqual(sol.array[i],i%3)
+            self.assertEqual(sol.carray[i],i%3)
 
+        self.assertRaises(TypeError,solution.solution,3,stype='real')
+            
 
 
 if __name__ == '__main__':

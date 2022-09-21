@@ -120,7 +120,7 @@ class TestPSO(unittest.TestCase):
 
         feval = evaluator.fitness(lambda x : np.linalg.norm(x,2))
 
-        init = initializer.random(VEC_SIZE,bounds=bounds.bound_box(VEC_SIZE,-3,3))
+        init = initializer.random(bounds=([-3]*VEC_SIZE,[3]*VEC_SIZE))
         bestinit=_core.eoFirstIsBestInit()
 
         pop = swarm.from_init(4,init)
@@ -151,8 +151,7 @@ class TestPSO(unittest.TestCase):
         bnds = bounds.bound_box(VEC_SIZE,-0.5,0.5)
         velo = _core.eoStandardVelocity(topo,1,1.6,2,bnds)
 
-
-        init = initializer.random(VEC_SIZE,bounds=bounds.bound_box(VEC_SIZE,-3,3))
+        init = initializer.random(bounds=([-3]*VEC_SIZE,[3]*VEC_SIZE))
         pop = swarm.from_init(POP_SIZE,init)
 
         psoinit=_core.PSOInitializer(

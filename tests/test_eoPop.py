@@ -27,8 +27,8 @@ class Test_Pop(unittest.TestCase):
         self.realpop = population.empty(stype='real')
 
         self.init = initializer.initializer(lambda : np.arange(10)) #just something
-        self.bininit = initializer.random(10,'bin')
-        self.realinit = initializer.random(stype='real',bounds=bounds.RealVectorBounds(10,-1,1))
+        self.bininit = initializer.random(10,stype='bin')
+        self.realinit = initializer.random(bounds=([-1]*10,[1]*10),stype='real')
 
     def tearDown(self):
         self.pop.resize(0)

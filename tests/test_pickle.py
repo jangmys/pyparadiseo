@@ -38,19 +38,34 @@ class TestPickle(unittest.TestCase):
         d=pickle.dumps(sol)
         sol2=pickle.loads(d)
 
-        # print(sol2)
-
+        np.testing.assert_almost_equal(sol2.carray,[1,2,3,4])
+        np.testing.assert_almost_equal(sol2.array,[1,2,3,4])
         np.testing.assert_almost_equal(sol2.encoding,[1,2,3,4])
-        # self.assertAlmostEqual(sol2.encoding,[1,2,3,4])
+
         self.assertEqual(sol2.fitness,42.0)
         self.assertEqual(sol2.objectives[0],1.1)
         self.assertEqual(sol2.objectives[1],2.2)
         self.assertEqual(sol2.diversity,4.2)
 
 
-        # print(sol.__dict__)
-        # print(vars(sol))
-        # pickle.dumps(sol)
+    def test_pickle_binary(self):
+        sol = solution.solution([1,0,1,1],'bin')
+        sol.fitness = 42.0
+        sol.objectives = [1.1,2.2]
+        sol.diversity = 4.2
+
+        d=pickle.dumps(sol)
+        sol2=pickle.loads(d)
+
+        np.testing.assert_almost_equal(sol2.carray,[1,0,1,1])
+        np.testing.assert_almost_equal(sol2.array,[1,0,1,1])
+        np.testing.assert_almost_equal(sol2.encoding,[1,0,1,1])
+
+        self.assertEqual(sol2.fitness,42.0)
+        self.assertEqual(sol2.objectives[0],1.1)
+        self.assertEqual(sol2.objectives[1],2.2)
+        self.assertEqual(sol2.diversity,4.2)
+
 
     def test_deepcopy(self):
         #make a solution

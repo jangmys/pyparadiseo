@@ -59,8 +59,7 @@ public:
         return *this;
     }
 
-    //FITNESS
-    //==========================================
+    //----------------FITNESS-----------------
     /*
     getter/setter for fitness, exposed to python as a "property"
     on the C++ side a fitness is a double
@@ -79,16 +78,11 @@ public:
         }
 
         boost::python::extract<double> x(f);
-        // boost::python::extract<Fitness> x(f);
         if(x.check())
         {
-            double d = x();
-
-            // std::cout<<"val=\t"<<d<<std::endl;
-            // Fitness d = x();
-            fitness(d);
+            fitness(x());
         }else{
-            throw index_error("fitness : failed to extract double\n");
+            throw index_error("PyEO::setFitness : failed to extract double\n");
         }
     }
 
@@ -96,18 +90,15 @@ public:
     //we inherit from MOEO but don't want this by default ... reversing without interfering in MOEO module...
     bool operator<(const PyEO& _other) const
     {
-        if(getFitness().is_none())
-        std::cout<<"can't compare< NoneType\n";
+        if(invalidFitness() || _other.invalidFitness())
+            std::cout<<"can't compare< invalid fitness\n";
 
         //this is Fitness<FitnessTraits>::operator<(Fitness &lhs, Fitness& rhn)
         //default is maximization, i.e TRUE iff *this < other, reversed for minimization
         return fitness() < _other.fitness();
     }
 
-
-
-    //OBJECTIVE VECTOR
-    //======================================================
+    //----------------------OBJECTIVE VECTOR----------------------------
     //C++ functions use objectiveVector...so this should always return : an objectiveVector!
     //if invalid...(what should happen? see pickling...)
     ObjectiveVector getObjectiveVector() const
@@ -133,8 +124,7 @@ public:
         objectiveVector(f);
     }
 
-    //DIVERSITY
-    //====================================================================
+    //------------------------------DIVERSITY---------------------------------------
     //getter/setter for diversity, exposed to python as a "property"
     //on the C++ side a diversity is a double
     //on the Python side, anything convertible to a double
@@ -151,8 +141,7 @@ public:
         boost::python::extract<double> x(f);
         if(x.check())
         {
-            double d = x();
-            diversity(d);
+            diversity(x());
         }else{
             throw index_error("diversity : failed to extract double\n");
         }
@@ -256,8 +245,7 @@ public:
         return *this;
     }
 
-    //ENCODING
-    //==========================================
+    //------------------ENCODING------------------
     //maybe I should make that private?
     //solution encoding is a python object --> a property of pyEOT
     boost::python::object encoding;
@@ -266,19 +254,17 @@ public:
     void set_encoding(boost::python::object enc){ encoding = enc; }
 
 
-    //depend on type of object passed...
+    //this depends on type of object used as encoding
 
     //should check if the object is sliceable, indexable etc...
     boost::python::object get_item(int key) const
     {
         return encoding[key];
     }
-
     void set_item(int index, boost::python::object key)
     {
         encoding[index]=key;
     }
-
     boost::python::object get_len() const
     {
         ssize_t l = boost::python::len(encoding);
@@ -319,12 +305,10 @@ public:
         return s;
     }
 
-
     // void printOn(std::ostream & _os) const
     // {
     //     _os << to_string() << ' ';
     // }
-
 };
 
 
@@ -342,9 +326,6 @@ public:
             bp::make_tuple(sizeof(T)),
             bp::object())
         ){}
-
-        ///ctor clashing with previous one!!
-    // VectorSolution(boost::python::object _obj) :
 
     VectorSolution(const VectorSolution& p) : PyEO(p),vec(p.vec),
         encoding(

@@ -25,28 +25,59 @@ class TestBounds(unittest.TestCase):
         self.assertFalse(interval.isInBounds(1.1))
         self.assertFalse(interval.isInBounds(-1.1))
 
+    def test_intInterval(self):
+        interval = bounds.IntInterval(-10,10)
+        self.assertTrue(interval.isBounded())
+        self.assertFalse(interval.hasNoBoundAtAll())
+        self.assertTrue(interval.isMinBounded())
+        self.assertTrue(interval.isMaxBounded())
 
-    def test_realInterval_fold(self):
+        self.assertTrue(interval.isInBounds(-10))
+        self.assertTrue(interval.isInBounds(10))
+        self.assertTrue(interval.isInBounds(0))
+        self.assertFalse(interval.isInBounds(11))
+        self.assertFalse(interval.isInBounds(-11))
+
+
+
+    def test_Interval_fold(self):
         interval = bounds.RealInterval(-1.0,1.0)
 
         self.assertAlmostEqual(interval.foldsInBounds(1.1), 0.9)
         self.assertAlmostEqual(interval.foldsInBounds(-1.1), -0.9)
         self.assertAlmostEqual(interval.foldsInBounds(40.0), 0.0)
 
+        interval = bounds.IntInterval(-10,10)
 
-    def test_realInterval_truncate(self):
+        self.assertAlmostEqual(interval.foldsInBounds(11), 9)
+        self.assertAlmostEqual(interval.foldsInBounds(-11), -9)
+        self.assertAlmostEqual(interval.foldsInBounds(400), 0)
+
+
+    def test_Interval_truncate(self):
         interval = bounds.RealInterval(-1.0,1.0)
 
         self.assertAlmostEqual(interval.truncate(1.1), 1.0)
         self.assertAlmostEqual(interval.truncate(-1.1), -1.0)
 
+        interval = bounds.IntInterval(-10,10)
+        self.assertAlmostEqual(interval.truncate(11), 10)
+        self.assertAlmostEqual(interval.truncate(-11), -10)
 
-    def test_realInterval_minmax(self):
+
+    def test_Interval_minmax(self):
         interval = bounds.RealInterval(-1.0,1.0)
 
         self.assertEqual(interval.minimum(),-1.0)
         self.assertEqual(interval.maximum(),1.0)
         self.assertEqual(interval.range(),2.0)
+
+        interval = bounds.IntInterval(-10,10)
+
+        self.assertEqual(interval.minimum(),-10)
+        self.assertEqual(interval.maximum(),10)
+        self.assertEqual(interval.range(),20)
+
 
     def test_realVecBounds1(self):
         b = bounds.RealVectorBounds(3,-1.0,1.0)
@@ -70,6 +101,30 @@ class TestBounds(unittest.TestCase):
 
         self.assertTrue(b.uniform(0) > -1.0)
         self.assertTrue(b.uniform(1) < 1.0)
+
+
+    def test_intVecBounds1(self):
+        b = bounds.IntVectorBoundsBase(3,bounds.IntInterval(-10,10))
+        #
+        self.assertTrue(b.isBounded())
+        for i in range(3):
+            self.assertTrue(b.isBounded(i))
+            self.assertFalse(b.hasNoBoundAtAll(i))
+            self.assertTrue(b.isMinBounded(i))
+            self.assertTrue(b.isMaxBounded(i))
+            self.assertAlmostEqual(b.foldsInBounds(i,10+i),10-i)
+            self.assertAlmostEqual(b.truncate(i,10+i),10)
+
+        v = np.asarray([10+i for i in range(3)])
+        b.foldsInBounds(v)
+        np.testing.assert_almost_equal(v,np.asarray([10,9,8]))
+        #
+        v = np.asarray([10+i for i in range(3)])
+        b.truncate(v)
+        np.testing.assert_almost_equal(v,np.asarray([10,10,10]))
+
+        self.assertTrue(b.uniform(0) > -10)
+        self.assertTrue(b.uniform(1) < 10)
 
 
     def test_realVecBounds2(self):

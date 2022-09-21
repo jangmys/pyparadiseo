@@ -117,7 +117,7 @@ def solution(obj,stype=None):
 
     klass=SOLUTIONS[stype]
 
-    #if obj is a Solution call copy ctor
+    #if obj is already a Solution, call copy ctor
     if isinstance(obj,klass):
         return klass(obj)
 
@@ -125,13 +125,14 @@ def solution(obj,stype=None):
     if stype=='gen':
         return klass(obj)
     else:
+        #get object length
         try:
-            #zeros
             ret=klass(len(obj))
         except TypeError:
             print("For stype='",stype,"' solution encoding must have a length. Consider using generic solution type.")
             raise
 
+        #set ndarray to obj
         try:
             ret.encoding = obj
             # ret.array = obj
@@ -204,7 +205,7 @@ def zeros(size=0,stype=None):
     return klass(size)
 
 
-def random(size=0,stype=None,**kwargs):
+def random(size=0,lb=None,ub=None,stype=None,**kwargs):
     """
     Create and intialize fixed size solution ('bin' or 'real')
 
@@ -229,13 +230,20 @@ def random(size=0,stype=None,**kwargs):
     =====
     if `stype` is 'gen', encoding is set to ``None``
     """
+    if stype is None:
+        stype=config._SOLUTION_TYPE
+
     sol = empty(stype)
 
-    if 'bounds' in kwargs:
-        init = initializer.random(size,stype,bounds=kwargs["bounds"])
-        init(sol)
-    else:
+    if stype == 'gen':
+        return sol
+
+    if stype == 'bin':
         init = initializer.random(size,stype)
+        init(sol)
+
+    if stype == 'real':
+        init = initializer.random(size,lb,ub,stype)
         init(sol)
 
     return sol

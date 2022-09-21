@@ -10,6 +10,7 @@ domain bounds
 """
 #ABC
 from ._core import RealBounds as RealBoundsBase
+from ._core import RealBaseVectorBounds as RealVectorBoundsBase
 
 #use? bound for one variable ...
 
@@ -19,6 +20,17 @@ from ._core import RealAboveBound # [inf,a]
 from ._core import RealInterval #[a,b]
 
 from ._core import RealVectorBounds #a vector of bounds
+
+
+
+from ._core import IntBounds as IntBoundsBase
+from ._core import IntBaseVectorBounds as IntVectorBoundsBase
+
+from ._core import IntNoBounds # unbounded
+from ._core import IntBelowBound # [a,inf]
+from ._core import IntAboveBound # [inf,a]
+from ._core import IntInterval #[a,b]
+
 
 
 #class_ BoundsReal():

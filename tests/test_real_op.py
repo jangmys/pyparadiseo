@@ -12,7 +12,7 @@ import copy
 
 class TestRealOp(unittest.TestCase):
     def setUp(self):
-        self.init = initializer.random(stype='real',bounds=bounds.RealVectorBounds(10,-1,1))
+        self.init = initializer.random(bounds=([-1]*10,[1]*10),stype='real')
         self.sol = solution.empty(stype='real')
 
         print(type(self.init))

@@ -31,98 +31,37 @@ std::vector < bool > moeoObjectiveVectorTraits::bObj;
 
 bool FitnessTraits::_minimizing = false;
 
-
-//TODO: __copy__ OK, error when trying to __deepcopy__
-// struct PyEOT_pickle_suite : bp::pickle_suite
-// {
-//     typedef doubleFitness Fitness;
-//     typedef double Diversity;
-//     typedef realObjVec ObjectiveVector;
-//
-//     static bp::tuple getstate(const PyEOT& p)
-//     // static bp::tuple getstate(bp::object _eot)
-//     {
-//         // PyEOT const& p = bp::extract<PyEOT const&>(_eot)();
-//
-//         return bp::make_tuple(
-//                 p.invalidObjectiveVector()?bp::object():bp::object(p.objectiveVector()),
-//                 p.invalidFitness()?bp::object():bp::object(p.fitness().get()),
-//                 p.invalidDiversity()?bp::object():bp::object(p.diversity()),
-//                 p.get_encoding());
-//     }
-//
-//     static void setstate(PyEOT& p, bp::tuple state)
-//     // static void setstate(bp::object _eot, bp::tuple state)
-//     {
-//         using namespace boost::python;
-//         // PyEOT& p = bp::extract<PyEOT&>(_eot);
-//
-//         //https://stackoverflow.com/questions/22674774/get-single-element-from-a-boostpythonobject-list-for-use-in-python-routine
-//         /*
-//         The boost::python::object's operator[] returns a boost::python::proxy object. While the proxy class has an implicit conversion to boost::python::object, there are many areas in the API where an explicit conversion is required.
-//
-//         Explicitly constructing a boost::python::object from the proxy should resolve the conversion exception:
-//         */
-//         p.setObjectiveVector( bp::object(state[0]) );
-//         p.setFitness( bp::object(state[1]) );
-//         p.setDiversity( state[2] ); //checks for None
-//
-//         if(bp::object(state[3]).ptr() != Py_None)
-//         {
-//             p.set_encoding(state[3]);
-//         }else{
-//             p.set_encoding(bp::object())
-//             ;
-//         }
-//     }
-// };
-
-
+//-------------common-------------
 extern void registerConverters();
-
 extern void eo_abstract();
-
-// extern template void export_abstract<PyEOT>(std::string s);
-// extern template void export_abstract<RealSolution>(std::string s);
-// extern template void export_abstract<BinarySolution>(std::string s);
-
 extern void bounds();
-
-//common
 extern void valueParam();
 
-//EO - core
+//-------------EO - core-------------
 extern void initialize();
 extern void evaluate();
 extern void random_numbers();
 
-
-
-//EO
+//-------------EO-------------
 extern void pop();
 extern void geneticOps();
 extern void transform();
 extern void mergers();
 extern void reduce();
-
 extern void selectOne();
 extern void PyEOTSelectOne();
 extern void selectors();
-
 extern void replacement();
 extern void breeders();
 extern void eoAlgos();
-
 extern void algos();
 extern void continuators();
 extern void add_checkpoint();
-
 extern void reduce();
-
 extern void real_op();
 extern void bit_op();
 
-//MO
+//-------------MO-------------
 extern void mo();
 extern void moEvaluators();
 extern void moNeighborhoods();
@@ -131,58 +70,73 @@ extern void moContinuators();
 extern void moAlgos();
 extern void moComparators();
 
-//MOEO
+//-------------MOEO-------------
 extern void moeo_abstract();
 extern void moeo_algos();
 
-
+//-------------PSO-------------
 extern void eoParticleSwarm();
 
-
 //TEST
-struct Bar { int x; };
+// struct Bar { int x; };
+//
+//
+// template<typename Bar>
+// class Foo {
+// public:
+//     Foo(boost::python::object _op) : op(_op){}
+//
+//     Bar const& get_bar() { return b; }
+//
+//     void print_first(const eoPop<Bar>& pop)
+//     {
+//         std::cout<<"\nfirst\t"<<pop[0]<<std::endl;
+//     }
+//
+//     Bar const& get_first(const eoPop<Bar>& pop)
+//     {
+//         std::cout<<"\nget_first";
+//
+//         return pop[0];
+//     }
+//
+//     Bar const& get_first_fun(const eoPop<Bar>& pop)
+//     {
+//         std::cout<<" >>> "<<boost::python::extract<const Bar&>(op(pop))<<std::endl;
+//
+//         b = boost::python::extract<Bar>(op(pop));
+//
+//
+//         // return boost::python::extract<const Bar&>(op(pop));
+//         // return op(pop);
+//
+//         //
+//         std::cout<<"\ngot\t"<<b<<std::endl;
+//         //
+//         return b;
+//     }
+//
+//     private:
+//         Bar b;
+//
+//         boost::python::object op;
+// };
 
 
-template<typename Bar>
-class Foo {
-public:
-    Foo(boost::python::object _op) : op(_op){}
+template<typename T>
+std::string vec_to_string(std::vector<T>& _vec)
+{
+    std::string result;
 
-    Bar const& get_bar() { return b; }
-
-    void print_first(const eoPop<Bar>& pop)
-    {
-        std::cout<<"\nfirst\t"<<pop[0]<<std::endl;
+    result += "[ ";
+    for(auto &&v : _vec){
+        result += std::to_string(v);
+        result += ' ';
     }
+    result += "]";
 
-    Bar const& get_first(const eoPop<Bar>& pop)
-    {
-        std::cout<<"\nget_first";
-
-        return pop[0];
-    }
-
-    Bar const& get_first_fun(const eoPop<Bar>& pop)
-    {
-        std::cout<<" >>> "<<boost::python::extract<const Bar&>(op(pop))<<std::endl;
-
-        b = boost::python::extract<Bar>(op(pop));
-
-
-        // return boost::python::extract<const Bar&>(op(pop));
-        // return op(pop);
-
-        //
-        std::cout<<"\ngot\t"<<b<<std::endl;
-        //
-        return b;
-    }
-
-    private:
-        Bar b;
-
-        boost::python::object op;
-};
+    return result;
+}
 
 
 BOOST_PYTHON_MODULE(_core)
@@ -247,6 +201,7 @@ BOOST_PYTHON_MODULE(_core)
     // need this to be able to derive moeoObjectiveVector from std::vector<double>
     class_< std::vector<double> >("DoubleVec")
         .def(bp::vector_indexing_suite<std::vector<double> >())
+        .def("__str__",vec_to_string<double>)
         // .def_pickle(PickleSuite<std::vector<double>>())
         ;
     class_< std::vector<bool> >("BoolVec")
@@ -392,7 +347,7 @@ BOOST_PYTHON_MODULE(_core)
     .def("__str__", &BinarySolution::to_string)
     .def_readwrite("carray",&BinarySolution::vec)
     .add_property("array",&BinarySolution::get_encoding,&BinarySolution::set_encoding)
-    // .add_property("array",&BinarySolution::get_array,&BinarySolution::set_array)
+    .def_pickle(PyEOT_pickle_suite<BinarySolution>())
     ;
 
     class_<IntSolution,bases<PyEO>>("IntSolution",init<optional<unsigned int>>())
@@ -403,6 +358,7 @@ BOOST_PYTHON_MODULE(_core)
     .def("__str__", &IntSolution::to_string)
     .def_readwrite("carray",&IntSolution::vec)
     .add_property("array",&IntSolution::get_array,&IntSolution::set_array)
+    .def_pickle(PyEOT_pickle_suite<IntSolution>())
     ;
 
 

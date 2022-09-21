@@ -12,51 +12,9 @@ The :func:`random` initializer
 Any function-like object that takes
 """
 from pyparadiseo import config,utils
-
-def random(size=0,stype=None,**kwargs):
-    """
-    Random initializer (for bin/real)
-
-    Parameters
-    ----------
-    size : int
-        solution length
-    stype : str, optional
-        solution type
-    """
-    if stype is None:
-        stype = config._SOLUTION_TYPE
-
-    if stype == 'gen':
-        raise TypeError("initializer.random : not availble for generic solution type")
-
-    if stype == 'bin':
-        class_ = utils.get_class("BinaryInit")
-        return class_(size)
-
-    if stype == 'real':
-        class_ = utils.get_class("RealBoundedInit")
-        if "bounds" in kwargs.keys():
-            return class_(kwargs["bounds"])
-        else:
-            raise TypeError("need bounds for type 'real'")
-
-    if stype == 'perm':
-        class_ = utils.get_class("PermutationInit")
-        if "startFrom" in kwargs.keys():
-            return class_(size,kwargs["startFrom"])
-        else:
-            return class_(size)
-
-    if stype == 'real-pso':
-        class_ = utils.get_class("RealBoundedParticleInit")
-        if "bounds" in kwargs.keys():
-            return class_(kwargs["bounds"])
-        else:
-            raise TypeError("need bounds for type 'real'")
+from pyparadiseo import bounds as bounds_mod
 
 
-#### it's a "decorator"
 def initializer(init_fun,stype=None):
     """
     make initializer from function
@@ -117,3 +75,52 @@ def initializer(init_fun,stype=None):
         return class_(init_fun)
     else:
         raise NotImplementedError("Not yet implemented")
+
+
+def random(size=0,bounds=None,stype=None,**kwargs):
+    """
+    Random initializer (for bin/real)
+
+    Parameters
+    ----------
+    size : int
+        solution length
+    stype : str, optional
+        solution type
+    """
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    if stype == 'gen':
+        raise TypeError("initializer.random : not availble for generic solution type")
+
+    if stype == 'bin':
+        class_ = utils.get_class("BinaryInit")
+        return class_(size)
+
+    if stype == 'real':
+        class_ = utils.get_class("RealBoundedInit")
+        if bounds is not None:
+            if isinstance(bounds, bounds_mod.RealVectorBoundsBase):
+                return class_(bounds)
+            else:
+                return class_(bounds_mod.bound_box(bounds[0],bounds[1]))
+        else:
+            raise TypeError("need bounds for type 'real'")
+
+    if stype == 'perm':
+        class_ = utils.get_class("PermutationInit")
+        if "startFrom" in kwargs.keys():
+            return class_(size,kwargs["startFrom"])
+        else:
+            return class_(size)
+
+    if stype == 'real-pso':
+        class_ = utils.get_class("RealBoundedParticleInit")
+        if bounds is not None:
+            if isinstance(bounds, bounds_mod.RealVectorBoundsBase):
+                return class_(bounds)
+            else:
+                return class_(bounds_mod.bound_box(bounds[0],bounds[1]))
+        else:
+            raise TypeError("need bounds for type 'realparticle'")
