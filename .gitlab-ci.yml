@@ -36,11 +36,11 @@ build-job:
     stage: build
     tags:
         - ci.inria.fr
-        - small
+        - medium
     script:
         - . /opt/venv36/bin/activate
         - python3 --version
-        - python3 setup.py sdist bdist_wheel -G"Unix Makefiles"
+        - python3 setup.py sdist bdist_wheel -G"Unix Makefiles" -- -- -j12
         - auditwheel repair dist/*cp36m-linux_x86_64.whl
         - rm dist/*
         # - python3 -m pip install wheelhouse/*.manylinux2014_x86_64.whl
@@ -64,12 +64,15 @@ build-cp37:
         - /opt/python/cp37-cp37m/bin/python3 -m venv /opt/venv37
         - . /opt/venv37/bin/activate
         - python3 --version  # For debugging
-        - mkdir -p .pip
-        - python3 -m pip install --cache-dir=.pip --upgrade pip
-        - python3 -m pip install --cache-dir=.pip scikit-build numpy numba pytest auditwheel sphinxcontrib-napoleon Sphinx sphinx-rtd-theme pydata-sphinx-theme
-        - python3 setup.py sdist bdist_wheel -G"Unix Makefiles"
+        - python3 setup.py sdist bdist_wheel -G"Unix Makefiles" -- -- -j12
         - auditwheel repair dist/*cp37m-linux_x86_64.whl
         - rm dist/*
+        - |+
+          for i in 36m 37m 38 39 310
+          do
+            echo "Hello $i"
+          done
+
         # - python3 -m pip install wheelhouse/*.manylinux2014_x86_64.whl
         # - python3 -c "import pyparadiseo"
         # - python3 -m pytest tests

@@ -1,24 +1,22 @@
 cmake_minimum_required(VERSION 3.14)
 
 project(pyparadiseo
-    VERSION "0.1"
+    VERSION "0.2.1"
     LANGUAGES CXX
 )
 
 set(CMAKE_CXX_STANDARD 17)
 
 set(BOOST_ROOT /usr/)
-
 set(BOOST_INCLUDEDIR /usr/include/boost169/)
 set(BOOST_LIBRARYDIR /usr/lib64/boost169/)
 
-find_package(Python3 3.6.15 EXACT COMPONENTS Interpreter Development.Module NumPy)
+find_package(Python3 COMPONENTS Interpreter Development.Module NumPy)
 find_package(Boost COMPONENTS python36 numpy36 REQUIRED)
-# find_package(Boost 1.65 COMPONENTS numpy3 REQUIRED)
 
-message("==> Python Sitelib : " ${Python3_SITELIB})
-message("==> Boost include : " ${Boost_INCLUDE_DIRS})
-message("==> Python include : " ${Python3_INCLUDE_DIRS})
+# message("==> Python Sitelib : " ${Python3_SITELIB})
+# message("==> Boost include : " ${Boost_INCLUDE_DIRS})
+# message("==> Python include : " ${Python3_INCLUDE_DIRS})
 
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${Python3_INCLUDE_DIRS})
@@ -106,5 +104,4 @@ target_link_libraries(_core Python3::Module ${Boost_LIBRARIES} Python3::NumPy)
 target_link_libraries(_mod Python3::Module ${Boost_LIBRARIES} Python3::NumPy)
 
 install(TARGETS _core LIBRARY DESTINATION ./ COMPONENT libraries)
-
 install(TARGETS _mod LIBRARY DESTINATION ./ COMPONENT libraries)
