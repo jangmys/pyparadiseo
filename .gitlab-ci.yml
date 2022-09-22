@@ -77,13 +77,14 @@ test-job1:
     needs:
         - build-job
     script:
-        - python3 -m pip install wheelhouse/*.manylinux2014_x86_64.whl
+        - . /opt/venv36/bin/activate
+        - python3 -m pip install wheelhouse/*cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
         - python3 -c "import pyparadiseo"
         - python3 -m pytest tests
     artifacts:
         paths:
             - wheelhouse/
-            - docs/build/
+            #- docs/build/
 
 pages:
     stage: test
@@ -93,6 +94,7 @@ pages:
     needs:
         - test-job1
     script:
+        - . /opt/venv36/bin/activate
         - cd docs
         - make html
         - cd ..
