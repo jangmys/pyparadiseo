@@ -18,12 +18,13 @@ cache:
         - _skbuild
 
 before_script:
-    - /opt/python/cp36-cp36m/bin/python3 --version  # For debugging
-    - /opt/python/cp36-cp36m/bin/python3 -m venv /opt/venv
-    - . /opt/venv/bin/activate
-    - mkdir -p .pip
-    - python3 -m pip install --cache-dir=.pip --upgrade pip
-    - python3 -m pip install --cache-dir=.pip scikit-build numpy numba pytest auditwheel sphinxcontrib-napoleon Sphinx sphinx-rtd-theme pydata-sphinx-theme
+    - echo "before script"
+    # - /opt/python/cp36-cp36m/bin/python3 -m venv /opt/venv36
+    # - . /opt/venv36/bin/activate
+    # - python3 --version  # For debugging
+    # - mkdir -p .pip
+    # - python3 -m pip install --cache-dir=.pip --upgrade pip
+    # - python3 -m pip install --cache-dir=.pip scikit-build numpy numba pytest auditwheel sphinxcontrib-napoleon Sphinx sphinx-rtd-theme pydata-sphinx-theme
     #- yum -y install python-sphinx
 
 stages:
@@ -37,8 +38,10 @@ build-job:
         - ci.inria.fr
         - small
     script:
+        - . /opt/venv36/bin/activate
+        - python3 --version
         - python3 setup.py sdist bdist_wheel -G"Unix Makefiles"
-        - auditwheel repair dist/*.whl
+        - auditwheel repair dist/*cp36m-linux_x86_64.whl
         - rm dist/*
         # - python3 -m pip install wheelhouse/*.manylinux2014_x86_64.whl
         # - python3 -c "import pyparadiseo"
@@ -50,6 +53,34 @@ build-job:
         paths:
             #- _skbuild/
             - wheelhouse/
+
+
+build-cp37:
+    stage: build
+    tags:
+        - ci.inria.fr
+        - small
+    script:
+        - /opt/python/cp37-cp37m/bin/python3 -m venv /opt/venv37
+        - . /opt/venv37/bin/activate
+        - python3 --version  # For debugging
+        - mkdir -p .pip
+        - python3 -m pip install --cache-dir=.pip --upgrade pip
+        - python3 -m pip install --cache-dir=.pip scikit-build numpy numba pytest auditwheel sphinxcontrib-napoleon Sphinx sphinx-rtd-theme pydata-sphinx-theme
+        - python3 setup.py sdist bdist_wheel -G"Unix Makefiles"
+        - auditwheel repair dist/*cp37m-linux_x86_64.whl
+        - rm dist/*
+        # - python3 -m pip install wheelhouse/*.manylinux2014_x86_64.whl
+        # - python3 -c "import pyparadiseo"
+        # - python3 -m pytest tests
+    cache:
+        paths:
+            - _skbuild/
+    artifacts:
+        paths:
+            #- _skbuild/
+            - wheelhouse/
+    when: manual
 
 
 test-job1:
