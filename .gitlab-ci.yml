@@ -18,12 +18,13 @@ cache:
         - _skbuild
 
 before_script:
-    - /opt/python/cp36-cp36m/bin/python3 --version  # For debugging
-    - /opt/python/cp36-cp36m/bin/python3 -m venv /opt/venv
-    - . /opt/venv/bin/activate
-    - mkdir -p .pip
-    - python3 -m pip install --cache-dir=.pip --upgrade pip
-    - python3 -m pip install --cache-dir=.pip scikit-build numpy numba pytest auditwheel sphinxcontrib-napoleon Sphinx sphinx-rtd-theme pydata-sphinx-theme
+    - echo "before script"
+    # - /opt/python/cp36-cp36m/bin/python3 --version  # For debugging
+    #- /opt/python/cp36-cp36m/bin/python3 -m venv /opt/venv
+    #- . /opt/venv/bin/activate
+    #- mkdir -p .pip
+    #- python3 -m pip install --cache-dir=.pip --upgrade pip
+    #- python3 -m pip install --cache-dir=.pip scikit-build numpy numba pytest auditwheel sphinxcontrib-napoleon Sphinx sphinx-rtd-theme pydata-sphinx-theme
     #- yum -y install python-sphinx
 
 stages:
@@ -35,10 +36,26 @@ build-job:
     stage: build
     tags:
         - ci.inria.fr
-        - small
+        - large
     script:
-        - python3 setup.py sdist bdist_wheel -G"Unix Makefiles"
-        - auditwheel repair dist/*.whl
+        #- python3 setup.py sdist bdist_wheel -G"Unix Makefiles"
+        #- auditwheel repair dist/*.whl
+        #- rm dist/*
+        - |+
+          for i in 36 37
+          do
+            . /opt/venv${i}/bin/activate
+            python3 --version  # For debugging
+            python3 setup.py sdist bdist_wheel -G"Unix Makefiles" -- -- -j4
+            auditwheel repair dist/*cp${i}m-linux_x86_64.whl
+          done
+          for i in 38 39 310
+          do
+            . /opt/venv${i}/bin/activate
+            python3 --version  # For debugging
+            python3 setup.py sdist bdist_wheel -G"Unix Makefiles" -- -- -j4
+            auditwheel repair dist/*cp${i}-linux_x86_64.whl
+          done
         - rm dist/*
         # - python3 -m pip install wheelhouse/*.manylinux2014_x86_64.whl
         # - python3 -c "import pyparadiseo"
@@ -101,7 +118,8 @@ pypi:
     needs:
         - test-job1
     script:
+        - . /opt/venv36/bin/activate
         - python3 -m pip install -U twine
         #- twine upload --skip-existing wheelhouse/*
-        - twine upload wheelhouse/*.manylinux2014_x86_64.whl
+        - twine upload --skip-existing wheelhouse/*.manylinux2014_x86_64.whl
     when: manual
