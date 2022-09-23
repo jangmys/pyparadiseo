@@ -47,6 +47,11 @@ def empty(stype=None):
         class_ = utils.get_class("BinaryPop")
     if stype == 'real':
         class_ = utils.get_class("RealPop")
+    if stype == 'perm':
+        class_ = utils.get_class("IntPop")
+
+    if class_ is None:
+        raise TypeError("unknown stype")
 
     return class_()
 
@@ -84,7 +89,7 @@ def from_init(pop_size,f_init,stype=None):
         class_ = utils.get_class("RealPop")
 
     if class_ is None:
-        raise TypeError("invalid init function")
+        raise TypeError("population.from_init : invalid init function")
 
     return class_(pop_size,f_init)
 

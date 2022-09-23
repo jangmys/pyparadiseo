@@ -239,11 +239,14 @@ def random(size=0,lb=None,ub=None,stype=None,**kwargs):
         return sol
 
     if stype == 'bin':
-        init = initializer.random(size,stype)
+        init = initializer.random(size=size,stype=stype)
         init(sol)
 
     if stype == 'real':
-        init = initializer.random(size,lb,ub,stype)
+        if len(lb)>size:
+            size = len(lb)
+
+        init = initializer.random(size,(lb,ub),stype)
         init(sol)
 
     return sol

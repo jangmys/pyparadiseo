@@ -2,6 +2,8 @@
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 #include <boost/smart_ptr.hpp>
 
+#include <pyeot.h>
+
 
 namespace bp=boost::python;
 

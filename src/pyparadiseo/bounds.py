@@ -10,7 +10,7 @@ domain bounds
 """
 #ABC
 from ._core import RealBounds as RealBoundsBase
-from ._core import RealBaseVectorBounds as RealVectorBoundsBase
+# from ._core import RealVectorBoundsBase
 
 #use? bound for one variable ...
 
@@ -31,7 +31,7 @@ from ._core import IntBelowBound # [a,inf]
 from ._core import IntAboveBound # [inf,a]
 from ._core import IntInterval #[a,b]
 
-
+import numpy as np
 
 #class_ BoundsReal():
 #   pass
@@ -43,34 +43,26 @@ from ._core import IntInterval #[a,b]
 # (dim, lb, ub) --> same for all
 # (real_vec,real_vec) --> lb,ub as vectors
 
-# (bound,bound) --> only 2D (why the particular case?)
 
-def bound_below(lb):
+def real_interval(lb,ub):
     """
-    half-open bounds [a,inf[ (1D)
+    1D Real Interval Bounds
 
-    *Test*
+    Parameters
+    ----------
+    lb : real
+    ub : real
 
-    * Stuff
-    * more
-
-    ``code``
+    np.inf is allowed
     """
-    return RealBoundBelow(lb)
-
-
-def bound_above(ub):
-    """
-    half-open bounds ]inf,a] (1D)
-    """
-    return RealAboveBound(ub)
-
-
-def bound_interval(lb,ub):
-    """
-    1D
-    """
-    return RealInterval(lb,ub)
+    if not np.isinf(lb) and not np.isinf(ub):
+        return RealInterval(lb,ub)
+    if np.isinf(lb) and np.isinf(ub):
+        return RealNoBounds()
+    if np.isinf(lb):
+        return RealAboveBound(ub)
+    if np.isinf(ub):
+        return RealBelowBound(lb)
 
 
 def bound_box(*args):
@@ -89,13 +81,20 @@ def bound_box(*args):
     if len(args) == 2:
         ret=None
         try:
-            #either we got two vectors or (int,bounds)
-            #trust python to figure it out
-            ret = RealVectorBounds(args[0],args[1])
+            if len(args[0]) != len(args[1]):
+                print("lb and ub should be of same length")
+
+            ret = RealVectorBounds()
+            for idx in range(len(args[0])):
+                a,b = args[0][idx],args[1][idx]
+                ret.append(real_interval(a,b))
+
             return ret
         except ValueError:
             print("failed to construct bound_box")
 
     if len(args) == 3:
         #should be one int and two floats
-        return RealVectorBounds(args[0],args[1],args[2])
+        return RealVectorBounds(args[0],
+            RealInterval(args[1],args[2])
+        )

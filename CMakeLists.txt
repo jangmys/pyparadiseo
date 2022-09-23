@@ -14,16 +14,14 @@ set(BOOST_LIBRARYDIR /usr/lib64/boost169/)
 find_package(Python3 COMPONENTS Interpreter Development.Module NumPy)
 find_package(Boost COMPONENTS python36 numpy36 REQUIRED)
 
-# message("==> Python Sitelib : " ${Python3_SITELIB})
-# message("==> Boost include : " ${Boost_INCLUDE_DIRS})
-# message("==> Python include : " ${Python3_INCLUDE_DIRS})
-
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${Python3_INCLUDE_DIRS})
 
 link_directories(${Boost_LIBRARY_DIRS})
 
-set(CMAKE_CXX_FLAGS "-Wall -Wno-maybe-uninitialized -O2 -fPIC -DBOOST_NO_AUTO_PTR")
+
+###!!!boost.python uses deprecated PyEval_CallFunction : lots of warnings!!!
+set(CMAKE_CXX_FLAGS "-Wall -Wno-maybe-uninitialized -Wno-deprecated-declarations -O2 -fPIC -DBOOST_NO_AUTO_PTR")
 
 set(commonSources
     src/cpp/utils/converters.cpp

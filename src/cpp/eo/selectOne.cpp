@@ -157,8 +157,8 @@ void expose_selectOne(std::string name)
     class_<eoSelectOneWrap<SolutionType>,boost::noncopyable>
     (make_name("eoSelectOne",name).c_str(), init<>())
     .def("__call__",pure_virtual(&eoSelectOneWrap<SolutionType>::operator()),
-        // return_internal_reference<>()
         return_value_policy<copy_const_reference>()
+        // return_internal_reference<>()
     )
     .def("setup",&eoSelectOne<SolutionType>::setup,&eoSelectOneWrap<SolutionType>::default_setup)
     ;

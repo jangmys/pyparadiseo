@@ -34,6 +34,8 @@
 #include "eoRNG.h"
 #include "eoLogger.h"
 
+#include <boost/shared_ptr.hpp>
+
 /**
 \defgroup Real Vector of reals
 
@@ -214,6 +216,8 @@ public:
 @ingroup Bounds
 */
 extern eoRealNoBounds eoDummyRealNoBounds;
+
+extern boost::shared_ptr<eoRealBounds> eoDummyRealNoBoundsPtr;
 
 /**
  * fully bounded eoRealBound == interval

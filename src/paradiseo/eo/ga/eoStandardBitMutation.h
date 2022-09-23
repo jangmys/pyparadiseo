@@ -1,4 +1,3 @@
-
 #ifndef _eoStandardBitMutation_h_
 #define _eoStandardBitMutation_h_
 
@@ -75,7 +74,7 @@ class eoUniformBitMutation : public eoMonOp<EOT>
  *
  * This is identical to sampling k from the conditional binomial
  * distribution Bin>0(n,p) which re-assigns the probability to sample
- * a 0 proportionally to all values i ∈ [1..n]. 
+ * a 0 proportionally to all values i ∈ [1..n].
  *
  * @ingroup Bitstrings
  * @ingroup Variators

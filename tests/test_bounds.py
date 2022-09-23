@@ -12,32 +12,25 @@ class TestBounds(unittest.TestCase):
         self.reals = np.asarray([0.1,0.1,.2,.3,.5,.8,1.3,2.1])
 
 
-    def test_realInterval(self):
-        interval = bounds.RealInterval(-1.0,1.0)
-        self.assertTrue(interval.isBounded())
-        self.assertFalse(interval.hasNoBoundAtAll())
-        self.assertTrue(interval.isMinBounded())
-        self.assertTrue(interval.isMaxBounded())
+    def test_Interval(self):
+        def t_interval(interval):
+            self.assertTrue(interval.isBounded())
+            self.assertFalse(interval.hasNoBoundAtAll())
+            self.assertTrue(interval.isMinBounded())
+            self.assertTrue(interval.isMaxBounded())
 
-        self.assertTrue(interval.isInBounds(-1.0))
-        self.assertTrue(interval.isInBounds(1.0))
-        self.assertTrue(interval.isInBounds(0.0))
-        self.assertFalse(interval.isInBounds(1.1))
-        self.assertFalse(interval.isInBounds(-1.1))
+            self.assertTrue(interval.isInBounds(-1.0))
+            self.assertTrue(interval.isInBounds(1.0))
+            self.assertTrue(interval.isInBounds(0.0))
+            self.assertFalse(interval.isInBounds(1.1))
+            self.assertFalse(interval.isInBounds(-1.1))
 
-    def test_intInterval(self):
-        interval = bounds.IntInterval(-10,10)
-        self.assertTrue(interval.isBounded())
-        self.assertFalse(interval.hasNoBoundAtAll())
-        self.assertTrue(interval.isMinBounded())
-        self.assertTrue(interval.isMaxBounded())
+            print(interval)
 
-        self.assertTrue(interval.isInBounds(-10))
-        self.assertTrue(interval.isInBounds(10))
-        self.assertTrue(interval.isInBounds(0))
-        self.assertFalse(interval.isInBounds(11))
-        self.assertFalse(interval.isInBounds(-11))
-
+        interval = bounds.RealInterval(-1.01,1.01)
+        t_interval(interval)
+        interval = bounds.IntInterval(-1,1)
+        t_interval(interval)
 
 
     def test_Interval_fold(self):
@@ -80,7 +73,7 @@ class TestBounds(unittest.TestCase):
 
 
     def test_realVecBounds1(self):
-        b = bounds.RealVectorBounds(3,-1.0,1.0)
+        b = bounds.bound_box(3,-1.0,1.0)
 
         self.assertTrue(b.isBounded())
         for i in range(3):
@@ -127,38 +120,49 @@ class TestBounds(unittest.TestCase):
         self.assertTrue(b.uniform(1) < 10)
 
 
-    def test_realVecBounds2(self):
-        b = bounds.RealVectorBounds(3,bounds.RealInterval(-1.0,1.0))
+    def test_bound_box(self):
+        lb = [np.inf,  0,     0,-np.inf]
+        ub = [    10,100,np.inf, np.inf]
+        b = bounds.bound_box(lb,ub)
 
-        self.assertTrue(b.isBounded())
-        for i in range(3):
-            self.assertTrue(b.isBounded(i))
-            self.assertFalse(b.hasNoBoundAtAll(i))
-            self.assertTrue(b.isMinBounded(i))
-            self.assertTrue(b.isMaxBounded(i))
-            self.assertAlmostEqual(b.foldsInBounds(i,1.0+i*0.1),1.0-i*0.1)
-            self.assertAlmostEqual(b.truncate(i,1.0+i*0.1),1.0)
+        self.assertEqual(len(b),4)
 
-        v = np.asarray([1.0+0.1*i for i in range(3)])
-        b.foldsInBounds(v)
-        np.testing.assert_almost_equal(v,np.asarray([1.0,0.9,0.8]))
+        for bd in b:
+            print(type(bd))
 
-        v = np.asarray([1.0+0.1*i for i in range(3)])
-        b.truncate(v)
-        np.testing.assert_almost_equal(v,np.asarray([1.0,1.0,1.0]))
 
-        self.assertTrue(b.uniform(0) > -1.0)
-        self.assertTrue(b.uniform(1) < 1.0)
+    def test_other(self):
+        from pyparadiseo._core import _BdsVectorReal,RealVectorBounds
 
+        truc = RealVectorBounds()
+        # truc = _BdsVectorReal()
+
+        i = bounds.RealInterval(1.0,2.0)
+
+        truc.append(i)
+        # print("LEN",len(truc))
+        # print(truc[0])
+
+        i = bounds.RealAboveBound(200.0)
+
+        truc.append(i)
+        truc = RealVectorBounds(10,bounds.RealAboveBound(200.0))
+        # print("LEN",len(truc))
+        # for i in truc:
+        #     print(i,hex(id(i)))
 
     def test_realVecBounds3(self):
         lb = np.asarray([-1.0*i for i in range(1,4)])
         ub = np.asarray([i*1.0 for i in range(1,4)])
-        b = bounds.RealVectorBounds(lb,ub)
 
-        self.assertTrue(b.isBounded())
-        for i in range(0,3):
-            self.assertTrue(b.isBounded(i))
+        b = bounds.bound_box(lb,ub)
+
+        self.assertNotEqual(hex(id(b[0])),hex(id(b[1])))
+        self.assertNotEqual(hex(id(b[1])),hex(id(b[2])))
+        self.assertEqual(len(b),3)
+
+        for i in range(len(b)):
+            self.assertTrue(b[i].isBounded())
             self.assertFalse(b.hasNoBoundAtAll(i))
             self.assertTrue(b.isMinBounded(i))
             self.assertTrue(b.isMaxBounded(i))
@@ -168,6 +172,7 @@ class TestBounds(unittest.TestCase):
         v = np.asarray([i*1.0+0.1 for i in range(1,4)])
         b.foldsInBounds(v)
         np.testing.assert_almost_equal(v,np.asarray([0.9,1.9,2.9]))
+
 
         v = np.asarray([i*1.0+0.1 for i in range(1,4)])
         b.truncate(v)

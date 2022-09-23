@@ -130,7 +130,7 @@ def make_crossover(xover,stype=None):
 
 
 ### ==================================================
-### BINARY
+### ----------------------BINARY----------------------
 ### ==================================================
 def standard_bit_mutation(rate=0.5):
     """
@@ -146,8 +146,9 @@ def standard_bit_mutation(rate=0.5):
 
 def uniform_bit_mutation(rate=0.5):
     """
-    Uniform bit mutation with mutation rate p:
-        choose k from the uniform distribution U(0,n) and apply flip_k(x).
+    Uniform bit mutation with mutation rate p
+
+    choose k from the uniform distribution U(0,n) and apply flip_k(x).
 
     Returns
     =======
@@ -156,28 +157,80 @@ def uniform_bit_mutation(rate=0.5):
     return UniformBitMutation(rate)
 
 
-
-def bit_flip(flip_prob=0.01,normalize=False):
+def conditional_bit_mutation(rate=0.5):
     """
-    flip each bit with probability `flip_prob`
+    Conditional standard bit mutation with mutation rate p
 
-    Parameters
-    ==========
-    flip_prob : real, default=0.01
-        mutation rate (probability for each bit to be flipped)
-    normalize : bool, default=False
-        normalize `flip_prob` with respect to chromosome size
-
-    Returns
-    =======
-    eoMonOp<BinarySolution>
+    choose k from the binomial distribution Bin(n,p) until k >0
+    and apply flip_k(x).
+    This is identical to sampling k from the conditional binomial
+    distribution Bin>0(n,p) which re-assigns the probability to sample a 0 proportionally to all values i ∈ [1..n].
     """
-    if nbits==1:
-        return OneBitFlip()
-    elif allow_duplicates:
-        return DetBitFlip(nbits)
-    else:
-        return DetSingleBitFlip(nbits)
+    return ConditionalBitMutation(rate)
+
+
+def shifted_bit_mutation(rate=0.5):
+    """
+    Shifted standard bit mutation with mutation rate p.
+
+    choose k from the binomial distribution Bin(n,p).
+    When k= 0, set k= 1. Apply flip_k(x).
+
+    This is identical to sampling k from the conditional binomial
+    distribution Bin0→1(n,p) which re-assigns the probability to
+    sample a 0 to sampling k= 1.
+    """
+    return ShiftedBitMutation(rate)
+
+
+def normal_bit_mutation(rate=0.5,variance=1):
+    """
+    Mutation which size is sample in a gaussian.
+
+    sample k from the normal distribution N(pn,σ^2) and apply flip_k(x).
+
+    From:
+    Furong Ye, Carola Doerr, and Thomas Back.
+    Interpolating local and global search by controllingthe variance of standard bit mutation.
+    In 2019 IEEE Congress on Evolutionary Computation(CEC), pages 2292–2299.
+
+    In contrast to standard bit mutation, this operators allows to scale the variance of the mutation strength independently of the mean.
+        """
+    return NormalBitMutation(rate,variance)
+
+
+def fast_bit_mutation(rate=0.5,beta=1.5):
+    """
+    Fast mutation which size is sampled from an adaptive power law.
+
+    From:
+    Benjamin Doerr, Huu Phuoc Le, Régis Makhmara, and Ta Duy Nguyen.
+    Fast genetic algorithms.
+    In Proc. of Genetic and Evolutionary Computation Conference (GECCO’17), pages 777–784.ACM, 2017.
+    """
+    return FastBitMutation(rate,beta)
+
+
+
+
+# def bit_flip(flip_prob=0.01,normalize=False):
+#     """
+#     flip_k mutation
+#
+#     Parameters
+#     ==========
+#     nbits : int
+#
+#     flip_prob : real, default=0.01
+#         mutation rate (probability for each bit to be flipped)
+#     normalize : bool, default=False
+#         normalize `flip_prob` with respect to chromosome size
+#
+#     Returns
+#     =======
+#     eoMonOp<BinarySolution>
+#     """
+#     pass
 
 
 def bit_flip_n(nbits=1,allow_duplicates=True):

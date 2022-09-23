@@ -31,6 +31,187 @@
 #include "eoRNG.h"
 #include "eoRealBounds.h"
 
+#include <memory>
+#include <boost/shared_ptr.hpp>
+
+class eoRealIntervalBds : public std::vector<boost::shared_ptr<eoRealInterval>>
+{
+public:
+    eoRealIntervalBds() : std::vector<boost::shared_ptr<eoRealInterval> >(0) {}
+};
+
+typedef boost::shared_ptr<eoRealBounds> eoRealBoundsPtr;
+
+
+class eoRealVectorBounds : public std::vector<eoRealBoundsPtr>
+{
+public:
+    eoRealVectorBounds() : std::vector<eoRealBoundsPtr>(0) {}
+
+    eoRealVectorBounds(unsigned _dim, eoRealBoundsPtr _bounds) :
+      std::vector<eoRealBoundsPtr>(_dim, _bounds)
+    {}
+
+    eoRealVectorBounds(unsigned _dim, double _min, double _max)
+        // std::vector<eoRealBoundsPtr>(0)
+    {
+        if (_max-_min<=0)
+            throw eoException("Void range in eoRealVectorBounds");
+
+        eoRealBoundsPtr ptBounds(new eoRealInterval(_min, _max));
+        //     // handle memory once
+        //     ownedBounds.push_back(ptBounds);
+        // same bound for everyone
+        for (unsigned int i=0; i<_dim; i++)
+            push_back(ptBounds);
+    }
+
+
+    /** test: is i_th component bounded
+    */
+    virtual bool isBounded(unsigned _i)
+    {
+        return (*this)[_i]->isBounded();
+    }
+
+    /** test: bounded iff all are bounded
+     */
+    virtual bool isBounded(void)
+    {
+        for (unsigned i=0; i<size(); i++)
+            if (! (*this)[i]->isBounded())
+                return false;
+        return true;
+    }
+
+    /** Self-test: true iff i_th component has no bounds at all
+     */
+    virtual bool hasNoBoundAtAll(unsigned _i)
+    {
+        return (*this)[_i]->hasNoBoundAtAll();
+    }
+
+    /** Self-test: true iff all components have no bound at all
+     */
+    virtual bool hasNoBoundAtAll(void)
+    {
+        for (unsigned i=0; i<size(); i++)
+            if (! (*this)[i]->hasNoBoundAtAll())
+                return false;
+        return true;
+    }
+
+    virtual bool isMinBounded(unsigned _i)
+    { return (*this)[_i]->isMinBounded();} ;
+
+    virtual bool isMaxBounded(unsigned _i)
+    { return (*this)[_i]->isMaxBounded();} ;
+
+    /** Folds a real value back into the bounds - i_th component
+     */
+    virtual void foldsInBounds(unsigned _i, double & _r)
+    {
+        (*this)[_i]->foldsInBounds(_r);
+    }
+
+    /** Folds all variables of a std::vector of real values into the bounds
+     */
+    virtual void foldsInBounds(std::vector<double> & _v)
+    {
+        for (unsigned i=0; i<size(); i++)
+        {
+            (*this)[i]->foldsInBounds(_v[i]);
+        }
+    }
+
+    /** Truncates a real value to the bounds - i_th component
+     */
+    virtual void truncate(unsigned _i, double & _r)
+    {
+        (*this)[_i]->truncate(_r);
+    }
+
+    /** truncates all variables of a std::vector of real values to the bounds
+    */
+    virtual void truncate(std::vector<double> & _v)
+    {
+        for (unsigned i=0; i<size(); i++)
+        {
+            (*this)[i]->truncate(_v[i]);
+        }
+    }
+
+    /** test: is i_th component within the bounds?
+     */
+    virtual bool isInBounds(unsigned _i, double _r)
+    { return (*this)[_i]->isInBounds(_r); }
+
+    /** test: are ALL components within the bounds?
+     */
+    virtual bool isInBounds(const std::vector<double> _v)
+    {
+        for (unsigned i=0; i<size(); i++)
+            if (! isInBounds(i, _v[i]))
+                return false;
+        return true;
+    }
+
+    /** Accessors: will raise an std::exception if these do not exist
+    */
+    virtual double minimum(unsigned _i) {return (*this)[_i]->minimum();}
+    virtual double maximum(unsigned _i) {return (*this)[_i]->maximum();}
+    virtual double range(unsigned _i) {return (*this)[_i]->range();}
+
+    /** Computes the average range
+     *  An std::exception will be raised if one of the component is unbounded
+    */
+    virtual double averageRange()
+    {
+        double r=0.0;
+        for (unsigned i=0; i<size(); i++)
+            r += range(i);
+        return r/size();
+    }
+
+    /** Generates a random number in i_th range
+     *  An std::exception will be raised if one of the component is unbounded
+    */
+    virtual double uniform(unsigned _i, eoRng & _rng = eo::rng)
+    {
+        (void)_rng;
+
+        double r= (*this)[_i]->uniform();
+        return r;
+    }
+
+    /** fills a std::vector with uniformly chosen variables in bounds
+     *  An std::exception will be raised if one of the component is unbounded
+     */
+    void uniform(std::vector<double> & _v, eoRng & _rng = eo::rng)
+    {
+        _v.resize(size());
+        for (unsigned i=0; i<size(); i++)
+        {
+            _v[i] = uniform(i, _rng);
+        }
+    }
+
+    void adjust_size(unsigned _dim);
+
+    /**
+     * Write object. It's called printOn since it prints the object on a stream.
+     * @param _os A std::ostream.
+     */
+    virtual void printOn(std::ostream& _os) const
+    {
+        for (unsigned i=0; i<size(); i++)
+        {
+            operator[](i)->printOn(_os);
+            _os << ";";
+        }
+    }
+};
+
 /**
 Vector type for bounds (see eoRealBounds.h for scalar types)
 ------------
@@ -205,6 +386,7 @@ public:
       }
   }
 
+
   /**
    * Write object. It's called printOn since it prints the object on a stream.
    * @param _os A std::ostream.
@@ -225,124 +407,126 @@ public:
 
 @ingroup Bounds
  */
-class eoRealVectorBounds : public eoRealBaseVectorBounds, public eoPersistent
-{
-public:
-  /** Default Ctor will call base class default ctor
-   */
-  eoRealVectorBounds():eoRealBaseVectorBounds() {}
-
-  /** Ctor: same bounds for everybody, given as an eoRealBounds
-  */
-  eoRealVectorBounds(unsigned _dim, eoRealBounds & _bounds) :
-    eoRealBaseVectorBounds(_dim, _bounds), factor(1,_dim), ownedBounds(0)
-  {}
-
-  /** Ctor, particular case of dim-2
-   */
-  eoRealVectorBounds(eoRealBounds & _xbounds, eoRealBounds & _ybounds) :
-    eoRealBaseVectorBounds(_xbounds, _ybounds), factor(2,1), ownedBounds(0)
-  {}
-
-  /** Simple bounds = minimum and maximum (allowed)
-  */
-  eoRealVectorBounds(unsigned _dim, double _min, double _max) :
-    eoRealBaseVectorBounds(), factor(1, _dim), ownedBounds(0)
-  {
-    if (_max-_min<=0)
-      throw eoException("Void range in eoRealVectorBounds");
-    eoRealBounds *ptBounds = new eoRealInterval(_min, _max);
-    // handle memory once
-    ownedBounds.push_back(ptBounds);
-    // same bound for everyone
-    for (unsigned int i=0; i<_dim; i++)
-      push_back(ptBounds);
-  }
-
-  /** Ctor: different bounds for different variables, std::vectors of double
-   */
-  eoRealVectorBounds(std::vector<double> _min, std::vector<double> _max) :
-    factor(_min.size(), 1), ownedBounds(0)
-  {
-    if (_max.size() != _min.size())
-      throw eoException("Dimensions don't match in eoRealVectorBounds");
-    // the bounds
-    eoRealBounds *ptBounds;
-    for (unsigned i=0; i<_min.size(); i++)
-      {
-        ptBounds = new eoRealInterval(_min[i], _max[i]);
-        ownedBounds.push_back(ptBounds);
-        push_back(ptBounds);
-      }
-  }
-
-  /** Ctor from a std::string
-   * and don't worry, the readFrom(std::string) starts by setting everything to 0!
-  */
-  eoRealVectorBounds(std::string _s) : eoRealBaseVectorBounds()
-  {
-    readFrom(_s);
-  }
-
-  /** Dtor: destroy all ownedBounds - BUG ???*/
-  virtual ~eoRealVectorBounds()
-  {
-//     std::cout << "Dtor, avec size = " << ownedBounds.size() << std::endl;
-//     for (unsigned i = 0; i < ownedBounds.size(); ++i)
-//     {
-//         delete ownedBounds[i];
-//     }
-}
-
-
-  // methods from eoPersistent
-  /**
-   * Read object from a stream
-   * only calls the readFrom(std::string) - for param reading
-   * @param _is A std::istream.
-   */
-  virtual void readFrom(std::istream& _is) ;
-
-  /**
-   * Read object from a std::string
-   * @param _s A std::istream.
-   */
-  virtual void readFrom(std::string _s) ;
-
-  /** overload printOn method to save space */
-  virtual void printOn(std::ostream& _os) const
-  {
-    if (factor[0]>1)
-      _os << factor[0] ;
-    operator[](0)->printOn(_os);
-
-    // other bounds
-    unsigned int index=factor[0];
-    if (factor.size()>1)
-      for (unsigned i=1; i<factor.size(); i++)
-        {
-          _os << ";";
-          if (factor[i] > 1)
-            _os << factor[i];
-          operator[](index)->printOn(_os);
-          index += factor[i];
-        }
-  }
-
-  /** Eventually increases the size by duplicating last bound */
-  void adjust_size(unsigned _dim);
-
-  /** need to rewrite copy ctor and assignement operator
-   *  because of ownedBounds */
-  eoRealVectorBounds(const eoRealVectorBounds &);
-
-private:// WARNING: there is no reason for both std::vector below
-        //to be synchronized in any manner
-  std::vector<unsigned int> factor;        // std::list of nb of "grouped" bounds
-  std::vector<eoRealBounds *> ownedBounds;
-// keep this one private
-  eoRealVectorBounds& operator=(const eoRealVectorBounds&);
-  };
+// class eoRealVectorBounds : public eoRealBaseVectorBounds, public eoPersistent
+// {
+// public:
+//   /** Default Ctor will call base class default ctor
+//    */
+//   eoRealVectorBounds():eoRealBaseVectorBounds() {}
+//
+//   /** Ctor: same bounds for everybody, given as an eoRealBounds
+//   */
+//   eoRealVectorBounds(unsigned _dim, eoRealBounds & _bounds) :
+//     eoRealBaseVectorBounds(_dim, _bounds), factor(1,_dim), ownedBounds(0)
+//   {}
+//
+//   /** Ctor, particular case of dim-2
+//    */
+//   eoRealVectorBounds(eoRealBounds & _xbounds, eoRealBounds & _ybounds) :
+//     eoRealBaseVectorBounds(_xbounds, _ybounds), factor(2,1), ownedBounds(0)
+//   {}
+//
+//   /** Simple bounds = minimum and maximum (allowed)
+//   */
+//   eoRealVectorBounds(unsigned _dim, double _min, double _max) :
+//     eoRealBaseVectorBounds(), factor(1, _dim), ownedBounds(0)
+//   {
+//     if (_max-_min<=0)
+//       throw eoException("Void range in eoRealVectorBounds");
+//     eoRealBounds *ptBounds = new eoRealInterval(_min, _max);
+//     // handle memory once
+//     ownedBounds.push_back(ptBounds);
+//     // same bound for everyone
+//     for (unsigned int i=0; i<_dim; i++)
+//       push_back(ptBounds);
+//   }
+//
+//   /** Ctor: different bounds for different variables, std::vectors of double
+//    */
+//   eoRealVectorBounds(std::vector<double> _min, std::vector<double> _max) :
+//     factor(_min.size(), 1), ownedBounds(0)
+//   {
+//     if (_max.size() != _min.size())
+//       throw eoException("Dimensions don't match in eoRealVectorBounds");
+//     // the bounds
+//     // eoRealBounds *ptBounds;
+//     for (unsigned i=0; i<_min.size(); i++)
+//       {
+//
+//         eoRealBounds *ptBounds = new eoRealInterval(_min[i], _max[i]);
+//         // std::cout<<_min[i]<<" "<<_max[i]<<" "<<ptBounds<<"\n";
+//         ownedBounds.push_back(ptBounds);
+//         push_back(ptBounds);
+//       }
+//   }
+//
+//   /** Ctor from a std::string
+//    * and don't worry, the readFrom(std::string) starts by setting everything to 0!
+//   */
+//   eoRealVectorBounds(std::string _s) : eoRealBaseVectorBounds()
+//   {
+//     readFrom(_s);
+//   }
+//
+//   /** Dtor: destroy all ownedBounds - BUG ???*/
+//   virtual ~eoRealVectorBounds()
+//   {
+// //     std::cout << "Dtor, avec size = " << ownedBounds.size() << std::endl;
+// //     for (unsigned i = 0; i < ownedBounds.size(); ++i)
+// //     {
+// //         delete ownedBounds[i];
+// //     }
+// }
+//
+//
+//   // methods from eoPersistent
+//   /**
+//    * Read object from a stream
+//    * only calls the readFrom(std::string) - for param reading
+//    * @param _is A std::istream.
+//    */
+//   virtual void readFrom(std::istream& _is) ;
+//
+//   /**
+//    * Read object from a std::string
+//    * @param _s A std::istream.
+//    */
+//   virtual void readFrom(std::string _s) ;
+//
+//   /** overload printOn method to save space */
+//   virtual void printOn(std::ostream& _os) const
+//   {
+//     if (factor[0]>1)
+//       _os << factor[0] ;
+//     operator[](0)->printOn(_os);
+//
+//     // other bounds
+//     unsigned int index=factor[0];
+//     if (factor.size()>1)
+//       for (unsigned i=1; i<factor.size(); i++)
+//         {
+//           _os << ";";
+//           if (factor[i] > 1)
+//             _os << factor[i];
+//           operator[](index)->printOn(_os);
+//           index += factor[i];
+//         }
+//   }
+//
+//   /** Eventually increases the size by duplicating last bound */
+//   void adjust_size(unsigned _dim);
+//
+//   /** need to rewrite copy ctor and assignement operator
+//    *  because of ownedBounds */
+//   eoRealVectorBounds(const eoRealVectorBounds &);
+//
+// private:// WARNING: there is no reason for both std::vector below
+//         //to be synchronized in any manner
+//   std::vector<unsigned int> factor;        // std::list of nb of "grouped" bounds
+//   std::vector<eoRealBounds *> ownedBounds;
+// // keep this one private
+//   eoRealVectorBounds& operator=(const eoRealVectorBounds&);
+//   };
 
 //////////////////////////////////////////////////////////////
 /** the dummy unbounded eoRealVectorBounds: usefull if you don't need bounds!
@@ -361,7 +545,7 @@ public:
    * Ctor: nothing to do, but beware of dimension: call base class ctor
    */
   eoRealVectorNoBounds(unsigned _dim) :
-    eoRealVectorBounds( (_dim?_dim:1), eoDummyRealNoBounds)
+    eoRealVectorBounds( (_dim?_dim:1), eoDummyRealNoBoundsPtr)
   {}
 
 

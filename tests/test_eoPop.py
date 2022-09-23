@@ -25,10 +25,12 @@ class Test_Pop(unittest.TestCase):
         self.pop = population.empty()
         self.binpop = population.empty(stype='bin')
         self.realpop = population.empty(stype='real')
+        self.permpop = population.empty(stype='perm')
 
         self.init = initializer.initializer(lambda : np.arange(10)) #just something
         self.bininit = initializer.random(10,stype='bin')
         self.realinit = initializer.random(bounds=([-1]*10,[1]*10),stype='real')
+        self.perminit = initializer.random(10,stype='perm')
 
     def tearDown(self):
         self.pop.resize(0)
@@ -36,12 +38,16 @@ class Test_Pop(unittest.TestCase):
         self.realpop.resize(0)
 
     def test_from_init(self):
-        def t_from_init(init):
-            pop = population.from_init(10,init)
-            self.assertEqual(len(pop),10)
+        pop = population.from_init(10,self.init)
+        self.assertEqual(len(pop),10)
 
-        t_from_init(self.init)
-        t_from_init(self.bininit)
+        pop = population.from_init(10,self.realinit)
+        self.assertEqual(len(pop),10)
+
+
+        # t_from_init(self.init)
+        # t_from_init(self.bininit)
+        # t_from_init(self.perminit)
         # t_from_init(self.realinit)
     #
     def test_resize(self):
@@ -59,7 +65,27 @@ class Test_Pop(unittest.TestCase):
 
         t_resize(self.pop)
         t_resize(self.binpop)
-        # t_resize(self.realpop)
+        t_resize(self.realpop)
+
+    def test_pickle(self):
+        import pickle
+
+        pop = population.from_init(10,self.realinit)
+        for i,ind in enumerate(pop):
+            ind.fitness = i
+            ind.diversity = i**2
+            ind.objectives = [10*i,11*i]
+
+        d=pickle.dumps(pop)
+        pop2=pickle.loads(d)
+
+        for i,ind in enumerate(pop):
+            np.testing.assert_allclose(ind.encoding,pop2[i].encoding)
+            np.testing.assert_allclose(ind.carray,pop2[i].carray)
+            np.testing.assert_allclose(ind.objectives,pop2[i].objectives)
+            np.testing.assert_allclose(ind.fitness,pop2[i].fitness)
+            np.testing.assert_allclose(ind.diversity,pop2[i].diversity)
+
 
     def test_append(self):
         def t_append(pop,init):
@@ -79,6 +105,7 @@ class Test_Pop(unittest.TestCase):
             # sort fails if fitness not set
             with self.assertRaises(RuntimeError):
                 pop.sort()
+
             for i in pop:
                 i.fitness = np.random.randint(100)
 
@@ -86,7 +113,7 @@ class Test_Pop(unittest.TestCase):
             self.assertTrue(isNonIncreasing(pop),"maximize : sorted pop should be non-increasing")
         t_sort(self.pop)
         t_sort(self.binpop)
-    #     t_sort(self.realpop)
+        t_sort(self.realpop)
 
     def test_shuffle(self):
         def t_shuffle(pop):
@@ -150,7 +177,7 @@ class Test_Pop(unittest.TestCase):
             self.assertEqual(len(pop2),0)
         t_swap(self.pop,self.init)
         t_swap(self.binpop,self.bininit)
-    #     t_swap(self.realpop,self.realinit)
+        t_swap(self.realpop,self.realinit)
 
 if __name__ == '__main__':
     unittest.main()

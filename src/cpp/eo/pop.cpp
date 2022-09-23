@@ -1,6 +1,7 @@
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
+#include <pickle.h>
 #include <pyeot.h>
 #include <pso/pypot.h>
 
@@ -70,7 +71,29 @@ void pop_resize(eoPop<SolutionType>& pop, unsigned i) {
     pop.resize(i);
 }
 
+template<class SolutionType>
+struct pyPop_pickle_suite : boost::python::pickle_suite
+{
+    static boost::python::tuple getstate(const eoPop<SolutionType>& _pop)
+    {
+        boost::python::list entries;
+        for (unsigned i = 0; i != _pop.size(); ++i)
+            entries.append( PyEOT_pickle_suite<SolutionType>::getstate(_pop[i]) );
 
+        return boost::python::make_tuple(boost::python::object(_pop.size()), entries);
+    }
+
+    static void setstate( eoPop<SolutionType>& _pop, boost::python::tuple pickled)
+    {
+        int sz = boost::python::extract<int>(pickled[0]);
+        boost::python::list entries = boost::python::list(pickled[1]);
+        _pop.resize(sz);
+        for (unsigned i = 0; i != _pop.size(); ++i)
+            {
+                PyEOT_pickle_suite<SolutionType>::setstate(_pop[i], boost::python::tuple(entries[i]) );
+            }
+    }
+};
 
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(pop_sort_overload, sort, 0, 1)
@@ -111,7 +134,7 @@ void expose_pop(std::string name)
     .def("push_back", pop_push_back<SolutionType>)
     .def("resize",    pop_resize<SolutionType>)
     .def("swap", &eoPop<SolutionType>::swap)
-    // .def_pickle(pyPop_pickle_suite())
+    .def_pickle(pyPop_pickle_suite<SolutionType>())
     ;
 }
 

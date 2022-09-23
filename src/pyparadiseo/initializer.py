@@ -101,7 +101,7 @@ def random(size=0,bounds=None,stype=None,**kwargs):
     if stype == 'real':
         class_ = utils.get_class("RealBoundedInit")
         if bounds is not None:
-            if isinstance(bounds, bounds_mod.RealVectorBoundsBase):
+            if isinstance(bounds, bounds_mod.RealVectorBounds):
                 return class_(bounds)
             else:
                 return class_(bounds_mod.bound_box(bounds[0],bounds[1]))
@@ -118,7 +118,7 @@ def random(size=0,bounds=None,stype=None,**kwargs):
     if stype == 'real-pso':
         class_ = utils.get_class("RealBoundedParticleInit")
         if bounds is not None:
-            if isinstance(bounds, bounds_mod.RealVectorBoundsBase):
+            if isinstance(bounds, bounds_mod.RealVectorBounds):
                 return class_(bounds)
             else:
                 return class_(bounds_mod.bound_box(bounds[0],bounds[1]))
