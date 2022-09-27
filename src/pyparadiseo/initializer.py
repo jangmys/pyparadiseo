@@ -77,6 +77,16 @@ def initializer(init_fun,stype=None):
         raise NotImplementedError("Not yet implemented")
 
 
+def empty(stype=None):
+    """
+    Solution
+    """
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    pass
+
+
 def random(size=0,bounds=None,stype=None,**kwargs):
     """
     Random initializer (for bin/real)

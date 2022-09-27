@@ -25,13 +25,6 @@ struct pyeoFitnessEval : eoEvalFunc<SolutionType> {
     { };
 
     void
-    setEvalFunc(boost::python::object obj)
-    {
-        std::cout << "Setting fitness eval\n"<<std::endl;
-        eo_eval_op = obj;
-    }
-
-    void
     operator () (SolutionType& _eo)
     {
         if (eval_op.ptr() != Py_None) {
@@ -51,10 +44,16 @@ struct pyeoFitnessEval : eoEvalFunc<SolutionType> {
         }
     }
 
-    std::string className() const
-    {
-        return "pyeoFitnessEval"; // never saw the use of className anyway
-    }
+    void set_eval_op(boost::python::object obj){ eval_op = obj; }
+    void set_eo_eval_op(boost::python::object obj){ eo_eval_op = obj; }
+
+    boost::python::object get_eval_op() const {return eval_op;}
+    boost::python::object get_eo_eval_op() const {return eo_eval_op;}
+
+    // std::string className() const
+    // {
+    //     return "pyeoFitnessEval"; // never saw the use of className anyway
+    // }
 
 private:
     boost::python::object eval_op;
@@ -112,6 +111,27 @@ private:
 
 
 
+template<typename SolutionType>
+struct fitness_pickle_suite : bp::pickle_suite
+{
+    static bp::tuple getstate(const pyeoFitnessEval<SolutionType>& f)
+    {
+        return bp::make_tuple(
+                f.get_eval_op(),
+                f.get_eo_eval_op()
+        );
+    }
+
+    static void setstate(pyeoFitnessEval<SolutionType>& f, bp::tuple state)
+    {
+        using namespace boost::python;
+
+        f.set_eval_op(state[0]);
+        f.set_eo_eval_op(state[1]);
+    }
+};
+
+
 
 template<class SolutionType>
 void export_eval(std::string postfix)
@@ -122,9 +142,9 @@ void export_eval(std::string postfix)
         init<>()
     )
     .def(init<boost::python::object>()[WC1])
-    .def("set_eval_func", &pyeoFitnessEval<SolutionType>::setEvalFunc)
+    .def("set_eval_op", &pyeoFitnessEval<SolutionType>::set_eval_op)
     .def("__call__", &pyeoFitnessEval<SolutionType>::operator ())
-    // .def("__name__", &pyeoFitnessEval<SolutionType>::className)
+    .def_pickle(fitness_pickle_suite<SolutionType>())
     ;
 
     //===========================================================

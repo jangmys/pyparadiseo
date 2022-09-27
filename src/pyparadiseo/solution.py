@@ -64,7 +64,6 @@ add_solution_doc(RealSolution)
 #############################################
 #############################################
 #############################################
-
 def solution(obj,stype=None):
     """
     Create an initialized solution
@@ -117,22 +116,25 @@ def solution(obj,stype=None):
 
     klass=SOLUTIONS[stype]
 
-    #if obj is already a Solution, call copy ctor
+    #-----if obj is already a Solution, call copy ctor-----
     if isinstance(obj,klass):
         return klass(obj)
 
-    #else make from python object
+    if obj is None:
+        return klass()
+
+    #-----else make from python object-----
     if stype=='gen':
         return klass(obj)
     else:
-        #get object length
+        #-----get object length-----
         try:
             ret=klass(len(obj))
         except TypeError:
             print("For stype='",stype,"' solution encoding must have a length. Consider using generic solution type.")
             raise
 
-        #set ndarray to obj
+        #-----set ndarray to obj-----
         try:
             ret.encoding = obj
             # ret.array = obj

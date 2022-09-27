@@ -469,6 +469,16 @@ public:
         return vec.cend();
     }
 
+
+    boost::python::object get_item(int key) const
+    {
+        return encoding[key];
+    }
+    void set_item(int index, boost::python::object key)
+    {
+        encoding[index]=key;
+    }
+
     //I/O
     std::string to_string() const
     {
@@ -517,127 +527,6 @@ typedef VectorSolution<int> IntSolution;
 typedef VectorSolution<unsigned int> BinarySolution;
 // typedef IntSolution BinarySolution;
 typedef VectorSolution<double> RealSolution;
-
-
-
-// public inheritance from std::vector<T>
-//
-// template<typename T>
-// class VectorSolution : public PyEO, public std::vector<T>
-// {
-// public:
-//     using std::vector<T>::data;
-//     using std::vector<T>::size;
-//     using std::vector<T>::resize;
-//     using std::vector<T>::operator[];
-//
-//     VectorSolution(unsigned int _size = 0) : PyEO(),std::vector<T>(_size),
-//         encoding(
-//             np::from_data(data(),
-//             np::dtype::get_builtin<T>(),
-//             bp::make_tuple(_size),
-//             bp::make_tuple(sizeof(T)),
-//             bp::object())
-//         ){}
-//
-//
-//     VectorSolution(const VectorSolution<T>& p) : PyEO(p),std::vector<T>(p),
-//         encoding(
-//             np::from_data(data(),
-//             np::dtype::get_builtin<T>(),
-//             bp::make_tuple(size()),
-//             bp::make_tuple(sizeof(T)),
-//             bp::object())
-//         ){}
-//
-//     VectorSolution& operator=(const VectorSolution& p)
-//     {
-//         PyEO::operator=(p);
-//         std::vector<T>::operator=(p);
-//
-//         // encoding = p.encoding.copy();
-//
-//         encoding = np::from_data(data(),
-//             np::dtype::get_builtin<T>(),
-//             bp::make_tuple(size()),
-//             bp::make_tuple(sizeof(T)),
-//             bp::object()
-//         );
-//
-//         return *this;
-//     }
-//
-//     np::ndarray get_array() const { return encoding; }
-//
-//     void set_array(np::ndarray enc){
-//         int input_size = enc.shape(0);
-//         T* input_ptr = reinterpret_cast<T*>(enc.get_data());
-//
-//         for (int i = 0; i < input_size; ++i)
-//             operator[](i) = *(input_ptr + i);
-//
-//         encoding = np::from_data(data(),
-//             np::dtype::get_builtin<T>(),
-//             bp::make_tuple(size()),
-//             bp::make_tuple(sizeof(T)),
-//             bp::object()
-//         );
-//     }
-//
-//     //I/O
-//     std::string to_string() const
-//     {
-//         std::string result;
-//
-//         result += PyEO::to_string();
-//         result += "\t";
-//
-//         for(unsigned i=0;i<size();i++){
-//             result += boost::python::extract<const char*>(boost::python::str(operator[](i)));
-//             result += " ";
-//         }
-//
-//         return result;
-//     }
-//
-//     std::string repr() const
-//     {
-//         std::string s;
-//
-//         s += "Solution(";
-//         s += PyEO::repr();
-//         s += ",";
-//         for(unsigned i=0;i<size();i++){
-//             s += boost::python::extract<const char*>(boost::python::str(operator[](i)));
-//             s += " ";
-//         }
-//         // s += boost::python::extract<const char*>(boost::python::str(encoding));
-//         s += ")";
-//
-//         return s;
-//     }
-//
-//     void printOn(std::ostream & _os) const
-//     {
-//         _os << to_string() << ' ';
-//     }
-//
-//     np::ndarray encoding;
-// };
-//
-//
-// template<class T>
-// void vec_resize(VectorSolution<T>& vec, unsigned i) {
-//     vec.resize(i);
-//
-//     vec.encoding = np::from_data(vec.data(),
-//         np::dtype::get_builtin<T>(),
-//         bp::make_tuple(vec.size()),
-//         bp::make_tuple(sizeof(T)),
-//         bp::object()
-//     );
-// }
-
 
 
 

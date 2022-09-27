@@ -46,6 +46,7 @@ SolutionType& pop_getitem(eoPop<SolutionType>& pop, bp::object key)
     return pop[i];
 }
 
+
 template<class SolutionType>
 void pop_setitem(eoPop<SolutionType>& pop, bp::object key, SolutionType& value)
 {
@@ -59,6 +60,12 @@ void pop_setitem(eoPop<SolutionType>& pop, bp::object key, SolutionType& value)
     }
 
     pop[i] = value;
+}
+
+template<class SolutionType>
+void pop_merge(eoPop<SolutionType>& pop, eoPop<SolutionType>& pop2){
+    for(auto&& ind : pop2)
+        pop.push_back(ind);
 }
 
 template<class SolutionType>
@@ -95,6 +102,34 @@ struct pyPop_pickle_suite : boost::python::pickle_suite
     }
 };
 
+template<class SolutionType>
+struct SolVec_pickle_suite : bp::pickle_suite
+{
+    static boost::python::tuple getstate(const std::vector<SolutionType>& _vec)
+    {
+        boost::python::list entries;
+        for (unsigned i = 0; i != _vec.size(); ++i)
+            entries.append( PyEOT_pickle_suite<SolutionType>::getstate(_vec[i]) );
+
+        return boost::python::make_tuple(boost::python::object(_vec.size()), entries);
+    }
+
+    static void setstate( std::vector<SolutionType>& _vec, boost::python::tuple pickled)
+    {
+        int sz = boost::python::extract<int>(pickled[0]);
+        boost::python::list entries = boost::python::list(pickled[1]);
+        _vec.resize(sz);
+        for (unsigned i = 0; i != _vec.size(); ++i)
+            {
+                PyEOT_pickle_suite<SolutionType>::setstate(_vec[i], boost::python::tuple(entries[i]) );
+            }
+    }
+};
+
+
+// .def_pickle(ObjectiveVector_pickle_suite())
+
+
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(pop_sort_overload, sort, 0, 1)
 
@@ -105,26 +140,21 @@ void expose_pop(std::string name)
 
     class_<std::vector<SolutionType>>(("_SolutionVector"+name).c_str())
     .def(vector_indexing_suite<std::vector<SolutionType>>())
+    .def_pickle(SolVec_pickle_suite<SolutionType>())
     ;
 
     class_<eoPop<SolutionType>,bases<std::vector<SolutionType>>>
-    ((name+"Pop").c_str(),
-    "A vector of Solutions.",
-    init<>() )
+    ((name+"Pop").c_str(),"A vector of Solutions.",init<>() )
     .def( init< unsigned, eoInit<SolutionType>& >()[with_custodian_and_ward<1,3>()] )
-    //     // .enable_pickling()
     .def("append", &eoPop<SolutionType>::append,
         "Append initialized individuals at the end of Pop"
         "\n\n"
         "new pop_size should larger than current pop_size"
     )
     .def("__str__", pop_to_string<SolutionType>)
-    // .def("__len__", pop_size<SolutionType>)
     .def("sort", static_cast<void (eoPop<SolutionType>::*)(void)>(&eoPop<SolutionType>::sort))
     .def("sort", static_cast<void (eoPop<SolutionType>::*)(std::vector<const SolutionType*>&) const >(&eoPop<SolutionType>::sort))
     .def("shuffle", pop_shuffle<SolutionType>)
-    .def("__getitem__", pop_getitem<SolutionType>, return_internal_reference<>() )
-    .def("__setitem__", pop_setitem<SolutionType>)
     .def("best", &eoPop<SolutionType>::best_element, return_internal_reference<>(),
         "Return best individual"
     )
@@ -132,6 +162,7 @@ void expose_pop(std::string name)
         "Return worst individual"
     )
     .def("push_back", pop_push_back<SolutionType>)
+    .def("merge", pop_merge<SolutionType>)
     .def("resize",    pop_resize<SolutionType>)
     .def("swap", &eoPop<SolutionType>::swap)
     .def_pickle(pyPop_pickle_suite<SolutionType>())
@@ -149,4 +180,6 @@ void pop()
     expose_pop<IntSolution>("Int");
     //Particles
     expose_pop<RealParticle>("RealParticle");
+
+    
 }

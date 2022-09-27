@@ -206,6 +206,7 @@ BOOST_PYTHON_MODULE(_core)
         ;
     class_< std::vector<bool> >("BoolVec")
         .def(bp::vector_indexing_suite<std::vector<bool> >())
+        .def("__str__",vec_to_string<bool>)
         // .def_pickle(PickleSuite<std::vector<bool>>())
         ;
     class_< std::vector<int> >("IntVec")
@@ -297,6 +298,11 @@ BOOST_PYTHON_MODULE(_core)
         // .enable_pickling()
     ;
 
+    implicitly_convertible<object, PyEOT>();
+    // implicitly_convertible<std::vector<double>, PyEOT>();
+    // implicitly_convertible<std::vector<bool>, PyEOT>();
+
+    // implicitly_convertible<PyEOT, object>();
     // class_<Bar>("Bar");
     //
     // class_<Foo<Bar>>("Foo", init<boost::python::object>())
@@ -328,6 +334,8 @@ BOOST_PYTHON_MODULE(_core)
     // .def(init<boost::python::object>())
     .def(init<const RealSolution&>())
     .add_property("encoding", &RealSolution::get_encoding, &RealSolution::set_encoding)
+    .def("__getitem__", &RealSolution::get_item, "forward __getitem__ to encoding.\n\n fail if encoding object doesn't provide indexing capabilities")
+    .def("__setitem__", &RealSolution::set_item, "see __getitem__")
     .def("resize", &RealSolution::resize)
     .def("__len__", &RealSolution::size)
     .def("__repr__", &RealSolution::repr)
@@ -341,6 +349,8 @@ BOOST_PYTHON_MODULE(_core)
     class_<BinarySolution,bases<PyEO>>("BinarySolution",init<optional<unsigned int>>())
     .def(init<const BinarySolution&>())
     .add_property("encoding", &BinarySolution::get_encoding, &BinarySolution::set_encoding)
+    .def("__getitem__", &BinarySolution::get_item, "forward __getitem__ to encoding.\n\n fail if encoding object doesn't provide indexing capabilities")
+    .def("__setitem__", &BinarySolution::set_item, "see __getitem__")
     .def("resize", &BinarySolution::resize)
     .def("__len__", &BinarySolution::size)
     .def("__repr__", &BinarySolution::repr)

@@ -45,6 +45,28 @@ class test_eval(unittest.TestCase):
         ev(self.sol)
         self.assertEqual(self.sol.fitness,45)
 
+
+    # def test_pickle(self):
+    #     # take encoding as argument return fitness
+    #     def foo(x):
+    #         return np.sum(x)
+    #     ev = evaluator.fitness(foo)
+    #
+    #     import pickle
+    #
+    #     # AttributeError: Can't pickle local object 'test_eval.test_pickle.<locals>.foo'
+    #     d = pickle.dumps(ev)
+    #     ev2 = pickle.loads(d)
+    #
+    #     self.sol.invalidate()
+    #     ev2(self.sol)
+    #
+    #     self.assertTrue(isinstance(ev2,eoEvalFunc))
+    #     # ev(self.sol)
+    #     self.assertEqual(self.sol.fitness,45)
+
+
+
     def test_inherit(self):
         class myEval(eoEvalFunc):
             def __init__(self):
