@@ -180,6 +180,4 @@ void pop()
     expose_pop<IntSolution>("Int");
     //Particles
     expose_pop<RealParticle>("RealParticle");
-
-    
 }
