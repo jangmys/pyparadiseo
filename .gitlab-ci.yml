@@ -1,4 +1,5 @@
-image: jangmys/manylinux2014_pyparadiseo:latest
+image: jangmys/manylinux2014_boost180_cp36_310
+#image: jangmys/manylinux2014_pyparadiseo:latest
 
 # Change pip's cache directory to be inside the project directory since we can
 # only cache local items.
