@@ -12,7 +12,7 @@ set(BOOST_INCLUDEDIR /usr/include/boost169/)
 set(BOOST_LIBRARYDIR /usr/lib64/boost169/)
 
 find_package(Python3 COMPONENTS Interpreter Development.Module NumPy)
-find_package(Boost COMPONENTS python36 numpy36 REQUIRED)
+find_package(Boost COMPONENTS python3 numpy3 REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${Python3_INCLUDE_DIRS})
