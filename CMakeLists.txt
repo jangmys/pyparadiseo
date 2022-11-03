@@ -1,3 +1,7 @@
+if(SKBUILD)
+  message(STATUS "The project is built using scikit-build")
+endif()
+
 cmake_minimum_required(VERSION 3.14)
 
 project(pyparadiseo
@@ -7,12 +11,18 @@ project(pyparadiseo
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(BOOST_ROOT /usr/)
-set(BOOST_INCLUDEDIR /usr/include/boost169/)
-set(BOOST_LIBRARYDIR /usr/lib64/boost169/)
+# set(BOOST_ROOT /usr/local/)
+# set(BOOST_INCLUDEDIR /usr/local/include/boost/)
+# set(BOOST_LIBRARYDIR /usr/local/lib/)
+# set(BOOST_ROOT /usr/)
+# set(BOOST_INCLUDEDIR /usr/include/boost169/)
+# set(BOOST_LIBRARYDIR /usr/lib64/boost169/)
 
 find_package(Python3 COMPONENTS Interpreter Development.Module NumPy)
 find_package(Boost COMPONENTS python3 numpy3 REQUIRED)
+
+# message("BOOST_INC " ${Boost_INCLUDE_DIRS})
+# message("BOOST_INC " ${Boost_LIBRARIES})
 
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${Python3_INCLUDE_DIRS})
