@@ -24,7 +24,7 @@ before_script:
     #- /opt/python/cp36-cp36m/bin/python3 -m venv /opt/venv
     #- . /opt/venv/bin/activate
     #- mkdir -p .pip
-    #- python3 -m pip install --cache-dir=.pip --upgrade pip
+    - python3 -m pip install --upgrade pip
     #- python3 -m pip install --cache-dir=.pip scikit-build numpy numba pytest auditwheel sphinxcontrib-napoleon Sphinx sphinx-rtd-theme pydata-sphinx-theme
     #- yum -y install python-sphinx
 
