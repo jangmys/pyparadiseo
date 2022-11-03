@@ -78,7 +78,7 @@ test-job1:
         - build-job
     script:
         - . /opt/venv36/bin/activate
-        - python3 -m pip install wheelhouse/*cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+        - python3 -m pip install wheelhouse/*cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl --force-reinstall
         - python3 -c "import pyparadiseo"
         - python3 -m pytest tests
     artifacts:
