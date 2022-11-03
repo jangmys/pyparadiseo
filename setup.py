@@ -33,7 +33,10 @@ if __name__ == "__main__":
         packages=find_packages(where = 'src'),
         package_dir={"": "src"},
         cmake_install_dir="src/pyparadiseo",
-        include_package_data = True,
+        # include_package_data = True,
+        # package_dir={'libboost_numpy36': '/usr/local/lib'},
+        # libraries=[('libboost_numpy36.so.1.80.0',{})],
+        package_data={'libboost_numpy36': ['/usr/local/lib/libboost_numpy36.so.1.80.0']},
         extras_require={"test": ["pytest"]},
         python_requires=">=3.6"
     )
