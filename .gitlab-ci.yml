@@ -125,4 +125,8 @@ pypi:
         - python3 -m pip install -U twine
         #- twine upload --skip-existing wheelhouse/*
         - twine upload --skip-existing wheelhouse/pyparadiseo-*-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+        - twine upload --skip-existing wheelhouse/pyparadiseo-*-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+        - twine upload --skip-existing wheelhouse/pyparadiseo-*-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+        - twine upload --skip-existing wheelhouse/pyparadiseo-*-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+        - twine upload --skip-existing wheelhouse/pyparadiseo-*-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
     when: manual
