@@ -23,7 +23,7 @@ class TestBinary(unittest.TestCase):
         for i in self.sol.array:
             self.assertTrue(isinstance(i, np.int32))
         for i in self.sol.carray:
-            self.assertTrue(isinstance(i, np.int))
+            self.assertTrue(isinstance(i, int))
 
     def test_setter(self):
         init = initializer.random(10,stype='bin')
