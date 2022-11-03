@@ -124,5 +124,5 @@ pypi:
         - . /opt/venv39/bin/activate
         - python3 -m pip install -U twine
         #- twine upload --skip-existing wheelhouse/*
-        - twine upload --skip-existing wheelhouse/pyparadiseo-0.2.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+        - twine upload --skip-existing wheelhouse/pyparadiseo-*-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
     when: manual
