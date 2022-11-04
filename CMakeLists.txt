@@ -1,3 +1,12 @@
+macro(print_all_variables)
+    message(STATUS "print_all_variables------------------------------------------{")
+    get_cmake_property(_variableNames VARIABLES)
+    foreach (_variableName ${_variableNames})
+        message(STATUS "${_variableName}=${${_variableName}}")
+    endforeach()
+    message(STATUS "print_all_variables------------------------------------------}")
+endmacro()
+
 if(SKBUILD)
   message(STATUS "The project is built using scikit-build")
 endif()
@@ -19,16 +28,19 @@ set(CMAKE_CXX_STANDARD 17)
 # set(BOOST_LIBRARYDIR /usr/lib64/boost169/)
 
 find_package(Python3 COMPONENTS Interpreter Development.Module NumPy)
-find_package(Boost COMPONENTS python3 numpy3 REQUIRED)
 
-# message("BOOST_INC " ${Boost_INCLUDE_DIRS})
-# message("BOOST_INC " ${Boost_LIBRARIES})
+message(STATUS "Python_VERSION=${Python3_VERSION}")
+message(STATUS ${${Python3_VERSION}})
+message(STATUS ${Python3_VERSION})
+
+find_package(Boost COMPONENTS python${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR} numpy${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR} REQUIRED)
+
+# print_all_variables()
 
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${Python3_INCLUDE_DIRS})
 
 link_directories(${Boost_LIBRARY_DIRS})
-
 
 ###!!!boost.python uses deprecated PyEval_CallFunction : lots of warnings!!!
 set(CMAKE_CXX_FLAGS "-Wall -Wno-maybe-uninitialized -Wno-deprecated-declarations -O2 -fPIC -DBOOST_NO_AUTO_PTR")
