@@ -40,5 +40,8 @@ if __name__ == "__main__":
         # include_package_data = True,
         package_data={'libboost_numpy'+py_version: ['/usr/local/lib/libboost_numpy'+py_version+'.so.1.80.0']},
         extras_require={"test": ["pytest"]},
+        install_requires=[
+            'numpy',
+        ],
         python_requires=">=3.6"
     )
