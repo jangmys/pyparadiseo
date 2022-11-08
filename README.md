@@ -14,6 +14,12 @@ You can install PyParadiseo with `pip`
 pip install pyparadiseo
 ```
 
+### Build from source
+Prerequisites
+
+- scikit-build
+- boost python
+
 ## Getting Started
 
 The documentation of PyParadiseo is available [here](https://paradiseo.gitlabpages.inria.fr/pyparadiseo/)
