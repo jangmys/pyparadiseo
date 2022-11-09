@@ -16,13 +16,18 @@ def sleep_and_hello(sec,arg):
     return arg+1
 
 def func(x):
-    # time.sleep(1)
-    return np.sum(x)
+    time.sleep(0.1)
+    return 418.9828872724338*len(x)-np.sum(np.sin(np.sqrt(np.abs(x))))
 
-from pyparadiseo._core import eoPopEvalFuncBin
+    # def schwefel_fun(ind):
+    #     return 418.9828872724338*len(ind)-np.sum(np.sin(np.sqrt(np.abs(ind))))
 
+from pyparadiseo._core import eoPopEvalFuncReal
+
+#sumbit
+# not inheriting
 class popevaal():
-    global _fitness_eval
+    # global _fitness_eval
 
     def __init__(self,fitness_eval,max_workers):
         self._fitness_eval = fitness_eval
@@ -37,12 +42,34 @@ class popevaal():
             pop[i].fitness = f.result()
 
 
-
-class popeval(eoPopEvalFuncBin):
-    global _fitness_eval
+# not inheriting
+class popevaal2():
+    # global _fitness_eval
 
     def __init__(self,fitness_eval,max_workers):
-        eoPopEvalFuncBin.__init__(self)
+        self._fitness_eval = fitness_eval
+        self._max_workers=max_workers
+
+    def __call__(self,pop,pop2):
+        with MPIPoolExecutor(max_workers=self._max_workers) as executor:
+            future = executor.map(self._fitness_eval, pop)
+            for i,f in enumerate(future):
+                pop[i].fitness = f
+                # .result()
+
+        # future = list()
+        # for ind in pop:
+        #     future.append(self.executor.submit(self._fitness_eval, ind))
+        #
+        # for i,f in enumerate(future):
+        #     pop[i].fitness = f.result()
+
+
+class popeval(eoPopEvalFuncReal):
+    # global _fitness_eval
+
+    def __init__(self,fitness_eval,max_workers):
+        eoPopEvalFuncReal.__init__(self)
         self._fitness_eval = fitness_eval
         self.executor = MPIPoolExecutor(max_workers=max_workers)
 
@@ -55,11 +82,11 @@ class popeval(eoPopEvalFuncBin):
             pop[i].fitness = f.result()
 
 
-class popeval_sync(eoPopEvalFuncBin):
-    global _fitness_eval
+class popeval_sync(eoPopEvalFuncReal):
+    # global _fitness_eval
 
     def __init__(self,fitness_eval,max_workers):
-        eoPopEvalFuncBin.__init__(self)
+        eoPopEvalFuncReal.__init__(self)
         self._fitness_eval = fitness_eval
         self.executor = MPIPoolExecutor(max_workers=max_workers)
 
@@ -69,28 +96,31 @@ class popeval_sync(eoPopEvalFuncBin):
 
 
 
-eval = evaluator.fitness(func,stype='bin')
+eval = evaluator.fitness(func,stype='real')
 
 if __name__ == '__main__':
     pop = population.from_list(
-        [solution.random(5,stype='bin') for _ in range(10)],stype='bin'
+        [solution.random(5,[-500]*5,[500]*5,stype='real') for _ in range(10)],stype='real'
         )
 
-    for i in np.arange(1,9):
+    for i in np.arange(1,8):
         peval = popeval(func,i)
 
         t1 = time.time()
         peval(pop,pop)
         print(i,time.time()-t1)
+        # print(pop)
 
+    for i in np.arange(1,8):
         peval = popeval_sync(func,i)
 
         t1 = time.time()
         peval(pop,pop)
         print(i,"\t",time.time()-t1)
 
+    for i in np.arange(1,8):
         t1 = time.time()
-        peval = evaluator.pop_eval(popevaal(func,i),stype='bin')
+        peval = evaluator.pop_eval(popevaal2(func,i),stype='real')
         peval(pop,pop)
         print(i,"\t",time.time()-t1)
 

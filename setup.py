@@ -42,6 +42,7 @@ if __name__ == "__main__":
         extras_require={"test": ["pytest"]},
         install_requires=[
             'numpy',
+            'mpi4py'
         ],
         python_requires=">=3.6"
     )

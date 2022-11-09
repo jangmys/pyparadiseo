@@ -7,6 +7,7 @@ evaluate solutions
 evaluators assign fitness or objective values to solutions
 """
 from pyparadiseo import config,utils
+from mpi4py.futures import MPIPoolExecutor
 
 
 def fitness(fun=None,counting=False,stype=None):
@@ -112,6 +113,26 @@ def pop_eval_from_fitness(f_eval,stype=None):
 # ===================================
 # ===================================
 # ===================================
+
+class __popeval():
+    def __init__(self,fitness_eval,max_workers):
+        self._fitness_eval = fitness_eval
+        self._max_workers=max_workers
+
+    def __call__(self,pop,pop2):
+        with MPIPoolExecutor(max_workers=self._max_workers) as executor:
+            future = executor.map(self._fitness_eval, pop2)
+            for i,f in enumerate(future):
+                pop2[i].fitness = f
+
+        # for ind in pop2:
+        #     print(ind.fitness)
+
+def pool_exec_pop_eval(f_eval,nb_workers,stype=None):
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    return pop_eval(__popeval(f_eval,nb_workers),stype=stype)
 
 #
 # class _FitnessEval():
