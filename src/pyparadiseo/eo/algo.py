@@ -96,7 +96,7 @@ def easyEA(continuator,eval,breed,replace,stype=None):
     if stype is None:
         stype = config._SOLUTION_TYPE
 
-    class_ = utils.get_class("eoEasyEA"+config.TYPES[type])
+    class_ = utils.get_class("eoEasyEA"+config.TYPES[stype])
 
     ### breed can be (select+transform)
     if isinstance(breed,tuple):

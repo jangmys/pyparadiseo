@@ -178,6 +178,21 @@ class Test_Pop(unittest.TestCase):
         self.assertEqual(i3[0],3) #ref still valid !
 
 
+    def test_get_ndarray(self):
+        pop = population.from_init(10,self.realinit)
+        for ind in pop:
+            ind.fitness = np.random.random()
+
+        arr = np.asarray(pop)
+        fitness = np.asarray([_.fitness for _ in pop])
+        for i,ind in enumerate(pop):
+            np.testing.assert_almost_equal(ind.encoding, arr[i])
+            np.testing.assert_almost_equal(ind.fitness, fitness[i])
+
+
+        # print(fitness)
+
+
     def test_pickle(self):
         import pickle
 

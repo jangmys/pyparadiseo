@@ -58,7 +58,7 @@ void mergers()
 {
     expose_mergers<PyEOT>("");
     expose_mergers<BinarySolution>("Bin");
-
+    expose_mergers<RealSolution>("Real");
     // DEF2(eoElitism, double)
     //     .def( init<double, bool>() );
     // DEF(eoNoElitism);

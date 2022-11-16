@@ -108,11 +108,18 @@ def make_mutation(mutate,stype=None):
     if stype is None:
         stype = config._SOLUTION_TYPE
 
-    if stype == 'gen':
-        class_ = utils.get_class("pyMonOp")
-        return class_(mutate)
-    else:
-        NotImplementedError("Not yet implemented")
+    class_ = utils.get_class("pyMonOp"+config.TYPES[stype])
+
+    return class_(mutate)
+
+
+    #
+    #
+    #
+    #
+    #
+    # else:
+    #     NotImplementedError("Not yet implemented")
 
 
 def make_crossover(xover,stype=None):
@@ -122,11 +129,9 @@ def make_crossover(xover,stype=None):
     if stype is None:
         stype = config._SOLUTION_TYPE
 
-    if stype == 'gen':
-        class_ = utils.get_class("pyQuadOp")
-        return class_(xover)
-    else:
-        NotImplementedError("Not yet implemented")
+    class_ = utils.get_class("pyQuadOp"+config.TYPES[stype])
+
+    return class_(xover)
 
 
 ### ==================================================
@@ -313,7 +318,7 @@ def uniform_bit_cx(preference=0.5):
 
 
 ### ==================================================
-### REAL
+### -----------------------REAL-----------------------
 ### ==================================================
 def uniform_real_mutation(epsilon, bounds=None, p_change=1.0):
     """
