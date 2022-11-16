@@ -36,6 +36,38 @@ using namespace boost::python;
 
 // #define DEF3(x, i1, i2) class_<x<PyEOT>, bases<eoContinue<PyEOT > > >(#x, init<i1, i2 >() ).def("__call__", &eoContinue<PyEOT>::operator())
 
+template<typename SolutionType>
+class PyContinue : public eoContinue<SolutionType>
+{
+public:
+    PyContinue() : eoContinue<SolutionType>(){};
+
+    PyContinue(boost::python::object _op) :
+        eoContinue<SolutionType>(),
+        cont_op(_op)
+    { };
+
+    bool
+    operator () (const eoPop<SolutionType>& _pop)
+    {
+        if (cont_op.ptr() != Py_None) {
+            // return boost::python::call<bool>(mon_op.ptr(),_eo.encoding);
+            return cont_op(_pop);
+        } else  {
+            std::cout << "no cont_op defined : do nothing, return true";
+            return true;
+        }
+    }
+
+private:
+    boost::python::object cont_op;
+};
+
+
+
+
+
+
 void add_checkpoint();
 
 template<typename SolutionType>
@@ -58,6 +90,12 @@ void expose_continuators(std::string name)
         ;
 
     // CONTINUATORS
+    class_<PyContinue<SolutionType>, bases<eoContinue<SolutionType> > >//, boost::noncopyable >
+        (make_name("PyContinue",name).c_str(), init<object>() )
+        .def("__call__", &PyContinue<SolutionType>::operator())
+        ;
+
+
     class_<eoGenContinue<SolutionType>, bases<eoContinue<SolutionType> > >//, boost::noncopyable >
         (make_name("eoGenContinue",name).c_str(), init<unsigned long>() )
         .def("__call__", &eoGenContinue<SolutionType>::operator())
@@ -66,7 +104,7 @@ void expose_continuators(std::string name)
 
     class_<eoCombinedContinue<SolutionType>, bases<eoContinue<SolutionType> > >
         (make_name("eoCombinedContinue",name).c_str(), init<eoContinue<SolutionType>&>()[WC1])
-        .def( init<eoContinue<SolutionType>&, eoContinue<SolutionType>& >()[WC2] )
+        // .def( init<eoContinue<SolutionType>&, eoContinue<SolutionType>& >()[WC2] )
         .def("add", &eoCombinedContinue<SolutionType>::add, WC1)
         .def("__call__", &eoCombinedContinue<SolutionType>::operator())
         ;

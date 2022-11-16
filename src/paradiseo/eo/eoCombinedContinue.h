@@ -53,11 +53,11 @@ public:
 
   /// Ctor, make sure that at least on continuator is present
   eoCombinedContinue( eoContinue<EOT>& _cont)
-    : eoContinue<EOT>(), std::vector<eoContinue<EOT>* >(1, &_cont) 
+    : eoContinue<EOT>(), std::vector<eoContinue<EOT>* >(1, &_cont)
   {
   }
 
-//  /* FIXME remove in next release
+/* FIXME remove in next release
   /// Ctor - for historical reasons ... should disspear some day
   eoCombinedContinue( eoContinue<EOT>& _cont1, eoContinue<EOT>& _cont2)
     : eoContinue<EOT>(), std::vector<eoContinue<EOT>* >()
@@ -69,7 +69,7 @@ public:
     this->push_back(&_cont1);
     this->push_back(&_cont2);
   }
-//  */
+*/
 
   void add(eoContinue<EOT> & _cont)
   {

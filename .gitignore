@@ -33,3 +33,5 @@ problemData
 #local only
 local_build-install.sh
 notes.md
+
+tests/mpi
