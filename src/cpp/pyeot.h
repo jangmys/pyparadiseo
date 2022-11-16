@@ -90,8 +90,11 @@ public:
     //we inherit from MOEO but don't want this by default ... reversing without interfering in MOEO module...
     bool operator<(const PyEO& _other) const
     {
-        if(invalidFitness() || _other.invalidFitness())
+        if(invalidFitness() || _other.invalidFitness()){
             std::cout<<"can't compare< invalid fitness\n";
+            std::cout<<to_string();
+            std::cout<<_other.to_string();
+        }
 
         //this is Fitness<FitnessTraits>::operator<(Fitness &lhs, Fitness& rhn)
         //default is maximization, i.e TRUE iff *this < other, reversed for minimization

@@ -20,6 +20,10 @@ if __name__ == "__main__":
     with open("README.md", "r", encoding="utf-8") as fh:
         long_description = fh.read()
 
+    py_version = str(sys.version_info.major)+str(sys.version_info.minor)
+
+    print("Setup for Python version: ",py_version)
+
     setup(
         # name="pyparadiseo",
         # version="0.1",
@@ -33,7 +37,12 @@ if __name__ == "__main__":
         packages=find_packages(where = 'src'),
         package_dir={"": "src"},
         cmake_install_dir="src/pyparadiseo",
-        include_package_data = True,
+        # include_package_data = True,
+        package_data={'libboost_numpy'+py_version: ['/usr/local/lib/libboost_numpy'+py_version+'.so.1.80.0']},
         extras_require={"test": ["pytest"]},
+        install_requires=[
+            'numpy',
+            'mpi4py'
+        ],
         python_requires=">=3.6"
     )

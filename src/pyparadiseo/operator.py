@@ -51,7 +51,9 @@ from ._core import BitGxOver
 # real ops (defined on RealSolution)
 from ._core import UniformMutation
 from ._core import DetUniformMutation
+from ._core import PolynomialMutation
 
+from ._core import TwoPtCrossover
 from ._core import SegmentCrossover
 from ._core import HypercubeCrossover
 from ._core import SBXCrossover
@@ -337,6 +339,29 @@ def uniform_real_mutation(epsilon, bounds=None, p_change=1.0):
         return UniformMutation(epsilon,p_change)
     else:
         return UniformMutation(bounds,epsilon,p_change)
+
+
+def polynomial_mutation(proba=0.2,eta=50,bounds=None):
+    """Polynomial Mutation as in https://www.egr.msu.edu/~kdeb/papers/k2012016.pdf"""
+    if bounds == None:
+        return PolynomialMutation(proba,eta)
+    else:
+        return PolynomialMutation(bounds,proba,eta)
+
+
+def two_point_crossover():
+    """Two point (real) crossover
+
+    - pick two random indices i1,i2 in [0,min_size(a,b)] (i1<i2)
+    - swap ranges [i1,i2[
+
+    Example
+    =======
+    cross([A,B,C,D,E],[1,2,3,4,5]) with i1=1,i2=3 ==>
+
+    ([A,2,3,D,E],[1,B,C,4,5])
+    """
+    return TwoPtCrossover()
 
 
 def segment_cx(bounds=None,alpha=0.0):

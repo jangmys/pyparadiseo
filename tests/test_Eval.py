@@ -108,15 +108,17 @@ class test_eval(unittest.TestCase):
 
     def test_pypopeval(self):
         class popeval():
-            def __init__(self):
-                self.func = lambda x: np.sum(x)
+            def __init__(self,_func):
+                self.func = _func
             def __call__(self,pop1,pop2):
                 for ind in pop2:
                     ind.fitness = self.func(ind.encoding)
 
         from pyparadiseo._core import pyPopEval
 
-        f = pyPopEval(popeval())
+        func=lambda x: np.sum(x)
+
+        f = evaluator.pop_eval(popeval(func))
 
         f(self.pop,self.pop)
 
