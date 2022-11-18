@@ -15,6 +15,7 @@ from pyparadiseo import config
 from pyparadiseo import initializer
 from pyparadiseo import bounds
 
+from ._core import _PyEO
 from ._core import Solution
 from ._core import RealSolution
 from ._core import BinarySolution
@@ -111,15 +112,18 @@ def solution(obj,stype=None):
     ========
     :func:`pyparadiseo.solution.empty`
     """
+    #-----if obj is already a Solution, call copy ctor-----
+    if issubclass(obj.__class__,_PyEO):
+        klass = obj.__class__
+        return klass(obj)
+
+    #-----get solution type----------
     if stype is None:
         stype=config._SOLUTION_TYPE
 
     klass=SOLUTIONS[stype]
 
-    #-----if obj is already a Solution, call copy ctor-----
-    if isinstance(obj,klass):
-        return klass(obj)
-
+    #-----if obj is None, return default solution-----
     if obj is None:
         return klass()
 
@@ -149,6 +153,10 @@ def empty(stype=None):
 
     For `stype` ='gen', encoding is set to ``None``.
     For array-like solutions, encoding is set to an array of length zero.
+
+    Note
+    ====
+    identical to calling solution.solution(stype)
 
     Parameters
     ==========
@@ -274,7 +282,3 @@ def from_init(initializer,stype=None) :
     sol=empty(stype)
     initializer(sol)
     return sol
-
-
-    #### try to get SolutionType from initializer-type?
-    # pass

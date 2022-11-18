@@ -100,13 +100,13 @@ mutation_rate = [0,0.2,0.4,0.5,0.6,0.8]
 
 # == selectC
 selectC = [
-    select_one.random(),
-    select_one.stoch_tournament(0.5),
+    eo.select_one.random(),
+    eo.select_one.stoch_tournament(0.5),
     # select_one.elite_sequential(),
-    select_one.proportional(),
-    select_one.det_tournament(2),
-    select_one.det_tournament(6),
-    select_one.det_tournament(10)
+    eo.select_one.proportional(),
+    eo.select_one.det_tournament(2),
+    eo.select_one.det_tournament(6),
+    eo.select_one.det_tournament(10)
     ]
 
 # == crossover
@@ -139,17 +139,17 @@ mutation = [
 selectM = selectC
 
 replacement = [
-    replacement.plus(),
-    replacement.comma(),
-    replacement.ssga_worse(),
-    replacement.ssga_stoch_tournament(0.51),
-    replacement.ssga_stoch_tournament(0.71),
-    replacement.ssga_stoch_tournament(0.91),
-    replacement.ssga_det_tournament(2),
-    replacement.ssga_det_tournament(4),
-    replacement.ssga_det_tournament(6),
-    replacement.ssga_det_tournament(8),
-    replacement.ssga_det_tournament(10)
+    eo.replace.plus(),
+    eo.replace.comma(),
+    eo.replace.ssga_worse(),
+    eo.replace.ssga_stoch_tournament(0.51),
+    eo.replace.ssga_stoch_tournament(0.71),
+    eo.replace.ssga_stoch_tournament(0.91),
+    eo.replace.ssga_det_tournament(2),
+    eo.replace.ssga_det_tournament(4),
+    eo.replace.ssga_det_tournament(6),
+    eo.replace.ssga_det_tournament(8),
+    eo.replace.ssga_det_tournament(10)
 ]
 
 

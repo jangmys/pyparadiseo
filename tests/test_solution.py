@@ -156,8 +156,51 @@ class TestSolution(unittest.TestCase):
             self.assertEqual(sol.carray[i],i%3)
 
         self.assertRaises(TypeError,solution.solution,3,stype='real')
-            
+
 
 
 if __name__ == '__main__':
-    unittest.main()
+
+    config.set_solution_type('real')
+
+    print('hi')
+    sol=solution.solution([0,1,2]*3,stype='real')
+
+    # for item in dir(sol):
+    #     print(item,getattr(sol,item))
+
+    # print('obj: ',sol.objectives)
+    # print('__class__: ',sol.__class__)
+    # print('__name__: ',sol.__name__)
+
+    sol.data = dict()
+    sol.data.update({'sim' : True})
+    print(sol)
+    print(sol.data)
+
+    from pyparadiseo._core import _PyEO
+
+    print(issubclass(sol.__class__, _PyEO))
+
+    klass = sol.__class__
+    print("#"*20," new (copy)")
+    sol3 = klass(sol)
+    print(sol3)
+    print(sol3.data)
+
+
+    # sol.data['sim']=False
+    #
+    # import copy
+    #
+    print("#"*20," new (copy)")
+    sol2 = solution.solution(sol)
+    print(sol2)
+    print(sol2.data)
+    # print("#"*20," copy")
+    #
+    # sol2.data = copy.deepcopy(sol.data)
+    # print(sol2)
+    # print(sol2.data)
+
+    # unittest.main()

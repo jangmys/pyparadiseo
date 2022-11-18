@@ -2,7 +2,7 @@ from pyparadiseo import config
 from pyparadiseo import initializer
 from pyparadiseo import population
 
-from pyparadiseo.eo import replacement
+from pyparadiseo import eo
 
 import unittest
 import inspect
@@ -38,7 +38,7 @@ class test_eoReplacement(unittest.TestCase):
 
     def test_generational(self):
         #swapping populations
-        replace = replacement.generational()
+        replace = eo.replace.generational()
 
         #replace with same size pop
         replace(self.pop1,self.pop2)
@@ -53,7 +53,7 @@ class test_eoReplacement(unittest.TestCase):
 
 
     def test_plus(self):
-        replace = replacement.plus()
+        replace = eo.replace.plus()
 
         #result is pop1
         replace(self.pop1,self.pop2)
@@ -66,7 +66,7 @@ class test_eoReplacement(unittest.TestCase):
 
 
     def test_comma(self):
-        replace = replacement.comma()
+        replace = eo.replace.comma()
 
         replace(self.pop1,self.pop2)
 
@@ -76,7 +76,7 @@ class test_eoReplacement(unittest.TestCase):
 
 
     def test_ssga_worse(self):
-        replace = replacement.ssga_worse()
+        replace = eo.replace.ssga_worse()
 
         #|offspring|=1 : replace 1
         replace(self.pop1,self.pop_one)

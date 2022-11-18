@@ -19,9 +19,7 @@ from pyparadiseo import config,utils
 
 def continuator(cont_call=None,stype=None):
     """
-    class decorator
-
-    make pyparadiseo continuator from python callable class
+    make pyparadiseo continuator from python callable
 
     callable must take population as input and return boolean (True for continue, False for termination)
     """
@@ -31,38 +29,6 @@ def continuator(cont_call=None,stype=None):
     class_ = utils.get_class("PyContinue"+config.TYPES[stype])
 
     return class_(cont_call)
-
-
-
-# class decorate(object):
-#     def __init__(self, arg):
-#         self.arg = arg
-#     def __call__(self, cls):
-#         class Wrapped(cls):
-#             classattr = self.arg
-#             def new_method(self, value):
-#                 return value * 2
-#         return Wrapped
-
-
-
-# def from_class(_callable_class,stype=None):
-#     """
-#     make pyparadiseo continuator from python callable
-#
-#     callable must take population as input and return boolean (True for continue, False for termination)
-#     """
-#     if stype is None:
-#         stype = config._SOLUTION_TYPE
-#
-#     base_ = utils.get_class("eoContinue"+config.TYPES[stype])
-#
-#     class derived(_callable_class,base_):
-#         pass
-#
-#     return derived
-
-
 
 
 def max_generations(nb_gens,stype=None):

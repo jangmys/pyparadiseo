@@ -82,6 +82,7 @@ set(eoSources
     src/cpp/eo/breeders.cpp
     src/cpp/eo/eoAlgos.cpp
     src/cpp/eo/bounds.cpp
+    src/cpp/eo/int_bounds.cpp
     src/cpp/eo/real_op.cpp
     src/cpp/eo/bit_op.cpp
     src/cpp/pso/eoPSO.cpp

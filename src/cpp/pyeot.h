@@ -34,27 +34,32 @@ public:
 
     //ATTRIBUTES (from MOEO)
     // doubleFitness
-    // objectiveVector
     // diversity
+    // objectiveVector
+    bp::object data;
 
     //for copy ctor
     bp::object copyMod = bp::import("copy");
-    bp::object deepcopy = copyMod.attr("deepcopy");
+    bp::object deepcopy = bp::import("copy").attr("deepcopy");
 
     PyEO() : MOEO(){}
 
     PyEO(const PyEO& p) : MOEO()
     {
-        setFitness(p.deepcopy(p.getFitness()));
+        setFitness(deepcopy(p.getFitness()));
         setObjectiveVector(p.getObjectiveVector());
-        setDiversity(p.deepcopy(p.getDiversity()));
+        setDiversity(deepcopy(p.getDiversity()));
+        data = deepcopy(p.data);
+        // std::cout<<"aaaaaa\n";
     }
 
     PyEO& operator=(const PyEO& p)
     {
-        setFitness(p.deepcopy(p.getFitness()));
+        setFitness(deepcopy(p.getFitness()));
         setObjectiveVector(p.getObjectiveVector());
-        setDiversity(p.deepcopy(p.getDiversity()));
+        setDiversity(deepcopy(p.getDiversity()));
+        data = deepcopy(p.data);
+        // data = p.data.copy();
 
         return *this;
     }
@@ -502,7 +507,7 @@ public:
     {
         std::string s;
 
-        s += "Solution(";
+        s += "VectorSolution<T>(";
         s += PyEO::repr();
         s += ",";
         for(unsigned i=0;i<size();i++){

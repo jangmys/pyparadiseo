@@ -4,14 +4,13 @@ EO Algorithms
 There are three genetic algorithms
 
 - `simpleGA` following Holland and Goldberg
-
 - `easyEA`
-
-fastGA :
+- `fastGA`
 """
 
 from pyparadiseo import config,utils
-from pyparadiseo.eo import breeders,replacement
+from pyparadiseo import eo
+from pyparadiseo.eo import breeders
 
 def simpleGA(selector,crossover,p_cross,mutate,p_mutate,f_eval,continuator,stype=None):
     """
@@ -104,7 +103,7 @@ def easyEA(continuator,eval,breed,replace,stype=None):
 
     ### replace can be (merge+reduce)
     if isinstance(replace,tuple):
-        replace = replacement(*replace,stype)
+        replace = eo.replace(*replace,stype)
 
     return class_(continuator,eval,breed,replace)
 

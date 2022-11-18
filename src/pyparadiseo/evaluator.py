@@ -35,16 +35,15 @@ def fitness(fun=None,counting=False,stype=None):
 
     class_ = utils.get_class("FitnessEval"+config.TYPES[stype])
 
-    ret = None
 
+    #wrap function in FitnessEval
+    ret = None
     if fun is not None:
         ret=class_(fun)
-    else: # to use as decorator
-        ret=class_()
 
+    #wrap FitnessEval in CountingFitnessEval
     if counting:
-        print("counting")
-        return  utils.get_class("eoEvalFuncCounter"+config.TYPES[stype])(ret)
+        return utils.get_class("eoEvalFuncCounter"+config.TYPES[stype])(ret)
     else:
         return ret
 
@@ -115,6 +114,12 @@ def pop_eval_from_fitness(f_eval,stype=None):
 # ===================================
 # ===================================
 # ===================================
+def apply(func, pop):
+    l = len(pop)
+    for i in range(l):
+        func(pop)
+
+
 
 class _mpi_pool_popeval():
     def __init__(self,fitness_eval,max_workers):
@@ -144,7 +149,7 @@ class _process_pool_popeval():
     def __init__(self,fitness_eval,max_workers):
         self._fitness_eval = fitness_eval
         self._max_workers=max_workers
-
+        
     def __call__(self,pop,pop2):
         with ProcessPoolExecutor(max_workers=self._max_workers) as executor:
             future = executor.map(self._fitness_eval, pop2)
@@ -164,49 +169,3 @@ def pool_exec_pop_eval(f_eval,nb_workers,pool_exec_type='thread',stype=None):
         return pop_eval(_thread_pool_popeval(f_eval,nb_workers),stype=stype)
     if pool_exec_type == 'proc':
         return pop_eval(_process_pool_popeval(f_eval,nb_workers),stype=stype)
-
-
-# def thread_pool_exec_pop_eval(f_eval,nb_workers,stype=None):
-#     if stype is None:
-#         stype = config._SOLUTION_TYPE
-#
-#     return pop_eval(__popeval(f_eval,nb_workers),stype=stype)
-
-#
-# class _FitnessEval():
-#     def __new__(cls,fun=None,type=None):
-#         if type is None:
-#             type = config._SOLUTION_TYPE
-#
-#         class_ = utils.get_class("FitnessEval"+config.TYPES[type])
-#
-#         if fun is not None:
-#             return class_(fun)
-#         else:
-#             return class_()
-#
-#
-# class _ObjectiveEval():
-#     def __new__(cls,fun=None,type=None):
-#         if type is None:
-#             type = config._SOLUTION_TYPE
-#
-#         class_ = utils.get_class("ObjectiveEval"+config.TYPES[type])
-#
-#         if fun is not None:
-#             return class_(fun)
-#         else:
-#             return class_()
-#
-#
-# class _PopEval():
-#     def __new__(cls,f_eval,stype=None):
-#         if stype is None:
-#             stype = config._SOLUTION_TYPE
-#
-#         class_ = utils.get_class("eoPopLoopEval"+config.TYPES[stype])
-#
-#         if isinstance(f_eval,utils.get_class("eoEvalFunc"+config.TYPES[stype])):
-#             return class_(f_eval)
-#         else:
-#             return class_(_FitnessEval(fun=f_eval,type=stype))

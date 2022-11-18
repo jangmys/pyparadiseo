@@ -336,9 +336,9 @@ def uniform_real_mutation(epsilon, bounds=None, p_change=1.0):
         probability of changing a solution component
     """
     if bounds == None:
-        return UniformMutation(epsilon,p_change)
+        return UniformMutation(epsilon=epsilon,p_change=p_change)
     else:
-        return UniformMutation(bounds,epsilon,p_change)
+        return UniformMutation(bounds=bounds,epsilon=epsilon,p_change=p_change)
 
 
 def polynomial_mutation(proba=0.2,eta=50,bounds=None):
@@ -364,14 +364,18 @@ def two_point_crossover():
     return TwoPtCrossover()
 
 
-def segment_cx(bounds=None,alpha=0.0):
+def segment_cx(bounds=None,alpha=0.0,stype='real'):
     """
     Segment Crossover
     """
+    klass = None
+    if stype == 'real':
+        klass = SegmentCrossover
+
     if bounds == None:
-        return SegmentCrossover(alpha)
+        return klass(alpha)
     else:
-        return SegmentCrossover(bounds,alpha)
+        return klass(bounds,alpha)
 
 
 def hypercube_cx(bounds=None,alpha=0.0):

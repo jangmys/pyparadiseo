@@ -6,3 +6,13 @@ from .._core import eoReplacement as Replacement
 from .._core import eoSelect as Select
 from .._core import eoTransform as Transform
 from .._core import eoBreed as Breed
+
+from . import algo
+from . import breeders
+from . import continuator
+from . import merge
+from . import reduce
+from . import replace
+from . import selector
+from . import select_one
+from . import transform

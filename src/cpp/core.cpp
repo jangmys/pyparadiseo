@@ -35,6 +35,7 @@ bool FitnessTraits::_minimizing = false;
 extern void registerConverters();
 extern void eo_abstract();
 extern void bounds();
+extern void int_bounds();
 extern void valueParam();
 
 //-------------EO - core-------------
@@ -278,6 +279,7 @@ BOOST_PYTHON_MODULE(_core)
     .def("__str__", &PyEO::to_string)
     .def("__copy__", &generic__copy__<PyEO>)
     .def("__deepcopy__", &generic__deepcopy__<PyEO>)
+    .def_readwrite("data", &PyEO::data)
     ;
 
     class_<PyEOT,bases<PyEO>>("Solution",init<optional<object>>())
@@ -432,6 +434,7 @@ BOOST_PYTHON_MODULE(_core)
     // algos();
     // reduce();
     bounds();
+    int_bounds();
     real_op();
     bit_op();
 

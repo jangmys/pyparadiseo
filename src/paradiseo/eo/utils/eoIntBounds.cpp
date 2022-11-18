@@ -11,11 +11,14 @@
 #include <sstream>
 
 #include "eoIntBounds.h"
-
+#include "eoIntVectorBounds.h"
 
 // the global dummy bounds
 // (used for unbounded variables when bounds are required)
+eoIntNoBounds eoDummyIntNoBoundsPtr;
+
 eoIntNoBounds eoDummyIntNoBounds;
+eoIntVectorNoBounds eoDummyVectorIntNoBounds(0);
 
 ///////////// helper read functions defined in eoRealBounds.cpp
 extern bool remove_leading(std::string & _s, const std::string _delim);

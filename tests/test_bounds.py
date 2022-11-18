@@ -97,7 +97,7 @@ class TestBounds(unittest.TestCase):
 
 
     def test_intVecBounds1(self):
-        b = bounds.IntVectorBoundsBase(3,bounds.IntInterval(-10,10))
+        b = bounds.IntVectorBounds(3,bounds.IntInterval(-10,10))
         #
         self.assertTrue(b.isBounded())
         for i in range(3):

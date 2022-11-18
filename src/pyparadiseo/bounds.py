@@ -10,6 +10,7 @@ domain bounds
 """
 #ABC
 from ._core import RealBounds as RealBoundsBase
+from ._core import IntBounds as IntBoundsBase
 # from ._core import RealVectorBoundsBase
 
 #use? bound for one variable ...
@@ -22,14 +23,14 @@ from ._core import RealInterval #[a,b]
 from ._core import RealVectorBounds #a vector of bounds
 
 
-
-from ._core import IntBounds as IntBoundsBase
-from ._core import IntBaseVectorBounds as IntVectorBoundsBase
-
 from ._core import IntNoBounds # unbounded
 from ._core import IntBelowBound # [a,inf]
 from ._core import IntAboveBound # [inf,a]
 from ._core import IntInterval #[a,b]
+
+# from ._core import IntBounds as IntBoundsBase
+from ._core import IntVectorBounds
+
 
 import numpy as np
 
@@ -42,8 +43,6 @@ import numpy as np
 # (dim, bound) --> same for all (allows half-intevals)
 # (dim, lb, ub) --> same for all
 # (real_vec,real_vec) --> lb,ub as vectors
-
-
 def real_interval(lb,ub):
     """
     1D Real Interval Bounds
@@ -65,7 +64,29 @@ def real_interval(lb,ub):
         return RealBelowBound(lb)
 
 
-def bound_box(*args):
+
+def int_interval(lb,ub):
+    """
+    1D Integer Interval Bounds
+
+    Parameters
+    ----------
+    lb : int
+    ub : int
+
+    np.inf is allowed
+    """
+    if not np.isinf(lb) and not np.isinf(ub):
+        return IntInterval(lb,ub)
+    if np.isinf(lb) and np.isinf(ub):
+        return IntNoBounds()
+    if np.isinf(lb):
+        return IntAboveBound(ub)
+    if np.isinf(ub):
+        return IntBelowBound(lb)
+
+
+def bound_box(*args,stype='real'):
     r"""Box-bounds for real-valued solutions
 
     Parameters
@@ -84,10 +105,16 @@ def bound_box(*args):
             if len(args[0]) != len(args[1]):
                 print("lb and ub should be of same length")
 
-            ret = RealVectorBounds()
-            for idx in range(len(args[0])):
-                a,b = args[0][idx],args[1][idx]
-                ret.append(real_interval(a,b))
+            if stype=='real':
+                ret = RealVectorBounds()
+                for idx in range(len(args[0])):
+                    a,b = args[0][idx],args[1][idx]
+                    ret.append(real_interval(a,b))
+            else:
+                ret = IntVectorBounds()
+                for idx in range(len(args[0])):
+                    a,b = args[0][idx],args[1][idx]
+                    ret.append(int_interval(a,b))
 
             return ret
         except ValueError:
@@ -95,6 +122,11 @@ def bound_box(*args):
 
     if len(args) == 3:
         #should be one int and two floats
-        return RealVectorBounds(args[0],
-            RealInterval(args[1],args[2])
-        )
+        if stype=='real':
+            return RealVectorBounds(args[0],
+                    RealInterval(args[1],args[2])
+                )
+        else:
+            return IntVectorBounds(args[0],
+                    IntInterval(args[1],args[2])
+                )
