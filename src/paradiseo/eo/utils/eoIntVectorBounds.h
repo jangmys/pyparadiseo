@@ -107,14 +107,14 @@ public:
 
   /** Folds a real value back into the bounds - i_th component
    */
-  virtual void foldsInBounds(unsigned _i, double & _r)
+  virtual void foldsInBounds(unsigned _i, int& _r)
   {
     (*this)[_i]->foldsInBounds(_r);
   }
 
   /** Folds all variables of a std::vector of real values into the bounds
    */
-  virtual void foldsInBounds(std::vector<long int> & _v)
+  virtual void foldsInBounds(std::vector<int> & _v)
   {
    for (unsigned i=0; i<size(); i++)
      {
@@ -231,173 +231,173 @@ eoIntVectorBounds which derives from the preceding *and* eoPersistent
 
 @ingroup Bounds
 */
-class eoBaseVectorBounds : public std::vector<eoIntBounds*>
-{
-public:
-  // virtual desctructor (to avoid warning?)
-  virtual ~eoBaseVectorBounds(){}
-
-  /** Default Ctor.
-   */
-  eoBaseVectorBounds() : std::vector<eoIntBounds*>(0) {}
-
-  /** Ctor: same bounds for everybody, given as an eoIntBounds
-  */
-  eoBaseVectorBounds(unsigned _dim, eoIntBounds & _bounds) :
-    std::vector<eoIntBounds*>(_dim, &_bounds)
-  {}
-
-  /** Ctor, particular case of dim-2
-   */
-  eoBaseVectorBounds(eoIntBounds& _xbounds, eoIntBounds& _ybounds) :
-    std::vector<eoIntBounds*>(0)
-  {
-        push_back( &_xbounds);
-        push_back( &_ybounds);
-  }
-
-  /** test: is i_th component bounded
-   */
-  virtual bool isBounded(unsigned _i)
-  {
-    return (*this)[_i]->isBounded();
-  }
-
-  /** test: bounded iff all are bounded
-   */
-  virtual bool isBounded(void)
-  {
-    for (unsigned i=0; i<size(); i++)
-      if (! (*this)[i]->isBounded())
-        return false;
-    return true;
-  }
-
-  /** Self-test: true iff i_th component has no bounds at all
-   */
-  virtual bool hasNoBoundAtAll(unsigned _i)
-  {
-    return (*this)[_i]->hasNoBoundAtAll();
-  }
-
-  /** Self-test: true iff all components have no bound at all
-   */
-  virtual bool hasNoBoundAtAll(void)
-  {
-    for (unsigned i=0; i<size(); i++)
-      if (! (*this)[i]->hasNoBoundAtAll())
-        return false;
-    return true;
-  }
-
-  virtual bool isMinBounded(unsigned _i)
-  { return (*this)[_i]->isMinBounded();} ;
-
-  virtual bool isMaxBounded(unsigned _i)
-  { return (*this)[_i]->isMaxBounded();} ;
-
-  /** Folds a real value back into the bounds - i_th component
-   */
-  virtual void foldsInBounds(unsigned _i, double & _r)
-  {
-    (*this)[_i]->foldsInBounds(_r);
-  }
-
-  /** Folds all variables of a std::vector of real values into the bounds
-   */
-  virtual void foldsInBounds(std::vector<long int> & _v)
-  {
-   for (unsigned i=0; i<size(); i++)
-     {
-       (*this)[i]->foldsInBounds(_v[i]);
-     }
-  }
-
-  /** Truncates a real value to the bounds - i_th component
-   */
-  virtual void truncate(unsigned _i, double & _r)
-  {
-    (*this)[_i]->truncate(_r);
-  }
-
-  /** truncates all variables of a std::vector of real values to the bounds
-   */
-  virtual void truncate(std::vector<double> & _v)
-  {
-   for (unsigned i=0; i<size(); i++)
-     {
-       (*this)[i]->truncate(_v[i]);
-     }
-  }
-
-  /** test: is i_th component within the bounds?
-   */
-  virtual bool isInBounds(unsigned _i, long int _r)
-  { return (*this)[_i]->isInBounds(_r); }
-
-  /** test: are ALL components within the bounds?
-   */
-  virtual bool isInBounds(const std::vector<long int> _v)
-  {
-    for (unsigned i=0; i<size(); i++)
-      if (! isInBounds(i, _v[i]))
-        return false;
-    return true;
-  }
-
-  /** Accessors: will raise an std::exception if these do not exist
-   */
-  virtual long int minimum(unsigned _i) {return (*this)[_i]->minimum();}
-  virtual long int maximum(unsigned _i) {return (*this)[_i]->maximum();}
-  virtual long int range(unsigned _i) {return (*this)[_i]->range();}
-
-  /** Computes the average range
-   *  An std::exception will be raised if one of the component is unbounded
-   */
-  virtual double averageRange()
-  {
-    double r=0.0;
-    for (unsigned i=0; i<size(); i++)
-      r += range(i);
-    return r/size();
-  }
-
-  /** Generates a random number in i_th range
-   *  An std::exception will be raised if one of the component is unbounded
-   */
-  virtual double uniform(unsigned _i, eoRng & _rng = eo::rng)
-  {
-    (void)_rng;
-
-    double r= (*this)[_i]->uniform();
-    return r;
-  }
-
-  /** fills a std::vector with uniformly chosen variables in bounds
-   *  An std::exception will be raised if one of the component is unbounded
-   */
-  void uniform(std::vector<double> & _v, eoRng & _rng = eo::rng)
-  {
-    _v.resize(size());
-    for (unsigned i=0; i<size(); i++)
-      {
-      _v[i] = uniform(i, _rng);
-      }
-  }
-
-  /**
-   * Write object. It's called printOn since it prints the object on a stream.
-   * @param _os A std::ostream.
-   */
-  virtual void printOn(std::ostream& _os) const
-  {
-    for (unsigned i=0; i<size(); i++)
-      {
-        operator[](i)->printOn(_os);
-        _os << ";";
-      }
-  }
-};
+// class eoBaseVectorBounds : public std::vector<eoIntBounds*>
+// {
+// public:
+//   // virtual desctructor (to avoid warning?)
+//   virtual ~eoBaseVectorBounds(){}
+//
+//   /** Default Ctor.
+//    */
+//   eoBaseVectorBounds() : std::vector<eoIntBounds*>(0) {}
+//
+//   /** Ctor: same bounds for everybody, given as an eoIntBounds
+//   */
+//   eoBaseVectorBounds(unsigned _dim, eoIntBounds & _bounds) :
+//     std::vector<eoIntBounds*>(_dim, &_bounds)
+//   {}
+//
+//   /** Ctor, particular case of dim-2
+//    */
+//   eoBaseVectorBounds(eoIntBounds& _xbounds, eoIntBounds& _ybounds) :
+//     std::vector<eoIntBounds*>(0)
+//   {
+//         push_back( &_xbounds);
+//         push_back( &_ybounds);
+//   }
+//
+//   /** test: is i_th component bounded
+//    */
+//   virtual bool isBounded(unsigned _i)
+//   {
+//     return (*this)[_i]->isBounded();
+//   }
+//
+//   /** test: bounded iff all are bounded
+//    */
+//   virtual bool isBounded(void)
+//   {
+//     for (unsigned i=0; i<size(); i++)
+//       if (! (*this)[i]->isBounded())
+//         return false;
+//     return true;
+//   }
+//
+//   /** Self-test: true iff i_th component has no bounds at all
+//    */
+//   virtual bool hasNoBoundAtAll(unsigned _i)
+//   {
+//     return (*this)[_i]->hasNoBoundAtAll();
+//   }
+//
+//   /** Self-test: true iff all components have no bound at all
+//    */
+//   virtual bool hasNoBoundAtAll(void)
+//   {
+//     for (unsigned i=0; i<size(); i++)
+//       if (! (*this)[i]->hasNoBoundAtAll())
+//         return false;
+//     return true;
+//   }
+//
+//   virtual bool isMinBounded(unsigned _i)
+//   { return (*this)[_i]->isMinBounded();} ;
+//
+//   virtual bool isMaxBounded(unsigned _i)
+//   { return (*this)[_i]->isMaxBounded();} ;
+//
+//   /** Folds a real value back into the bounds - i_th component
+//    */
+//   virtual void foldsInBounds(unsigned _i, double & _r)
+//   {
+//     (*this)[_i]->foldsInBounds(_r);
+//   }
+//
+//   /** Folds all variables of a std::vector of real values into the bounds
+//    */
+//   virtual void foldsInBounds(std::vector<long int> & _v)
+//   {
+//    for (unsigned i=0; i<size(); i++)
+//      {
+//        (*this)[i]->foldsInBounds(_v[i]);
+//      }
+//   }
+//
+//   /** Truncates a real value to the bounds - i_th component
+//    */
+//   virtual void truncate(unsigned _i, double & _r)
+//   {
+//     (*this)[_i]->truncate(_r);
+//   }
+//
+//   /** truncates all variables of a std::vector of real values to the bounds
+//    */
+//   virtual void truncate(std::vector<double> & _v)
+//   {
+//    for (unsigned i=0; i<size(); i++)
+//      {
+//        (*this)[i]->truncate(_v[i]);
+//      }
+//   }
+//
+//   /** test: is i_th component within the bounds?
+//    */
+//   virtual bool isInBounds(unsigned _i, long int _r)
+//   { return (*this)[_i]->isInBounds(_r); }
+//
+//   /** test: are ALL components within the bounds?
+//    */
+//   virtual bool isInBounds(const std::vector<long int> _v)
+//   {
+//     for (unsigned i=0; i<size(); i++)
+//       if (! isInBounds(i, _v[i]))
+//         return false;
+//     return true;
+//   }
+//
+//   /** Accessors: will raise an std::exception if these do not exist
+//    */
+//   virtual long int minimum(unsigned _i) {return (*this)[_i]->minimum();}
+//   virtual long int maximum(unsigned _i) {return (*this)[_i]->maximum();}
+//   virtual long int range(unsigned _i) {return (*this)[_i]->range();}
+//
+//   /** Computes the average range
+//    *  An std::exception will be raised if one of the component is unbounded
+//    */
+//   virtual double averageRange()
+//   {
+//     double r=0.0;
+//     for (unsigned i=0; i<size(); i++)
+//       r += range(i);
+//     return r/size();
+//   }
+//
+//   /** Generates a random number in i_th range
+//    *  An std::exception will be raised if one of the component is unbounded
+//    */
+//   virtual double uniform(unsigned _i, eoRng & _rng = eo::rng)
+//   {
+//     (void)_rng;
+//
+//     double r= (*this)[_i]->uniform();
+//     return r;
+//   }
+//
+//   /** fills a std::vector with uniformly chosen variables in bounds
+//    *  An std::exception will be raised if one of the component is unbounded
+//    */
+//   void uniform(std::vector<double> & _v, eoRng & _rng = eo::rng)
+//   {
+//     _v.resize(size());
+//     for (unsigned i=0; i<size(); i++)
+//       {
+//       _v[i] = uniform(i, _rng);
+//       }
+//   }
+//
+//   /**
+//    * Write object. It's called printOn since it prints the object on a stream.
+//    * @param _os A std::ostream.
+//    */
+//   virtual void printOn(std::ostream& _os) const
+//   {
+//     for (unsigned i=0; i<size(); i++)
+//       {
+//         operator[](i)->printOn(_os);
+//         _os << ";";
+//       }
+//   }
+// };
 
 ////////////////////////////////////////////////////////////////////
 /** Now a derived class, for parser reading
