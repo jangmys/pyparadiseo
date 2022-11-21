@@ -45,7 +45,7 @@ pyparadiseo.rng().reseed(42)
 
 f_eval = evaluator.fitness(f)
 
-mybounds = bounds.bound_box(f.constraint.lb,f.constraint.ub)
+mybounds = bounds.box(f.constraint.lb,f.constraint.ub)
 
 # POP
 myinit = initializer.random(stype='real',bounds=mybounds)

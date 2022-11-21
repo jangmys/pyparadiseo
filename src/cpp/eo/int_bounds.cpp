@@ -52,7 +52,7 @@ public:
     DEF_CONST_PV2(double,eoRng&,uniform)
     DEF_CONST_PV2(long int,eoRng&,random)
 
-    DEF_CONST_PV3(double&,foldsInBounds)
+    DEF_CONST_PV3(int&,foldsInBounds)
     DEF_CONST_PV3(double&,truncate)
 
     virtual void
@@ -134,8 +134,8 @@ void add_int_bounds(std::string name, Init init)
         .def("isMinBounded", &IntBounds::isMinBounded)
         .def("isMaxBounded", &IntBounds::isMaxBounded)
         .def("isInBounds", &IntBounds::isInBounds)
-        .def("foldsInBounds",static_cast<void (IntBounds::*)(double&) const>(&IntBounds::foldsInBounds))
-        .def("foldsInBounds",foldsInBoundsWrap<eoIntBounds,long int>)
+        .def("foldsInBounds",static_cast<void (IntBounds::*)(int&) const>(&IntBounds::foldsInBounds))
+        .def("foldsInBounds",foldsInBoundsWrap<eoIntBounds,int>)
         .def("truncate",static_cast<void (IntBounds::*)(double&) const>(&IntBounds::truncate))
         .def("truncate", truncateWrap<eoIntBounds,long int>)
         .def("minimum", &IntBounds::minimum)
@@ -145,14 +145,7 @@ void add_int_bounds(std::string name, Init init)
         .def("random", &IntBounds::random)
         .def("__str__", to_string<IntBounds>)
         ;
-
-    register_ptr_to_python< boost::shared_ptr<IntBounds> >();
 }
-
-
-
-
-
 
 //-----------------for vector bounds-----------------
 template<class X>
@@ -166,21 +159,8 @@ void uniformWrap(X& _b, np::ndarray _v, eoRng & _rng = eo::rng)
     }
 }
 
-
-
-//overload constructor for bounds...?
-// static std::shared_ptr<eoRealVectorBounds> makeClass()
-
-// BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(unif_overload, uniform, 0, 1)
-// BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(uniform1_overload, uniform, 1, 2)
-// BOOST_PYTHON_FUNCTION_OVERLOADS(uniform2_overload, uniformWrap<eoRealVectorBounds>, 2, 3)
-
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(int_uniform1_overload, uniform, 1, 2)
 BOOST_PYTHON_FUNCTION_OVERLOADS(int_uniform2_overload, uniformWrap<eoIntVectorBounds>, 2, 3)
-
-
-// BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(uniform1_overload, static_cast<double (eoRealBaseVectorBounds::*)(unsigned,eoRng&)>(&eoRealBaseVectorBounds::uniform), 1, 2)
-
 
 void
 int_bounds()
@@ -213,13 +193,13 @@ int_bounds()
     add_int_bounds<eoIntAboveBound>("IntAboveBound",init<long int>());
 
 
-    class_<std::vector<eoIntBounds*> >("_BoundsVectorInt")
-    .def(vector_indexing_suite<std::vector<eoIntBounds*> >())
-    ;
+    // class_<std::vector<eoIntBounds*> >("_BoundsVectorInt")
+    // .def(vector_indexing_suite<std::vector<eoIntBounds*> >())
+    // ;
 
-    class_<std::vector<boost::shared_ptr<eoIntInterval>> >("_BdsVectorIntInterval")
-    .def(vector_indexing_suite<std::vector<boost::shared_ptr<eoIntInterval>>,true>())
-    ;
+    // class_<std::vector<boost::shared_ptr<eoIntInterval>> >("_BdsVectorIntInterval")
+    // .def(vector_indexing_suite<std::vector<boost::shared_ptr<eoIntInterval>>,true>())
+    // ;
 
     class_<std::vector<eoIntBoundsPtr>>("_BdsVectorInt")
     .def(vector_indexing_suite<std::vector<eoIntBoundsPtr>,true>())

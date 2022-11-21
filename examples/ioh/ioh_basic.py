@@ -36,7 +36,7 @@ config.set_solution_type('real')
 f_eval = evaluator.fitness(f)
 
 for i in range(5):
-    sol = solution.random(5,bounds=bounds.bound_box(f.constraint.lb,f.constraint.ub))
+    sol = solution.random(5,bounds=bounds.box(f.constraint.lb,f.constraint.ub))
 
     # print(sol)
     f_eval(sol)

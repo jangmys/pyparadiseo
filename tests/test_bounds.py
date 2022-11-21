@@ -73,7 +73,7 @@ class TestBounds(unittest.TestCase):
 
 
     def test_realVecBounds1(self):
-        b = bounds.bound_box(3,-1.0,1.0)
+        b = bounds.box(3,-1.0,1.0)
 
         self.assertTrue(b.isBounded())
         for i in range(3):
@@ -97,7 +97,7 @@ class TestBounds(unittest.TestCase):
 
 
     def test_intVecBounds1(self):
-        b = bounds.bound_box(3,-10,10,stype='int')
+        b = bounds.box(3,-10,10,stype='int')
 
         self.assertTrue(b.isBounded())
         for i in range(3):
@@ -119,10 +119,10 @@ class TestBounds(unittest.TestCase):
         self.assertTrue(b.uniform(1) < 10)
 
 
-    def test_bound_box(self):
+    def test_box(self):
         lb = [np.inf,  0,     0,-np.inf]
         ub = [    10,100,np.inf, np.inf]
-        b = bounds.bound_box(lb,ub)
+        b = bounds.box(lb,ub)
 
         self.assertEqual(len(b),4)
 
@@ -149,7 +149,7 @@ class TestBounds(unittest.TestCase):
         lb = np.asarray([-1.0*i for i in range(1,4)])
         ub = np.asarray([i*1.0 for i in range(1,4)])
 
-        b = bounds.bound_box(lb,ub)
+        b = bounds.box(lb,ub)
 
         self.assertNotEqual(hex(id(b[0])),hex(id(b[1])))
         self.assertNotEqual(hex(id(b[1])),hex(id(b[2])))

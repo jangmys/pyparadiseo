@@ -86,7 +86,7 @@ def int_interval(lb,ub):
         return IntBelowBound(lb)
 
 
-def bound_box(*args,stype='real'):
+def box(*args,stype='real'):
     r"""Box-bounds for real-valued solutions
 
     Parameters
@@ -118,7 +118,7 @@ def bound_box(*args,stype='real'):
 
             return ret
         except ValueError:
-            print("failed to construct bound_box")
+            print("failed to construct box")
 
     if len(args) == 3:
         #should be one int and two floats

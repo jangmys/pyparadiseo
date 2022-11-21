@@ -12,7 +12,7 @@ Only real-valued.
 .. autosummary::
     :toctree: _autosummary
 
-    bound_box
+    box
     bound_interval
     bound_below
     bound_above

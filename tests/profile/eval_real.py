@@ -80,7 +80,7 @@ print("="*20)
 
 
 ind = solution.empty(stype='real')
-init = initializer.random(D,stype='real',bounds=bounds.bound_box(D,-1,1))
+init = initializer.random(D,stype='real',bounds=bounds.box(D,-1,1))
 
 #
 # print("="*20)
@@ -168,7 +168,7 @@ print(sol2.array)
 #
 #
 #
-# b= bounds.bound_box(D,-1.0,1.0)
+# b= bounds.box(D,-1.0,1.0)
 # init=initializer.random(stype='real',bounds=b)
 #
 # s = solution.empty(stype='real')
