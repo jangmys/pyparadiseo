@@ -26,7 +26,6 @@ To compile the binary extension you need:
 
 Docker image
 ------------
-Here is a ``manylinux2014_x86_54`` `Docker image`_ with installed prerequisites
+Here is a ``manylinux2014_x86_64`` `Docker image`_ with installed prerequisites
 
-
-.. _Docker image: https://hub.docker.com/repository/docker/jangmys/manylinux2014_pyparadiseo
+.. _Docker image: https://hub.docker.com/repository/docker/jangmys/manylinux2014_boost180_cp36_310

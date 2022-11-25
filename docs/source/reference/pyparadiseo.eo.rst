@@ -1,30 +1,29 @@
 .. _eo:
 
-Evolving Objects (EO)
-============================
+Evolving Objects (EO) (:mod:`pyparadiseo.eo`)
+==============================================
 
-.. currentmodule:: pyparadiseo
+The EO module contains algorithm components for population-based metaheuristics.
 
-Summary
-~~~~~~~~~
+.. currentmodule:: pyparadiseo.eo
 
-.. :caption: Summary
+.. autosummary::
+    :toctree: _autosummary
+    :recursive:
 
-.. toctree::
-   :maxdepth: 2
+    algo
+    continuator
+    breeders
+    merge
+    reduce
+    replace
+    select_one
+    selector
+    transform
 
-   eo/algo
-   eo/continuator
-   eo/replace
-   eo/transform
-
-
-.. .. rubric:: Abstract Base Classes
-
-
-Abstract Base Classes
-~~~~~~~~~~~~~~~~~~~~~~
-
-.. automodule:: pyparadiseo.eo
-   :members:
-   :imported-members:
+.. Abstract Base Classes
+.. ~~~~~~~~~~~~~~~~~~~~~~
+..
+.. .. automodule:: pyparadiseo.eo
+..    :members:
+..    :imported-members:

@@ -1,5 +1,5 @@
 """
-    Reducers
+    Reduce population
 
     base : eoReduce.h
 

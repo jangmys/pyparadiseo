@@ -115,15 +115,6 @@ def make_mutation(mutate,stype=None):
     return class_(mutate)
 
 
-    #
-    #
-    #
-    #
-    #
-    # else:
-    #     NotImplementedError("Not yet implemented")
-
-
 def make_crossover(xover,stype=None):
     """
     make crossover from callable
@@ -220,24 +211,6 @@ def fast_bit_mutation(rate=0.5,beta=1.5):
 
 
 
-# def bit_flip(flip_prob=0.01,normalize=False):
-#     """
-#     flip_k mutation
-#
-#     Parameters
-#     ==========
-#     nbits : int
-#
-#     flip_prob : real, default=0.01
-#         mutation rate (probability for each bit to be flipped)
-#     normalize : bool, default=False
-#         normalize `flip_prob` with respect to chromosome size
-#
-#     Returns
-#     =======
-#     eoMonOp<BinarySolution>
-#     """
-#     pass
 
 
 def bit_flip_n(nbits=1,allow_duplicates=True):

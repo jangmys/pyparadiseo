@@ -1,5 +1,5 @@
 """
-    Mergers
+    Merge populations 
 
     base : eoMerge.h
 

@@ -1,23 +1,9 @@
 Core modules
-============
+==============
+
+These modules allow to define optimization problems (solution encoding, fitness/objective evaluation, search space)
 
 .. currentmodule:: pyparadiseo
-
-.. .. autosummary::
-..     :toctree: _autosummary
-..     :caption: core modulz
-..
-..     config
-..     solution
-
-..     :recursive:
-..
-..     initializer
-..     bounds
-..     population
-..     evaluator
-
-.. :nosignatures:
 
 .. toctree::
     :maxdepth: 2
@@ -28,14 +14,3 @@ Core modules
     evaluator
     initializer
     bounds
-
-
-
-
-
-
-
-
-
-
-.. :imported-members:

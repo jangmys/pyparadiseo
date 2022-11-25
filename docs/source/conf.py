@@ -18,15 +18,15 @@ import pydata_sphinx_theme
 sys.path.insert(0, os.path.abspath('.'))
 # sys.path.insert(0, os.path.abspath('../'))
 # sys.path.insert(0, os.path.abspath('../../src/pyparadiseo'))
-sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.6/cmake-build'))
+sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.8/cmake-build'))
 # sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.6/cmake-install/src/pyparadiseo/core/_core.so'))
 # sys.path.insert(0, os.path.abspath('../src'))
 # sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.6/cmake-install/src'))
-sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.6/cmake-install/src/pyparadiseo'))
-sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.6/cmake-install/src/pyparadiseo/mo'))
-sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.6/cmake-install/src/pyparadiseo/moeo'))
-sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.6/cmake-install/src/pyparadiseo/eo'))
-sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.6/cmake-install/src/pyparadiseo/core'))
+sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.8/cmake-install/src/pyparadiseo'))
+sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.8/cmake-install/src/pyparadiseo/mo'))
+sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.8/cmake-install/src/pyparadiseo/moeo'))
+sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.8/cmake-install/src/pyparadiseo/eo'))
+sys.path.insert(0, os.path.abspath('../../_skbuild/linux-x86_64-3.8/cmake-install/src/pyparadiseo/core'))
 
 
 # from https://github.com/eudoxos/minieigen/blob/master/doc/source/conf.py
@@ -146,12 +146,14 @@ extensions = [
 # autoclass_content = "both"  # include both class docstring and __init__
 autosummary_generate = True  # Turn on sphinx.ext.autosummary
 
+
+
 # autodoc_class_signature = "separated"
 autodoc_typehints = 'description'
 
 autodoc_default_options = {
     'members': True,
-    'member-order': 'groupwise',
+    'member-order': 'bysource',
     # 'special-members': '__init__,__call__',
     'undoc-members': True,
     'private-members': True,

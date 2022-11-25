@@ -1,5 +1,5 @@
 """
-MO continuators
+MO stopping criteria
 """
 from pyparadiseo import utils,config
 

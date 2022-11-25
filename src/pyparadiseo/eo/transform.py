@@ -1,5 +1,5 @@
 """
-eoTransform transforms a population by applying genetic operators on it.
+Transform population
 
 base : eoTransform.h
 

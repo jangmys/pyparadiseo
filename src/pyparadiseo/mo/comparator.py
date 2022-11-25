@@ -1,5 +1,5 @@
 """
-neighbor comparators
+Compare Solutions and Neighbors
 """
 from pyparadiseo import utils,config
 

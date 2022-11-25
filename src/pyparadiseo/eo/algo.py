@@ -1,5 +1,5 @@
 """
-EO Algorithms
+Evolutionary Algorithms
 
 There are three genetic algorithms
 
@@ -13,11 +13,19 @@ from pyparadiseo import eo
 from pyparadiseo.eo import breeders
 
 def simpleGA(selector,crossover,p_cross,mutate,p_mutate,f_eval,continuator,stype=None):
-    """
-    Simple Genetic Algorithm (SGA)
+    """Simple Genetic Algorithm (SGA)
+
+    **Pseudo-code**
+
+    >>> while continuator(pop):
+    >>>    select : create offspring from pop
+    >>>    crossover : apply crossover to offspring
+    >>>    mutate : apply mutation to offspring
+    >>>    swap(offspring,pop) : full replacement
+    >>>    eval : evaluate pop
 
     Parameters
-    ----------
+    ==========
     selector : selectOne
     crossover : eoQuadOp
     p_cross : float
@@ -27,26 +35,14 @@ def simpleGA(selector,crossover,p_cross,mutate,p_mutate,f_eval,continuator,stype
     continuator : eocontinue
     stype : str,optional
 
-    Pseudo-code of SGA
-    -------------------
-    ```python
-    while continuator(pop):
-        select : create offspring from pop
-        crossover : apply crossover to offspring
-        mutate : apply mutation to offspring
-        swap(offspring,pop) : full replacement
-        eval : evaluate pop
-    ```
-
+    Notes
+    ======
     The components of SGA are
 
-    *selector* :
-
-    *crossover* :
-
-    *mutate*:
-
-    *continuator* :
+    - *selector* :
+    - *crossover* :
+    - *mutate*:
+    - *continuator* :
     """
     if stype is None:
         stype = config._SOLUTION_TYPE
@@ -60,37 +56,45 @@ def simpleGA(selector,crossover,p_cross,mutate,p_mutate,f_eval,continuator,stype
 def easyEA(continuator,eval,breed,replace,stype=None):
     """Easy EA
 
-    An easy-to-use evolutionary algorithm; you can use any chromosome,
-       and any selection transformation, merging and evaluation
-       algorithms; you can even change in runtime parameters of those
-       sub-algorithms
+    An easy-to-use evolutionary algorithm. You can use any chromosome, and any selection transformation, merging and evaluation algorithms.
+
+    **Pseudo-code**
+
+    >>> pop_eval(pop)
+    >>> while continuator(pop):
+    >>>    breed(pop,offspring)   # select and transform
+    >>>    pop_eval(offspring)    # evaluate offspring
+    >>>    replace(pop,offspring) # merge and reduce
+
+    -----
+
+    To assemble an EasyEA :
+
+    >>> my_ea = easyEA(continuator,eval,breed,replace)
+
+    where
+
+    - evalFunc is a `fitness eval` or `pop_fitness_eval`
+    - breed is a `breed` or a (select,transform) tuple
+    - replace is a `replace` or a (merge,reduce) tuple
+
+    then call
+
+    >>> my_ea(pop)
+
+    to evolve a population
 
     Parameters
     ==========
     continuator : an eoContinue
-    eval : eoEvalFunc or eoPopEval
+    f_eval : eoEvalFunc or eoPopEval
     breed : eoBreed or (eoSelect,eoTransform)
     replace : eoReplacement or (eoMerge,eoReduce)
+    stype : solution type
 
-    Pseudo-code
-    -------------
-    popEval(pop)
-    while continuator(pop):
-        breed(pop,offspring)   # select and transform
-        popEval(offspring)     # evaluate offspring
-        replace(pop,offspring) # merge and reduce
-
-
-    Notes
-    -----
-    (continue,EvalFunc,Breed,Replace)  #order inverse of SGA? (mandatory left, optional right)
-    (continue,PopEval,Breed,Replace)
-    (continue,EvalFunc,Breed,(Merge,Reduce))
-    (continue,EvalFunc,(Select,Transform),Replace)
-    (continue,EvalFunc,(Select,Transform),(Merge,Reduce))
-
-    Using `SGATransform` and fullReplacement yields SGA
-
+    Returns
+    =============
+    an easyEA callable (derived from eoAlgo)
     """
     if stype is None:
         stype = config._SOLUTION_TYPE

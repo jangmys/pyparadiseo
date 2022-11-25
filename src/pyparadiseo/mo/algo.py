@@ -1,5 +1,9 @@
 """
-Local Search algorithms
+Single-solution based algorithms
+
+- Hill Climbers
+- Simulated Annealing
+- Tabu Search
 """
 from pyparadiseo import utils,config
 
@@ -37,24 +41,29 @@ def set_move(self,move_op,move_back_op=None,index_table=None):
 #SimpleHC(Neighborhood,solEval,nborEval)
 #SimpleHC(Neighborhood,solEval,nborEval,moContinuator)
 #SimpleHC(Neighborhood,solEval,nborEval,moContinuator,moNeighborComparator,moSolNeighborComparator)
-def simple_hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=None,compareSN=None,hc_type='simple',stype=None):
-    """
-     * Simple HC:
-     * Hill-Climbing local search
-     *
-     * At each iteration,
-     *   the first best solution in the neighborhood is selected
-     *   if the selected neighbor have higher fitness than the current solution
-     *       then the solution is replaced by the selected neighbor
-     *   the algorithm stops when there is no higher neighbor
+def hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=None,compareSN=None,hc_type='simple',stype=None):
+    """Hill-Climbing local search
 
-     * Simple constructor for a hill-climber
-     * @param _neighborhood the neighborhood
-     * @param _fullEval the full evaluation function
-     * @param _eval neighbor's evaluation function
-     * @param _cont an external continuator
-     * @param _compN  a neighbor vs neighbor comparator
-     * @param _compSN a solution vs neighbor comparator
+    At each iteration, an improving solution in the neighborhood is selected. If the selected neighbor has higher fitness than the current solution, then the solution is replaced by the selected neighbor. The algorithm stops when there is no higher neighbor.
+
+    Three variants are available
+    - 'simple' : accept best neighbor (take first, if multiple best neighbors are found)
+    - 'first_improve' : accept first improving neighbor
+    - 'random_best' : accept one of the best neighbors at random
+
+    Parameters
+    ===========
+    neighborhood : neighborhood
+    f_eval : full evaluation function
+    nbor_eval : neighbor evaluation function
+    continuator : an external continuator
+        default = None
+    compareN : neighbor vs neighbor comparator
+        default = None
+    compSN  : a solution vs neighbor comparator
+        default = None
+    hc_type : hill-climber type
+    stype : solution type
     """
     if stype is None:
         stype = config._SOLUTION_TYPE

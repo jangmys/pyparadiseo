@@ -3,7 +3,8 @@ Config (:mod:`pyparadiseo.config`)
 
 .. currentmodule:: pyparadiseo.config
 
-
+Global variables
+----------------
 Set global pyparadiseo variables.
 
 * Solution type
@@ -21,9 +22,3 @@ Set global pyparadiseo variables.
     set_minimize_fitness
     is_minimizing
     setup_objectives
-
-
-.. .. automodule:: pyparadiseo.config
-..     :members:
-..     :undoc-members:
-..     :show-inheritance:

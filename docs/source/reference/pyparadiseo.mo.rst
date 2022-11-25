@@ -1,15 +1,19 @@
 .. _mo:
 
-Moving Objects (MO)
-======================
+Moving Objects (MO) (:mod:`pyparadiseo.mo`)
+============================================
 
-.. currentmodule:: pyparadiseo
+The MO module contains algorithm components for single-solution based metaheuristics.
 
-.. toctree::
-   :maxdepth: 2
+.. currentmodule:: pyparadiseo.mo
 
-   mo/algo
-   mo/eval
-   mo/compare
-   mo/continuator
-   mo/neighborhood
+.. autosummary::
+    :toctree: _autosummary
+    :recursive:
+
+    algo
+    continuator
+    comparator
+    eval
+    explorer
+    neighborhood

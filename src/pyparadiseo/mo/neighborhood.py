@@ -1,5 +1,5 @@
 """
-A neighborhood
+MO neighborhoods
 """
 from pyparadiseo import utils,config
 
