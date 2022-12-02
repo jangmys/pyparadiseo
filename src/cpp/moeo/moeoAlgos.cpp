@@ -22,7 +22,7 @@ void moeo_expose_algos(std::string stype)
     using namespace boost::python;
 
     // why is noncopyable needed? (else compilation error, does it hurt?)
-    // ==========================================================================
+    // ====================================================================
     class_<moeoNSGA<SolutionType>, bases<moeoEA<SolutionType>>, boost::noncopyable>
         (make_name("moeoNSGA",stype).c_str(), init<
           unsigned int,

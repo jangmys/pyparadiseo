@@ -1,0 +1,4 @@
+"""
+Diversity assignment
+=====================
+"""
