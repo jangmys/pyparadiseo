@@ -7,9 +7,10 @@ The EO module contains algorithm components for population-based metaheuristics.
 
 .. currentmodule:: pyparadiseo.eo
 
+
 .. autosummary::
     :toctree: _autosummary
-    :recursive:
+    :template: module.rst
 
     algo
     continuator
@@ -20,10 +21,3 @@ The EO module contains algorithm components for population-based metaheuristics.
     select_one
     selector
     transform
-
-.. Abstract Base Classes
-.. ~~~~~~~~~~~~~~~~~~~~~~
-..
-.. .. automodule:: pyparadiseo.eo
-..    :members:
-..    :imported-members:

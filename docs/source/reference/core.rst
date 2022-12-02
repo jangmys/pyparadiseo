@@ -8,12 +8,12 @@ These modules allow to define optimization problems (solution encoding, fitness/
 .. toctree::
     :maxdepth: 2
 
-    core.config
-    core.solution
-    population
-    evaluator
-    initializer
-    bounds
+    core/core.config
+    core/core.solution
+    core/population
+    core/evaluator
+    core/initializer
+    core/bounds
 
 
 .. autosummary::

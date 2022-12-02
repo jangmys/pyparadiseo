@@ -145,6 +145,8 @@ extensions = [
 
 # autoclass_content = "both"  # include both class docstring and __init__
 autosummary_generate = True  # Turn on sphinx.ext.autosummary
+autosummary_imported_members = True
+autosummary_ignore_module_all = False
 
 
 
@@ -178,7 +180,6 @@ master_doc = 'index'
 napoleon_numpy_docstring = True
 napoleon_use_ivar = True
 napoleon_use_param = True
-
 
 numpydoc_show_class_members=False
 add_module_names = False
@@ -247,11 +248,11 @@ html_context = {
 }
 
 
-
-# def setup(app):
+def setup(app):
 #     # assign the names to classes imported 'as ...', otherwise autodoc won't document these classes,
 #     # and will instead just say 'alias of ...'
-#     import pyparadiseo
+    import pyparadiseo
+    pyparadiseo._core.eoContinue.__name__ = 'eoContinue'
 #     import pyparadiseo.operator
 #     pyparadiseo.operator.MonOp.__name__ = 'MonOp'
 #     pyparadiseo.operator.BinOp.__name__ = 'BinOp'

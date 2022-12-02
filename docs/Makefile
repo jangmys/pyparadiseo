@@ -28,4 +28,4 @@ help:
 #	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 clean:
-	rm -rf build _autosummary */_autosummary */*/_autosummary
+	rm -rf build source/reference/core/_autosummary/* source/reference/eo/_autosummary/* source/reference/mo/_autosummary/* source/reference/operators/_autosummary/* source/reference/moeo/_autosummary/*

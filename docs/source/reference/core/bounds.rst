@@ -13,6 +13,7 @@ Real or integer-valued.
 
 .. autosummary::
     :toctree: _autosummary
+    :template: module.rst
 
     box
     real_interval

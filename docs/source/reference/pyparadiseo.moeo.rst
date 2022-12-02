@@ -7,7 +7,7 @@ Multi-Objective EO (MOEO) (:mod:`pyparadiseo.moeo`)
 
 .. autosummary::
     :toctree: _autosummary
-    :recursive:
+    :template: module.rst
 
     algo
     diversity_assignment

@@ -23,7 +23,7 @@ Mutation operators modify one solution object and return ``True`` if the solutio
 .. toctree::
     :maxdepth: 2
 
-    mutation
+    operators/mutation
 
 
 Crossover (aka **eoQuadOp<EOType>**)
@@ -40,7 +40,7 @@ Crossover operators modify two solution objects and return ``True`` if one of th
 .. toctree::
     :maxdepth: 2
 
-    crossover
+    operators/crossover
 
 -------------------
 
@@ -51,6 +51,6 @@ For convenience, pyparadiseo provides wrappers that allow to use Python callable
 When implementing variation operators it is the programmers responsibility to make sure that the operators are compatible with the solution definition.
 
 
-.. autofunction:: pyparadiseo.operator.make_mutation
+.. autofunction:: operator.make_mutation
 
-.. autofunction:: pyparadiseo.operator.make_crossover
+.. autofunction:: operator.make_crossover

@@ -9,7 +9,7 @@ The MO module contains algorithm components for single-solution based metaheuris
 
 .. autosummary::
     :toctree: _autosummary
-    :recursive:
+    :template: module.rst
 
     algo
     continuator
