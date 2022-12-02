@@ -66,6 +66,8 @@ set(moSources
 set(moeoSources
     src/cpp/moeo/moeoAbstract.cpp
     src/cpp/moeo/moeoAlgos.cpp
+    src/cpp/moeo/moeoFitnessAssign.cpp
+    src/cpp/moeo/moeoDiversityAssign.cpp
 )
 
 set(eoSources
