@@ -10,5 +10,5 @@ class test_moalgo(unittest.TestCase):
             if inspect.isclass(obj):
                 if name[0] == "_":
                     continue
-                if name != "LocalSearch":
+                if name != "moLocalSearch":
                     self.assertEqual(obj.__bases__[0].__name__,"moLocalSearch")

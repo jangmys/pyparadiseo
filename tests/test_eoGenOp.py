@@ -6,9 +6,9 @@ from pyparadiseo.operator import pyMonOp
 from pyparadiseo.operator import pyBinOp
 from pyparadiseo.operator import pyQuadOp
 
-from pyparadiseo.operator import MonOp
-from pyparadiseo.operator import BinOp
-from pyparadiseo.operator import QuadOp
+from pyparadiseo.operator import eoMonOp
+from pyparadiseo.operator import eoBinOp
+from pyparadiseo.operator import eoQuadOp
 
 from pyparadiseo import operator
 
@@ -69,7 +69,7 @@ class test_genops(unittest.TestCase):
 
 
     def test_deriveMonOp(self):
-        class myMonOp(MonOp):
+        class myMonOp(eoMonOp):
             def __call__(self,_pyeo):
                 for i in range(len(_pyeo)):
                     _pyeo[i]=0
@@ -98,7 +98,7 @@ class test_genops(unittest.TestCase):
         self.assertEqual(str(mycross.getType()),'binary')
 
     def test_deriveBinOp(self):
-        class myBinOp(BinOp):
+        class myBinOp(eoBinOp):
             def __call__(self,_pyeo1,_pyeo2):
                 for i in range(len(_pyeo1)):
                     _pyeo1[i]=0

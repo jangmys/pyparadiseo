@@ -10,5 +10,5 @@ class test_mocontinuator(unittest.TestCase):
             if inspect.isclass(obj):
                 if name[0] == "_":
                     continue
-                if name != "Continuator":
+                if name != "moContinuator":
                     self.assertEqual(obj.__bases__[0].__name__,"moContinuator")

@@ -97,7 +97,7 @@ class test_eoSelector(unittest.TestCase):
         #
         for x in [2,3,5,7,11]:
             sel = pySelectOne(select_x(x))
-            self.assertTrue(isinstance(sel,select_one.SelectOne))
+            self.assertTrue(isinstance(sel,select_one.eoSelectOne))
 
             ind = sel(self.pop)
 
@@ -312,7 +312,7 @@ class test_eoSelector(unittest.TestCase):
 
     def test_ctor(self):
         #abstract : should not be able to construct this?!
-        sel = select_one.SelectOne()
+        sel = select_one.eoSelectOne()
         self.assertTrue(callable(sel))
 
         sel = select_one.det_tournament()
