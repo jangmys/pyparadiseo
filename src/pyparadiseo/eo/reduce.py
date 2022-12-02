@@ -12,6 +12,11 @@
 """
 from pyparadiseo import config,utils
 
+from .._core import eoReduce
+
+__all__ = ['truncate','random','ep_reduce','linear','det_tournament','stoch_tournament', 'eoReduce']
+
+
 def truncate(stype=None):
     """Sort and Truncate (keep best)
     """

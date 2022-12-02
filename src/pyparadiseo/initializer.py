@@ -14,6 +14,9 @@ Any function-like object that takes
 from pyparadiseo import config,utils
 from pyparadiseo import bounds as bounds_mod
 
+from ._core import eoInit
+
+__all__=['initializer','empty','random','eoInit']
 
 def initializer(init_fun,stype=None):
     """

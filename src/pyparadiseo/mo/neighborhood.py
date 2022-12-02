@@ -3,7 +3,9 @@ MO neighborhoods
 """
 from pyparadiseo import utils,config
 
+from .._core import moNeighborhood
 
+__all__=['moNeighborhood','indexed','ordered','random']
 
 
 # from .._core import moOrderNeighborhood as OrderNeighborhood
@@ -25,7 +27,7 @@ class _Neighborhood():
         return class_()
 
 
-def indexed(neighborhood_size,stype=None):
+def indexed(neighborhood_size: int,stype=None):
     """
     A neighborhood based on indices
 
@@ -40,7 +42,7 @@ def indexed(neighborhood_size,stype=None):
     return class_(neighborhood_size)
 
 
-def ordered(neighborhood_size,stype=None):
+def ordered(neighborhood_size: int,stype=None):
     """
     An ordered indexed neighborhood
 
@@ -57,7 +59,7 @@ def ordered(neighborhood_size,stype=None):
     return class_(neighborhood_size)
 
 
-def random(neighborhood_size,max_neighbors=0,with_replacement=True,stype=None):
+def random(neighborhood_size: int,max_neighbors: int=0,with_replacement=True,stype=None):
     """
     A random neighborhood
 

@@ -6,26 +6,31 @@ Single-solution based algorithms
 - Tabu Search
 """
 from pyparadiseo import utils,config
-
+from typing import Union,Optional,Callable
 
 #ABC
-from .._core import moLocalSearch as LocalSearch
+from .._core import moLocalSearch
 
 # from .._core import moSimpleHC as SimpleHC
 # from .._core import moFirstImprHC as FirstImprHC
 # from .._core import moRandomBestHC as RandomBestHC
-from .._core import moNeutralHC as NeutralHC
+from .._core import moNeutralHC
 
 # from .._core import moRandomSearch as RandomSearch
-from .._core import moRandomWalk as RandomWalk
-from .._core import moRandomNeutralWalk as RandomNeutralWalk
+from .._core import moRandomWalk
+from .._core import moRandomNeutralWalk
 
-from .._core import moMetropolisHasting as MetropolisHasting
-from .._core import moSA as SA
-from .._core import moTS as TS
+from .._core import moMetropolisHasting
+from .._core import moSA
+from .._core import moTS
+
+__all__=['hill_climber','random_search','random_walk','random_neutral_walk','metropolis_hastings','simulated_annealing','tabu_search','moLocalSearch']
 
 
-def set_move(self,move_op,move_back_op=None,index_table=None):
+def _set_move(self,move_op,move_back_op=None,index_table=None):
+    """
+    local function injected in LS algo to set move and index_table
+    """
     self.set_move(move_op)
 
     if move_back_op is not None:
@@ -34,9 +39,6 @@ def set_move(self,move_op,move_back_op=None,index_table=None):
     if index_table is not None:
         self.set_index_table(index_table)
 
-
-# LocalSearch.set_move_ = set_move
-# moSimpleHCBin.set_move_ = set_move
 
 #SimpleHC(Neighborhood,solEval,nborEval)
 #SimpleHC(Neighborhood,solEval,nborEval,moContinuator)
@@ -53,10 +55,11 @@ def hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=None,co
 
     Parameters
     ===========
-    neighborhood : neighborhood
+    neighborhood : moNeighborhood
+        a Neighborhood
     f_eval : full evaluation function
     nbor_eval : neighbor evaluation function
-    continuator : an external continuator
+    continuator : moContinuator
         default = None
     compareN : neighbor vs neighbor comparator
         default = None
@@ -80,7 +83,7 @@ def hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=None,co
     if class_ is None:
         raise TypeError("invalid hc_type")
 
-    class_.set_move_ = set_move
+    class_.set_move_ = _set_move
 
     if config.is_minimizing():
         print("IS MIN\n")

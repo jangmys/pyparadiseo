@@ -7,6 +7,10 @@ __call__(pop) --> void
 """
 from pyparadiseo import config,utils
 
+from .._core import eoTransform
+
+__all__ = ['SGA','eoTransform']
+
 def SGA(crossover, c_proba, mutate, m_proba, stype=None):
     """transform a population using genetic operators.
 

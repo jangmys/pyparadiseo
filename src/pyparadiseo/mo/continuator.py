@@ -3,6 +3,10 @@ MO stopping criteria
 """
 from pyparadiseo import utils,config
 
+from .._core import moContinuator
+
+__all__=['moContinuator','always_true','max_iterations','full_evals','seconds_eseconds_elapsed']
+
 def always_true(stype=None):
     """
     Iteration-continuator: continues until a number of iterations is reached

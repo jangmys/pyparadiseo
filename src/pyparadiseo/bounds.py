@@ -26,6 +26,8 @@ from ._core import IntVectorBounds
 
 import numpy as np
 
+__all__ = ['RealVectorBounds','IntVectorBounds','box']
+
 
 def box(*args, stype='real'):
     r"""Box-bounds for real-valued solutions

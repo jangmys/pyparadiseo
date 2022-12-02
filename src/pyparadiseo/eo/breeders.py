@@ -15,8 +15,17 @@ base : eoBreed.h
 eoGeneralBreeder.h
 eoOneToOneBreeder.h
 """
-
 from pyparadiseo import config, utils
+
+from .._core import eoBreed
+eoBreed.__doc__="""Abstract base class for EO algorithms.
+
+It defines a functor ``__call__(const pop1,pop2) -> None``.
+
+Use ``eoBreed`` creation methods in :py:mod:`~pyparadiseo.eo.breeders`
+"""
+
+__all__=['breeder','select_transform','general_breeder','one_to_one_breeder','eoBreed']
 
 
 def breeder(klass_or_stype=None, stype=None):

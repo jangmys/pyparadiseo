@@ -23,6 +23,10 @@ eoSelectOne.h
 """
 from pyparadiseo import config,utils
 
+from .._core import eoSelect
+
+__all__ = ['det_select','select_many','select_number','select_perc','select_trunc','select_truncated_many','eoSelect']
+
 ################################################
 ################################################
 #### SELECT (src_pop,dest_pop)
