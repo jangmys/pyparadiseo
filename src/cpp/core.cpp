@@ -74,6 +74,8 @@ extern void moComparators();
 //-------------MOEO-------------
 extern void moeo_abstract();
 extern void moeo_algos();
+extern void moeo_fitnessAssign();
+extern void moeo_diversityAssign();
 
 //-------------PSO-------------
 extern void eoParticleSwarm();
@@ -453,6 +455,8 @@ BOOST_PYTHON_MODULE(_core)
     //MOEO
     moeo_abstract();
     moeo_algos();
+    moeo_fitnessAssign();
+    moeo_diversityAssign();
 
 
     // def("apply",&apply<PyEOT>);

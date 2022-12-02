@@ -3,19 +3,15 @@ PyParadisEO
 """
 from pyparadiseo import eo, mo, moeo
 
-from pyparadiseo import bounds
 from pyparadiseo import evaluator
 from pyparadiseo import initializer
 from pyparadiseo import operator
-from pyparadiseo import solution
 from pyparadiseo import population
 from pyparadiseo import config,utils
-
 
 #  EO RNG
 from ._core import eoRng
 from ._core import rng
-
 
 #import submodules
 from . import solution
