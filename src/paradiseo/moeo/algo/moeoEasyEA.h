@@ -38,8 +38,8 @@
 #ifndef _MOEOEASYEA_H
 #define _MOEOEASYEA_H
 
-#include <apply.h>
 #include <eoBreed.h>
+#include <apply.h>
 #include <eoContinue.h>
 #include <eoMergeReduce.h>
 #include <eoPopEvalFunc.h>
@@ -49,7 +49,9 @@
 #include <diversity/moeoDiversityAssignment.h>
 #include <diversity/moeoDummyDiversityAssignment.h>
 #include <fitness/moeoFitnessAssignment.h>
-#include <replacement/moeoReplacement.h>
+
+#include <eoReplacement.h>
+// #include <replacement/moeoReplacement.h>
 
 /**
  * An easy class to design multi-objective evolutionary algorithms.
@@ -68,7 +70,7 @@ public:
      * @param _diversityEval the diversity evaluation scheme
      * @param _evalFitAndDivBeforeSelection put this parameter to 'true' if you want to re-evalue the fitness and the diversity of the population before the selection process
      */
-    moeoEasyEA(eoContinue < MOEOT > & _continuator, eoEvalFunc < MOEOT > & _eval, eoBreed < MOEOT > & _breed, moeoReplacement < MOEOT > & _replace, moeoFitnessAssignment < MOEOT > & _fitnessEval, moeoDiversityAssignment < MOEOT > & _diversityEval, bool _evalFitAndDivBeforeSelection = false) :
+    moeoEasyEA(eoContinue < MOEOT > & _continuator, eoEvalFunc < MOEOT > & _eval, eoBreed < MOEOT > & _breed, eoReplacement < MOEOT > & _replace, moeoFitnessAssignment < MOEOT > & _fitnessEval, moeoDiversityAssignment < MOEOT > & _diversityEval, bool _evalFitAndDivBeforeSelection = false) :
             continuator(_continuator), eval (_eval), loopEval(_eval), popEval(loopEval), selectTransform(dummySelect, dummyTransform), breed(_breed), replace(_replace), fitnessEval(_fitnessEval), diversityEval(_diversityEval), evalFitAndDivBeforeSelection(_evalFitAndDivBeforeSelection)
     {}
 
@@ -83,7 +85,7 @@ public:
      * @param _diversityEval the diversity evaluation scheme
      * @param _evalFitAndDivBeforeSelection put this parameter to 'true' if you want to re-evalue the fitness and the diversity of the population before the selection process
      */
-    moeoEasyEA(eoContinue < MOEOT > & _continuator, eoPopEvalFunc < MOEOT > & _popEval, eoBreed < MOEOT > & _breed, moeoReplacement < MOEOT > & _replace, moeoFitnessAssignment < MOEOT > & _fitnessEval, moeoDiversityAssignment < MOEOT > & _diversityEval, bool _evalFitAndDivBeforeSelection = false) :
+    moeoEasyEA(eoContinue < MOEOT > & _continuator, eoPopEvalFunc < MOEOT > & _popEval, eoBreed < MOEOT > & _breed, eoReplacement < MOEOT > & _replace, moeoFitnessAssignment < MOEOT > & _fitnessEval, moeoDiversityAssignment < MOEOT > & _diversityEval, bool _evalFitAndDivBeforeSelection = false) :
             continuator(_continuator), eval(dummyEval), loopEval(dummyEval), popEval(_popEval), selectTransform(dummySelect, dummyTransform), breed(_breed), replace(_replace), fitnessEval(_fitnessEval), diversityEval(_diversityEval), evalFitAndDivBeforeSelection(_evalFitAndDivBeforeSelection)
     {}
 
@@ -99,7 +101,7 @@ public:
      * @param _diversityEval the diversity evaluation scheme
      * @param _evalFitAndDivBeforeSelection put this parameter to 'true' if you want to re-evalue the fitness and the diversity of the population before the selection process
      */
-    moeoEasyEA(eoContinue < MOEOT > & _continuator, eoEvalFunc < MOEOT > & _eval, eoSelect < MOEOT > & _select, eoTransform < MOEOT > & _transform, moeoReplacement < MOEOT > & _replace, moeoFitnessAssignment < MOEOT > & _fitnessEval, moeoDiversityAssignment < MOEOT > & _diversityEval, bool _evalFitAndDivBeforeSelection = false) :
+    moeoEasyEA(eoContinue < MOEOT > & _continuator, eoEvalFunc < MOEOT > & _eval, eoSelect < MOEOT > & _select, eoTransform < MOEOT > & _transform, eoReplacement < MOEOT > & _replace, moeoFitnessAssignment < MOEOT > & _fitnessEval, moeoDiversityAssignment < MOEOT > & _diversityEval, bool _evalFitAndDivBeforeSelection = false) :
             continuator(_continuator), eval(_eval), loopEval(_eval), popEval(loopEval), selectTransform(_select, _transform), breed(selectTransform), replace(_replace), fitnessEval(_fitnessEval), diversityEval(_diversityEval), evalFitAndDivBeforeSelection(_evalFitAndDivBeforeSelection)
     {}
 
@@ -115,7 +117,7 @@ public:
      * @param _diversityEval the diversity evaluation scheme
      * @param _evalFitAndDivBeforeSelection put this parameter to 'true' if you want to re-evalue the fitness and the diversity of the population before the selection process
      */
-    moeoEasyEA(eoContinue < MOEOT > & _continuator, eoPopEvalFunc < MOEOT > & _popEval, eoSelect < MOEOT > & _select, eoTransform < MOEOT > & _transform, moeoReplacement < MOEOT > & _replace, moeoFitnessAssignment < MOEOT > & _fitnessEval, moeoDiversityAssignment < MOEOT > & _diversityEval, bool _evalFitAndDivBeforeSelection = false) :
+    moeoEasyEA(eoContinue < MOEOT > & _continuator, eoPopEvalFunc < MOEOT > & _popEval, eoSelect < MOEOT > & _select, eoTransform < MOEOT > & _transform, eoReplacement < MOEOT > & _replace, moeoFitnessAssignment < MOEOT > & _fitnessEval, moeoDiversityAssignment < MOEOT > & _diversityEval, bool _evalFitAndDivBeforeSelection = false) :
             continuator(_continuator), eval(dummyEval), loopEval(dummyEval), popEval(_popEval), selectTransform(_select, _transform), breed(selectTransform), replace(_replace), fitnessEval(_fitnessEval), diversityEval(_diversityEval), evalFitAndDivBeforeSelection(_evalFitAndDivBeforeSelection)
     {}
 
@@ -203,7 +205,7 @@ protected:
     /** the breeder */
     eoBreed < MOEOT > & breed;
     /** the replacment strategy */
-    moeoReplacement < MOEOT > & replace;
+    eoReplacement < MOEOT > & replace;
     /** the fitness assignment strategy */
     moeoFitnessAssignment < MOEOT > & fitnessEval;
     /** the diversity assignment strategy */

@@ -64,7 +64,7 @@ class moeoSharingDiversityAssignment : public moeoDiversityAssignment < MOEOT >
      * @param _nicheSize neighborhood size in terms of radius distance (closely related to the way the distances are computed)
      * @param _alpha parameter used to regulate the shape of the sharing function
      */
-    moeoSharingDiversityAssignment(moeoDistance<MOEOT,double> & _distance, double _nicheSize = 0.5, double _alpha = 1.0) : distance(_distance), nicheSize(_nicheSize), alpha(_alpha)
+    moeoSharingDiversityAssignment(moeoDistance<MOEOT,typename MOEOT::Fitness> & _distance, double _nicheSize = 0.5, double _alpha = 1.0) : distance(_distance), nicheSize(_nicheSize), alpha(_alpha)
     {}
 
 

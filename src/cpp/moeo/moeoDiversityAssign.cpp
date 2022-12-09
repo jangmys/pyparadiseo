@@ -59,30 +59,30 @@ void expose_diversity_assign(std::string stype)
     .def("__call__",&moeoFrontByFrontCrowdingDiversityAssignment<SolutionType>::operator())
     ;
 
-    // class_<moeoSharingDiversityAssignment<SolutionType>, bases<moeoDiversityAssignment<SolutionType> > >
-    // ("moeoSharingDiversityAssignment",init<
-    //     moeoDistance<SolutionType,double>&,
-    //     double,
-    //     double
-    // >()
-    // [WC1]
-    // )
-    // .def(init<double,double>())
-    // .def("__call__",&moeoSharingDiversityAssignment<SolutionType>::operator())
-    // .def("updateByDeleting",&moeoSharingDiversityAssignment<SolutionType>::updateByDeleting)
-    // ;
-    //
-    // class_<moeoFrontByFrontSharingDiversityAssignment<SolutionType>,bases<moeoSharingDiversityAssignment<SolutionType>>>
-    // ("moeoFrontByFrontSharingDiversityAssignment",init<
-    //     moeoDistance<SolutionType,double>&,
-    //     double,
-    //     double
-    // >()[WC1]
-    // )
-    // .def(init<double,double>())
-    // .def("updateByDeleting",&moeoFrontByFrontSharingDiversityAssignment<SolutionType>::updateByDeleting)
-    // .def("__call__",&moeoFrontByFrontSharingDiversityAssignment<SolutionType>::operator())
-    // ;
+    class_<moeoSharingDiversityAssignment<SolutionType>, bases<moeoDiversityAssignment<SolutionType> > >
+    ("moeoSharingDiversityAssignment",init<
+        moeoDistance<SolutionType,typename SolutionType::Fitness>&,
+        double,
+        double
+    >()
+    [WC1]
+    )
+    .def(init<double,double>())
+    .def("__call__",&moeoSharingDiversityAssignment<SolutionType>::operator())
+    .def("updateByDeleting",&moeoSharingDiversityAssignment<SolutionType>::updateByDeleting)
+    ;
+
+    class_<moeoFrontByFrontSharingDiversityAssignment<SolutionType>,bases<moeoSharingDiversityAssignment<SolutionType>>>
+    ("moeoFrontByFrontSharingDiversityAssignment",init<
+        moeoDistance<SolutionType,typename SolutionType::Fitness>&,
+        double,
+        double
+    >()[WC1]
+    )
+    .def(init<double,double>())
+    .def("updateByDeleting",&moeoFrontByFrontSharingDiversityAssignment<SolutionType>::updateByDeleting)
+    .def("__call__",&moeoFrontByFrontSharingDiversityAssignment<SolutionType>::operator())
+    ;
 
 
 }

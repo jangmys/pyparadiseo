@@ -9,11 +9,6 @@
 #include <algo/moeoUnifiedDominanceBasedLS.h>
 
 #include <utils/def_abstract_functor.h>
-// #include "def_abstract_functor.h"
-
-
-
-
 
 
 template <typename SolutionType>
@@ -170,7 +165,7 @@ void moeo_expose_algos(std::string stype)
           eoContinue<SolutionType>&,
           eoEvalFunc<SolutionType>&,
           eoBreed<SolutionType>&,
-          moeoReplacement<SolutionType>&,
+          eoReplacement<SolutionType>&,
           moeoFitnessAssignment<SolutionType>&,
           moeoDiversityAssignment<SolutionType>&,
           bool
@@ -189,7 +184,7 @@ void moeo_expose_algos(std::string stype)
           eoContinue<SolutionType>&,
           eoPopEvalFunc<SolutionType>&,
           eoBreed<SolutionType>&,
-          moeoReplacement<SolutionType>&,
+          eoReplacement<SolutionType>&,
           moeoFitnessAssignment<SolutionType>&,
           moeoDiversityAssignment<SolutionType>&,
           bool
@@ -209,7 +204,7 @@ void moeo_expose_algos(std::string stype)
           eoEvalFunc<SolutionType>&,
           eoSelect<SolutionType>&,
           eoTransform<SolutionType>&,
-          moeoReplacement<SolutionType>&,
+          eoReplacement<SolutionType>&,
           moeoFitnessAssignment<SolutionType>&,
           moeoDiversityAssignment<SolutionType>&,
           bool
@@ -230,7 +225,7 @@ void moeo_expose_algos(std::string stype)
           eoPopEvalFunc<SolutionType>&,
           eoSelect<SolutionType>&,
           eoTransform<SolutionType>&,
-          moeoReplacement<SolutionType>&,
+          eoReplacement<SolutionType>&,
           moeoFitnessAssignment<SolutionType>&,
           moeoDiversityAssignment<SolutionType>&,
           bool
