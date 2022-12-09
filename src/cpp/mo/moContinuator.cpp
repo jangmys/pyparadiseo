@@ -1,3 +1,8 @@
+#include <boost/python.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
+
+
 #include <pyeot.h>
 #include "pymo.h"
 
@@ -7,7 +12,9 @@
 #include <continuator/moTimeContinuator.h>
 
 #include <continuator/moTrueContinuator.h>
-#include <continuator/moStatBase.h>
+#include <continuator/moCheckpoint.h>
+
+// #include <continuator/moStatBase.h>
 
 #include <continuator/moUpdater.h>
 
@@ -26,15 +33,6 @@ public:
     }
 };
 
-template<typename SolutionType>
-struct moStatBaseWrap : moStatBase<SolutionType>,wrapper<moStatBase<SolutionType>>
-{
-public:
-    void operator()(SolutionType& _ind)
-    {
-        this->get_override("operator()")(_ind);
-    }
-};
 
 template<typename SolutionType>
 void expose_moContinuators(std::string name)
@@ -103,12 +101,45 @@ void expose_moContinuators(std::string name)
     */
 
 
-    //why is this here???
-    class_<moStatBaseWrap<SolutionType>,boost::noncopyable>
-    (make_name("moStatBase",name).c_str())
-    .def("__call__", pure_virtual(&moStatBaseWrap<SolutionType>::operator()))
-    .def("lastCall", &moStatBase<SolutionType>::lastCall)
-    .def("init", &moStatBase<SolutionType>::init)
+    // ----------------------moCheckpoint----------------------
+    typedef boost::shared_ptr<moContinuator<NborT>> moContinuatorPtr;
+    typedef boost::shared_ptr<moStatBase<SolutionType>> moStatPtr;
+    typedef boost::shared_ptr<eoMonitor> eoMonitorPtr;
+    typedef boost::shared_ptr<eoUpdater> eoUpdaterPtr;
+    typedef boost::shared_ptr<moUpdater> moUpdaterPtr;
+
+    register_ptr_to_python< moContinuatorPtr >();
+
+    class_<std::vector<moContinuatorPtr>>(make_name("_ContinuatorVec",name).c_str())
+    .def(vector_indexing_suite<std::vector<moContinuatorPtr>,true>())
+    ;
+
+
+    void (moCheckpoint<NborT>::*add_cont)(moContinuatorPtr) = &moCheckpoint<NborT>::add;
+
+    void (moCheckpoint<NborT>::*add_stat)(moStatPtr) = &moCheckpoint<NborT>::add;
+
+    void (moCheckpoint<NborT>::*add_mon)(eoMonitorPtr) = &moCheckpoint<NborT>::add;
+
+    void (moCheckpoint<NborT>::*add_upd)(eoUpdaterPtr) = &moCheckpoint<NborT>::add;
+
+    void (moCheckpoint<NborT>::*add_moupd)(moUpdaterPtr) = &moCheckpoint<NborT>::add;
+
+    class_<moCheckpoint<NborT>,bases<moContinuator<NborT>>>(
+        make_name("moCheckpoint",name).c_str(),
+        init<
+            moContinuatorPtr,
+            optional<unsigned int>
+        >()[WC1]
+    )
+    .def("add",add_cont)
+    .def("add",add_stat)
+    .def("add",add_mon)
+    .def("add",add_upd)
+    .def("add",add_moupd)
+    // .def("init",&moCheckpoint<NborT>::init)
+    .def("__call__",&moCheckpoint<NborT>::operator())
+    // .def("last_call",&moCheckpoint<NborT>::lastCall)
     ;
 }
 
