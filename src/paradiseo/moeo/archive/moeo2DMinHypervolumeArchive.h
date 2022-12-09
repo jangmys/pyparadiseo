@@ -51,7 +51,7 @@ struct comp
 {
 	// returns a "before" b
 	// all objectives = min
-	bool operator() (const MOEOT & a, const MOEOT & b)
+	bool operator() (const MOEOT & a, const MOEOT & b) const
 	{
 		return  ((a.objectiveVector()[1] < b.objectiveVector()[1]) || ((a.objectiveVector()[1] == b.objectiveVector()[1]) && (a.objectiveVector()[0] < b.objectiveVector()[0])));
 	}
