@@ -80,10 +80,10 @@ def nsga(eval, transform, continuate, stype=None):
 
     Parameters
     ==========
-    eval : eval_func or pop_eval
-    transform : (cross,p_cross,mutate,p_mutate)
-        (GenOp)
-        (Transform)
+    eval : eoEvalFunc or eoPopEvalFunc
+        evaluate objectives
+    transform : eoGenOp
+        (cross,p_cross,mutate,p_mutate),(GenOp),(eoTransform)
     continuator : int or eoContinue
     """
     if stype is None:

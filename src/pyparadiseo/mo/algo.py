@@ -57,16 +57,20 @@ def hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=None,co
     ===========
     neighborhood : moNeighborhood
         a Neighborhood
-    f_eval : full evaluation function
-    nbor_eval : neighbor evaluation function
+    f_eval : eoEvalFunc
+        full evaluation function
+    nbor_eval : moEval
+        neighbor evaluation function
     continuator : moContinuator
         default = None
-    compareN : neighbor vs neighbor comparator
-        default = None
-    compSN  : a solution vs neighbor comparator
-        default = None
-    hc_type : hill-climber type
-    stype : solution type
+    compareN : moNeighborComparator [optional]
+        neighbor vs neighbor comparator, default = None
+    compSN  : moNeighborComparator [optional]
+        a solution vs neighbor comparator, default = None
+    hc_type : str [optional]
+        hill-climber type
+    stype : str [optional]
+        solution type
     """
     if stype is None:
         stype = config._SOLUTION_TYPE

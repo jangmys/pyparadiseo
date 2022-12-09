@@ -243,40 +243,4 @@ int_bounds()
     )
     .def("uniform", uniformWrap<eoIntVectorBounds>, int_uniform2_overload())
     ;
-
-
-    //ATTENTION : order of constructors matters!
-    // https://stackoverflow.com/questions/8140155/boost-python-confused-about-similar-constructor
-    //only purpose is to add some convenient ctors...
-    // class_<eoIntVectorBounds, bases<eoBaseVectorBounds> >("IntVectorBounds", init<>())
-    // .def(init<
-    //       std::vector<long int>,
-    //       std::vector<long int>
-    //   >()
-    // )
-    // ;
-    // .def(init<
-    //       unsigned,
-    //       eoIntBounds&
-    //   >()
-    //   [
-    //       with_custodian_and_ward<1, 3>()
-    //   ]
-    // )
-    // // .def(init<
-    // //       eoRealBounds&,
-    // //       eoRealBounds&
-    // //   >()
-    // //   [
-    // //       with_custodian_and_ward<1, 2,
-    // //       with_custodian_and_ward<1, 3> >()
-    // //   ]
-    // // )
-    // .def(init<
-    //       unsigned,
-    //       long int,
-    //       long int
-    //   >()
-    // )
-    // ;
 } // bounds

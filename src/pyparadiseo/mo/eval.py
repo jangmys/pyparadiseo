@@ -5,7 +5,7 @@ from pyparadiseo import config,utils
 from typing import Union,Optional,Callable
 
 ##abstract
-from .._core import moEval as Eval
+from .._core import moEval
 from .._core import moNeighborhoodEvaluation as NeighborhoodEvaluation
 
 from .._core import NeighborEval
