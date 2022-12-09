@@ -185,21 +185,13 @@ int_bounds()
     .def("truncate", pure_virtual(&eoIntBoundsWrap::truncate))
     ;
 
-    register_ptr_to_python< boost::shared_ptr<eoIntBounds> >();
+    register_ptr_to_python< std::shared_ptr<eoIntBounds> >();
 
     add_int_bounds<eoIntNoBounds>("IntNoBounds",init<>());
     add_int_bounds<eoIntInterval>("IntInterval",init<long int,long int>());
     add_int_bounds<eoIntBelowBound>("IntBelowBound",init<long int>());
     add_int_bounds<eoIntAboveBound>("IntAboveBound",init<long int>());
 
-
-    // class_<std::vector<eoIntBounds*> >("_BoundsVectorInt")
-    // .def(vector_indexing_suite<std::vector<eoIntBounds*> >())
-    // ;
-
-    // class_<std::vector<boost::shared_ptr<eoIntInterval>> >("_BdsVectorIntInterval")
-    // .def(vector_indexing_suite<std::vector<boost::shared_ptr<eoIntInterval>>,true>())
-    // ;
 
     class_<std::vector<eoIntBoundsPtr>>("_BdsVectorInt")
     .def(vector_indexing_suite<std::vector<eoIntBoundsPtr>,true>())

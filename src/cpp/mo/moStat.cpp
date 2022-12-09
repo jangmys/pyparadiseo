@@ -51,7 +51,7 @@ void expose_moStats(std::string name)
     .def("init", &moStatBase<SolutionType>::init)
     ;
 
-    register_ptr_to_python< boost::shared_ptr<moStatBase<SolutionType>> >();
+    register_ptr_to_python< std::shared_ptr<moStatBase<SolutionType>> >();
 
     expose_moStatBase<SolutionType,double>("moRealStat",name);
     expose_moStatBase<SolutionType,int>("moIntStat",name);

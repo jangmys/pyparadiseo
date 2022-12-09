@@ -48,6 +48,7 @@
 #include <algo/moLocalSearch.h>
 #include <eoInit.h>
 
+#include <boost/shared_ptr.hpp>
 
 /**
  * To sample the search space:
@@ -61,6 +62,12 @@ class moSampling : public eoF<void>
 {
 public:
 	typedef typename Neighbor::EOT EOT ;
+
+    typedef std::shared_ptr<moContinuator<Neighbor>> moContinuatorPtr;
+    typedef std::shared_ptr<moStatBase<EOT>> moStatPtr;
+    typedef std::shared_ptr<eoMonitor> eoMonitorPtr;
+    typedef std::shared_ptr<eoUpdater> eoUpdaterPtr;
+    typedef std::shared_ptr<moUpdater> moUpdaterPtr;
 
 	/**
 	 * Constructor
@@ -162,7 +169,7 @@ public:
 
 		// set the precision of the output
 		os.precision(precisionOutput);
-		for (unsigned int j = 0; j < monitorVec.size(); j++) 
+		for (unsigned int j = 0; j < monitorVec.size(); j++)
 		  monitorVec[j]->precision(precisionOutput);
 
 		if (!_openFile && _header) {

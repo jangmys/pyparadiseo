@@ -192,9 +192,10 @@ bounds()
     add_real_bounds<eoRealAboveBound>("RealAboveBound",init<double>());
 
 
-    register_ptr_to_python< boost::shared_ptr<eoRealBounds> >();
+    register_ptr_to_python< std::shared_ptr<eoRealBounds> >();
 
-    // By default indexed elements have Python reference semantics and are returned by proxy. This can be disabled by supplying true in the NoProxy template parameter. 
+    //and with std
+    // By default indexed elements have Python reference semantics and are returned by proxy. This can be disabled by supplying true in the NoProxy template parameter.
     // https://www.boost.org/doc/libs/1_80_0/libs/python/doc/html/reference/topics/indexing_support.html#topics.indexing_support.class_vector_indexing_suite
     class_<std::vector<eoRealBoundsPtr>>("_BdsVectorReal")
     .def(vector_indexing_suite<std::vector<eoRealBoundsPtr>,true>())

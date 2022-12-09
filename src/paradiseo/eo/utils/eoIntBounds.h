@@ -227,7 +227,7 @@ public:
  */
 extern eoIntNoBounds eoDummyIntNoBounds;
 
-extern boost::shared_ptr<eoIntBounds> eoDummyIntNoBoundsPtr;
+extern std::shared_ptr<eoIntBounds> eoDummyIntNoBoundsPtr;
 
 /**
  * fully bounded eoIntBound == interval

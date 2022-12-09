@@ -102,11 +102,11 @@ void expose_moContinuators(std::string name)
 
 
     // ----------------------moCheckpoint----------------------
-    typedef boost::shared_ptr<moContinuator<NborT>> moContinuatorPtr;
-    typedef boost::shared_ptr<moStatBase<SolutionType>> moStatPtr;
-    typedef boost::shared_ptr<eoMonitor> eoMonitorPtr;
-    typedef boost::shared_ptr<eoUpdater> eoUpdaterPtr;
-    typedef boost::shared_ptr<moUpdater> moUpdaterPtr;
+    typedef std::shared_ptr<moContinuator<NborT>> moContinuatorPtr;
+    typedef std::shared_ptr<moStatBase<SolutionType>> moStatPtr;
+    typedef std::shared_ptr<eoMonitor> eoMonitorPtr;
+    typedef std::shared_ptr<eoUpdater> eoUpdaterPtr;
+    typedef std::shared_ptr<moUpdater> moUpdaterPtr;
 
     register_ptr_to_python< moContinuatorPtr >();
 

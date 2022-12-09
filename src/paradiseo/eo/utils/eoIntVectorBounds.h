@@ -34,7 +34,7 @@
 #include <memory>
 #include <boost/shared_ptr.hpp>
 
-typedef boost::shared_ptr<eoIntBounds> eoIntBoundsPtr;
+typedef std::shared_ptr<eoIntBounds> eoIntBoundsPtr;
 
 class eoIntVectorBounds : public std::vector<eoIntBoundsPtr>
 {

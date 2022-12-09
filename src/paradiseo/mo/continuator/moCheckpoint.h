@@ -56,11 +56,11 @@ class moCheckpoint : public moContinuator<Neighbor> {
 public :
     typedef typename Neighbor::EOT EOT ;
 
-    typedef boost::shared_ptr<moContinuator<Neighbor>> moContinuatorPtr;
-    typedef boost::shared_ptr<moStatBase<EOT>> moStatPtr;
-    typedef boost::shared_ptr<eoMonitor> eoMonitorPtr;
-    typedef boost::shared_ptr<eoUpdater> eoUpdaterPtr;
-    typedef boost::shared_ptr<moUpdater> moUpdaterPtr;
+    typedef std::shared_ptr<moContinuator<Neighbor>> moContinuatorPtr;
+    typedef std::shared_ptr<moStatBase<EOT>> moStatPtr;
+    typedef std::shared_ptr<eoMonitor> eoMonitorPtr;
+    typedef std::shared_ptr<eoUpdater> eoUpdaterPtr;
+    typedef std::shared_ptr<moUpdater> moUpdaterPtr;
     /**
      * Constructor (moCheckpoint must have at least one continuator)
      * @param _cont a continuator
