@@ -12,6 +12,7 @@ TODO
 artifacts
 build/
 CMakeFiles/
+deprecate
 
 #doc
 doc/build/
