@@ -1,39 +1,15 @@
 .. _moeo:
 
-Multi-Objective EO (MOEO)
-=========================
+Multi-Objective EO (MOEO) (:mod:`pyparadiseo.moeo`)
+=====================================================
 
-.. currentmodule:: pyparadiseo
+.. currentmodule:: pyparadiseo.moeo
 
-.. toctree::
-    :maxdepth: 2
+.. autosummary::
+    :toctree: _autosummary
+    :template: module.rst
 
-    moeo/algo
-
-..
-.. MOEO Diversity Assignment
-.. ---------------------------------------------
-..
-.. .. automodule:: pyparadiseo.moeo.diversity_assignment
-..    :members:
-..    :undoc-members:
-..    :show-inheritance:
-..    :imported-members:
-..
-.. MOEO Fitness Assignement
-.. -------------------------------------------
-..
-.. .. automodule:: pyparadiseo.moeo.fitness_assignment
-..    :members:
-..    :undoc-members:
-..    :show-inheritance:
-..    :imported-members:
-..
-.. MOEO Replacement
-.. -----------------------------------
-..
-.. .. automodule:: pyparadiseo.moeo.replacement
-..    :members:
-..    :undoc-members:
-..    :show-inheritance:
-..    :imported-members:
+    algo
+    diversity_assignment
+    fitness_assignment
+    replacement

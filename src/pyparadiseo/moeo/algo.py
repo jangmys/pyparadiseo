@@ -17,21 +17,30 @@ SEEA :
 """
 from pyparadiseo import config, utils
 
-# from .._core import moeoEA
+from pyparadiseo.eo.continuator import  eoContinue
 
-# from .._core import moeoNSGA
-# from .._core import moeoNSGAII
-# from .._core import moeoEasyEA
-# from .._core import moeoMOGA
-# from .._core import moeoSPEA2
-# from .._core import moeoSEEA
-
-# from .._core import moeoUnifiedDominanceBasedLS
-
+__all__=['easyea','nsga','nsgaII','moga','spea2','seea']
 
 def easyea(eval, breed, continuate, replacement, fitness_assign, diversity_assign, evalFitAndDivBeforeSelection=False):
     """
     An easy class to design multi-objective evolutionary algorithms.
+
+    Parameters
+    ==========
+    eval : eoEvalFunc
+        evaluation function
+    breed : eoBreed
+        breeder
+    continuate : eoContinue
+        termination
+    replacement : eoReplacement
+        replacement
+    fitness_assign : moeoFitnessAssignment
+        assign fitness
+    diversity_assign : moeoDiversityAssignment
+        assign diversity
+    evalFitAndDivBeforeSelection : bool
+        evaluate fitness and diversity before selection
     """
     if stype is None:
         stype = config._SOLUTION_TYPE
@@ -71,10 +80,10 @@ def nsga(eval, transform, continuate, stype=None):
 
     Parameters
     ==========
-    eval : eval_func or pop_eval
-    transform : (cross,p_cross,mutate,p_mutate)
-        (GenOp)
-        (Transform)
+    eval : eoEvalFunc or eoPopEvalFunc
+        evaluate objectives
+    transform : eoGenOp
+        (cross,p_cross,mutate,p_mutate),(GenOp),(eoTransform)
     continuator : int or eoContinue
     """
     if stype is None:

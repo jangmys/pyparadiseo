@@ -1,5 +1,5 @@
 """
-Test docstring for eo.selector module
+Select populations
 
 The eo.selector module contains selection operators.
 
@@ -22,6 +22,10 @@ eoSelectOne.h
 
 """
 from pyparadiseo import config,utils
+
+from .._core import eoSelect
+
+__all__ = ['det_select','select_many','select_number','select_perc','select_trunc','select_truncated_many','eoSelect']
 
 ################################################
 ################################################
@@ -47,8 +51,8 @@ def det_select(rate=1.0,interpret_as_rate=True,stype=None):
 
     Notes
     =====
-    rate=[r \in [0.0,1.0]]
-        select first rate*source.size()
+    math::[r \in [0.0,1.0]]
+        select first r*source.size()
 
     rate=[N>0 positive integer], interpret_as_rate=False
         select first N individuals

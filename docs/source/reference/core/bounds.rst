@@ -5,14 +5,16 @@ Bounds (:mod:`pyparadiseo.bounds`)
 
 .. currentmodule:: pyparadiseo.bounds
 
+Domain bounds
+-------------
 Bound objects define the domain bounds.
 
-Only real-valued.
+Real or integer-valued.
 
 .. autosummary::
     :toctree: _autosummary
+    :template: module.rst
 
-    bound_box
-    bound_interval
-    bound_below
-    bound_above
+    box
+    real_interval
+    int_interval

@@ -34,16 +34,6 @@ class test_eocontinue(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_bases(self):
-        for name, obj in inspect.getmembers(continuator):
-            if inspect.isclass(obj):
-                if name[0] == '_':
-                    continue
-                if name == "EvalFuncCounter":
-                    self.assertEqual(obj.__bases__[0].__name__,"eoEvalFunc")
-                elif name != "Continue":
-                    self.assertEqual(obj.__bases__[0].__name__,"eoContinue")
-
     def test_inherit(self):
         from pyparadiseo._core import eoContinue
 

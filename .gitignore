@@ -19,6 +19,7 @@ doc/build/
 
 docs/doxygen
 docs/README
+docs/deprecate
 _autosummary
 
 # C extensions

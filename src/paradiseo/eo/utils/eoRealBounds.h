@@ -216,9 +216,7 @@ public:
 @ingroup Bounds
 */
 extern eoRealNoBounds eoDummyRealNoBounds;
-
-extern boost::shared_ptr<eoRealBounds> eoDummyRealNoBoundsPtr;
-
+extern std::shared_ptr<eoRealBounds> eoDummyRealNoBoundsPtr;
 /**
  * fully bounded eoRealBound == interval
 

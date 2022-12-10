@@ -4,6 +4,8 @@ from pyparadiseo import rng
 import unittest
 import numpy as np
 
+import pyparadiseo as pp
+
 
 class TestBounds(unittest.TestCase):
     def setUp(self):
@@ -24,8 +26,6 @@ class TestBounds(unittest.TestCase):
             self.assertTrue(interval.isInBounds(0.0))
             self.assertFalse(interval.isInBounds(1.1))
             self.assertFalse(interval.isInBounds(-1.1))
-
-            print(interval)
 
         interval = bounds.RealInterval(-1.01,1.01)
         t_interval(interval)
@@ -73,7 +73,7 @@ class TestBounds(unittest.TestCase):
 
 
     def test_realVecBounds1(self):
-        b = bounds.bound_box(3,-1.0,1.0)
+        b = bounds.box(3,-1.0,1.0)
 
         self.assertTrue(b.isBounded())
         for i in range(3):
@@ -97,8 +97,8 @@ class TestBounds(unittest.TestCase):
 
 
     def test_intVecBounds1(self):
-        b = bounds.IntVectorBounds(3,bounds.IntInterval(-10,10))
-        #
+        b = bounds.box(3,-10,10,stype='int')
+
         self.assertTrue(b.isBounded())
         for i in range(3):
             self.assertTrue(b.isBounded(i))
@@ -108,54 +108,48 @@ class TestBounds(unittest.TestCase):
             self.assertAlmostEqual(b.foldsInBounds(i,10+i),10-i)
             self.assertAlmostEqual(b.truncate(i,10+i),10)
 
-        v = np.asarray([10+i for i in range(3)])
+        v = np.asarray([10+i for i in range(3)],dtype=int)
         b.foldsInBounds(v)
         np.testing.assert_almost_equal(v,np.asarray([10,9,8]))
-        #
+
         v = np.asarray([10+i for i in range(3)])
         b.truncate(v)
         np.testing.assert_almost_equal(v,np.asarray([10,10,10]))
-
         self.assertTrue(b.uniform(0) > -10)
         self.assertTrue(b.uniform(1) < 10)
 
 
-    def test_bound_box(self):
+    def test_box(self):
         lb = [np.inf,  0,     0,-np.inf]
         ub = [    10,100,np.inf, np.inf]
-        b = bounds.bound_box(lb,ub)
+        b = bounds.box(lb,ub)
 
         self.assertEqual(len(b),4)
 
-        for bd in b:
-            print(type(bd))
+        self.assertTrue(isinstance(b[0],pp._core.RealAboveBound))
+        self.assertTrue(isinstance(b[1],pp._core.RealInterval))
+        self.assertTrue(isinstance(b[2],pp._core.RealBelowBound))
+        self.assertTrue(isinstance(b[3],pp._core.RealNoBounds))
+
 
 
     def test_other(self):
         from pyparadiseo._core import _BdsVectorReal,RealVectorBounds
 
         truc = RealVectorBounds()
-        # truc = _BdsVectorReal()
+        truc.append(bounds.RealInterval(1.0,2.0))
+        truc.append(bounds.RealAboveBound(200.0))
 
-        i = bounds.RealInterval(1.0,2.0)
+        self.assertEqual(len(truc),2)
+        self.assertTrue(isinstance(truc[0],pp._core.RealInterval))
+        self.assertTrue(isinstance(truc[1],pp._core.RealAboveBound))
 
-        truc.append(i)
-        # print("LEN",len(truc))
-        # print(truc[0])
-
-        i = bounds.RealAboveBound(200.0)
-
-        truc.append(i)
-        truc = RealVectorBounds(10,bounds.RealAboveBound(200.0))
-        # print("LEN",len(truc))
-        # for i in truc:
-        #     print(i,hex(id(i)))
 
     def test_realVecBounds3(self):
         lb = np.asarray([-1.0*i for i in range(1,4)])
         ub = np.asarray([i*1.0 for i in range(1,4)])
 
-        b = bounds.bound_box(lb,ub)
+        b = bounds.box(lb,ub)
 
         self.assertNotEqual(hex(id(b[0])),hex(id(b[1])))
         self.assertNotEqual(hex(id(b[1])),hex(id(b[2])))
@@ -172,7 +166,6 @@ class TestBounds(unittest.TestCase):
         v = np.asarray([i*1.0+0.1 for i in range(1,4)])
         b.foldsInBounds(v)
         np.testing.assert_almost_equal(v,np.asarray([0.9,1.9,2.9]))
-
 
         v = np.asarray([i*1.0+0.1 for i in range(1,4)])
         b.truncate(v)

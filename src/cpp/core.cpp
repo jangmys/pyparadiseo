@@ -70,10 +70,18 @@ extern void moExplorers();
 extern void moContinuators();
 extern void moAlgos();
 extern void moComparators();
+extern void moSample();
+extern void moStats();
+
+
 
 //-------------MOEO-------------
 extern void moeo_abstract();
 extern void moeo_algos();
+extern void moeo_distances();
+extern void moeo_archive();
+extern void moeo_fitnessAssign();
+extern void moeo_diversityAssign();
 
 //-------------PSO-------------
 extern void eoParticleSwarm();
@@ -446,13 +454,19 @@ BOOST_PYTHON_MODULE(_core)
     moExplorers();
     moAlgos();
     moComparators();
+    moSample();
+    moStats();
 
     //PSO
     eoParticleSwarm();
 
     //MOEO
     moeo_abstract();
+    moeo_distances();
+    moeo_archive();
     moeo_algos();
+    moeo_fitnessAssign();
+    moeo_diversityAssign();
 
 
     // def("apply",&apply<PyEOT>);

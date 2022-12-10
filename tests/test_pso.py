@@ -58,7 +58,7 @@ class TestPSO(unittest.TestCase):
     #     for i in range(7):
     #         pop.push_back(_core.RealParticle(10,1.0,1.0,1.0))
     #
-    #     init = initializer.random(10,stype='real',bounds=bounds.bound_box(10,-1,1))
+    #     init = initializer.random(10,stype='real',bounds=bounds.box(10,-1,1))
     #     eval = evaluator.fitness(lambda x : sum(x),stype='real')
     #     for ind in pop:
     #         init(ind)
@@ -99,12 +99,12 @@ class TestPSO(unittest.TestCase):
     #
     #     print("is: ",isinstance(topo,_core.eoTopology))
     #
-    #     bnds = bounds.bound_box(VEC_SIZE,-1.5,1.5)
+    #     bnds = bounds.box(VEC_SIZE,-1.5,1.5)
     #
     #     velo = _core.eoStandardVelocity(topo,1.0,1.0,1.0,bnds)
     #
     #     config.set_solution_type('real-pso')
-    #     init = initializer.random(VEC_SIZE,bounds=bounds.bound_box(VEC_SIZE,-3,3))
+    #     init = initializer.random(VEC_SIZE,bounds=bounds.box(VEC_SIZE,-3,3))
     #     pop = swarm.from_init(POP_SIZE,init)
     #
     #     # print(pop[0])
@@ -148,7 +148,7 @@ class TestPSO(unittest.TestCase):
 
         flight = _core.eoStandardFlight()
 
-        bnds = bounds.bound_box(VEC_SIZE,-0.5,0.5)
+        bnds = bounds.box(VEC_SIZE,-0.5,0.5)
         velo = _core.eoStandardVelocity(topo,1,1.6,2,bnds)
 
         init = initializer.random(bounds=([-3]*VEC_SIZE,[3]*VEC_SIZE))
@@ -194,9 +194,9 @@ class TestPSO(unittest.TestCase):
         NEIGHBORHOOD_SIZE = 5
 
     #     eval = evaluator.fitness(lambda x : np.linalg.norm(x,2))
-    #     bnds = bounds.bound_box(VEC_SIZE,-1.5,1.5)
+    #     bnds = bounds.box(VEC_SIZE,-1.5,1.5)
     #
-    #     init = initializer.random(VEC_SIZE,bounds=bounds.bound_box(VEC_SIZE,-3,3))
+    #     init = initializer.random(VEC_SIZE,bounds=bounds.box(VEC_SIZE,-3,3))
     #     pop = swarm.from_init(POP_SIZE,init)
     #
     #     # print("POP\t\t",pop)

@@ -21,6 +21,7 @@ cache:
 before_script:
     - echo "before script"
     - python3 -m pip install --upgrade pip
+    - export MPICC=/usr/lib64/openmpi/bin/mpicc
     # - /opt/python/cp36-cp36m/bin/python3 --version  # For debugging
     #- /opt/python/cp36-cp36m/bin/python3 -m venv /opt/venv
     #- . /opt/venv/bin/activate
@@ -42,12 +43,12 @@ build-job:
         #- python3 setup.py sdist bdist_wheel -G"Unix Makefiles"
         #- auditwheel repair dist/*.whl
         #- rm dist/*
+        # python3 -m pip install mpi4py numpy #include in docker image!
         - |+
           for i in 36 37
           do
             . /opt/venv${i}/bin/activate
             python3 --version  # For debugging
-            python3 -m pip install mpi4py numpy #include in docker image! 
 
             python3 setup.py sdist bdist_wheel -G"Unix Makefiles" -- -- -j4
             auditwheel repair dist/*cp${i}m-linux_x86_64.whl
@@ -56,7 +57,6 @@ build-job:
           do
             . /opt/venv${i}/bin/activate
             python3 --version  # For debugging
-            python3 -m pip install mpi4py numpy #include in docker image! 
 
             python3 setup.py sdist bdist_wheel -G"Unix Makefiles" -- -- -j4
             auditwheel repair dist/*cp${i}-linux_x86_64.whl

@@ -28,6 +28,9 @@ SOLUTIONS={
     'perm': IntSolution
 }
 
+__all__=['Solution','RealSolution','intSolution','BinarySolution','solution','empty','zeros','random','from_init']
+
+
 # Documenting C++ class (object creation is deferred to creation methods)
 def add_solution_doc(sol):
     sol.__doc__ ="""
@@ -49,7 +52,7 @@ def add_solution_doc(sol):
     --------
     .. code-block:: python
 
-        >>> pass
+        pass
     """
 
     sol.invalid.__doc__="""True if fitness is invalid"""

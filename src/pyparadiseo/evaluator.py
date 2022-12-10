@@ -11,6 +11,10 @@ from pyparadiseo import config,utils
 from mpi4py.futures import MPIPoolExecutor
 from concurrent.futures import ThreadPoolExecutor,ProcessPoolExecutor
 
+from ._core import eoEvalFunc
+from ._core import eoPopEvalFunc
+
+__all__=['fitness','pop_eval','counting_fitness','objectives','pop_eval_from_fitness','pool_exec_pop_eval','eoEvalFunc','eoPopEvalFunc']
 
 def fitness(fun=None,counting=False,stype=None):
     """
@@ -149,7 +153,7 @@ class _process_pool_popeval():
     def __init__(self,fitness_eval,max_workers):
         self._fitness_eval = fitness_eval
         self._max_workers=max_workers
-        
+
     def __call__(self,pop,pop2):
         with ProcessPoolExecutor(max_workers=self._max_workers) as executor:
             future = executor.map(self._fitness_eval, pop2)

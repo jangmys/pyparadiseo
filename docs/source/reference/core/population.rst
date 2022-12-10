@@ -9,7 +9,7 @@ Population objects
 --------------------
 
 * Population objects should be created using :ref:`population_creation`.
-* Behave (almost) like a Python list 
+* Behave (almost) like a Python list
 
 
 .. autosummary::

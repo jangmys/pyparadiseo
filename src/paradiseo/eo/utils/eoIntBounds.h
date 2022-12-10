@@ -96,13 +96,13 @@ public:
 
   /** Put value back into bounds - by folding back and forth
    */
-  virtual void foldsInBounds(double &)  const = 0;
+  virtual void foldsInBounds(int &)  const = 0;
 
   /** foldsInBounds for ints:
    * call the method for double and convert back */
   virtual void foldsInBounds(long int & i)  const
   {
-    double r = double(i);
+    int r = int(i);
     foldsInBounds(r);
     i = (long int)(r);
   }
@@ -158,7 +158,7 @@ public:
   virtual bool hasNoBoundAtAll(void) const  {return true;}
   virtual bool isMinBounded(void)  const {return false;}
   virtual bool isMaxBounded(void)  const {return false;}
-  virtual void foldsInBounds(double &)  const {return;}
+  virtual void foldsInBounds(int &)  const {return;}
   virtual void truncate(double &)  const {return;}
   virtual bool isInBounds(double)  const {return true;}
 
@@ -227,7 +227,7 @@ public:
  */
 extern eoIntNoBounds eoDummyIntNoBounds;
 
-extern boost::shared_ptr<eoIntBounds> eoDummyIntNoBoundsPtr;
+extern std::shared_ptr<eoIntBounds> eoDummyIntNoBoundsPtr;
 
 /**
  * fully bounded eoIntBound == interval
@@ -282,7 +282,7 @@ public :
   }
 
   // folds a value into bounds
-  virtual void foldsInBounds(double &  _r) const
+  virtual void foldsInBounds(int &  _r) const
   {
     long iloc;
     double dlargloc = 2 * range() ;
@@ -413,7 +413,7 @@ public :
   }
 
   // folds a value into bounds
-  virtual void foldsInBounds(double &  _r) const
+  virtual void foldsInBounds(int &  _r) const
   {
     // easy as a pie: symmetry w.r.t. minimum
     if (_r < repMinimum)           // nothing to do otherwise
@@ -521,7 +521,7 @@ public :
   }
 
   // folds a value into bounds
-  virtual void foldsInBounds(double &  _r) const
+  virtual void foldsInBounds(int&  _r) const
   {
     // easy as a pie: symmetry w.r.t. maximum
     if (_r > repMaximum)           // nothing to do otherwise
@@ -668,7 +668,7 @@ public:
 
   /** Put value back into bounds - by folding back and forth
    */
-  virtual void foldsInBounds(double & _x) const {return repBound->foldsInBounds(_x);}
+  virtual void foldsInBounds(int & _x) const {return repBound->foldsInBounds(_x);}
 
   /** Put value back into bounds - by truncating to a boundary value
    */

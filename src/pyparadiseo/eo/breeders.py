@@ -15,33 +15,39 @@ base : eoBreed.h
 eoGeneralBreeder.h
 eoOneToOneBreeder.h
 """
+from pyparadiseo import config, utils
 
-from pyparadiseo import config,utils
+from .._core import eoBreed
+eoBreed.__doc__="""Abstract base class for EO algorithms.
+
+It defines a functor ``__call__(const pop1,pop2) -> None``.
+
+Use ``eoBreed`` creation methods in :py:mod:`~pyparadiseo.eo.breeders`
+"""
+
+__all__=['breeder','select_transform','general_breeder','one_to_one_breeder','eoBreed']
 
 
-def breeder(klass_or_stype=None,stype=None):
-    """
-    class decorator
+def breeder(klass_or_stype=None, stype=None):
+    """class decorator
 
     apply to python class that has
 
-    ```python
-    def __call__(parents,offspring):
-        pass
-    ```
+    ``__call__(parents,offspring)``
+
     """
-    if klass_or_stype is not None and stype is None :
+    if klass_or_stype is not None and stype is None:
         stype = config._SOLUTION_TYPE
 
-    base_ = utils.get_class("eoBreed"+config.TYPES[stype])
+    base_ = utils.get_class("eoBreed" + config.TYPES[stype])
 
     def wrap(kls):
-        if not hasattr(kls,"__call__"):
+        if not hasattr(kls, "__call__"):
             print("need (__call__(pop1,pop2) -> None)")
-        if not hasattr(kls,"__init__"):
+        if not hasattr(kls, "__init__"):
             print("need (__init__")
 
-        class derived(kls,base_):
+        class derived(kls, base_):
             pass
 
         return derived
@@ -52,8 +58,7 @@ def breeder(klass_or_stype=None,stype=None):
         return wrap(klass_or_stype)
 
 
-
-def select_transform(select,transform,stype=None):
+def select_transform(select, transform, stype=None):
     """
     make a breeder from a select and transform operators
 
@@ -74,13 +79,12 @@ def select_transform(select,transform,stype=None):
     if stype is None:
         stype = config._SOLUTION_TYPE
 
-    class_ = utils.get_class("eoSelectTransform"+config.TYPES[stype])
+    class_ = utils.get_class("eoSelectTransform" + config.TYPES[stype])
 
-    return class_(select,transform)
+    return class_(select, transform)
 
 
-
-def general_breeder(select_one,gen_op,rate=1.0,interpret_as_rate=True,stype=None):
+def general_breeder(select_one, gen_op, rate=1.0, interpret_as_rate=True, stype=None):
     """GeneralBreeder
 
     eoGeneralBreeder.h
@@ -97,12 +101,12 @@ def general_breeder(select_one,gen_op,rate=1.0,interpret_as_rate=True,stype=None
     if stype is None:
         stype = config._SOLUTION_TYPE
 
-    class_ = utils.get_class("eoGeneralBreeder"+config.TYPES[stype])
+    class_ = utils.get_class("eoGeneralBreeder" + config.TYPES[stype])
 
-    return class_(select_one,gen_op,rate,interpret_as_rate)
+    return class_(select_one, gen_op, rate, interpret_as_rate)
 
 
-def one_to_one_breeder(gen_op,f_eval,p_replace=1.0,stype=None):
+def one_to_one_breeder(gen_op, f_eval, p_replace=1.0, stype=None):
     """OneToOneBreeder
 
     eoOneToOneBreeder.h
@@ -122,6 +126,6 @@ def one_to_one_breeder(gen_op,f_eval,p_replace=1.0,stype=None):
     if stype is None:
         stype = config._SOLUTION_TYPE
 
-    class_ = utils.get_class("eoOneToOneBreeder"+config.TYPES[stype])
+    class_ = utils.get_class("eoOneToOneBreeder" + config.TYPES[stype])
 
-    return class_(gen_op,f_eval,p_replace)
+    return class_(gen_op, f_eval, p_replace)

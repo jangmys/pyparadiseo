@@ -4,7 +4,7 @@ Config
 
 set global pyparadseo parameters
 """
-
+__all__=['set_solution_type','set_maximize_fitness','set_minimize_fitness']
 
 from ._core import FitnessTraits
 from ._core import ObjectiveVectorTraits

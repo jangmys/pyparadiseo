@@ -34,14 +34,7 @@
 #include <memory>
 #include <boost/shared_ptr.hpp>
 
-class eoRealIntervalBds : public std::vector<boost::shared_ptr<eoRealInterval>>
-{
-public:
-    eoRealIntervalBds() : std::vector<boost::shared_ptr<eoRealInterval> >(0) {}
-};
-
-typedef boost::shared_ptr<eoRealBounds> eoRealBoundsPtr;
-
+typedef std::shared_ptr<eoRealBounds> eoRealBoundsPtr;
 
 class eoRealVectorBounds : public std::vector<eoRealBoundsPtr>
 {

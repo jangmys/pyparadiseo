@@ -61,11 +61,17 @@ set(moSources
     src/cpp/mo/moContinuator.cpp
     src/cpp/mo/moAlgo.cpp
     src/cpp/mo/moComparator.cpp
+    src/cpp/mo/moSampling.cpp
+    src/cpp/mo/moStat.cpp
 )
 
 set(moeoSources
     src/cpp/moeo/moeoAbstract.cpp
     src/cpp/moeo/moeoAlgos.cpp
+    src/cpp/moeo/moeoFitnessAssign.cpp
+    src/cpp/moeo/moeoDiversityAssign.cpp
+    src/cpp/moeo/moeoDistances.cpp
+    src/cpp/moeo/moeoArchive.cpp
 )
 
 set(eoSources

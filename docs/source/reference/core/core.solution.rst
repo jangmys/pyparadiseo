@@ -39,13 +39,3 @@ Solution creation routines
     zeros
     random
     from_init
-
-
-
-
-.. :members: invalid,invalidate
-   .. :inherited-members:
-   ..
-   .. .. method:: invalid
-   ..
-   ..    Boil the noodle *time* minutes.

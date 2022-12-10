@@ -1,10 +1,13 @@
 """
-neighbor comparators
+Compare Solutions and Neighbors
 """
 from pyparadiseo import utils,config
 
-# from .._core import moNeighborComparator
+from .._core import moNeighborComparator
 # from .._core import moSolNeighborComparator
+
+__all__=['moNeighborComparator','neighbor_compare','sol_neighbor_compare']
+
 
 def neighbor_compare(cmpfun,stype=None):
     """

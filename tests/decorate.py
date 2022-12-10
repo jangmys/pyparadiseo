@@ -86,7 +86,7 @@ def return_fitness(arr):
 def apply_to_sol(sol):
     sol.fitness = np.sum(sol.array)
 
-sol = solution.random(10,stype='real',bounds=bounds.bound_box(10,-1,1))
+sol = solution.random(10,stype='real',bounds=bounds.box(10,-1,1))
 
 print(sol)
 

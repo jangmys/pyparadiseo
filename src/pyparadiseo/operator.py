@@ -14,9 +14,9 @@ Variation Operators
 from pyparadiseo import config,utils
 
 # Base classes C++
-from ._core import eoMonOp as MonOp
-from ._core import eoBinOp as BinOp
-from ._core import eoQuadOp as QuadOp
+from ._core import eoMonOp
+from ._core import eoBinOp
+from ._core import eoQuadOp
 
 # Python injectors
 from ._core import pyMonOp
@@ -59,7 +59,29 @@ from ._core import HypercubeCrossover
 from ._core import SBXCrossover
 from ._core import RealUXover
 
-
+__all__=['eoMonOp','eoBinOp','eoQuadOp','make_mutation',
+'make_crossover',
+'standard_bit_mutation',
+'uniform_bit_mutation',
+'conditional_bit_mutation',
+'shifted_bit_mutation',
+'normal_bit_mutation',
+'fast_bit_mutation',
+'bit_flip_n',
+'bit_inversion',
+'bit_next',
+'bit_previous',
+'one_point_bit_cx',
+'n_point_bit_cx',
+'uniform_bit_cx',
+'uniform_real_mutation',
+'polynomial_mutation',
+'two_point_crossover',
+'segment_cx',
+'hypercube_cx',
+'uniform_real_cx',
+'sbx'
+]
 
 
 
@@ -113,15 +135,6 @@ def make_mutation(mutate,stype=None):
     class_ = utils.get_class("pyMonOp"+config.TYPES[stype])
 
     return class_(mutate)
-
-
-    #
-    #
-    #
-    #
-    #
-    # else:
-    #     NotImplementedError("Not yet implemented")
 
 
 def make_crossover(xover,stype=None):
@@ -220,24 +233,6 @@ def fast_bit_mutation(rate=0.5,beta=1.5):
 
 
 
-# def bit_flip(flip_prob=0.01,normalize=False):
-#     """
-#     flip_k mutation
-#
-#     Parameters
-#     ==========
-#     nbits : int
-#
-#     flip_prob : real, default=0.01
-#         mutation rate (probability for each bit to be flipped)
-#     normalize : bool, default=False
-#         normalize `flip_prob` with respect to chromosome size
-#
-#     Returns
-#     =======
-#     eoMonOp<BinarySolution>
-#     """
-#     pass
 
 
 def bit_flip_n(nbits=1,allow_duplicates=True):

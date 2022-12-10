@@ -57,6 +57,11 @@ namespace{
     {
         return std::string(name)+postfix;
     }
+
+    inline std::string make_name(std::string name,std::string postfix)
+    {
+        return name+postfix;
+    }
 }
 
 

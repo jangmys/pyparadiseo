@@ -1,5 +1,5 @@
 """
-    Replacement
+    Population replacement
 
     base : eoReplacement.h
 
@@ -12,8 +12,10 @@
 
 from pyparadiseo import config,utils
 
-from .._core import eoReduceMerge as ReduceMerge
-from .._core import eoMGGReplacement as MGGReplacement
+from .._core import eoReplacement
+
+__all__ = ['generational','weak_elitist','merge_reduce','plus','comma','ep_replacement','ssga_worse','ssga_stoch_tournament','ssga_det_tournament','eoReplacement']
+
 
 
 def generational(stype=None):

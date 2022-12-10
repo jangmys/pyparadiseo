@@ -1,7 +1,8 @@
 #ifndef PYMO_H_
 #define PYMO_H_
 
-#include "pyeot.h"
+#include <pyeot.h>
+#include <utils/def_abstract_functor.h>
 
 #include <neighborhood/moNeighbor.h>
 #include <neighborhood/moIndexNeighbor.h>

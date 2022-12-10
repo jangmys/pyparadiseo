@@ -2,14 +2,18 @@
 Neighbor evaluators
 """
 from pyparadiseo import config,utils
+from typing import Union,Optional,Callable
 
 ##abstract
-from .._core import moEval as Eval
+from .._core import moEval
 from .._core import moNeighborhoodEvaluation as NeighborhoodEvaluation
 
 from .._core import NeighborEval
 from .._core import moFullEvalByCopy as FullEvalByCopy
 from .._core import moFullEvalByModif as FullEvalByModif
+
+__all__=['moEval','moNeighborhoodEvaluation','neighbor_eval','neighbor_full_eval']
+
 
 class _Eval():
     """
@@ -27,6 +31,14 @@ def neighbor_eval(f_eval,stype=None):
 
     f_eval(solution-encoding, solution-fitness, index) --> new-solution-fitness
 
+    Parameters
+    ==========
+    f_eval : Callable
+        neighbor evaluation function
+
+    Returns
+    =======
+    NeighborEval (a :py:class:`~pyparadiseo.mo.eval.moEval`)
     """
     if stype is None:
         stype = config._SOLUTION_TYPE

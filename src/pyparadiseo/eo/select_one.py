@@ -1,9 +1,10 @@
 """
-Select-One
+Select an individual from popululation
 
-Test docstring for eo.selector module
+Individual-selectors are functors derived from the  :py:class:`eoSelectOne` base class.
+Those functors take a population as input and return an individual.
 
-The eo.selector module contains selection operators.
+
 
 eoSelectOne.h
     __call__(src_pop) --> Solution
@@ -15,27 +16,17 @@ eoSelectOne.h
 """
 from pyparadiseo import config,utils
 
+from .._core import eoSelectOne
+eoSelectOne.__doc__="this is the doc of SelectOne"
 
-from .._core import eoSelect as Select
-
-# from selectors.cpp
-# from .._core import eoDetSelect as DetSelect
-# from .._core import eoSelectMany as SelectMany
-# from .._core import eoSelectNumber as SelectNumber
-# from .._core import eoSelectPerc as SelectPerc
-# from .._core import eoTruncSelect as TruncSelect
-# from .._core import eoTruncatedSelectMany as TruncatedSelectMany
-
-
-# from selectOne.cpp
-from .._core import eoSelectOne as SelectOne
-SelectOne.__doc__="this is the doc of SelectOne"
-
+__all__ = ['select_one','det_tournament','stoch_tournament','truncated','proportional','random','best','round_robin','sequential','elite_sequential','eoSelectOne']
 
 
 def select_one(klass_or_fun=None,_setup=None,stype=None):
     """
-    wrap python callable in paradiseo selectOne operator
+    Make eoSelectOne from python callable.
+
+    The setup function is called ...
     """
     if klass_or_stype is not None and stype is None :
         stype = config._SOLUTION_TYPE

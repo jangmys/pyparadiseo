@@ -35,7 +35,7 @@ def realGA_generic_sol():
 
     myeval = evaluator.fitness(lambda sol: norm2(sol))
 
-    mybounds=pp.bounds.bound_box(VEC_SIZE,(-1.0)*DOMAIN_BOUND,DOMAIN_BOUND)
+    mybounds=pp.bounds.box(VEC_SIZE,(-1.0)*DOMAIN_BOUND,DOMAIN_BOUND)
 
     rand_arr = lambda : DOMAIN_BOUND*(2*np.random.random(VEC_SIZE)-1)
     myinit = pp.initializer.initializer(rand_arr)
@@ -98,7 +98,7 @@ def realGA_real_sol():
     from pyparadiseo import _mod
     myeval=_mod.Sphere()
 
-    mybounds = pp.bounds.bound_box(VEC_SIZE,(-1.0)*DOMAIN_BOUND,DOMAIN_BOUND)
+    mybounds = pp.bounds.box(VEC_SIZE,(-1.0)*DOMAIN_BOUND,DOMAIN_BOUND)
 
     myinit = pp.initializer.random(bounds=mybounds)
     p = population.from_init(POP_SIZE,myinit,stype='real')
@@ -133,7 +133,7 @@ def realGA_pyops():
     from pyparadiseo import _mod
     myeval=_mod.Sphere()
 
-    mybounds = pp.bounds.bound_box(VEC_SIZE,(-1.0)*DOMAIN_BOUND,DOMAIN_BOUND)
+    mybounds = pp.bounds.box(VEC_SIZE,(-1.0)*DOMAIN_BOUND,DOMAIN_BOUND)
     myinit = pp.initializer.random(stype='real',bounds=mybounds)
 
     p = population.from_init(POP_SIZE,myinit,stype='real')

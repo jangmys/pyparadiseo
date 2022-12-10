@@ -143,13 +143,6 @@ void add_real_bounds(std::string name, Init init)
         ;
 }
 
-
-
-
-
-
-
-
 //-----------------for vector bounds-----------------
 template<class X>
 void uniformWrap(X& _b, np::ndarray _v, eoRng & _rng = eo::rng)
@@ -162,19 +155,10 @@ void uniformWrap(X& _b, np::ndarray _v, eoRng & _rng = eo::rng)
     }
 }
 
-
-
-//overload constructor for bounds...?
-// static std::shared_ptr<eoRealVectorBounds> makeClass()
-
-// BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(unif_overload, uniform, 0, 1)
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(uniform1_overload, uniform, 1, 2)
 BOOST_PYTHON_FUNCTION_OVERLOADS(uniform2_overload, uniformWrap<eoRealVectorBounds>, 2, 3)
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(int_uniform1_overload, uniform, 1, 2)
-// BOOST_PYTHON_FUNCTION_OVERLOADS(int_uniform2_overload, uniformWrap<eoBaseVectorBounds>, 2, 3)
-
-
 
 
 void
@@ -199,36 +183,29 @@ bounds()
     .def("truncate", pure_virtual(&eoRealBoundsWrap::truncate))
     ;
 
-    register_ptr_to_python< boost::shared_ptr<eoRealBounds> >();
 
-    ////////// derived from RealBounds
-    //////////////////////////////////////////////////
+    //----------------derived from RealBounds----------------
+
     add_real_bounds<eoRealNoBounds>("RealNoBounds",init<>());
     add_real_bounds<eoRealInterval>("RealInterval",init<double,double>());
     add_real_bounds<eoRealBelowBound>("RealBelowBound",init<double>());
     add_real_bounds<eoRealAboveBound>("RealAboveBound",init<double>());
 
 
-    // expose do derive eoRealBaseVectorBounds
-    class_<std::vector<eoRealBounds*> >("_BoundsVectorReal")
-    .def(vector_indexing_suite<std::vector<eoRealBounds*> >())
-    ;
+    register_ptr_to_python< std::shared_ptr<eoRealBounds> >();
 
-    class_<std::vector<boost::shared_ptr<eoRealInterval>> >("_BdsVectorRealInterval")
-    .def(vector_indexing_suite<std::vector<boost::shared_ptr<eoRealInterval>>,true>())
-    ;
-
+    //and with std
+    // By default indexed elements have Python reference semantics and are returned by proxy. This can be disabled by supplying true in the NoProxy template parameter.
+    // https://www.boost.org/doc/libs/1_80_0/libs/python/doc/html/reference/topics/indexing_support.html#topics.indexing_support.class_vector_indexing_suite
     class_<std::vector<eoRealBoundsPtr>>("_BdsVectorReal")
     .def(vector_indexing_suite<std::vector<eoRealBoundsPtr>,true>())
     ;
 
-
+    //-------------------eoRealVectorBounds-------------------
     bool (eoRealVectorBounds::* isBounded_1) (unsigned) = &eoRealVectorBounds::isBounded;
     bool (eoRealVectorBounds::* isBounded_2) (void)     = &eoRealVectorBounds::isBounded;
     bool (eoRealVectorBounds::* hasNoBoundAtAll_1) (unsigned) = &eoRealVectorBounds::hasNoBoundAtAll;
     bool (eoRealVectorBounds::* hasNoBoundAtAll_2) (void) = &eoRealVectorBounds::hasNoBoundAtAll;
-
-
 
     class_<eoRealVectorBounds, bases<std::vector<eoRealBoundsPtr> > >("RealVectorBounds", init<>())
     .def(init<

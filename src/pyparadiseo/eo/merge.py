@@ -1,5 +1,5 @@
 """
-    Mergers
+    Merge populations
 
     base : eoMerge.h
 
@@ -15,7 +15,9 @@
  """
 from pyparadiseo import config,utils
 
+from .._core import eoMerge
 
+__all__ = ['elitist','plus','no_elitist','eoMerge']
 
 
 def elitist(rate,interpret_as_rate=True,stype=None):

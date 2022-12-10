@@ -1,27 +1,36 @@
 """
-Local Search algorithms
+Single-solution based algorithms
+
+- Hill Climbers
+- Simulated Annealing
+- Tabu Search
 """
 from pyparadiseo import utils,config
-
+from typing import Union,Optional,Callable
 
 #ABC
-from .._core import moLocalSearch as LocalSearch
+from .._core import moLocalSearch
 
 # from .._core import moSimpleHC as SimpleHC
 # from .._core import moFirstImprHC as FirstImprHC
 # from .._core import moRandomBestHC as RandomBestHC
-from .._core import moNeutralHC as NeutralHC
+from .._core import moNeutralHC
 
 # from .._core import moRandomSearch as RandomSearch
-from .._core import moRandomWalk as RandomWalk
-from .._core import moRandomNeutralWalk as RandomNeutralWalk
+from .._core import moRandomWalk
+from .._core import moRandomNeutralWalk
 
-from .._core import moMetropolisHasting as MetropolisHasting
-from .._core import moSA as SA
-from .._core import moTS as TS
+from .._core import moMetropolisHasting
+from .._core import moSA
+from .._core import moTS
+
+__all__=['hill_climber','random_search','random_walk','random_neutral_walk','metropolis_hastings','simulated_annealing','tabu_search','moLocalSearch']
 
 
-def set_move(self,move_op,move_back_op=None,index_table=None):
+def _set_move(self,move_op,move_back_op=None,index_table=None):
+    """
+    local function injected in LS algo to set move and index_table
+    """
     self.set_move(move_op)
 
     if move_back_op is not None:
@@ -31,30 +40,37 @@ def set_move(self,move_op,move_back_op=None,index_table=None):
         self.set_index_table(index_table)
 
 
-# LocalSearch.set_move_ = set_move
-# moSimpleHCBin.set_move_ = set_move
-
 #SimpleHC(Neighborhood,solEval,nborEval)
 #SimpleHC(Neighborhood,solEval,nborEval,moContinuator)
 #SimpleHC(Neighborhood,solEval,nborEval,moContinuator,moNeighborComparator,moSolNeighborComparator)
-def simple_hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=None,compareSN=None,hc_type='simple',stype=None):
-    """
-     * Simple HC:
-     * Hill-Climbing local search
-     *
-     * At each iteration,
-     *   the first best solution in the neighborhood is selected
-     *   if the selected neighbor have higher fitness than the current solution
-     *       then the solution is replaced by the selected neighbor
-     *   the algorithm stops when there is no higher neighbor
+def hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=None,compareSN=None,hc_type='simple',stype=None):
+    """Hill-Climbing local search
 
-     * Simple constructor for a hill-climber
-     * @param _neighborhood the neighborhood
-     * @param _fullEval the full evaluation function
-     * @param _eval neighbor's evaluation function
-     * @param _cont an external continuator
-     * @param _compN  a neighbor vs neighbor comparator
-     * @param _compSN a solution vs neighbor comparator
+    At each iteration, an improving solution in the neighborhood is selected. If the selected neighbor has higher fitness than the current solution, then the solution is replaced by the selected neighbor. The algorithm stops when there is no higher neighbor.
+
+    Three variants are available
+    - 'simple' : accept best neighbor (take first, if multiple best neighbors are found)
+    - 'first_improve' : accept first improving neighbor
+    - 'random_best' : accept one of the best neighbors at random
+
+    Parameters
+    ===========
+    neighborhood : moNeighborhood
+        a Neighborhood
+    f_eval : eoEvalFunc
+        full evaluation function
+    nbor_eval : moEval
+        neighbor evaluation function
+    continuator : moContinuator
+        default = None
+    compareN : moNeighborComparator [optional]
+        neighbor vs neighbor comparator, default = None
+    compSN  : moNeighborComparator [optional]
+        a solution vs neighbor comparator, default = None
+    hc_type : str [optional]
+        hill-climber type
+    stype : str [optional]
+        solution type
     """
     if stype is None:
         stype = config._SOLUTION_TYPE
@@ -71,7 +87,7 @@ def simple_hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=
     if class_ is None:
         raise TypeError("invalid hc_type")
 
-    class_.set_move_ = set_move
+    class_.set_move_ = _set_move
 
     if config.is_minimizing():
         print("IS MIN\n")

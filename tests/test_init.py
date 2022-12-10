@@ -119,7 +119,7 @@ class test_init(unittest.TestCase):
     def test_real_bounded_init(self):
         from pyparadiseo import bounds
 
-        # b = bounds.bound_box(9,-1.0,1.0)
+        # b = bounds.box(9,-1.0,1.0)
         init = initializer.random(bounds=([-1]*9,[1]*9),stype='real')
         # init(self.real_sol)
     #     self.assertEqual(len(self.real_sol),9)
