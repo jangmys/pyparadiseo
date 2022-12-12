@@ -7,7 +7,8 @@ from pyparadiseo import evaluator
 from pyparadiseo import initializer
 from pyparadiseo import operator
 from pyparadiseo import population
-from pyparadiseo import config,utils
+from . import utils
+from . import config
 
 #  EO RNG
 from ._core import eoRng

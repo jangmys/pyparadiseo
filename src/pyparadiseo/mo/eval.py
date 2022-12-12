@@ -5,6 +5,8 @@ from pyparadiseo import config,utils
 from typing import Union,Optional,Callable
 
 ##abstract
+from pyparadiseo import evaluator
+
 from .._core import moEval
 from .._core import moNeighborhoodEvaluation as NeighborhoodEvaluation
 
@@ -48,6 +50,7 @@ def neighbor_eval(f_eval,stype=None):
     return class_(f_eval)
 
 
+
 def neighbor_full_eval(f_eval,backable=False,stype=None):
     """
     Parameters
@@ -65,8 +68,11 @@ def neighbor_full_eval(f_eval,backable=False,stype=None):
 
     class_=None
     if not backable:
-        class_ = utils.get_class("moFullEvalByCopy"+config.TYPES[sol_type])
+        class_ = utils.get_class("moFullEvalByCopy"+config.TYPES[stype])
     else:
-        class_ = utils.get_class("moFullEvalByModif"+config.TYPES[sol_type])
+        class_ = utils.get_class("moFullEvalByModif"+config.TYPES[stype])
 
-    return class_(f_eval)
+    if isinstance(f_eval,utils.get_class("eoEvalFunc"+config.TYPES[stype])):
+        return class_(f_eval)
+    else:
+        return class_(evaluator.fitness(f_eval))

@@ -102,8 +102,10 @@ void expose_moAlgos(std::string name)
     .def("getNeighborhoodExplorer",&moLocalSearch<NborT>::getNeighborhoodExplorer,return_internal_reference<>())
     .def("set_move",setMove<moLocalSearchWrap<SolutionType>>)
     .def("set_move_back",setMoveBack<moLocalSearchWrap<SolutionType>>)
-    .def("get_current_neighbor",getCurrentNeighbor<moLocalSearchWrap<SolutionType>,SolutionType>,return_internal_reference<>())
-    .def("get_selected_neighbor",getSelectedNeighbor<moLocalSearchWrap<SolutionType>,SolutionType>,return_internal_reference<>())
+    .def("_get_current_neighbor",getCurrentNeighbor<moLocalSearchWrap<SolutionType>,SolutionType>,return_internal_reference<>())
+    .def("_get_selected_neighbor",getSelectedNeighbor<moLocalSearchWrap<SolutionType>,SolutionType>,return_internal_reference<>())
+    .def("get_continuator",&moLocalSearch<NborT>::getContinuator,return_internal_reference<>())
+    .def("set_continuator",&moLocalSearch<NborT>::setContinuator)
     // .def("set_move",&moLocalSearchWrap<SolutionType>::setMove)
     // .def("set_move_back",&moLocalSearchWrap<SolutionType>::setMoveBack)
     ;
@@ -137,8 +139,8 @@ void expose_moAlgos(std::string name)
     )
     .def("set_move",setMove<moSimpleHC<NborT>>)
     .def("set_move_back",setMoveBack<moSimpleHC<NborT>>)
-    .def("get_current_neighbor",getCurrentNeighbor<moSimpleHC<NborT>,SolutionType>,return_internal_reference<>())
-    .def("get_selected_neighbor",getSelectedNeighbor<moSimpleHC<NborT>,SolutionType>,return_internal_reference<>())
+    // .def("get_current_neighbor",getCurrentNeighbor<moSimpleHC<NborT>,SolutionType>,return_internal_reference<>())
+    // .def("get_selected_neighbor",getSelectedNeighbor<moSimpleHC<NborT>,SolutionType>,return_internal_reference<>())
     ;
 
 

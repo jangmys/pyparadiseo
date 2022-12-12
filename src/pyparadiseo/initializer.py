@@ -119,7 +119,8 @@ def random(size=0,bounds=None,stype=None,**kwargs):
             else:
                 return class_(bounds_mod.box(bounds[0],bounds[1]))
         else:
-            raise TypeError("need bounds for type 'real'")
+            return class_(bounds_mod.box(size,0,1))
+
 
     if stype == 'perm':
         class_ = utils.get_class("PermutationInit")

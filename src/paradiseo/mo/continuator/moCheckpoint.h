@@ -45,7 +45,6 @@
 //JG : changed all pointers and references to boost_shared_ptr (for boost.python)
 // should probably be std::shared_ptr...
 #include <memory>
-#include <boost/shared_ptr.hpp>
 
 
 /**

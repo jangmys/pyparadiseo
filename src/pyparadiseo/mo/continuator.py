@@ -80,3 +80,27 @@ def seconds_elapsed(seconds,verbose=False,stype=None):
 
     class_ = utils.get_class("moTimeContinuator"+config.TYPES[stype])
     return class_(seconds,verbose)
+
+
+def checkpoint(continu,interval_freq=1,stype=None):
+    """
+    A checkpointing continuator
+
+    Parameters
+    ==========
+    continu : moContinuator
+        a continuator
+    interval_freq : int
+        sampling frequency for statistics
+
+    Returns
+    ========
+    moCheckpoint : moCheckpoint
+        as it says
+    """
+    if stype is None:
+        stype = config._SOLUTION_TYPE
+
+    class_ = utils.get_class("moCheckpoint"+config.TYPES[stype])
+
+    return class_(continu,interval_freq)
