@@ -151,7 +151,7 @@ void addSortedStat(eoCheckPoint<PyEOT>& c, eoSortedStatBase<PyEOT>& s) { c.add(s
 void add_checkpoint()
 {
     class_<eoCheckPoint<PyEOT>, bases< eoContinue<PyEOT> > >
-        ("eoCheckPoint",
+        ("eoCheckpoint",
          init<eoContinue<PyEOT>&> ()[with_custodian_and_ward<1,2>()]
          )
         .def("add", addContinue, with_custodian_and_ward<1,2>() )

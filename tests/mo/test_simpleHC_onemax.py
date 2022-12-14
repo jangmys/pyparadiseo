@@ -39,8 +39,6 @@ class test_simpleHC_onemax(unittest.TestCase):
         """
         # from pyparadiseo import _core
         #
-        # #assemble algo
-        hc = mo.algo.hill_climber(self.nhood,self.myeval,self.nborEval)
         # #
 
         #when running under pytest defining this move globally, causes segfault on shutdown (even though all tests pass)
@@ -51,7 +49,8 @@ class test_simpleHC_onemax(unittest.TestCase):
             else:
                 sol[ind] = True
 
-        hc.set_move(move)
+        # #assemble algo
+        hc = mo.algo.hill_climber(self.nhood,self.myeval,self.nborEval,move)
 
         # # # define sol / init / eval
         sol = solution.empty()

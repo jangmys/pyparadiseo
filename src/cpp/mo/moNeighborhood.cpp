@@ -18,6 +18,55 @@
 using namespace boost::python;
 
 template<typename SolutionType>
+class pyNeighborhood : moNeighborhood<PyNeighbor<SolutionType>>
+{
+public:
+    typedef PyNeighbor<SolutionType> PyNbor;
+
+    pyNeighborhood(object _has_neighbor_op,object _init_op,object _next_op,object _cont_op, bool _isRandom = false) : moNeighborhood<PyNbor>(),has_neighbor_op(_has_neighbor_op),init_op(_init_op),next_op(_next_op),cont_op(_cont_op),m_isRandom(_isRandom){}
+
+    bool hasNeighbor(SolutionType& sol) override
+    {
+        if (has_neighbor_op.ptr() != Py_None)
+            return has_neighbor_op(boost::ref(sol));
+        return false;
+    }
+
+    void init(SolutionType& sol,PyNbor& nbor) override
+    {
+        if (init_op.ptr() != Py_None)
+            init_op(boost::ref(sol),boost::ref(nbor));
+    }
+
+    void next(SolutionType& sol,PyNbor& nbor) override
+    {
+        if (next_op.ptr() != Py_None)
+            next_op(boost::ref(sol),boost::ref(nbor));
+    }
+
+    bool cont(SolutionType& sol) override
+    {
+        if (cont_op.ptr() != Py_None)
+            return cont_op(boost::ref(sol));
+        return false;
+    }
+
+    bool isRandom() override
+    {
+        return m_isRandom;
+    }
+
+private:
+    object has_neighbor_op;
+    object init_op;
+    object next_op;
+    object cont_op;
+
+    bool m_isRandom;
+};
+
+
+template<typename SolutionType>
 struct moNeighborhoodWrap : moNeighborhood<PyNeighbor<SolutionType>>,
     wrapper<moNeighborhood<PyNeighbor<SolutionType>>>
 {
@@ -122,6 +171,18 @@ void expose_moNeighborhoods(std::string name)
     .def("init", pure_virtual(&moIndexNeighborhood<NborT>::init))
     .def("next", pure_virtual(&moIndexNeighborhood<NborT>::next))
     .def("cont", pure_virtual(&moIndexNeighborhood<NborT>::cont))
+    ;
+
+    //-------------------------------concrete-------------------------------
+
+
+    class_<pyNeighborhood<SolutionType>,bases<moIndexNeighborhood<NborT>>>(
+        make_name("pyNeighborhood",name).c_str(),
+        init<object,object,object,object,optional<bool>>())
+    .def("has_neighbor",&pyNeighborhood<NborT>::hasNeighbor)
+    .def("init",&pyNeighborhood<NborT>::init)
+    .def("next",&pyNeighborhood<NborT>::next)
+    .def("cont",&pyNeighborhood<NborT>::cont)
     ;
 
     class_<moOrderNeighborhood<NborT>,bases<moIndexNeighborhood<NborT>>>(

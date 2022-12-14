@@ -3,43 +3,36 @@ MO neighborhoods
 """
 from pyparadiseo import utils,config
 
+#ABC
 from .._core import moNeighborhood
+from .._core import moIndexNeighborhood
 
-__all__=['moNeighborhood','indexed','ordered','random']
-
-
-# from .._core import moOrderNeighborhood as OrderNeighborhood
-# from .._core import moDummyNeighborhood as DummyNeighborhood
-#
-# from .._core import moRndWithoutReplNeighborhood as RndWithoutReplNeighborhood
-# from .._core import moRndWithReplNeighborhood as RndWithReplNeighborhood
+__all__=['moNeighborhood','moIndexNeighborhood','neighborhood','ordered','random']
 
 
-class _Neighborhood():
+def neighborhood(init,next,cont,has_neighbor,is_random,stype=None):
     """
-    A Neighborhood (abstract base class)
-    """
-    def __new__(cls,type=None):
-        if type is None:
-            type = config._SOLUTION_TYPE
-
-        class_ = utils.get_class("moNeighborhood"+config.TYPES[type])
-        return class_()
-
-
-def indexed(neighborhood_size: int,stype=None):
-    """
-    A neighborhood based on indices
+    A user-defined Neighborhood
 
     Parameters
-    ----------
-    neighborhood_size
+    ==========
+    init : Callable (solution,neighbor)->None
+        initialize first neighbor
+    next : Callable (solution,neighbor)->None
+        set neighbor to next
+    cont : Callable (solution)->Bool
+        continue ?
+    has_neighbor : Callable (solution)->Bool
+        solution has neighbor?
+    is_random : bool
+        True if neighborhood is random
     """
     if stype is None:
         stype = config._SOLUTION_TYPE
 
-    class_ = utils.get_class("moIndexNeighborhood"+config.TYPES[stype])
-    return class_(neighborhood_size)
+    class_ = utils.get_class("pyNeighborhood"+config.TYPES[stype])
+
+    return class_(init,next,cont,has_neighbor,is_random)
 
 
 def ordered(neighborhood_size: int,stype=None):
