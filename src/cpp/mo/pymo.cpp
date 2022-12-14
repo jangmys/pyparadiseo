@@ -72,12 +72,4 @@ void mo()
     expose_nbor<BinarySolution>("Bin");
     expose_nbor<RealSolution>("Real");
     expose_nbor<IntSolution>("Perm");
-
-    class_<BinNeighbor,bases<PyNeighbor<BinarySolution>>>(
-        "BinNeighbor",
-        init<>()
-    )
-    .def("move", &BinNeighbor::move)
-    .def("move_back", &BinNeighbor::moveBack)
-    ;
 }

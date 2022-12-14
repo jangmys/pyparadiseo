@@ -1,7 +1,6 @@
 import numpy as np
 
 from pyparadiseo._core import moEvalBin
-from pyparadiseo import decorators
 from pyparadiseo import evaluator
 
 import numba
@@ -22,7 +21,7 @@ class inherit_incr_eval(moEvalBin):
 
 
 class OneMax():
-    def __init__(self,dim,value = 42):
+    def __init__(self,dim,value = 0):
         self.dim = dim
         self.value = value #just a value that represent problem data
 
@@ -35,6 +34,7 @@ class OneMax():
             return sol.fitness - 1
         else:
             return sol.fitness + 1
+
 
     def move(self,nbor,sol):
         ind = nbor.index()

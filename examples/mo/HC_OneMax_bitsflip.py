@@ -23,6 +23,47 @@ import time
 import numpy as np
 import inspect
 
+
+class rand_move():
+    def __init__(self,n,m):
+        self.nvar = n
+        self.ntoflip = m
+        self.to_flip = np.zeros(n,dtype=int)
+        self.to_flip[:self.ntoflip]=1
+
+
+    def eval_incremental(self,nbor,sol):
+        """
+        incremental eval
+        """
+        f = sol.fitness
+
+        np.random.shuffle(self.to_flip)
+
+
+
+
+        if sol.encoding[nbor.index()]:
+            return sol.fitness - 1
+        else:
+            return sol.fitness + 1
+
+
+
+    def move(self,nbor,sol):
+        """flip [0,k] bits"""
+        for i,e in enumerate(self.to_flip):
+            if e:
+                sol[i] = 1 - sol[i]
+
+        i,j=self.moves[nbor.index()]
+        while i<j:
+            sol.array[i],sol.array[j]=sol.array[j],sol.array[i]
+            i += 1
+            j -= 1
+        return sol
+
+
 if __name__ == "__main__":
     DIM = 2000
     max_one = onemax.OneMax(DIM,42.0)

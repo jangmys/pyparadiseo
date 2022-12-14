@@ -27,7 +27,6 @@ class test_mosampling(unittest.TestCase):
         self.nborEval = mo.eval.neighbor_full_eval(lambda x : np.sum(x))
 
         self.init = initializer.random(10)
-        self.ls = mo.algo.hill_climber(self.nhood,self.myeval,self.nborEval)
 
         def move(nbor,sol):
             ind = nbor.index()
@@ -37,10 +36,8 @@ class test_mosampling(unittest.TestCase):
             else:
                 sol[ind] = sol[ind]*0.99
 
-        self.ls.set_move(move)
-
-
-        pass
+        self.ls = mo.algo.hill_climber(self.nhood,self.myeval,self.nborEval,move)
+        # self.ls.set_move(move)
     def tearDown(self):
         pass
     def test_basic(self):

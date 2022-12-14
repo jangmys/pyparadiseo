@@ -5,7 +5,7 @@ from pyparadiseo import utils,config
 
 from .._core import moContinuator
 
-__all__=['moContinuator','always_true','max_iterations','full_evals','seconds_eseconds_elapsed']
+__all__=['moContinuator','always_true','max_iterations','full_evals','seconds_eseconds_elapsed','pymoCheckpoint']
 
 def always_true(stype=None):
     """
@@ -65,9 +65,8 @@ def full_evals(f,nb_evals,restart_counter=True,stype=None):
     if stype is None:
         stype = config._SOLUTION_TYPE
 
-    class_ = utils.get_class("moFullEvalContinue"+config.TYPES[stype])
-    #if fun is callable...
-    #if fun is evalFunc...
+    class_ = utils.get_class("moFullEvalContinuator"+config.TYPES[stype])
+
     return class_(f,nb_evals,restart_counter)
 
 
@@ -80,6 +79,45 @@ def seconds_elapsed(seconds,verbose=False,stype=None):
 
     class_ = utils.get_class("moTimeContinuator"+config.TYPES[stype])
     return class_(seconds,verbose)
+
+
+# like moCheckpoint
+class pymoCheckpoint(moContinuator):
+    def __init__(self, cont, freq_interval=1):
+        moContinuator.__init__(self)
+        self.continuators = [cont]
+        self.stats = []
+
+        self.interval = freq_interval
+        self.counter = 0
+
+    def add_cont(self,_cont):
+        self.continuators.append(_cont)
+
+    def add_stat(self,_stat):
+        self.stats.append(_stat)
+
+    def init(self,sol):
+        for stat in self.stats:
+            stat.init(sol)
+
+        for cont in self.continuators:
+            cont.init(sol)
+
+    def __call__(self,sol):
+        if self.counter % self.interval == 0:
+            for stat in self.stats:
+                stat(sol)
+
+        for cont in self.continuators:
+            if not cont(sol):
+                return False
+
+        return True
+
+    def lastCall(self,solution):
+        for stat in self.stats:
+            stat.lastCall(sol)
 
 
 def checkpoint(continu,interval_freq=1,stype=None):

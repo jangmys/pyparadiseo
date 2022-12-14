@@ -43,7 +43,7 @@ def _set_move(self,move_op,move_back_op=None,index_table=None):
 #SimpleHC(Neighborhood,solEval,nborEval)
 #SimpleHC(Neighborhood,solEval,nborEval,moContinuator)
 #SimpleHC(Neighborhood,solEval,nborEval,moContinuator,moNeighborComparator,moSolNeighborComparator)
-def hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=None,compareSN=None,hc_type='simple',stype=None):
+def hill_climber(neighborhood,f_eval,nbor_eval,move,continuator=None,compareN=None,compareSN=None,nneutral_steps=1,hc_type='simple',stype=None):
     """Hill-Climbing local search
 
     At each iteration, an improving solution in the neighborhood is selected. If the selected neighbor has higher fitness than the current solution, then the solution is replaced by the selected neighbor. The algorithm stops when there is no higher neighbor.
@@ -61,6 +61,8 @@ def hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=None,co
         full evaluation function
     nbor_eval : moEval
         neighbor evaluation function
+    move : Callable
+        a move function
     continuator : moContinuator
         default = None
     compareN : moNeighborComparator [optional]
@@ -83,6 +85,8 @@ def hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=None,co
         class_ = utils.get_class("moFirstImprHC"+config.TYPES[stype])
     elif hc_type == 'random_best':
         class_ = utils.get_class("moRandomBestHC"+config.TYPES[stype])
+    elif hc_type == 'neutral':
+        class_ = utils.get_class("moNeutralHC"+config.TYPES[stype])
 
     if class_ is None:
         raise TypeError("invalid hc_type")
@@ -96,12 +100,23 @@ def hill_climber(neighborhood,f_eval,nbor_eval,continuator=None,compareN=None,co
     if compareN is not None:
         if compareSN is None:
             raise TypeError("must provide both, compareN and compareSN.")
-        algo = class_(neighborhood,f_eval,nbor_eval,continuator,compareN,compareSN)
-    elif continuator is not None:
-        algo = class_(neighborhood,f_eval,nbor_eval,continuator)
-    else:
-        algo = class_(neighborhood,f_eval,nbor_eval)
 
+        if hc_type == 'neutral':
+            algo = class_(neighborhood,f_eval,nbor_eval,continuator,compareN,compareSN,nneutral_steps)
+        else:
+            algo = class_(neighborhood,f_eval,nbor_eval,continuator,compareN,compareSN,nneutral_steps)
+    elif continuator is not None:
+        if hc_type == 'neutral':
+            algo = class_(neighborhood,f_eval,nbor_eval,continuator,nneutral_steps)
+        else:
+            algo = class_(neighborhood,f_eval,nbor_eval,continuator)
+    else:
+        if hc_type == 'neutral':
+            algo = class_(neighborhood,f_eval,nbor_eval,nneutral_steps)
+        else:
+            algo = class_(neighborhood,f_eval,nbor_eval)
+
+    algo.set_move(move)
     return algo
 
 

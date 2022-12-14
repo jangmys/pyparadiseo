@@ -27,7 +27,14 @@ class test_moalgo(unittest.TestCase):
         # neighborhood
         self.nhood = mo.neighborhood.ordered(self.DIM)
 
-        self.hc = mo.algo.hill_climber(self.nhood,self.myeval,self.nborEval)
+        def move(self,nbor,sol):
+            ind = nbor.index()
+            if sol.array[ind]:
+                sol.array[ind] = False
+            else:
+                sol.array[ind] = True
+
+        self.hc = mo.algo.hill_climber(self.nhood,self.myeval,self.nborEval,move)
         config.set_maximize_fitness()
 
 
