@@ -7,3 +7,4 @@ from . import replace
 from . import selector
 from . import select_one
 from . import transform
+from . import stats

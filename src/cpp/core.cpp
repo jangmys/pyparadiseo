@@ -61,6 +61,7 @@ extern void add_checkpoint();
 extern void reduce();
 extern void real_op();
 extern void bit_op();
+extern void eo_statistics();
 
 //-------------MO-------------
 extern void mo();
@@ -164,10 +165,12 @@ BOOST_PYTHON_MODULE(_core)
     Py_Initialize(); //needed to call Python code from c++
     numpy::initialize();
 
+    implicitly_convertible<float, object>();
     implicitly_convertible<double, object>();
     implicitly_convertible<int, object>();
     implicitly_convertible<unsigned int, object>();
     implicitly_convertible<bool, object>();
+    implicitly_convertible<std::string, object>();
 
     // implicitly_convertible<std::complex<double>, std::any>();
 
@@ -438,6 +441,7 @@ BOOST_PYTHON_MODULE(_core)
     eoAlgos();
     continuators();
     add_checkpoint();
+    eo_statistics();
 
     // algos();
     // reduce();

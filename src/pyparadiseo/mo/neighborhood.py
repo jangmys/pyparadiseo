@@ -196,7 +196,7 @@ def neighborhood(init,next,cont,has_neighbor,is_random=False,stype=None):
 
     class_ = utils.get_class("pyNeighborhood"+config.TYPES[stype])
 
-    return class_(init,next,cont,has_neighbor,lambda : is_random)
+    return class_(init,next,cont,has_neighbor,is_random)
 
 
 def ordered(neighborhood_size: int,stype=None):

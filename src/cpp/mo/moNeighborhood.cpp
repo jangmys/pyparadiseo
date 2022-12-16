@@ -18,12 +18,12 @@
 using namespace boost::python;
 
 template<typename SolutionType>
-class pyNeighborhood : moNeighborhood<PyNeighbor<SolutionType>>
+class pyNeighborhood : public moNeighborhood<PyNeighbor<SolutionType>>
 {
 public:
     typedef PyNeighbor<SolutionType> PyNbor;
 
-    pyNeighborhood(object _has_neighbor_op,object _init_op,object _next_op,object _cont_op, bool _isRandom = false) : moNeighborhood<PyNbor>(),has_neighbor_op(_has_neighbor_op),init_op(_init_op),next_op(_next_op),cont_op(_cont_op),m_isRandom(_isRandom){}
+    pyNeighborhood(object _init_op,object _next_op,object _cont_op, object _has_neighbor_op, bool _isRandom = false) : moNeighborhood<PyNbor>(),init_op(_init_op),next_op(_next_op),cont_op(_cont_op),has_neighbor_op(_has_neighbor_op),m_isRandom(_isRandom){}
 
     bool hasNeighbor(SolutionType& sol) override
     {
@@ -57,10 +57,10 @@ public:
     }
 
 private:
-    object has_neighbor_op;
     object init_op;
     object next_op;
     object cont_op;
+    object has_neighbor_op;
 
     bool m_isRandom;
 };
@@ -176,7 +176,7 @@ void expose_moNeighborhoods(std::string name)
     //-------------------------------concrete-------------------------------
 
 
-    class_<pyNeighborhood<SolutionType>,bases<moIndexNeighborhood<NborT>>>(
+    class_<pyNeighborhood<SolutionType>,bases<moNeighborhood<NborT>>>(
         make_name("pyNeighborhood",name).c_str(),
         init<object,object,object,object,optional<bool>>())
     .def("has_neighbor",&pyNeighborhood<NborT>::hasNeighbor)

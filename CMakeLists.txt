@@ -48,6 +48,8 @@ set(CMAKE_CXX_FLAGS "-Wall -Wno-maybe-uninitialized -Wno-deprecated-declarations
 set(commonSources
     src/cpp/utils/converters.cpp
     src/cpp/utils/valueParam.cpp
+    src/cpp/utils/stats.cpp
+    src/cpp/utils/monitors.cpp
     src/cpp/common/random_numbers.cpp
     src/cpp/common/init.cpp
     src/cpp/common/eval.cpp

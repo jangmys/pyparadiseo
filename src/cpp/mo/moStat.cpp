@@ -4,6 +4,7 @@
 
 #include <continuator/moStatBase.h>
 #include <continuator/moStat.h>
+#include <continuator/moFitnessStat.h>
 
 using namespace boost::python;
 
@@ -21,7 +22,7 @@ template<typename SolutionType,typename T>
 struct moStatWrap : moStat<SolutionType,T>,wrapper<moStat<SolutionType,T>>
 {
 public:
-    moStatWrap(T _value, std::string _description) : moStat<SolutionType,T>(_value,_description){};
+    moStatWrap(T _value, std::string _description = "") : moStat<SolutionType,T>(_value,_description){};
 
     void operator()(SolutionType& _ind)
     {
@@ -30,13 +31,13 @@ public:
 };
 
 template<typename SolutionType,typename T>
-void expose_moStatBase(std::string basename,std::string name)
+void expose_moStat(std::string basename,std::string name)
 {
     class_<moStatWrap<SolutionType,T>,bases<moStatBase<SolutionType>>,boost::noncopyable>
-    (make_name(basename.c_str(),name).c_str(),init<T,std::string>())
+    (make_name(basename.c_str(),name).c_str(),init<T,optional< std::string>>())
     .def("__call__", pure_virtual(&moStatWrap<SolutionType,T>::operator()))
-    // .def("lastCall", &moStatBase<SolutionType>::lastCall)
-    // .def("init", &moStatBase<SolutionType>::init)
+    .def("lastCall", &moStatBase<SolutionType>::lastCall)
+    .def("init", &moStatBase<SolutionType>::init)
     ;
 }
 
@@ -53,16 +54,15 @@ void expose_moStats(std::string name)
 
     register_ptr_to_python< std::shared_ptr<moStatBase<SolutionType>> >();
 
-    expose_moStatBase<SolutionType,double>("moRealStat",name);
-    expose_moStatBase<SolutionType,int>("moIntStat",name);
-    expose_moStatBase<SolutionType,boost::python::object>("moPyStat",name);
+    expose_moStat<SolutionType,double>("moRealStat",name);
+    expose_moStat<SolutionType,int>("moIntStat",name);
+    expose_moStat<SolutionType,boost::python::object>("moPyStat",name);
+    expose_moStat<SolutionType,typename SolutionType::Fitness>("moFitStat",name);
 
-    // class_<moStatWrap<SolutionType,double>,bases<moStatBase<SolutionType>>,boost::noncopyable>
-    // (make_name("moRealStat",name).c_str(),init<double,std::string>())
-    // .def("__call__", pure_virtual(&moStatWrap<SolutionType,double>::operator()))
-    // // .def("lastCall", &moStatBase<SolutionType>::lastCall)
-    // // .def("init", &moStatBase<SolutionType>::init)
-    // ;
+    class_<moFitnessStat<SolutionType>,bases<moStat<SolutionType,typename SolutionType::Fitness>>>(make_name("moFitnessStat",name).c_str())
+    .def("__call__",&moFitnessStat<SolutionType>::operator())
+    .def("init",&moFitnessStat<SolutionType>::init)
+    ;
 }
 
 
