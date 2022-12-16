@@ -33,6 +33,22 @@ public:
     }
 };
 
+template<typename SolutionType>
+struct pyContinuator : moContinuator<PyNeighbor<SolutionType>>
+{
+    pyContinuator(object _op, object _init_op = object(), object _last_call_op = object()) : moContinuator<PyNeighbor<SolutionType>>(),op(_op),init_op(_init_op),last_call_op(_last_call_op)
+    {};
+
+    bool operator()(SolutionType& sol) override{
+        return op(boost::ref(sol));
+    }
+
+    object op;
+    object init_op;
+    object last_call_op;
+};
+
+
 
 template<typename SolutionType>
 void expose_moContinuators(std::string name)
@@ -47,6 +63,14 @@ void expose_moContinuators(std::string name)
     (make_name("moContinuator",name).c_str())
     .def("__call__", pure_virtual(&moContinuatorWrap<SolutionType>::operator()))
     ;
+
+
+    class_<pyContinuator<SolutionType>,bases<moContinuator<NborT>>>
+    (make_name("pymoContinuator",name).c_str(),
+    init<object,object,optional<object>>())
+    .def("__call__",&pyContinuator<SolutionType>::operator())
+    ;
+
 
 
     class_<moIterContinuator<NborT>,bases<moContinuator<NborT>>>
