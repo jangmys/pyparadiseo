@@ -1,3 +1,8 @@
+"""
+Moving objects (MO) - Solution-based metaheuristics
+"""
+
+
 from . import algo
 from . import comparator
 from . import continuator
