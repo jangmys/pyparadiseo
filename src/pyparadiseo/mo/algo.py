@@ -104,7 +104,7 @@ def hill_climber(neighborhood,f_eval,nbor_eval,move,continuator=None,compareN=No
         if hc_type == 'neutral':
             algo = class_(neighborhood,f_eval,nbor_eval,continuator,compareN,compareSN,nneutral_steps)
         else:
-            algo = class_(neighborhood,f_eval,nbor_eval,continuator,compareN,compareSN,nneutral_steps)
+            algo = class_(neighborhood,f_eval,nbor_eval,continuator,compareN,compareSN)
     elif continuator is not None:
         if hc_type == 'neutral':
             algo = class_(neighborhood,f_eval,nbor_eval,continuator,nneutral_steps)
