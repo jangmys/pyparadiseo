@@ -48,6 +48,7 @@ build-job:
           for i in 36 37
           do
             . /opt/venv${i}/bin/activate
+            python3 -m pip install --upgrade pip
             python3 --version  # For debugging
 
             python3 setup.py sdist bdist_wheel -G"Unix Makefiles" -- -- -j4
@@ -56,6 +57,7 @@ build-job:
           for i in 38 39 310
           do
             . /opt/venv${i}/bin/activate
+            python3 -m pip install --upgrade pip
             python3 --version  # For debugging
 
             python3 setup.py sdist bdist_wheel -G"Unix Makefiles" -- -- -j4
