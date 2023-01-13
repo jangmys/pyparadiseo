@@ -1,5 +1,10 @@
 [![pipeline status](https://gitlab.inria.fr/paradiseo/pyparadiseo/badges/master/pipeline.svg)](https://gitlab.inria.fr/paradiseo/pyparadiseo/-/commits/master)
 
+For the documentation of PyParadiseo see [this](https://paradiseo.gitlabpages.inria.fr/pyparadiseo/).
+
+This README only gives a short introduction.
+
+
 ### Table of Contents
 - [Installation](#installation)
 - [Usage](#getting-started)
@@ -7,18 +12,34 @@
 
 ## Installation
 
-For now, PyParadiseo is only available for Python 3.6.
-You can install PyParadiseo with `pip`
+The easiest way to get pyparadiseo is to install it via ``pip``. Currently the following Python versions are supported: 3.6, 3.7, 3.8, 3.9, 3.10
 
-```console
-pip install pyparadiseo
+### Install with ``pip``
+
+You can install pyParadiseo with `pip`
+
+
+```bash
+    pip install pyparadiseo
 ```
 
 ### Build from source
-Prerequisites
 
-- scikit-build
-- boost python
+To build pyParadiseo, you'll need to have a few prerequisites installed on your system and set the corresponding paths in ``setup.py`` and ``CMakeLists.txt``
+
+### Prerequisites
+
+To compile the binary extension you need:
+    - cmake >= 3.14
+    - python3 >= 3.6
+    - boost-python
+    - boost-numpy
+
+### Docker image
+Here is a ``manylinux2014_x86_64`` `Docker image`_ with installed prerequisites
+
+.. _Docker image: https://hub.docker.com/repository/docker/jangmys/manylinux2014_boost180_cp36_310
+
 
 ## Getting Started
 

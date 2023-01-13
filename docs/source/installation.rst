@@ -2,7 +2,7 @@
 
 Installation
 ============
-The easiest way to get pyparadiseo is to install it via ``pip``
+The easiest way to get pyparadiseo is to install it via ``pip``. Currently the following Python versions are supported: 3.6, 3.7, 3.8, 3.9, 3.10
 
 Install with ``pip``
 --------------------
@@ -11,6 +11,7 @@ You can install pyParadiseo with `pip`
 .. code-block:: sh
 
     pip install pyparadiseo
+
 
 Build from source
 -----------------
