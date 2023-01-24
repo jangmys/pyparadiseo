@@ -14,7 +14,8 @@ from pyparadiseo import config,utils
 from ._core import eoEvalFunc
 from ._core import eoPopEvalFunc
 
-__all__=['fitness','pop_eval','counting_fitness','objectives','pop_eval_from_fitness','pool_exec_pop_eval','eoEvalFunc','eoPopEvalFunc']
+__all__=['fitness','pop_eval','counting_fitness','objectives','pop_eval_from_fitness','eoEvalFunc','eoPopEvalFunc']
+#'pool_exec_pop_eval'
 
 def fitness(fun=None,counting=False,stype=None):
     """
