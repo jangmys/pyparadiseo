@@ -14,7 +14,7 @@ endif()
 cmake_minimum_required(VERSION 3.14)
 
 project(pyparadiseo
-    VERSION "0.4"
+    VERSION "0.4.1"
     LANGUAGES CXX
 )
 
